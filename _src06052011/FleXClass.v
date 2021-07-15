@@ -1,4 +1,53 @@
-Inductive Tip3Config := 
+Require Import Coq.Program.Basics.
+Require Import Coq.Logic.FunctionalExtensionality.
+Require Import Coq.Program.Combinators.
+Require Import FinProof.ProgrammingWith.
+
+Require Import String.
+
+Local Open Scope record.
+Local Open Scope program_scope. 
+Require Import FinProof.Common.
+Require Import FinProof.MonadTransformers21.
+Require Import FinProof.StateMonad21.
+
+(* Require Import FinProof.Lib.BasicModuleTypes. *)
+Require Import UMLang.SolidityNotations2.
+Require Import UMLang.SML_NG20.
+(* Require Import flexTypes. *)
+
+Section RecordsDefinitions.
+
+Set Implicit Arguments.
+Unset Strict Implicit.
+Set Contextual Implicit.
+Set Maximal Implicit Insertion.
+
+Variables I I8 I16 I32 I64 I128 I256 : Type.
+Variables A B C S Bs : Type.
+Variables L M H : Type -> Type. (* H - handle<type> *)
+Variables HM P : Type -> Type -> Type.
+Variables T G Sl Bt : Type.
+
+Variables addr_std_fixedP IStockNotifyPtrP : Type. (******************************)
+
+Notation " 'fst0' x " := ( x ) (at level 60, right associativity).
+Notation " 'fst1' x " := ( fst ( fst0 x ) ) (at level 60, right associativity).
+Notation " 'fst2' x " := ( fst ( fst1 x ) ) (at level 60, right associativity).
+Notation " 'fst3' x " := ( fst ( fst2 x ) ) (at level 60, right associativity).
+Notation " 'fst4' x " := ( fst ( fst3 x ) ) (at level 60, right associativity).
+Notation " 'fst5' x " := ( fst ( fst4 x ) ) (at level 60, right associativity).
+Notation " 'fst6' x " := ( fst ( fst5 x ) ) (at level 60, right associativity).
+Notation " 'fst7' x " := ( fst ( fst6 x ) ) (at level 60, right associativity).
+Notation " 'fst8' x " := ( fst ( fst7 x ) ) (at level 60, right associativity).
+Notation " 'fst9' x " := ( fst ( fst8 x ) ) (at level 60, right associativity).
+Notation " 'fst10' x " := ( fst ( fst9 x ) ) (at level 60, right associativity).
+Notation " 'fst11' x " := ( fst ( fst10 x ) ) (at level 60, right associativity).
+Notation " 'fst12' x " := ( fst ( fst11 x ) ) (at level 60, right associativity).
+Notation " 'fst13' x " := ( fst ( fst12 x ) ) (at level 60, right associativity).
+
+
+Inductive Tip3Config :=
 | Tip3Config_ι_name 
 | Tip3Config_ι_symbol 
 | Tip3Config_ι_decimals 
@@ -6,7 +55,8 @@ Inductive Tip3Config :=
 | Tip3Config_ι_root_address 
 | Tip3Config_ι_code 
 
-. 
+.
+ 
 Definition Tip3ConfigP := ( 
 S * S * I8 * I256 * A * C )%type . 
 
@@ -30,7 +80,8 @@ end .
  refine d3. 
  refine d4. 
  refine d5. 
- refine d6. Defined. 
+ refine d6. 
+Defined. 
 
  
 Coercion Tip3Config_get : Tip3Config >-> Funclass. 
@@ -70,6 +121,7 @@ Inductive SellArgs :=
 | SellArgs_ι_receive_wallet 
 
 . 
+
 Definition SellArgsP := ( 
 I128 * addr_std_fixedP )%type . 
 
@@ -209,6 +261,10 @@ Inductive DPrice :=
 | DPrice_ι_tip3cfg_ 
 
 . 
+
+Definition TonsConfigP := ( 
+I128 * I128 * I128 * I128 * I128 * I128 )%type . 
+
 Definition DPriceP := ( 
 I128 * I128 * I128 * addr_std_fixedP * I128 * I8 * IStockNotifyPtrP * I8 * TonsConfigP * Tip3ConfigP )%type . 
 
@@ -240,7 +296,8 @@ end .
  refine d7. 
  refine d8. 
  refine d9. 
- refine d10. Defined. 
+ refine d10. 
+Defined. 
 
  
 Coercion DPrice_get : DPrice >-> Funclass. 
@@ -253,10 +310,8 @@ Inductive TonsConfig :=
 | TonsConfig_ι_order_answer 
 | TonsConfig_ι_process_queue 
 | TonsConfig_ι_send_notify 
+.
 
-. 
-Definition TonsConfigP := ( 
-I128 * I128 * I128 * I128 * I128 * I128 )%type . 
 
  
 Definition TonsConfig_get : forall (f: TonsConfig)(r: TonsConfigP ) , 
@@ -278,7 +333,8 @@ end .
  refine d3. 
  refine d4. 
  refine d5. 
- refine d6. Defined. 
+ refine d6. 
+Defined. 
 
  
 Coercion TonsConfig_get : TonsConfig >-> Funclass. 
@@ -313,7 +369,8 @@ end .
  refine d2. 
  refine d3. 
  refine d4. 
- refine d5. Defined. 
+ refine d5. 
+Defined. 
 
  
 Coercion DStock_get : DStock >-> Funclass. 
@@ -342,7 +399,8 @@ end .
 
  refine d1. 
  refine d2. 
- refine d3. Defined. 
+ refine d3. 
+Defined. 
 
  
 Coercion DTradingPair_get : DTradingPair >-> Funclass. 
@@ -368,7 +426,8 @@ end .
  destruct f. 
 
  refine d1. 
- refine d2. Defined. 
+ refine d2. 
+Defined. 
 
  
 Coercion FLeXSellArgsAddrs_get : FLeXSellArgsAddrs >-> Funclass. 
@@ -409,7 +468,8 @@ end .
  refine d4. 
  refine d5. 
  refine d6. 
- refine d7. Defined. 
+ refine d7. 
+Defined. 
 
  
 Coercion FLeXSellArgs_get : FLeXSellArgs >-> Funclass. 
@@ -596,59 +656,6 @@ end .
 Coercion dealer_get : dealer >-> Funclass. 
 
  
-Inductive Stock := 
-| Stock_ι_> 
-
-. 
-Definition StockP := ( 
-TIMESTAMP_DELAYP )%type . 
-
- 
-Definition Stock_get : forall (f: Stock)(r: StockP ) , 
-match f with 
-| Stock_ι_> => TIMESTAMP_DELAYP 
-
-end . 
- intros f r. 
- destruct r as  ( d1 , d2 ) . 
- destruct f. 
-
- refine d1. Defined. 
-
- 
-Coercion Stock_get : Stock >-> Funclass. 
-
- 
-Inductive FLeXClient := 
-| FLeXClient_ι_> 
-| FLeXClient_ι_) 
-| FLeXClient_ι_) 
-| FLeXClient_ι_} 
-
-. 
-Definition FLeXClientP := ( 
-TIMESTAMP_DELAYP * price_codeP * std_addrP * std_addrP )%type . 
-
- 
-Definition FLeXClient_get : forall (f: FLeXClient)(r: FLeXClientP ) , 
-match f with 
-| FLeXClient_ι_> => TIMESTAMP_DELAYP 
-| FLeXClient_ι_) => price_codeP 
-| FLeXClient_ι_) => std_addrP 
-| FLeXClient_ι_} => std_addrP 
-
-end . 
- intros f r. 
- destruct r as  ((( d1 , d2 ), d3), d4) . 
- destruct f. 
-
- refine d1. 
- refine d2. 
- refine d3. 
- refine d4. Defined. 
-
- 
-Coercion FLeXClient_get : FLeXClient >-> Funclass. 
 
  
 Class PruvendoRecord R F :=
@@ -676,7 +683,8 @@ refine (v, d2, d3, d4, d5, d6) .
  refine (d1, d2, d3, v, d5, d6) .
  refine (d1, d2, d3, d4, v, d6) .
  refine (d1, d2, d3, d4, d5, v) .
- Defined. 
+ Defined.
+
 Instance Tip3Config_set_Record : PruvendoRecord Tip3ConfigP Tip3Config :=
 {
   field_type := fun f => match f with 
@@ -688,8 +696,8 @@ Instance Tip3Config_set_Record : PruvendoRecord Tip3ConfigP Tip3Config :=
 | Tip3Config_ι_code => C 
 
 end;
-  getPruvendoRecord := @Tip3Config ;
-  setPruvendoRecord := @Tip3Config ;
+  getPruvendoRecord := @Tip3Config_get ;
+  setPruvendoRecord := @Tip3Config_set ;
 }. 
 Definition OrderRet_set : forall (f: OrderRet)  
 ( v : match f with 
@@ -705,6 +713,7 @@ refine (v, d2, d3) .
  refine (d1, v, d3) .
  refine (d1, d2, v) .
  Defined. 
+
 Instance OrderRet_set_Record : PruvendoRecord OrderRetP OrderRet :=
 {
   field_type := fun f => match f with 
@@ -713,8 +722,8 @@ Instance OrderRet_set_Record : PruvendoRecord OrderRetP OrderRet :=
 | OrderRet_ι_enqueued => I128 
 
 end;
-  getPruvendoRecord := @OrderRet ;
-  setPruvendoRecord := @OrderRet ;
+  getPruvendoRecord := @OrderRet_get ;
+  setPruvendoRecord := @OrderRet_set ;
 }. 
 Definition SellArgs_set : forall (f: SellArgs)  
 ( v : match f with 
@@ -735,8 +744,8 @@ Instance SellArgs_set_Record : PruvendoRecord SellArgsP SellArgs :=
 | SellArgs_ι_receive_wallet => addr_std_fixedP 
 
 end;
-  getPruvendoRecord := @SellArgs ;
-  setPruvendoRecord := @SellArgs ;
+  getPruvendoRecord := @SellArgs_get ;
+  setPruvendoRecord := @SellArgs_set ;
 }. 
 Definition SellInfo_set : forall (f: SellInfo)  
 ( v : match f with 
@@ -769,9 +778,10 @@ Instance SellInfo_set_Record : PruvendoRecord SellInfoP SellInfo :=
 | SellInfo_ι_lend_finish_time => I32 
 
 end;
-  getPruvendoRecord := @SellInfo ;
-  setPruvendoRecord := @SellInfo ;
+  getPruvendoRecord := @SellInfo_get ;
+  setPruvendoRecord := @SellInfo_set ;
 }. 
+
 Definition BuyInfo_set : forall (f: BuyInfo)  
 ( v : match f with 
 | BuyInfo_ι_original_amount => I128 
@@ -789,7 +799,8 @@ refine (v, d2, d3, d4, d5) .
  refine (d1, d2, v, d4, d5) .
  refine (d1, d2, d3, v, d5) .
  refine (d1, d2, d3, d4, v) .
- Defined. 
+Defined. 
+
 Instance BuyInfo_set_Record : PruvendoRecord BuyInfoP BuyInfo :=
 {
   field_type := fun f => match f with 
@@ -800,9 +811,10 @@ Instance BuyInfo_set_Record : PruvendoRecord BuyInfoP BuyInfo :=
 | BuyInfo_ι_answer_addr => addr_std_fixedP 
 
 end;
-  getPruvendoRecord := @BuyInfo ;
-  setPruvendoRecord := @BuyInfo ;
+  getPruvendoRecord := @BuyInfo_get ;
+  setPruvendoRecord := @BuyInfo_set ;
 }. 
+
 Definition DetailsInfo_set : forall (f: DetailsInfo)  
 ( v : match f with 
 | DetailsInfo_ι_price => I128 
@@ -828,9 +840,10 @@ Instance DetailsInfo_set_Record : PruvendoRecord DetailsInfoP DetailsInfo :=
 | DetailsInfo_ι_buy_amount => I128 
 
 end;
-  getPruvendoRecord := @DetailsInfo ;
-  setPruvendoRecord := @DetailsInfo ;
+  getPruvendoRecord := @DetailsInfo_get ;
+  setPruvendoRecord := @DetailsInfo_set ;
 }. 
+
 Definition DPrice_set : forall (f: DPrice)  
 ( v : match f with 
 | DPrice_ι_price_ => I128 
@@ -859,6 +872,7 @@ refine (v, d2, d3, d4, d5, d6, d7, d8, d9, d10) .
  refine (d1, d2, d3, d4, d5, d6, d7, d8, v, d10) .
  refine (d1, d2, d3, d4, d5, d6, d7, d8, d9, v) .
  Defined. 
+
 Instance DPrice_set_Record : PruvendoRecord DPriceP DPrice :=
 {
   field_type := fun f => match f with 
@@ -874,9 +888,10 @@ Instance DPrice_set_Record : PruvendoRecord DPriceP DPrice :=
 | DPrice_ι_tip3cfg_ => Tip3ConfigP 
 
 end;
-  getPruvendoRecord := @DPrice ;
-  setPruvendoRecord := @DPrice ;
+  getPruvendoRecord := @DPrice_get ;
+  setPruvendoRecord := @DPrice_set ;
 }. 
+
 Definition TonsConfig_set : forall (f: TonsConfig)  
 ( v : match f with 
 | TonsConfig_ι_transfer_tip3 => I128 
@@ -896,7 +911,8 @@ refine (v, d2, d3, d4, d5, d6) .
  refine (d1, d2, d3, v, d5, d6) .
  refine (d1, d2, d3, d4, v, d6) .
  refine (d1, d2, d3, d4, d5, v) .
- Defined. 
+Defined. 
+
 Instance TonsConfig_set_Record : PruvendoRecord TonsConfigP TonsConfig :=
 {
   field_type := fun f => match f with 
@@ -908,9 +924,10 @@ Instance TonsConfig_set_Record : PruvendoRecord TonsConfigP TonsConfig :=
 | TonsConfig_ι_send_notify => I128 
 
 end;
-  getPruvendoRecord := @TonsConfig ;
-  setPruvendoRecord := @TonsConfig ;
+  getPruvendoRecord := @TonsConfig_get ;
+  setPruvendoRecord := @TonsConfig_set ;
 }. 
+
 Definition DStock_set : forall (f: DStock)  
 ( v : match f with 
 | DStock_ι_deployer_pubkey_ => I256 
@@ -928,7 +945,8 @@ refine (v, d2, d3, d4, d5) .
  refine (d1, d2, v, d4, d5) .
  refine (d1, d2, d3, v, d5) .
  refine (d1, d2, d3, d4, v) .
- Defined. 
+Defined. 
+
 Instance DStock_set_Record : PruvendoRecord DStockP DStock :=
 {
   field_type := fun f => match f with 
@@ -939,9 +957,10 @@ Instance DStock_set_Record : PruvendoRecord DStockP DStock :=
 | DStock_ι_notify_addr_ => A 
 
 end;
-  getPruvendoRecord := @DStock ;
-  setPruvendoRecord := @DStock ;
+  getPruvendoRecord := @DStock_get ;
+  setPruvendoRecord := @DStock_set ;
 }. 
+
 Definition DTradingPair_set : forall (f: DTradingPair)  
 ( v : match f with 
 | DTradingPair_ι_stock_addr_ => A 
@@ -955,7 +974,8 @@ end) (r:  DTradingPairP ) , DTradingPairP.
 refine (v, d2, d3) .
  refine (d1, v, d3) .
  refine (d1, d2, v) .
- Defined. 
+Defined. 
+
 Instance DTradingPair_set_Record : PruvendoRecord DTradingPairP DTradingPair :=
 {
   field_type := fun f => match f with 
@@ -964,9 +984,10 @@ Instance DTradingPair_set_Record : PruvendoRecord DTradingPairP DTradingPair :=
 | DTradingPair_ι_deploy_value_ => I128 
 
 end;
-  getPruvendoRecord := @DTradingPair ;
-  setPruvendoRecord := @DTradingPair ;
+  getPruvendoRecord := @DTradingPair_get ;
+  setPruvendoRecord := @DTradingPair_set ;
 }. 
+
 Definition FLeXSellArgsAddrs_set : forall (f: FLeXSellArgsAddrs)  
 ( v : match f with 
 | FLeXSellArgsAddrs_ι_my_tip3_addr => A 
@@ -978,7 +999,8 @@ end) (r:  FLeXSellArgsAddrsP ) , FLeXSellArgsAddrsP.
  destruct f. 
 refine (v, d2) .
  refine (d1, v) .
- Defined. 
+Defined. 
+
 Instance FLeXSellArgsAddrs_set_Record : PruvendoRecord FLeXSellArgsAddrsP FLeXSellArgsAddrs :=
 {
   field_type := fun f => match f with 
@@ -986,9 +1008,10 @@ Instance FLeXSellArgsAddrs_set_Record : PruvendoRecord FLeXSellArgsAddrsP FLeXSe
 | FLeXSellArgsAddrs_ι_receive_wallet => A 
 
 end;
-  getPruvendoRecord := @FLeXSellArgsAddrs ;
-  setPruvendoRecord := @FLeXSellArgsAddrs ;
+  getPruvendoRecord := @FLeXSellArgsAddrs_get ;
+  setPruvendoRecord := @FLeXSellArgsAddrs_set ;
 }. 
+
 Definition FLeXSellArgs_set : forall (f: FLeXSellArgs)  
 ( v : match f with 
 | FLeXSellArgs_ι_price => I128 
@@ -1010,7 +1033,8 @@ refine (v, d2, d3, d4, d5, d6, d7) .
  refine (d1, d2, d3, d4, v, d6, d7) .
  refine (d1, d2, d3, d4, d5, v, d7) .
  refine (d1, d2, d3, d4, d5, d6, v) .
- Defined. 
+Defined. 
+
 Instance FLeXSellArgs_set_Record : PruvendoRecord FLeXSellArgsP FLeXSellArgs :=
 {
   field_type := fun f => match f with 
@@ -1023,9 +1047,10 @@ Instance FLeXSellArgs_set_Record : PruvendoRecord FLeXSellArgsP FLeXSellArgs :=
 | FLeXSellArgs_ι_price_code => C 
 
 end;
-  getPruvendoRecord := @FLeXSellArgs ;
-  setPruvendoRecord := @FLeXSellArgs ;
+  getPruvendoRecord := @FLeXSellArgs_get ;
+  setPruvendoRecord := @FLeXSellArgs_set ;
 }. 
+
 Definition FLeXBuyArgs_set : forall (f: FLeXBuyArgs)  
 ( v : match f with 
 | FLeXBuyArgs_ι_price => I128 
@@ -1047,7 +1072,8 @@ refine (v, d2, d3, d4, d5, d6, d7) .
  refine (d1, d2, d3, d4, v, d6, d7) .
  refine (d1, d2, d3, d4, d5, v, d7) .
  refine (d1, d2, d3, d4, d5, d6, v) .
- Defined. 
+Defined. 
+
 Instance FLeXBuyArgs_set_Record : PruvendoRecord FLeXBuyArgsP FLeXBuyArgs :=
 {
   field_type := fun f => match f with 
@@ -1060,9 +1086,10 @@ Instance FLeXBuyArgs_set_Record : PruvendoRecord FLeXBuyArgsP FLeXBuyArgs :=
 | FLeXBuyArgs_ι_my_tip3_addr => A 
 
 end;
-  getPruvendoRecord := @FLeXBuyArgs ;
-  setPruvendoRecord := @FLeXBuyArgs ;
+  getPruvendoRecord := @FLeXBuyArgs_get ;
+  setPruvendoRecord := @FLeXBuyArgs_set ;
 }. 
+
 Definition FLeXCancelArgs_set : forall (f: FLeXCancelArgs)  
 ( v : match f with 
 | FLeXCancelArgs_ι_price => I128 
@@ -1080,7 +1107,8 @@ refine (v, d2, d3, d4, d5) .
  refine (d1, d2, v, d4, d5) .
  refine (d1, d2, d3, v, d5) .
  refine (d1, d2, d3, d4, v) .
- Defined. 
+Defined. 
+
 Instance FLeXCancelArgs_set_Record : PruvendoRecord FLeXCancelArgsP FLeXCancelArgs :=
 {
   field_type := fun f => match f with 
@@ -1091,9 +1119,10 @@ Instance FLeXCancelArgs_set_Record : PruvendoRecord FLeXCancelArgsP FLeXCancelAr
 | FLeXCancelArgs_ι_price_code => C 
 
 end;
-  getPruvendoRecord := @FLeXCancelArgs ;
-  setPruvendoRecord := @FLeXCancelArgs ;
+  getPruvendoRecord := @FLeXCancelArgs_get ;
+  setPruvendoRecord := @FLeXCancelArgs_set ;
 }. 
+
 Definition DFLeXClient_set : forall (f: DFLeXClient)  
 ( v : match f with 
 | DFLeXClient_ι_owner_ => I256 
@@ -1113,7 +1142,8 @@ refine (v, d2, d3, d4, d5, d6) .
  refine (d1, d2, d3, v, d5, d6) .
  refine (d1, d2, d3, d4, v, d6) .
  refine (d1, d2, d3, d4, d5, v) .
- Defined. 
+Defined. 
+
 Instance DFLeXClient_set_Record : PruvendoRecord DFLeXClientP DFLeXClient :=
 {
   field_type := fun f => match f with 
@@ -1125,9 +1155,10 @@ Instance DFLeXClient_set_Record : PruvendoRecord DFLeXClientP DFLeXClient :=
 | DFLeXClient_ι_notify_addr_ => A 
 
 end;
-  getPruvendoRecord := @DFLeXClient ;
-  setPruvendoRecord := @DFLeXClient ;
+  getPruvendoRecord := @DFLeXClient_get ;
+  setPruvendoRecord := @DFLeXClient_set ;
 }. 
+
 Definition process_ret_set : forall (f: process_ret)  
 ( v : match f with 
 | process_ret_ι_sells_amount => I128 
@@ -1139,7 +1170,8 @@ end) (r:  process_retP ) , process_retP.
  destruct f. 
 refine (v, d2) .
  refine (d1, v) .
- Defined. 
+Defined. 
+
 Instance process_ret_set_Record : PruvendoRecord process_retP process_ret :=
 {
   field_type := fun f => match f with 
@@ -1147,9 +1179,10 @@ Instance process_ret_set_Record : PruvendoRecord process_retP process_ret :=
 | process_ret_ι_buys_amount => I128 
 
 end;
-  getPruvendoRecord := @process_ret ;
-  setPruvendoRecord := @process_ret ;
+  getPruvendoRecord := @process_ret_get ;
+  setPruvendoRecord := @process_ret_set ;
 }. 
+
 Definition dealer_set : forall (f: dealer)  
 ( v : match f with 
 | dealer_ι_tip3root_ => A 
@@ -1171,7 +1204,8 @@ refine (v, d2, d3, d4, d5, d6, d7) .
  refine (d1, d2, d3, d4, v, d6, d7) .
  refine (d1, d2, d3, d4, d5, v, d7) .
  refine (d1, d2, d3, d4, d5, d6, v) .
- Defined. 
+Defined. 
+
 Instance dealer_set_Record : PruvendoRecord dealerP dealer :=
 {
   field_type := fun f => match f with 
@@ -1184,64 +1218,18 @@ Instance dealer_set_Record : PruvendoRecord dealerP dealer :=
 | dealer_ι_buys_amount_ => I128 
 
 end;
-  getPruvendoRecord := @dealer ;
-  setPruvendoRecord := @dealer ;
+  getPruvendoRecord := @dealer_get ;
+  setPruvendoRecord := @dealer_set ;
 }. 
-Definition Stock_set : forall (f: Stock)  
-( v : match f with 
-| Stock_ι_> => TIMESTAMP_DELAYP 
 
-end) (r:  StockP ) , StockP. 
- intros. 
- destruct r as  ( d1 , d2 ) . 
- destruct f. 
-refine (v) .
- Defined. 
-Instance Stock_set_Record : PruvendoRecord StockP Stock :=
-{
-  field_type := fun f => match f with 
-| Stock_ι_> => TIMESTAMP_DELAYP 
 
-end;
-  getPruvendoRecord := @Stock ;
-  setPruvendoRecord := @Stock ;
-}. 
-Definition FLeXClient_set : forall (f: FLeXClient)  
-( v : match f with 
-| FLeXClient_ι_> => TIMESTAMP_DELAYP 
-| FLeXClient_ι_) => price_codeP 
-| FLeXClient_ι_) => std_addrP 
-| FLeXClient_ι_} => std_addrP 
-
-end) (r:  FLeXClientP ) , FLeXClientP. 
- intros. 
- destruct r as  ((( d1 , d2 ), d3), d4) . 
- destruct f. 
-refine (v, d2, d3, d4) .
- refine (d1, v, d3, d4) .
- refine (d1, d2, v, d4) .
- refine (d1, d2, d3, v) .
- Defined. 
-Instance FLeXClient_set_Record : PruvendoRecord FLeXClientP FLeXClient :=
-{
-  field_type := fun f => match f with 
-| FLeXClient_ι_> => TIMESTAMP_DELAYP 
-| FLeXClient_ι_) => price_codeP 
-| FLeXClient_ι_) => std_addrP 
-| FLeXClient_ι_} => std_addrP 
-
-end;
-  getPruvendoRecord := @FLeXClient ;
-  setPruvendoRecord := @FLeXClient ;
-}. 
 Notation "'{$$' r 'With' y ':=' v '$$}'" := (@setPruvendoRecord _ _ _ y v r) : struct_scope.
  
 Lemma no_Tip3Config_eq : forall (f1 f2: Tip3Config) (v2: field_type f2) (r : Tip3ConfigP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
-intros.
-destruct r. destruct p.
+intros. destruct r as  ((((( d1 , d2 ), d3), d4), d5), d6) .
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1249,15 +1237,16 @@ Lemma Tip3Config_eq : forall (f2: Tip3Config) (v2: field_type f2) (r : Tip3Confi
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ((((( d1 , d2 ), d3), d4), d5), d6) .
 destruct f2; auto.
-Qed. 
+Qed.
+
 Lemma no_OrderRet_eq : forall (f1 f2: OrderRet) (v2: field_type f2) (r : OrderRetP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (( d1 , d2 ), d3) .
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1265,15 +1254,16 @@ Lemma OrderRet_eq : forall (f2: OrderRet) (v2: field_type f2) (r : OrderRetP ) ,
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (( d1 , d2 ), d3) .
 destruct f2; auto.
-Qed. 
+Qed.
+ 
 Lemma no_SellArgs_eq : forall (f1 f2: SellArgs) (v2: field_type f2) (r : SellArgsP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ( d1 , d2 ) .
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1281,15 +1271,15 @@ Lemma SellArgs_eq : forall (f2: SellArgs) (v2: field_type f2) (r : SellArgsP ) ,
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ( d1 , d2 ) .
 destruct f2; auto.
-Qed. 
+Qed.
+ 
 Lemma no_SellInfo_eq : forall (f1 f2: SellInfo) (v2: field_type f2) (r : SellInfoP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
-intros.
-destruct r. destruct p.
+intros. destruct r as  ((((( d1 , d2 ), d3), d4), d5), d6) .
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1297,15 +1287,16 @@ Lemma SellInfo_eq : forall (f2: SellInfo) (v2: field_type f2) (r : SellInfoP ) ,
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ((((( d1 , d2 ), d3), d4), d5), d6) .
 destruct f2; auto.
 Qed. 
+
 Lemma no_BuyInfo_eq : forall (f1 f2: BuyInfo) (v2: field_type f2) (r : BuyInfoP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((( d1 , d2 ), d3), d4), d5).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1313,15 +1304,16 @@ Lemma BuyInfo_eq : forall (f2: BuyInfo) (v2: field_type f2) (r : BuyInfoP ) ,
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((( d1 , d2 ), d3), d4), d5).
 destruct f2; auto.
 Qed. 
+
 Lemma no_DetailsInfo_eq : forall (f1 f2: DetailsInfo) (v2: field_type f2) (r : DetailsInfoP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ((( d1 , d2 ), d3), d4).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1329,15 +1321,17 @@ Lemma DetailsInfo_eq : forall (f2: DetailsInfo) (v2: field_type f2) (r : Details
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ((( d1 , d2 ), d3), d4).
 destruct f2; auto.
 Qed. 
+
 Lemma no_DPrice_eq : forall (f1 f2: DPrice) (v2: field_type f2) (r : DPriceP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+ destruct r as  ((((((((( d1 , d2 ), d3), d4), d5), d6), d7), d8), d9), d10) . 
+
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1345,15 +1339,16 @@ Lemma DPrice_eq : forall (f2: DPrice) (v2: field_type f2) (r : DPriceP ) ,
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+ destruct r as  ((((((((( d1 , d2 ), d3), d4), d5), d6), d7), d8), d9), d10) . 
 destruct f2; auto.
 Qed. 
+
 Lemma no_TonsConfig_eq : forall (f1 f2: TonsConfig) (v2: field_type f2) (r : TonsConfigP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ((((( d1 , d2 ), d3), d4), d5), d6).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1361,15 +1356,16 @@ Lemma TonsConfig_eq : forall (f2: TonsConfig) (v2: field_type f2) (r : TonsConfi
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ((((( d1 , d2 ), d3), d4), d5), d6).
 destruct f2; auto.
 Qed. 
+
 Lemma no_DStock_eq : forall (f1 f2: DStock) (v2: field_type f2) (r : DStockP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((( d1 , d2 ), d3), d4), d5).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1377,15 +1373,16 @@ Lemma DStock_eq : forall (f2: DStock) (v2: field_type f2) (r : DStockP ) ,
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((( d1 , d2 ), d3), d4), d5).
 destruct f2; auto.
 Qed. 
+
 Lemma no_DTradingPair_eq : forall (f1 f2: DTradingPair) (v2: field_type f2) (r : DTradingPairP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (( d1 , d2 ), d3).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1393,15 +1390,16 @@ Lemma DTradingPair_eq : forall (f2: DTradingPair) (v2: field_type f2) (r : DTrad
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (( d1 , d2 ), d3).
 destruct f2; auto.
 Qed. 
+
 Lemma no_FLeXSellArgsAddrs_eq : forall (f1 f2: FLeXSellArgsAddrs) (v2: field_type f2) (r : FLeXSellArgsAddrsP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ( d1 , d2 ).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1409,15 +1407,16 @@ Lemma FLeXSellArgsAddrs_eq : forall (f2: FLeXSellArgsAddrs) (v2: field_type f2) 
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ( d1 , d2 ).
 destruct f2; auto.
 Qed. 
+
 Lemma no_FLeXSellArgs_eq : forall (f1 f2: FLeXSellArgs) (v2: field_type f2) (r : FLeXSellArgsP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((((( d1 , d2 ), d3), d4), d5), d6), d7).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1425,15 +1424,16 @@ Lemma FLeXSellArgs_eq : forall (f2: FLeXSellArgs) (v2: field_type f2) (r : FLeXS
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((((( d1 , d2 ), d3), d4), d5), d6), d7).
 destruct f2; auto.
 Qed. 
+
 Lemma no_FLeXBuyArgs_eq : forall (f1 f2: FLeXBuyArgs) (v2: field_type f2) (r : FLeXBuyArgsP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((((( d1 , d2 ), d3), d4), d5), d6), d7).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1441,15 +1441,16 @@ Lemma FLeXBuyArgs_eq : forall (f2: FLeXBuyArgs) (v2: field_type f2) (r : FLeXBuy
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((((( d1 , d2 ), d3), d4), d5), d6), d7).
 destruct f2; auto.
 Qed. 
+
 Lemma no_FLeXCancelArgs_eq : forall (f1 f2: FLeXCancelArgs) (v2: field_type f2) (r : FLeXCancelArgsP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((( d1 , d2 ), d3), d4), d5).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1457,15 +1458,16 @@ Lemma FLeXCancelArgs_eq : forall (f2: FLeXCancelArgs) (v2: field_type f2) (r : F
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((( d1 , d2 ), d3), d4), d5).
 destruct f2; auto.
 Qed. 
+
 Lemma no_DFLeXClient_eq : forall (f1 f2: DFLeXClient) (v2: field_type f2) (r : DFLeXClientP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ((((( d1 , d2 ), d3), d4), d5), d6).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1473,7 +1475,7 @@ Lemma DFLeXClient_eq : forall (f2: DFLeXClient) (v2: field_type f2) (r : DFLeXCl
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ((((( d1 , d2 ), d3), d4), d5), d6).
 destruct f2; auto.
 Qed. 
 
@@ -1482,7 +1484,7 @@ f1 <> f2 ->
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ( d1 , d2 ).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1490,18 +1492,16 @@ Lemma process_ret_eq : forall (f2: process_ret) (v2: field_type f2) (r : process
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  ( d1 , d2 ).
 destruct f2; auto.
 Qed. 
-
-
 
 Lemma no_dealer_eq : forall (f1 f2: dealer) (v2: field_type f2) (r : dealerP ) ,  
 f1 <> f2 -> 
 f1 {$$ r With f2 := v2 $$} = f1 r.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((((( d1 , d2 ), d3), d4), d5), d6), d7).
 destruct f1; destruct f2; auto; try contradiction.
 Qed.
 
@@ -1509,41 +1509,40 @@ Lemma dealer_eq : forall (f2: dealer) (v2: field_type f2) (r : dealerP ) ,
 f2 {$$ r With f2 := v2 $$} = v2.
 Proof.
 intros.
-destruct r. destruct p.
+destruct r as  (((((( d1 , d2 ), d3), d4), d5), d6), d7).
 destruct f2; auto.
 Qed. 
 
-Lemma no_Stock_eq : forall (f1 f2: Stock) (v2: field_type f2) (r : StockP ) ,  
-f1 <> f2 -> 
-f1 {$$ r With f2 := v2 $$} = f1 r.
-Proof.
-intros.
-destruct r. destruct p.
-destruct f1; destruct f2; auto; try contradiction.
-Qed.
 
-Lemma Stock_eq : forall (f2: Stock) (v2: field_type f2) (r : StockP ) ,  
-f2 {$$ r With f2 := v2 $$} = v2.
-Proof.
-intros.
-destruct r. destruct p.
-destruct f2; auto.
-Qed. 
+Notation " 'fst0' x " := ( x ) (at level 60, right associativity).
+Notation " 'fst1' x " := ( fst ( fst0 x ) ) (at level 60, right associativity).
+Notation " 'fst2' x " := ( fst ( fst1 x ) ) (at level 60, right associativity).
+Notation " 'fst3' x " := ( fst ( fst2 x ) ) (at level 60, right associativity).
+Notation " 'fst4' x " := ( fst ( fst3 x ) ) (at level 60, right associativity).
+Notation " 'fst5' x " := ( fst ( fst4 x ) ) (at level 60, right associativity).
+Notation " 'fst6' x " := ( fst ( fst5 x ) ) (at level 60, right associativity).
+Notation " 'fst7' x " := ( fst ( fst6 x ) ) (at level 60, right associativity).
+Notation " 'fst8' x " := ( fst ( fst7 x ) ) (at level 60, right associativity).
+Notation " 'fst9' x " := ( fst ( fst8 x ) ) (at level 60, right associativity).
+Notation " 'fst10' x " := ( fst ( fst9 x ) ) (at level 60, right associativity).
+Notation " 'fst11' x " := ( fst ( fst10 x ) ) (at level 60, right associativity).
+Notation " 'fst12' x " := ( fst ( fst11 x ) ) (at level 60, right associativity).
+Notation " 'fst13' x " := ( fst ( fst12 x ) ) (at level 60, right associativity).
+Notation " 'fst14' x " := ( fst ( fst13 x ) ) (at level 60, right associativity).
+Notation " 'fst15' x " := ( fst ( fst14 x ) ) (at level 60, right associativity).
+Notation " 'fst16' x " := ( fst ( fst15 x ) ) (at level 60, right associativity).
+Notation " 'fst17' x " := ( fst ( fst16 x ) ) (at level 60, right associativity).
+Notation " 'fst18' x " := ( fst ( fst17 x ) ) (at level 60, right associativity).
+Notation " 'fst19' x " := ( fst ( fst18 x ) ) (at level 60, right associativity).
+Notation " 'fst20' x " := ( fst ( fst19 x ) ) (at level 60, right associativity).
 
-Lemma no_FLeXClient_eq : forall (f1 f2: FLeXClient) (v2: field_type f2) (r : FLeXClientP ) ,  
-f1 <> f2 -> 
-f1 {$$ r With f2 := v2 $$} = f1 r.
-Proof.
-intros.
-destruct r. destruct p.
-destruct f1; destruct f2; auto; try contradiction.
-Qed.
+Compute fst6 ("1","2","3","4","5","6","7")%string.
 
-Lemma FLeXClient_eq : forall (f2: FLeXClient) (v2: field_type f2) (r : FLeXClientP ) ,  
-f2 {$$ r With f2 := v2 $$} = v2.
-Proof.
-intros.
-destruct r. destruct p.
-destruct f2; auto.
-Qed. 
+
+
+
+
+
+
+
 
