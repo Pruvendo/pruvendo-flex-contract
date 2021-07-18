@@ -27,11 +27,39 @@
  Variables A B C S Bs : Type. 
  Variables L M H Q R : Type -> Type. (* H - handle<type> , Q - queue<type> , R - ref<type> *) 
  Variables HM P : Type -> Type -> Type. 
- Variables T G Sl Bt Bi IFLeXNotifyPtrP : Type. 
+ Variables T G Sl Bt Bi : Type. 
  
  (* Variables TipAccountP PadawanP ProposalResolverP : Type . *) 
  
 
+(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
+(* 2 *) Definition TickTockP := 
+ ( B * 
+ B )%type .
+(* 1 *) Inductive allowance_infoFields := | allowance_info_ι_spender | allowance_info_ι_remainingTokens .
+(* 2 *) Definition allowance_infoP := 
+ ( A * 
+ I256 )%type .
+(* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
+(* 2 *) Definition StateInitP := 
+ ( M I8 * 
+ M TickTockP * 
+ C * 
+ C * 
+ C )%type .
+(* 1 *) Inductive DTONTokenWalletFields := | DTONTokenWallet_ι_name_ | DTONTokenWallet_ι_symbol_ | DTONTokenWallet_ι_decimals_ | DTONTokenWallet_ι_balance_ | DTONTokenWallet_ι_root_public_key_ | DTONTokenWallet_ι_wallet_public_key_ | DTONTokenWallet_ι_root_address_ | DTONTokenWallet_ι_owner_address_ | DTONTokenWallet_ι_code_ | DTONTokenWallet_ι_allowance_ | DTONTokenWallet_ι_workchain_id_ .
+(* 2 *) Definition DTONTokenWalletP := 
+ ( (L I8) * 
+ (L I8) * 
+ I8 * 
+ I128 * 
+ I256 * 
+ I256 * 
+ A * 
+ M A * 
+ C * 
+ M allowance_infoP * 
+ I8 )%type .
 (* 1 *) Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
 (* 2 *) Definition TonsConfigP := 
  ( I128 * 
@@ -57,15 +85,16 @@
  ( I32 * 
  I128 * 
  I128 )%type .
-(* 1 *) Inductive dealerFields := | dealer_ι_tip3root_ | dealer_ι_notify_addr_ | dealer_ι_price_ | dealer_ι_deals_limit_ | dealer_ι_tons_cfg_ | dealer_ι_sells_amount_ | dealer_ι_buys_amount_ .
+(* 1 *) Inductive dealerFields := | dealer_ι_tip3root_ | dealer_ι_notify_addr_ | dealer_ι_price_ | dealer_ι_deals_limit_ | dealer_ι_tons_cfg_ | dealer_ι_sells_amount_ | dealer_ι_buys_amount_ | dealer_ι_ret_ .
 (* 2 *) Definition dealerP := 
  ( A * 
- (* IFLeXNotifyPtrP *) I * 
+ I16 (* IFLeXNotifyPtrP *) * 
  I128 * 
  I * 
  TonsConfigP * 
  I128 * 
- I128 )%type .
+ I128 * 
+ M OrderRetP )%type .
 (* 1 *) Inductive FLeXSellArgsAddrsFields := | FLeXSellArgsAddrs_ι_my_tip3_addr | FLeXSellArgsAddrs_ι_receive_wallet .
 (* 2 *) Definition FLeXSellArgsAddrsP := 
  ( A * 
@@ -138,17 +167,22 @@
  TonsConfigP * 
  A * 
  A )%type .
-(* 1 *) Inductive DFLeXFields := | DFLeX_ι_deployer_pubkey_ | DFLeX_ι_tons_cfg_ | DFLeX_ι_min_amount_ | DFLeX_ι_deals_limit_ | DFLeX_ι_notify_addr_ .
+(* 1 *) Inductive DFLeXFields := | DFLeX_ι_deployer_pubkey_ | DFLeX_ι_tons_cfg_ | DFLeX_ι_pair_code_ | DFLeX_ι_xchg_pair_code_ | DFLeX_ι_price_code_ | DFLeX_ι_xchg_price_code_ | DFLeX_ι_min_amount_ | DFLeX_ι_deals_limit_ | DFLeX_ι_notify_addr_ .
 (* 2 *) Definition DFLeXP := 
  ( I256 * 
  TonsConfigP * 
+ M C * 
+ M C * 
+ M C * 
+ M C * 
  I128 * 
  I8 * 
  A )%type .
-(* 1 *) Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_buys_amount .
+(* 1 *) Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_buys_amount | process_ret_ι_ret_ .
 (* 2 *) Definition process_retP := 
  ( I128 * 
- I128 )%type .
+ I128 * 
+ M OrderRetP )%type .
 (* 1 *) Inductive SellArgsFields := | SellArgs_ι_amount | SellArgs_ι_receive_wallet .
 (* 2 *) Definition SellArgsP := 
  ( I128 * 
@@ -167,7 +201,7 @@
  addr_std_fixedP * 
  I128 * 
  I8 * 
- (* IFLeXNotifyPtrP *) I8 * 
+ I16 (* IFLeXNotifyPtrP *) * 
  I8 * 
  TonsConfigP * 
  C * 
@@ -199,14 +233,14 @@
  I128 * 
  I128 )%type .
 (* 1 *) Inductive DPriceXchgFields := | DPriceXchg_ι_price_ | DPriceXchg_ι_sells_amount_ | DPriceXchg_ι_buys_amount_ | DPriceXchg_ι_flex_ | DPriceXchg_ι_min_amount_ | DPriceXchg_ι_deals_limit_ | DPriceXchg_ι_notify_addr_ | DPriceXchg_ι_workchain_id_ | DPriceXchg_ι_tons_cfg_ | DPriceXchg_ι_tip3_code_ | DPriceXchg_ι_major_tip3cfg_ | DPriceXchg_ι_minor_tip3cfg_ .
-(* 2 *) Definition DPriceXchgP :=
+(* 2 *) Definition DPriceXchgP := 
  ( RationalPriceP * 
  I128 * 
  I128 * 
  addr_std_fixedP * 
  I128 * 
  I8 * 
- (* IFLeXNotifyPtrP *) I8 * 
+ I16 (* IFLeXNotifyPtrP *) * 
  I8 * 
  TonsConfigP * 
  C * 
@@ -225,14 +259,45 @@
  I128 )%type .
 (* 1 *) Inductive VMCommitFields := | VMCommit_ι_dealer .
 (* 2 *) Definition VMCommitP := 
- ( dealerP )%type . 
-(* 1 *) Inductive LocalStateFields := 
-| LocalState_ι_uint256 
-| LocalState_ι_Grams
-.
+ ( dealerP )%type .
+(* 1 *) Inductive LocalStateFields := | LocalState_ι_uint256 | LocalState_ι_cell | LocalState_ι_TonsConfig | LocalState_ι_address | LocalState_ι_uint128 | LocalState_ι_StateInit | LocalState_ι_DTradingPair | LocalState_ι_handle_ITradingPair_ | LocalState_ι_DXchgPair | LocalState_ι_handle_IXchgPair_ | LocalState_ι_parse_FLeXSellArgs_ | LocalState_ι_handle_IPrice_ | LocalState_ι_SellArgs | LocalState_ι_parse_FLeXBuyArgs_ | LocalState_ι_price_addr | LocalState_ι_parse_FLeXCancelArgs_ | LocalState_ι_parse_FLeXXchgCancelArgs_ | LocalState_ι_handle_IPriceXchg_ | LocalState_ι_bool_t | LocalState_ι_parse_FLeXXchgArgs_ | LocalState_ι_PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ | LocalState_ι_uint8 | LocalState_ι_Tip3Config | LocalState_ι_DPrice | LocalState_ι_DPriceXchg | LocalState_ι_tuple_address_address | LocalState_ι_uint32 | LocalState_ι_unsigned | LocalState_ι_OrderInfo | LocalState_ι_int | LocalState_ι_optional_uint128_ | LocalState_ι_bool | LocalState_ι_optional_OrderInfoWithIdx_ | LocalState_ι_queue_OrderInfo_ | LocalState_ι_pair_unsigned_OrderInfo_ .
 (* 2 *) Definition LocalStateP := 
- ( HM string I256  * 
- HM string G )%type .
+ ( HM string I256 * 
+ HM string C * 
+ HM string TonsConfigP * 
+ HM string A * 
+ HM string I128 * 
+ HM string StateInitP * 
+ HM string DTradingPairP * 
+ HM string I16 (* handle_ITradingPair_P *) * 
+ HM string DXchgPairP * 
+ HM string I16 (* handle_IXchgPair_P *) * 
+ HM string I16 (* parse_FLeXSellArgs_P *) * 
+ HM string I16 (* handle_IPrice_P *) * 
+ HM string SellArgsP * 
+ HM string I16 (* parse_FLeXBuyArgs_P *) * 
+ HM string I16 (* handle_IPrice_P *) * 
+ HM string I16 (* parse_FLeXCancelArgs_P *) * 
+ HM string I16 (* parse_FLeXXchgCancelArgs_P *) * 
+ HM string I16 (* handle_IPriceXchg_P *) * 
+ HM string B * 
+ HM string I16 (* parse_FLeXXchgArgs_P *) * 
+ HM string PayloadArgsP * 
+ HM string I16 (* handle_ITONTokenWallet_P *) * 
+ HM string I8 * 
+ HM string Tip3ConfigP * 
+ HM string DPriceP * 
+ HM string DPriceXchgP * 
+ HM string ( A * A ) * 
+ HM string I32 * 
+ HM string I * 
+ HM string OrderInfoP * 
+ HM string I * 
+ HM string ( M I128 ) * 
+ HM string B * 
+ HM string ( M ( I * OrderInfoP ) (* OrderInfoWithIdxP *) ) * (* pair<unsigned, OrderInfo> *)
+ HM string I16 (* OrderInfoP *) * 
+ HM string ( I * OrderInfoP )(* pair_unsigned_OrderInfo_P *) )%type .
 (* 1 *) Inductive LedgerFields := | Ledger_ι_dealer | Ledger_ι_VMCommit | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
 (* 2 *) Definition LedgerP := 
  ( dealerP * 
@@ -257,6 +322,18 @@ End RecordsDefinitions .
  
  Definition IFLeXNotifyPtrP := XInteger . 
 
+Definition TickTock := @ TickTockP
+XBool
+.
+Definition allowance_info := @ allowance_infoP
+XInteger256 XAddress
+.
+Definition StateInit := @ StateInitP
+XInteger8 XBool TvmCell XMaybe
+.
+Definition DTONTokenWallet := @ DTONTokenWalletP
+XInteger8 XInteger128 XInteger256 XAddress TvmCell XList XMaybe
+.
 Definition TonsConfig := @ TonsConfigP
 XInteger128
 .
@@ -271,7 +348,7 @@ XInteger32 XInteger128
 .
 Print dealerP.
 Definition dealer := @ dealerP
-XInteger XInteger128 XAddress
+XInteger    XInteger16     XInteger32 XInteger128 XAddress XMaybe
 .
 Definition FLeXSellArgsAddrs := @ FLeXSellArgsAddrsP
 XAddress
@@ -298,10 +375,10 @@ Definition DFLeXClient := @ DFLeXClientP
 XInteger8 XInteger128 XInteger256 XAddress TvmCell
 .
 Definition DFLeX := @ DFLeXP
-XInteger8 XInteger128 XInteger256 XAddress
+XInteger8 XInteger128 XInteger256 XAddress TvmCell XMaybe
 .
 Definition process_ret := @ process_retP
-XInteger128
+XInteger32 XInteger128 XMaybe
 .
 Definition SellArgs := @ SellArgsP
 XInteger8 XInteger128 XInteger256
@@ -309,8 +386,9 @@ XInteger8 XInteger128 XInteger256
 Definition DetailsInfo := @ DetailsInfoP
 XInteger128
 .
+Print DPriceP.
 Definition DPrice := @ DPriceP
-XInteger8 XInteger128 XInteger256 XAddress TvmCell XString
+XInteger8    XInteger16    XInteger128 XInteger256 XAddress TvmCell XString
 .
 Definition RationalPrice := @ RationalPriceP
 XInteger128
@@ -324,8 +402,9 @@ XInteger8 XInteger32 XInteger128 XInteger256
 Definition DetailsInfoXchg := @ DetailsInfoXchgP
 XInteger128
 .
+Print DPriceXchgP.
 Definition DPriceXchg := @ DPriceXchgP
-XInteger8 XInteger128 XInteger256 XAddress TvmCell XString
+XInteger8   XInteger16    XInteger128 XInteger256 XAddress TvmCell XString
 .
 Definition DTradingPair := @ DTradingPairP
 XInteger128 XAddress
@@ -333,18 +412,26 @@ XInteger128 XAddress
 Definition DXchgPair := @ DXchgPairP
 XInteger128 XAddress
 .
+Print VMCommitP.
 Definition VMCommit := @ VMCommitP
-XInteger XInteger128 XAddress
-.
-
-Print LocalStateP.
+XInteger    XInteger16      XInteger32 XInteger128 XAddress XMaybe
+. 
+Print LocalStateP . 
 Definition LocalState := @ LocalStateP
-XInteger256 XHMap XInteger
+XInteger XInteger8   XInteger16   XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
 .
-Print LedgerP.
+Print LedgerP .
 Definition Ledger := @ LedgerP
-XInteger XInteger128 XInteger256 XAddress XHMap XInteger 
+XInteger XInteger8   XInteger16   XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
 .
+Global Instance TickTock_default : XDefault TickTock := { 
+  	 default := ( default , default ) } .
+Global Instance allowance_info_default : XDefault allowance_info := { 
+  	 default := ( default , default ) } .
+Global Instance StateInit_default : XDefault StateInit := { 
+  	 default := ( default , default , default , default , default ) } .
+Global Instance DTONTokenWallet_default : XDefault DTONTokenWallet := { 
+  	 default := ( default , default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance TonsConfig_default : XDefault TonsConfig := { 
   	 default := ( default , default , default , default , default , default ) } .
 Global Instance addr_std_fixed_default : XDefault addr_std_fixed := { 
@@ -352,9 +439,9 @@ Global Instance addr_std_fixed_default : XDefault addr_std_fixed := {
 Global Instance OrderInfo_default : XDefault OrderInfo := { 
   	 default := ( default , default , default , default , default , default ) } .
 Global Instance OrderRet_default : XDefault OrderRet := { 
-  	 default := ( default , default , default ) } .
-Global Instance dealer_default : XDefault dealer := {
-  	 default := ( default , default , default , default , default , default , default ) } .
+  	 default := ( default , default , default ) } . 
+Global Instance dealer_default : XDefault dealer := { 
+  	 default := ( default , default , default , default , default , default , default , default ) } .
 Global Instance FLeXSellArgsAddrs_default : XDefault FLeXSellArgsAddrs := { 
   	 default := ( default , default ) } .
 Global Instance Tip3Config_default : XDefault Tip3Config := { 
@@ -373,15 +460,17 @@ Global Instance FLeXXchgCancelArgs_default : XDefault FLeXXchgCancelArgs := {
 Global Instance DFLeXClient_default : XDefault DFLeXClient := { 
   	 default := ( default , default , default , default , default , default , default ) } .
 Global Instance DFLeX_default : XDefault DFLeX := { 
-  	 default := ( default , default , default , default , default ) } .
+  	 default := ( default , default , default , default , default , default , default , default , default ) } .
 Global Instance process_ret_default : XDefault process_ret := { 
-  	 default := ( default , default ) } .
+  	 default := ( default , default , default ) } .
 Global Instance SellArgs_default : XDefault SellArgs := { 
   	 default := ( default , default ) } .
 Global Instance DetailsInfo_default : XDefault DetailsInfo := { 
   	 default := ( default , default , default , default ) } .
-Global Instance DPrice_default : XDefault DPrice := {
-  	 default := ( default , default , default , default , default , default , default , default , default , default , default ) } .
+Global Instance DPrice_default : XDefault DPrice := { 
+  	 default := ( default , default , default , default , default , 
+                  default , default , default , default , default , 
+                  default ) } .
 Global Instance RationalPrice_default : XDefault RationalPrice := { 
   	 default := ( default , default ) } .
 Global Instance PayloadArgs_default : XDefault PayloadArgs := { 
@@ -399,7 +488,7 @@ Global Instance DXchgPair_default : XDefault DXchgPair := {
 Global Instance VMCommit_default : XDefault VMCommit := { 
   	 default := ( default ) } .
 Global Instance LocalState_default : XDefault LocalState := { 
-  	 default := ( default , default ) } .
+  	 default := ( default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance Ledger_default : XDefault Ledger := { 
   	 default := ( default , default , default , default ) } .
 
@@ -449,6 +538,112 @@ Notation " 'fst37' x " := ( fst ( fst36 x ) ) (at level 60, right associativity)
 Notation " 'fst38' x " := ( fst ( fst37 x ) ) (at level 60, right associativity).
 Notation " 'fst39' x " := ( fst ( fst38 x ) ) (at level 60, right associativity).
 Notation " 'fst40' x " := ( fst ( fst39 x ) ) (at level 60, right associativity).
+(* 3 *) Definition TickTock_field_type f : Type :=  
+match f with | TickTock_ι_tick => XBool | TickTock_ι_tock => XBool end .
+
+Class Countable (X: Type) :=
+{
+   rength : nat;
+   rth : nat -> X -> {t: Type & t}
+}.
+
+(* 4 *) Definition TickTock_get (f: TickTockFields )(r: TickTock ) :  TickTock_field_type f := 
+ match f with 
+ | TickTock_ι_tick => fst1 r 
+ | TickTock_ι_tock => snd r 
+ end .
+
+(* 5 *) Coercion TickTock_get : TickTockFields >-> Funclass .
+(* 6 *) Definition TickTock_set (f: TickTockFields ) 
+(v: TickTock_field_type f) (r: TickTock ): TickTock  :=
+  match f, v with 
+ | TickTock_ι_tick , v' => ( v' , snd r ) 
+ | TickTock_ι_tock , v' => ( fst1 r , v' ) 
+ end .
+(* 7 *) Global Instance TickTock_PruvendoRecord : PruvendoRecord TickTock TickTockFields :=
+{
+  field_type := TickTock_field_type; 
+  getPruvendoRecord := @TickTock_get ;
+  setPruvendoRecord := @TickTock_set ;
+} .
+(* 3 *) Definition allowance_info_field_type f : Type :=  
+match f with | allowance_info_ι_spender => XAddress | allowance_info_ι_remainingTokens => XInteger256 end .
+(* 4 *) Definition allowance_info_get (f: allowance_infoFields )(r: allowance_info ) :  allowance_info_field_type f := 
+ match f with | allowance_info_ι_spender => fst1 r 
+ | allowance_info_ι_remainingTokens => snd r 
+ end .
+(* 5 *) Coercion allowance_info_get : allowance_infoFields >-> Funclass .
+(* 6 *) Definition allowance_info_set (f: allowance_infoFields ) 
+(v: allowance_info_field_type f) (r: allowance_info ): allowance_info  :=
+  match f, v with | allowance_info_ι_spender , v' => ( v' , snd r ) 
+ | allowance_info_ι_remainingTokens , v' => ( fst1 r , v' ) 
+ end .
+(* 7 *) Global Instance allowance_info_PruvendoRecord : PruvendoRecord allowance_info allowance_infoFields :=
+{
+  field_type := allowance_info_field_type; 
+  getPruvendoRecord := @allowance_info_get ;
+  setPruvendoRecord := @allowance_info_set ;
+} .
+(* 3 *) Definition StateInit_field_type f : Type :=  
+match f with | StateInit_ι_split_depth => XMaybe XInteger8 | StateInit_ι_special => XMaybe TickTock | StateInit_ι_code => TvmCell | StateInit_ι_data => TvmCell | StateInit_ι_library => TvmCell end .
+(* 4 *) Definition StateInit_get (f: StateInitFields )(r: StateInit ) :  StateInit_field_type f := 
+ match f with | StateInit_ι_split_depth => fst4 r 
+ | StateInit_ι_special => snd ( fst3 r ) 
+ | StateInit_ι_code => snd ( fst2 r ) 
+ | StateInit_ι_data => snd ( fst1 r ) 
+ | StateInit_ι_library => snd r 
+ end .
+(* 5 *) Coercion StateInit_get : StateInitFields >-> Funclass .
+(* 6 *) Definition StateInit_set (f: StateInitFields ) 
+(v: StateInit_field_type f) (r: StateInit ): StateInit  :=
+  match f, v with | StateInit_ι_split_depth , v' => ( v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | StateInit_ι_special , v' => ( fst4 r , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | StateInit_ι_code , v' => ( fst4 r , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | StateInit_ι_data , v' => ( fst4 r , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | StateInit_ι_library , v' => ( fst4 r , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+ end .
+(* 7 *) Global Instance StateInit_PruvendoRecord : PruvendoRecord StateInit StateInitFields :=
+{
+  field_type := StateInit_field_type; 
+  getPruvendoRecord := @StateInit_get ;
+  setPruvendoRecord := @StateInit_set ;
+} .
+(* 3 *) Definition DTONTokenWallet_field_type f : Type :=  
+match f with | DTONTokenWallet_ι_name_ => XList XInteger8 | DTONTokenWallet_ι_symbol_ => XList XInteger8 | DTONTokenWallet_ι_decimals_ => XInteger8 | DTONTokenWallet_ι_balance_ => XInteger128 | DTONTokenWallet_ι_root_public_key_ => XInteger256 | DTONTokenWallet_ι_wallet_public_key_ => XInteger256 | DTONTokenWallet_ι_root_address_ => XAddress | DTONTokenWallet_ι_owner_address_ => XMaybe XAddress | DTONTokenWallet_ι_code_ => TvmCell | DTONTokenWallet_ι_allowance_ => XMaybe allowance_info | DTONTokenWallet_ι_workchain_id_ => XInteger8 end .
+(* 4 *) Definition DTONTokenWallet_get (f: DTONTokenWalletFields )(r: DTONTokenWallet ) :  DTONTokenWallet_field_type f := 
+ match f with | DTONTokenWallet_ι_name_ => fst10 r 
+ | DTONTokenWallet_ι_symbol_ => snd ( fst9 r ) 
+ | DTONTokenWallet_ι_decimals_ => snd ( fst8 r ) 
+ | DTONTokenWallet_ι_balance_ => snd ( fst7 r ) 
+ | DTONTokenWallet_ι_root_public_key_ => snd ( fst6 r ) 
+ | DTONTokenWallet_ι_wallet_public_key_ => snd ( fst5 r ) 
+ | DTONTokenWallet_ι_root_address_ => snd ( fst4 r ) 
+ | DTONTokenWallet_ι_owner_address_ => snd ( fst3 r ) 
+ | DTONTokenWallet_ι_code_ => snd ( fst2 r ) 
+ | DTONTokenWallet_ι_allowance_ => snd ( fst1 r ) 
+ | DTONTokenWallet_ι_workchain_id_ => snd r 
+ end .
+(* 5 *) Coercion DTONTokenWallet_get : DTONTokenWalletFields >-> Funclass .
+(* 6 *) Definition DTONTokenWallet_set (f: DTONTokenWalletFields ) 
+(v: DTONTokenWallet_field_type f) (r: DTONTokenWallet ): DTONTokenWallet  :=
+  match f, v with | DTONTokenWallet_ι_name_ , v' => ( v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DTONTokenWallet_ι_symbol_ , v' => ( fst10 r , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DTONTokenWallet_ι_decimals_ , v' => ( fst10 r , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DTONTokenWallet_ι_balance_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DTONTokenWallet_ι_root_public_key_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DTONTokenWallet_ι_wallet_public_key_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DTONTokenWallet_ι_root_address_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DTONTokenWallet_ι_owner_address_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DTONTokenWallet_ι_code_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | DTONTokenWallet_ι_allowance_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | DTONTokenWallet_ι_workchain_id_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+ end .
+(* 7 *) Global Instance DTONTokenWallet_PruvendoRecord : PruvendoRecord DTONTokenWallet DTONTokenWalletFields :=
+{
+  field_type := DTONTokenWallet_field_type; 
+  getPruvendoRecord := @DTONTokenWallet_get ;
+  setPruvendoRecord := @DTONTokenWallet_set ;
+} .
 (* 3 *) Definition TonsConfig_field_type f : Type :=  
 match f with | TonsConfig_ι_transfer_tip3 => XInteger128 | TonsConfig_ι_return_ownership => XInteger128 | TonsConfig_ι_trading_pair_deploy => XInteger128 | TonsConfig_ι_order_answer => XInteger128 | TonsConfig_ι_process_queue => XInteger128 | TonsConfig_ι_send_notify => XInteger128 end .
 (* 4 *) Definition TonsConfig_get (f: TonsConfigFields )(r: TonsConfig ) :  TonsConfig_field_type f := 
@@ -539,34 +734,38 @@ match f with | OrderRet_ι_err_code => XInteger32 | OrderRet_ι_processed => XIn
   getPruvendoRecord := @OrderRet_get ;
   setPruvendoRecord := @OrderRet_set ;
 } .
-(* 3 *) Definition dealer_field_type f : Type :=  
-match f with | dealer_ι_tip3root_ => XAddress 
-| dealer_ι_notify_addr_ => XInteger (* IFLeXNotifyPtr *) 
+(* 3 *) Definition dealer_field_type f : Type :=
+match f with 
+| dealer_ι_tip3root_ => XAddress 
+| dealer_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) 
 | dealer_ι_price_ => XInteger128 
 | dealer_ι_deals_limit_ => XInteger 
 | dealer_ι_tons_cfg_ => TonsConfig 
 | dealer_ι_sells_amount_ => XInteger128 
 | dealer_ι_buys_amount_ => XInteger128 
+| dealer_ι_ret_ => XMaybe OrderRet 
 end .
 (* 4 *) Definition dealer_get (f: dealerFields )(r: dealer ) :  dealer_field_type f := 
- match f with | dealer_ι_tip3root_ => fst6 r 
- | dealer_ι_notify_addr_ => snd ( fst5 r ) 
- | dealer_ι_price_ => snd ( fst4 r ) 
- | dealer_ι_deals_limit_ => snd ( fst3 r ) 
- | dealer_ι_tons_cfg_ => snd ( fst2 r ) 
- | dealer_ι_sells_amount_ => snd ( fst1 r ) 
- | dealer_ι_buys_amount_ => snd r 
+ match f with | dealer_ι_tip3root_ => fst7 r 
+ | dealer_ι_notify_addr_ => snd ( fst6 r ) 
+ | dealer_ι_price_ => snd ( fst5 r ) 
+ | dealer_ι_deals_limit_ => snd ( fst4 r ) 
+ | dealer_ι_tons_cfg_ => snd ( fst3 r ) 
+ | dealer_ι_sells_amount_ => snd ( fst2 r ) 
+ | dealer_ι_buys_amount_ => snd ( fst1 r ) 
+ | dealer_ι_ret_ => snd r 
  end .
 (* 5 *) Coercion dealer_get : dealerFields >-> Funclass .
 (* 6 *) Definition dealer_set (f: dealerFields ) 
 (v: dealer_field_type f) (r: dealer ): dealer  :=
-  match f, v with | dealer_ι_tip3root_ , v' => ( v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | dealer_ι_notify_addr_ , v' => ( fst6 r , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | dealer_ι_price_ , v' => ( fst6 r , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | dealer_ι_deals_limit_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | dealer_ι_tons_cfg_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | dealer_ι_sells_amount_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | dealer_ι_buys_amount_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | dealer_ι_tip3root_ , v' => ( v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_notify_addr_ , v' => ( fst7 r , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_price_ , v' => ( fst7 r , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_deals_limit_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_tons_cfg_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_sells_amount_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_buys_amount_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | dealer_ι_ret_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
 (* 7 *) Global Instance dealer_PruvendoRecord : PruvendoRecord dealer dealerFields :=
 {
@@ -799,10 +998,14 @@ match f with | DFLeXClient_ι_owner_ => XInteger256 | DFLeXClient_ι_trading_pai
   setPruvendoRecord := @DFLeXClient_set ;
 } .
 (* 3 *) Definition DFLeX_field_type f : Type :=  
-match f with | DFLeX_ι_deployer_pubkey_ => XInteger256 | DFLeX_ι_tons_cfg_ => TonsConfig | DFLeX_ι_min_amount_ => XInteger128 | DFLeX_ι_deals_limit_ => XInteger8 | DFLeX_ι_notify_addr_ => XAddress end .
+match f with | DFLeX_ι_deployer_pubkey_ => XInteger256 | DFLeX_ι_tons_cfg_ => TonsConfig | DFLeX_ι_pair_code_ => XMaybe TvmCell | DFLeX_ι_xchg_pair_code_ => XMaybe TvmCell | DFLeX_ι_price_code_ => XMaybe TvmCell | DFLeX_ι_xchg_price_code_ => XMaybe TvmCell | DFLeX_ι_min_amount_ => XInteger128 | DFLeX_ι_deals_limit_ => XInteger8 | DFLeX_ι_notify_addr_ => XAddress end .
 (* 4 *) Definition DFLeX_get (f: DFLeXFields )(r: DFLeX ) :  DFLeX_field_type f := 
- match f with | DFLeX_ι_deployer_pubkey_ => fst4 r 
- | DFLeX_ι_tons_cfg_ => snd ( fst3 r ) 
+ match f with | DFLeX_ι_deployer_pubkey_ => fst8 r 
+ | DFLeX_ι_tons_cfg_ => snd ( fst7 r ) 
+ | DFLeX_ι_pair_code_ => snd ( fst6 r ) 
+ | DFLeX_ι_xchg_pair_code_ => snd ( fst5 r ) 
+ | DFLeX_ι_price_code_ => snd ( fst4 r ) 
+ | DFLeX_ι_xchg_price_code_ => snd ( fst3 r ) 
  | DFLeX_ι_min_amount_ => snd ( fst2 r ) 
  | DFLeX_ι_deals_limit_ => snd ( fst1 r ) 
  | DFLeX_ι_notify_addr_ => snd r 
@@ -810,11 +1013,15 @@ match f with | DFLeX_ι_deployer_pubkey_ => XInteger256 | DFLeX_ι_tons_cfg_ => 
 (* 5 *) Coercion DFLeX_get : DFLeXFields >-> Funclass .
 (* 6 *) Definition DFLeX_set (f: DFLeXFields ) 
 (v: DFLeX_field_type f) (r: DFLeX ): DFLeX  :=
-  match f, v with | DFLeX_ι_deployer_pubkey_ , v' => ( v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_tons_cfg_ , v' => ( fst4 r , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_min_amount_ , v' => ( fst4 r , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_deals_limit_ , v' => ( fst4 r , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | DFLeX_ι_notify_addr_ , v' => ( fst4 r , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | DFLeX_ι_deployer_pubkey_ , v' => ( v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DFLeX_ι_tons_cfg_ , v' => ( fst8 r , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DFLeX_ι_pair_code_ , v' => ( fst8 r , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DFLeX_ι_xchg_pair_code_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DFLeX_ι_price_code_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DFLeX_ι_xchg_price_code_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | DFLeX_ι_min_amount_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | DFLeX_ι_deals_limit_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | DFLeX_ι_notify_addr_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
 (* 7 *) Global Instance DFLeX_PruvendoRecord : PruvendoRecord DFLeX DFLeXFields :=
 {
@@ -823,16 +1030,18 @@ match f with | DFLeX_ι_deployer_pubkey_ => XInteger256 | DFLeX_ι_tons_cfg_ => 
   setPruvendoRecord := @DFLeX_set ;
 } .
 (* 3 *) Definition process_ret_field_type f : Type :=  
-match f with | process_ret_ι_sells_amount => XInteger128 | process_ret_ι_buys_amount => XInteger128 end .
+match f with | process_ret_ι_sells_amount => XInteger128 | process_ret_ι_buys_amount => XInteger128 | process_ret_ι_ret_ => XMaybe OrderRet end .
 (* 4 *) Definition process_ret_get (f: process_retFields )(r: process_ret ) :  process_ret_field_type f := 
- match f with | process_ret_ι_sells_amount => fst1 r 
- | process_ret_ι_buys_amount => snd r 
+ match f with | process_ret_ι_sells_amount => fst2 r 
+ | process_ret_ι_buys_amount => snd ( fst1 r ) 
+ | process_ret_ι_ret_ => snd r 
  end .
 (* 5 *) Coercion process_ret_get : process_retFields >-> Funclass .
 (* 6 *) Definition process_ret_set (f: process_retFields ) 
 (v: process_ret_field_type f) (r: process_ret ): process_ret  :=
-  match f, v with | process_ret_ι_sells_amount , v' => ( v' , snd r ) 
- | process_ret_ι_buys_amount , v' => ( fst1 r , v' ) 
+  match f, v with | process_ret_ι_sells_amount , v' => ( v' , snd ( fst1 r ) , snd r ) 
+ | process_ret_ι_buys_amount , v' => ( fst2 r , v' , snd r ) 
+ | process_ret_ι_ret_ , v' => ( fst2 r , snd ( fst1 r ) , v' ) 
  end .
 (* 7 *) Global Instance process_ret_PruvendoRecord : PruvendoRecord process_ret process_retFields :=
 {
@@ -881,18 +1090,7 @@ match f with | DetailsInfo_ι_price => XInteger128 | DetailsInfo_ι_min_amount =
   setPruvendoRecord := @DetailsInfo_set ;
 } .
 (* 3 *) Definition DPrice_field_type f : Type :=  
-match f with | DPrice_ι_price_ => XInteger128 
-| DPrice_ι_sells_amount_ => XInteger128 
-| DPrice_ι_buys_amount_ => XInteger128 
-| DPrice_ι_flex_ => addr_std_fixed 
-| DPrice_ι_min_amount_ => XInteger128 
-| DPrice_ι_deals_limit_ => XInteger8 
-| DPrice_ι_notify_addr_ => (* IFLeXNotifyPtr *) XInteger8
-| DPrice_ι_workchain_id_ => XInteger8 
-| DPrice_ι_tons_cfg_ => TonsConfig 
-| DPrice_ι_tip3_code_ => TvmCell 
-| DPrice_ι_tip3cfg_ => Tip3Config 
-end .
+match f with | DPrice_ι_price_ => XInteger128 | DPrice_ι_sells_amount_ => XInteger128 | DPrice_ι_buys_amount_ => XInteger128 | DPrice_ι_flex_ => addr_std_fixed | DPrice_ι_min_amount_ => XInteger128 | DPrice_ι_deals_limit_ => XInteger8 | DPrice_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) | DPrice_ι_workchain_id_ => XInteger8 | DPrice_ι_tons_cfg_ => TonsConfig | DPrice_ι_tip3_code_ => TvmCell | DPrice_ι_tip3cfg_ => Tip3Config end .
 (* 4 *) Definition DPrice_get (f: DPriceFields )(r: DPrice ) :  DPrice_field_type f := 
  match f with | DPrice_ι_price_ => fst10 r 
  | DPrice_ι_sells_amount_ => snd ( fst9 r ) 
@@ -1020,19 +1218,7 @@ match f with | DetailsInfoXchg_ι_price_num => XInteger128 | DetailsInfoXchg_ι_
   setPruvendoRecord := @DetailsInfoXchg_set ;
 } .
 (* 3 *) Definition DPriceXchg_field_type f : Type :=  
-match f with | DPriceXchg_ι_price_ => (* price_t *) RationalPrice
-| DPriceXchg_ι_sells_amount_ => XInteger128 
-| DPriceXchg_ι_buys_amount_ => XInteger128 
-| DPriceXchg_ι_flex_ => addr_std_fixed 
-| DPriceXchg_ι_min_amount_ => XInteger128 
-| DPriceXchg_ι_deals_limit_ => XInteger8 
-| DPriceXchg_ι_notify_addr_ => (* IFLeXNotifyPtr *) XInteger8
-| DPriceXchg_ι_workchain_id_ => XInteger8 
-| DPriceXchg_ι_tons_cfg_ => TonsConfig 
-| DPriceXchg_ι_tip3_code_ => TvmCell 
-| DPriceXchg_ι_major_tip3cfg_ => Tip3Config 
-| DPriceXchg_ι_minor_tip3cfg_ => Tip3Config 
-end .
+match f with | DPriceXchg_ι_price_ => RationalPrice | DPriceXchg_ι_sells_amount_ => XInteger128 | DPriceXchg_ι_buys_amount_ => XInteger128 | DPriceXchg_ι_flex_ => addr_std_fixed | DPriceXchg_ι_min_amount_ => XInteger128 | DPriceXchg_ι_deals_limit_ => XInteger8 | DPriceXchg_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) | DPriceXchg_ι_workchain_id_ => XInteger8 | DPriceXchg_ι_tons_cfg_ => TonsConfig | DPriceXchg_ι_tip3_code_ => TvmCell | DPriceXchg_ι_major_tip3cfg_ => Tip3Config | DPriceXchg_ι_minor_tip3cfg_ => Tip3Config end .
 (* 4 *) Definition DPriceXchg_get (f: DPriceXchgFields )(r: DPriceXchg ) :  DPriceXchg_field_type f := 
  match f with | DPriceXchg_ι_price_ => fst11 r 
  | DPriceXchg_ι_sells_amount_ => snd ( fst10 r ) 
@@ -1127,22 +1313,130 @@ match f with | VMCommit_ι_dealer => dealer end .
   getPruvendoRecord := @VMCommit_get ;
   setPruvendoRecord := @VMCommit_set ;
 } .
+
 (* 3 *) Definition LocalState_field_type f : Type :=  
-match f with 
-| LocalState_ι_uint256 => XHMap string XInteger256 
-| LocalState_ι_Grams => XHMap string XInteger
-end .
-(* 4 *) Definition LocalState_get (f: LocalStateFields )(r: LocalState ) :  LocalState_field_type f := 
- match f with 
-| LocalState_ι_uint256 => fst1 r
- | LocalState_ι_Grams  => snd r 
- end .
+match f with | LocalState_ι_uint256 => XHMap string XInteger256 | LocalState_ι_cell => XHMap string TvmCell | LocalState_ι_TonsConfig => XHMap string TonsConfig | LocalState_ι_address => XHMap string XAddress | LocalState_ι_uint128 => XHMap string XInteger128 | LocalState_ι_StateInit => XHMap string StateInit | LocalState_ι_DTradingPair => XHMap string DTradingPair | LocalState_ι_handle_ITradingPair_ => XHMap string XInteger16 (* handle_ITradingPair_ *) | LocalState_ι_DXchgPair => XHMap string DXchgPair | LocalState_ι_handle_IXchgPair_ => XHMap string XInteger16 (* handle_IXchgPair_ *) | LocalState_ι_parse_FLeXSellArgs_ => XHMap string XInteger16 (* parse_FLeXSellArgs_ *) | LocalState_ι_handle_IPrice_ => XHMap string XInteger16 (* handle_IPrice_ *) | LocalState_ι_SellArgs => XHMap string SellArgs | LocalState_ι_parse_FLeXBuyArgs_ => XHMap string XInteger16 (* parse_FLeXBuyArgs_ *) | LocalState_ι_price_addr => XHMap string XInteger16 | LocalState_ι_parse_FLeXCancelArgs_ => XHMap string XInteger16 (* parse_FLeXCancelArgs_ *) | LocalState_ι_parse_FLeXXchgCancelArgs_ => XHMap string XInteger16 (* parse_FLeXXchgCancelArgs_ *) | LocalState_ι_handle_IPriceXchg_ => XHMap string XInteger16 (* handle_IPriceXchg_ *) | LocalState_ι_bool_t => XHMap string XBool | LocalState_ι_parse_FLeXXchgArgs_ => XHMap string XInteger16 (* parse_FLeXXchgArgs_ *) | LocalState_ι_PayloadArgs => XHMap string PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ => XHMap string XInteger16 (* handle_ITONTokenWallet_ *) | LocalState_ι_uint8 => XHMap string XInteger8 | LocalState_ι_Tip3Config => XHMap string Tip3Config | LocalState_ι_DPrice => XHMap string DPrice | LocalState_ι_DPriceXchg => XHMap string DPriceXchg | LocalState_ι_tuple_address_address => XHMap string (XAddress*XAddress) | LocalState_ι_uint32 => XHMap string XInteger32 | LocalState_ι_unsigned => XHMap string XInteger | LocalState_ι_OrderInfo => XHMap string OrderInfo | LocalState_ι_int => XHMap string XInteger | LocalState_ι_optional_uint128_ => XHMap string (XMaybe XInteger128) | LocalState_ι_bool => XHMap string XBool | LocalState_ι_optional_OrderInfoWithIdx_ => XHMap string (XMaybe (XInteger*OrderInfo)) | LocalState_ι_queue_OrderInfo_ => XHMap string XInteger16 (* queue_OrderInfo_ *) | LocalState_ι_pair_unsigned_OrderInfo_ => XHMap string (XInteger*OrderInfo) end .
+Compute LocalState_field_type LocalState_ι_uint256 .
+Variable r : LocalState .
+Check fst35 r.
+(* 4 *) Definition LocalState_get (f: LocalStateFields )(r: LocalState ) :  LocalState_field_type f (* := *)
+.
+destruct f. refine ( fst35 r ) .
+refine ( snd ( fst34 r ) ) .
+refine ( snd ( fst33 r ) ) .
+refine ( snd ( fst32 r ) ) .
+refine ( snd ( fst31 r ) ) .
+refine ( snd ( fst30 r ) ) .
+refine ( snd ( fst29 r ) ) .
+refine ( snd ( fst28 r ) ) .
+refine ( snd ( fst27 r ) ) .
+refine ( snd ( fst26 r ) ) .
+refine ( snd ( fst25 r ) ) .
+refine ( snd ( fst24 r ) ) .
+refine ( snd ( fst23 r ) ) .
+refine ( snd ( fst22 r ) ) .
+refine ( snd ( fst21 r ) ) .
+refine ( snd ( fst20 r ) ) .
+refine ( snd ( fst19 r ) ) .
+refine ( snd ( fst18 r ) ) .
+refine ( snd ( fst17 r ) ) .
+refine ( snd ( fst16 r ) ) .
+refine ( snd ( fst15 r ) ) .
+refine ( snd ( fst14 r ) ) .
+refine ( snd ( fst13 r ) ) .
+refine ( snd ( fst12 r ) ) .
+refine ( snd ( fst11 r ) ) .
+refine ( snd ( fst10 r ) ) .
+refine ( snd ( fst9 r ) ) .
+refine ( snd ( fst8 r ) ) .
+refine ( snd ( fst7 r ) ) .
+refine ( snd ( fst6 r ) ) .
+refine ( snd ( fst5 r ) ) .
+refine ( snd ( fst4 r ) ) .
+refine ( snd ( fst3 r ) ) .
+refine ( snd ( fst2 r ) ) . 
+refine ( snd ( fst1 r ) ) .
+refine ( snd r ) .
+Defined.
+
+ (* match f with 
+ | LocalState_ι_uint256 => fst35 r : XHMap string XInteger256
+ | LocalState_ι_cell => snd ( fst34 r ) 
+ | LocalState_ι_TonsConfig => snd ( fst33 r ) 
+ | LocalState_ι_address => snd ( fst32 r ) 
+ | LocalState_ι_uint128 => snd ( fst31 r ) 
+ | LocalState_ι_StateInit => snd ( fst30 r ) 
+ | LocalState_ι_DTradingPair => snd ( fst29 r ) 
+ | LocalState_ι_handle_ITradingPair_ => snd ( fst28 r ) 
+ | LocalState_ι_DXchgPair => snd ( fst27 r ) 
+ | LocalState_ι_handle_IXchgPair_ => snd ( fst26 r ) 
+ | LocalState_ι_parse_FLeXSellArgs_ => snd ( fst25 r ) 
+ | LocalState_ι_handle_IPrice_ => snd ( fst24 r ) 
+ | LocalState_ι_SellArgs => snd ( fst23 r ) 
+ | LocalState_ι_parse_FLeXBuyArgs_ => snd ( fst22 r ) 
+ | LocalState_ι_price_addr => snd ( fst21 r ) 
+ | LocalState_ι_parse_FLeXCancelArgs_ => snd ( fst20 r ) 
+ | LocalState_ι_parse_FLeXXchgCancelArgs_ => snd ( fst19 r ) 
+ | LocalState_ι_handle_IPriceXchg_ => snd ( fst18 r ) 
+ | LocalState_ι_bool_t => snd ( fst17 r ) 
+ | LocalState_ι_parse_FLeXXchgArgs_ => snd ( fst16 r ) 
+ | LocalState_ι_PayloadArgs => snd ( fst15 r ) 
+ | LocalState_ι_handle_ITONTokenWallet_ => snd ( fst14 r ) 
+ | LocalState_ι_uint8 => snd ( fst13 r ) 
+ | LocalState_ι_Tip3Config => snd ( fst12 r ) 
+ | LocalState_ι_DPrice => snd ( fst11 r ) 
+ | LocalState_ι_DPriceXchg => snd ( fst10 r ) 
+ | LocalState_ι_tuple_address_address => snd ( fst9 r ) 
+ | LocalState_ι_uint32 => snd ( fst8 r ) 
+ | LocalState_ι_unsigned => snd ( fst7 r ) 
+ | LocalState_ι_OrderInfo => snd ( fst6 r ) 
+ | LocalState_ι_int => snd ( fst5 r ) 
+ | LocalState_ι_optional_uint128_ => snd ( fst4 r ) 
+ | LocalState_ι_bool => snd ( fst3 r ) 
+ | LocalState_ι_optional_OrderInfoWithIdx_ => snd ( fst2 r ) 
+ | LocalState_ι_queue_OrderInfo_ => snd ( fst1 r ) 
+ | LocalState_ι_pair_unsigned_OrderInfo_ => snd r 
+ end . *)
+
 (* 5 *) Coercion LocalState_get : LocalStateFields >-> Funclass .
 (* 6 *) Definition LocalState_set (f: LocalStateFields ) 
 (v: LocalState_field_type f) (r: LocalState ): LocalState  :=
-  match f, v with 
-| LocalState_ι_uint256 , v' => ( v' , snd r ) 
-| LocalState_ι_Grams , v' => ( fst1 r , v' )
+  match f, v with | LocalState_ι_uint256 , v' => ( v' , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_cell , v' => ( fst35 r , v' , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_TonsConfig , v' => ( fst35 r , snd ( fst34 r ) , v' , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_address , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , v' , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint128 , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , v' , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_StateInit , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , v' , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DTradingPair , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , v' , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_ITradingPair_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , v' , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DXchgPair , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , v' , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_IXchgPair_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , v' , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXSellArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , v' , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_IPrice_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , v' , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_SellArgs , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , v' , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXBuyArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , v' , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_price_addr , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , v' , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXCancelArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , v' , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXXchgCancelArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , v' , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_IPriceXchg_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , v' , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_bool_t , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , v' , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXXchgArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , v' , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_PayloadArgs , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , v' , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_ITONTokenWallet_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , v' , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint8 , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , v' , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_Tip3Config , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , v' , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DPrice , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DPriceXchg , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_tuple_address_address , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint32 , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_unsigned , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_OrderInfo , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_int , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_optional_uint128_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_bool , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_optional_OrderInfoWithIdx_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_queue_OrderInfo_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | LocalState_ι_pair_unsigned_OrderInfo_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
 (* 7 *) Global Instance LocalState_PruvendoRecord : PruvendoRecord LocalState LocalStateFields :=
 {
@@ -1334,16 +1628,14 @@ Definition T4 := LocalState .
  injproj := injproj_T4 ; 
  injinj := injinj_T4 ; 
  } . 
- 
 
-Axiom (* Lemma *) injcommute_T1_T2: 
+(* Lemma *) Axiom injcommute_T1_T2: 
                forall ( u : T2 ) ( t : T1 ) 
                       ( s:Ledger ), 
       ( injEmbed (EmbeddedType:=embeddedT2) u ( injEmbed t s ) ) = 
       ( injEmbed t ( injEmbed (EmbeddedType:=embeddedT2) u s ) ).
-(* Proof.
- intros. 
- auto.
+(* Proof. 
+ intros. auto.
 Qed. *)
 
 Instance InjectCommutableStates_T1_T2 : 
@@ -1367,7 +1659,7 @@ Lemma injcommute_T1xT2_T3 :
                       ( s:Ledger ), 
       ( injEmbed (EmbeddedType:=embeddedT3) u ( injEmbed t s ) ) = 
       ( injEmbed t ( injEmbed (EmbeddedType:=embeddedT3) u s ) ).
-Proof.
+Proof. 
  intros. auto.
 Qed.
 
@@ -1412,15 +1704,17 @@ Definition embeddedProduct_T1xT2xT3_T4 :=
 Existing Instance embeddedProduct_T1xT2xT3_T4 . 
 
 
- 
-Axiom (* Lemma *) fullState_T1xT2xT3_T4 : forall s s0, 
+
+ (* Lemma *) Axiom fullState_T1xT2xT3_T4 : forall s s0, 
  injEmbed ( T := (((T1 * T2)%xprod * T3)%xprod * T4)%xprod ) 
  ( projEmbed s ) ( injEmbed ( T := T4 ) ( projEmbed s ) s0 ) = s. 
 (*  Proof. 
  intros. destruct s. 
  repeat match goal with 
  | p : _ * _ |- _ => destruct p 
- end. auto. 
+ end. 
+
+  auto. 
  Qed.  *)
  
  Check FullState. 
