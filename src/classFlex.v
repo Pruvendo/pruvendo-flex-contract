@@ -14,7 +14,7 @@
  Require Import FinProof.StateMonad21. 
  
  Require Import UMLang.SolidityNotations2. 
- Require Import UMLang.SML_NG24. 
+ Require Import UMLang.SML_NG25. 
  
  Section RecordsDefinitions. 
  
@@ -44,9 +44,9 @@
 (* 2 *) Definition StateInitP := 
  ( M I8 * 
  M TickTockP * 
- C * 
- C * 
- C )%type .
+ M C * 
+ M C * 
+ M C )%type .
 (* 1 *) Inductive DTONTokenWalletFields := | DTONTokenWallet_ι_name_ | DTONTokenWallet_ι_symbol_ | DTONTokenWallet_ι_decimals_ | DTONTokenWallet_ι_balance_ | DTONTokenWallet_ι_root_public_key_ | DTONTokenWallet_ι_wallet_public_key_ | DTONTokenWallet_ι_root_address_ | DTONTokenWallet_ι_owner_address_ | DTONTokenWallet_ι_code_ | DTONTokenWallet_ι_allowance_ | DTONTokenWallet_ι_workchain_id_ .
 (* 2 *) Definition DTONTokenWalletP := 
  ( (L I8) * 
@@ -88,7 +88,7 @@
 (* 1 *) Inductive dealerFields := | dealer_ι_tip3root_ | dealer_ι_notify_addr_ | dealer_ι_price_ | dealer_ι_deals_limit_ | dealer_ι_tons_cfg_ | dealer_ι_sells_amount_ | dealer_ι_buys_amount_ | dealer_ι_ret_ .
 (* 2 *) Definition dealerP := 
  ( A * 
- I16 (* IFLeXNotifyPtrP *) * 
+ I16 (* handle<IFLeXNotify> *) * 
  I128 * 
  I * 
  TonsConfigP * 
@@ -158,8 +158,8 @@
  I128 * 
  C * 
  C )%type .
-(* 1 *) Inductive DFLeXClientFields := | DFLeXClient_ι_owner_ | DFLeXClient_ι_trading_pair_code_ | DFLeXClient_ι_xchg_pair_code_ | DFLeXClient_ι_workchain_id_ | DFLeXClient_ι_tons_cfg_ | DFLeXClient_ι_flex_ | DFLeXClient_ι_notify_addr_ .
-(* 2 *) Definition DFLeXClientP := 
+(* 1 *) Inductive FLeXClientFields := | FLeXClient_ι_owner_ | FLeXClient_ι_trading_pair_code_ | FLeXClient_ι_xchg_pair_code_ | FLeXClient_ι_workchain_id_ | FLeXClient_ι_tons_cfg_ | FLeXClient_ι_flex_ | FLeXClient_ι_notify_addr_ .
+(* 2 *) Definition FLeXClientP := 
  ( I256 * 
  C * 
  C * 
@@ -167,8 +167,8 @@
  TonsConfigP * 
  A * 
  A )%type .
-(* 1 *) Inductive DFLeXFields := | DFLeX_ι_deployer_pubkey_ | DFLeX_ι_tons_cfg_ | DFLeX_ι_pair_code_ | DFLeX_ι_xchg_pair_code_ | DFLeX_ι_price_code_ | DFLeX_ι_xchg_price_code_ | DFLeX_ι_min_amount_ | DFLeX_ι_deals_limit_ | DFLeX_ι_notify_addr_ .
-(* 2 *) Definition DFLeXP := 
+(* 1 *) Inductive FLeXFields := | FLeX_ι_deployer_pubkey_ | FLeX_ι_tons_cfg_ | FLeX_ι_pair_code_ | FLeX_ι_xchg_pair_code_ | FLeX_ι_price_code_ | FLeX_ι_xchg_price_code_ | FLeX_ι_min_amount_ | FLeX_ι_deals_limit_ | FLeX_ι_notify_addr_ .
+(* 2 *) Definition FLeXP := 
  ( I256 * 
  TonsConfigP * 
  M C * 
@@ -193,15 +193,15 @@
  I128 * 
  I128 * 
  I128 )%type .
-(* 1 *) Inductive DPriceFields := | DPrice_ι_price_ | DPrice_ι_sells_amount_ | DPrice_ι_buys_amount_ | DPrice_ι_flex_ | DPrice_ι_min_amount_ | DPrice_ι_deals_limit_ | DPrice_ι_notify_addr_ | DPrice_ι_workchain_id_ | DPrice_ι_tons_cfg_ | DPrice_ι_tip3_code_ | DPrice_ι_tip3cfg_ .
-(* 2 *) Definition DPriceP := 
+(* 1 *) Inductive PriceFields := | Price_ι_price_ | Price_ι_sells_amount_ | Price_ι_buys_amount_ | Price_ι_flex_ | Price_ι_min_amount_ | Price_ι_deals_limit_ | Price_ι_notify_addr_ | Price_ι_workchain_id_ | Price_ι_tons_cfg_ | Price_ι_tip3_code_ | Price_ι_tip3cfg_ .
+(* 2 *) Definition PriceP := 
  ( I128 * 
  I128 * 
  I128 * 
  addr_std_fixedP * 
  I128 * 
  I8 * 
- I16 (* IFLeXNotifyPtrP *) * 
+ I16 (* handle<IFLeXNotify> *) * 
  I8 * 
  TonsConfigP * 
  C * 
@@ -232,15 +232,15 @@
  I128 * 
  I128 * 
  I128 )%type .
-(* 1 *) Inductive DPriceXchgFields := | DPriceXchg_ι_price_ | DPriceXchg_ι_sells_amount_ | DPriceXchg_ι_buys_amount_ | DPriceXchg_ι_flex_ | DPriceXchg_ι_min_amount_ | DPriceXchg_ι_deals_limit_ | DPriceXchg_ι_notify_addr_ | DPriceXchg_ι_workchain_id_ | DPriceXchg_ι_tons_cfg_ | DPriceXchg_ι_tip3_code_ | DPriceXchg_ι_major_tip3cfg_ | DPriceXchg_ι_minor_tip3cfg_ .
-(* 2 *) Definition DPriceXchgP := 
+(* 1 *) Inductive PriceXchgFields := | PriceXchg_ι_price_ | PriceXchg_ι_sells_amount_ | PriceXchg_ι_buys_amount_ | PriceXchg_ι_flex_ | PriceXchg_ι_min_amount_ | PriceXchg_ι_deals_limit_ | PriceXchg_ι_notify_addr_ | PriceXchg_ι_workchain_id_ | PriceXchg_ι_tons_cfg_ | PriceXchg_ι_tip3_code_ | PriceXchg_ι_major_tip3cfg_ | PriceXchg_ι_minor_tip3cfg_ .
+(* 2 *) Definition PriceXchgP := 
  ( RationalPriceP * 
  I128 * 
  I128 * 
  addr_std_fixedP * 
  I128 * 
  I8 * 
- I16 (* IFLeXNotifyPtrP *) * 
+ I16 (* handle<IFLeXNotify> *) * 
  I8 * 
  TonsConfigP * 
  C * 
@@ -257,50 +257,93 @@
  A * 
  A * 
  I128 )%type .
-(* 1 *) Inductive VMCommitFields := | VMCommit_ι_dealer .
+(* 1 *) Inductive VMCommitFields := | VMCommit_ι_FLeX | VMCommit_ι_FLeXClient | VMCommit_ι_Price | VMCommit_ι_PriceXchg .
 (* 2 *) Definition VMCommitP := 
- ( dealerP )%type .
-(* 1 *) Inductive LocalStateFields := | LocalState_ι_uint256 | LocalState_ι_cell | LocalState_ι_TonsConfig | LocalState_ι_address | LocalState_ι_uint128 | LocalState_ι_StateInit | LocalState_ι_DTradingPair | LocalState_ι_handle_ITradingPair_ | LocalState_ι_DXchgPair | LocalState_ι_handle_IXchgPair_ | LocalState_ι_parse_FLeXSellArgs_ | LocalState_ι_handle_IPrice_ | LocalState_ι_SellArgs | LocalState_ι_parse_FLeXBuyArgs_ | LocalState_ι_price_addr | LocalState_ι_parse_FLeXCancelArgs_ | LocalState_ι_parse_FLeXXchgCancelArgs_ | LocalState_ι_handle_IPriceXchg_ | LocalState_ι_bool_t | LocalState_ι_parse_FLeXXchgArgs_ | LocalState_ι_PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ | LocalState_ι_uint8 | LocalState_ι_Tip3Config | LocalState_ι_DPrice | LocalState_ι_DPriceXchg | LocalState_ι_tuple_address_address | LocalState_ι_uint32 | LocalState_ι_unsigned | LocalState_ι_OrderInfo | LocalState_ι_int | LocalState_ι_optional_uint128_ | LocalState_ι_bool | LocalState_ι_optional_OrderInfoWithIdx_ | LocalState_ι_queue_OrderInfo_ | LocalState_ι_pair_unsigned_OrderInfo_ .
+ ( FLeXP * 
+ FLeXClientP * 
+ PriceP * 
+ PriceXchgP )%type .
+
+(* 1 *) Inductive LocalStateFields := | LocalState_ι_uint256 | LocalState_ι_cell | LocalState_ι_TonsConfig | LocalState_ι_address | LocalState_ι_uint128 | LocalState_ι_StateInit | LocalState_ι_DTradingPair | LocalState_ι_handle_ITradingPair_ | LocalState_ι_DXchgPair | LocalState_ι_handle_IXchgPair_ | LocalState_ι_parse_FLeXSellArgs_ | LocalState_ι_handle_IPrice_ | LocalState_ι_SellArgs | LocalState_ι_parse_FLeXBuyArgs_ | LocalState_ι_parse_FLeXCancelArgs_ | LocalState_ι_parse_FLeXXchgCancelArgs_ | LocalState_ι_handle_IPriceXchg_ | LocalState_ι_bool_t | LocalState_ι_parse_FLeXXchgArgs_ | LocalState_ι_PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ | LocalState_ι_uint8 | LocalState_ι_Tip3Config | LocalState_ι_DPrice | LocalState_ι_DPriceXchg | LocalState_ι_tuple_address_address | LocalState_ι_uint32 | LocalState_ι_unsigned | LocalState_ι_OrderInfo | LocalState_ι_int | LocalState_ι_optional_uint128_ | LocalState_ι_bool | LocalState_ι_optional_OrderInfoWithIdx_ | LocalState_ι_queue_OrderInfo_ | LocalState_ι_pair_unsigned_OrderInfo_ | LocalState_ι_uint256Index | LocalState_ι_cellIndex | LocalState_ι_TonsConfigIndex | LocalState_ι_addressIndex | LocalState_ι_uint128Index | LocalState_ι_StateInitIndex | LocalState_ι_DTradingPairIndex | LocalState_ι_handle_ITradingPair_Index | LocalState_ι_DXchgPairIndex | LocalState_ι_handle_IXchgPair_Index | LocalState_ι_parse_FLeXSellArgs_Index | LocalState_ι_handle_IPrice_Index | LocalState_ι_SellArgsIndex | LocalState_ι_parse_FLeXBuyArgs_Index | LocalState_ι_parse_FLeXCancelArgs_Index | LocalState_ι_parse_FLeXXchgCancelArgs_Index | LocalState_ι_handle_IPriceXchg_Index | LocalState_ι_bool_tIndex | LocalState_ι_parse_FLeXXchgArgs_Index | LocalState_ι_PayloadArgsIndex | LocalState_ι_handle_ITONTokenWallet_Index | LocalState_ι_uint8Index | LocalState_ι_Tip3ConfigIndex | LocalState_ι_DPriceIndex | LocalState_ι_DPriceXchgIndex | LocalState_ι_tuple_address_addressIndex | LocalState_ι_uint32Index | LocalState_ι_unsignedIndex | LocalState_ι_OrderInfoIndex | LocalState_ι_intIndex | LocalState_ι_optional_uint128_Index | LocalState_ι_boolIndex | LocalState_ι_optional_OrderInfoWithIdx_Index | LocalState_ι_queue_OrderInfo_Index | LocalState_ι_pair_unsigned_OrderInfo_Index .
 (* 2 *) Definition LocalStateP := 
- ( HM string I256 * 
- HM string C * 
- HM string TonsConfigP * 
- HM string A * 
- HM string I128 * 
- HM string StateInitP * 
- HM string DTradingPairP * 
- HM string I16 (* handle_ITradingPair_P *) * 
- HM string DXchgPairP * 
- HM string I16 (* handle_IXchgPair_P *) * 
- HM string I16 (* parse_FLeXSellArgs_P *) * 
- HM string I16 (* handle_IPrice_P *) * 
- HM string SellArgsP * 
- HM string I16 (* parse_FLeXBuyArgs_P *) * 
- HM string I16 (* handle_IPrice_P *) * 
- HM string I16 (* parse_FLeXCancelArgs_P *) * 
- HM string I16 (* parse_FLeXXchgCancelArgs_P *) * 
- HM string I16 (* handle_IPriceXchg_P *) * 
- HM string B * 
- HM string I16 (* parse_FLeXXchgArgs_P *) * 
- HM string PayloadArgsP * 
- HM string I16 (* handle_ITONTokenWallet_P *) * 
- HM string I8 * 
- HM string Tip3ConfigP * 
- HM string DPriceP * 
- HM string DPriceXchgP * 
- HM string ( A * A ) * 
- HM string I32 * 
- HM string I * 
- HM string OrderInfoP * 
- HM string I * 
- HM string ( M I128 ) * 
- HM string B * 
- HM string ( M ( I * OrderInfoP ) (* OrderInfoWithIdxP *) ) * (* pair<unsigned, OrderInfo> *)
- HM string I16 (* OrderInfoP *) * 
- HM string ( I * OrderInfoP )(* pair_unsigned_OrderInfo_P *) )%type .
-(* 1 *) Inductive LedgerFields := | Ledger_ι_dealer | Ledger_ι_VMCommit | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
+ ( HM (string*nat) I256 * 
+ HM (string*nat) C * 
+ HM (string*nat) TonsConfigP * 
+ HM (string*nat) A * 
+ HM (string*nat) I128 * 
+ HM (string*nat) StateInitP * 
+ HM (string*nat) DTradingPairP * 
+ HM (string*nat) I16 (* handle_ITradingPair_P *) * 
+ HM (string*nat) DXchgPairP * 
+ HM (string*nat) I16 (* handle_IXchgPair_P *) * 
+ HM (string*nat) I16 (* parse_FLeXSellArgs_P *) * 
+ HM (string*nat) I16 (* handle_IPrice_P *) * 
+ HM (string*nat) SellArgsP * 
+ HM (string*nat) I16 (* parse_FLeXBuyArgs_P *) * 
+ HM (string*nat) I16 (* parse_FLeXCancelArgs_P *) * 
+ HM (string*nat) I16 (* parse_FLeXXchgCancelArgs_P *) * 
+ HM (string*nat) I16 (* handle_IPriceXchg_P *) * 
+ HM (string*nat) B * 
+ HM (string*nat) I16 (* parse_FLeXXchgArgs_P *) * 
+ HM (string*nat) PayloadArgsP * 
+ HM (string*nat) I16 (* handle_ITONTokenWallet_P *) * 
+ HM (string*nat) I8 * 
+ HM (string*nat) Tip3ConfigP * 
+ HM (string*nat) PriceP * 
+ HM (string*nat) PriceXchgP * 
+ HM (string*nat) (A*A) * 
+ HM (string*nat) I32 * 
+ HM (string*nat) I * 
+ HM (string*nat) OrderInfoP * 
+ HM (string*nat) I * 
+ HM (string*nat) (M I128) * 
+ HM (string*nat) B * 
+ HM (string*nat) (M (I*OrderInfoP)) * 
+ HM (string*nat) I16 (* queue_OrderInfo_P *) * 
+ HM (string*nat) (I*OrderInfoP) * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat * 
+ HM string nat )%type .
+
+
+(* 1 *) Inductive LedgerFieldsI := | Ledger_ι_FLeX | Ledger_ι_FLeXClient | Ledger_ι_Price | Ledger_ι_PriceXchg | Ledger_ι_VMCommit | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
 (* 2 *) Definition LedgerP := 
- ( dealerP * 
+ ( FLeXP * 
+ FLeXClientP * 
+ PriceP * 
+ PriceXchgP * 
  VMCommitP * 
  LocalStateP * 
  LocalStateP )%type .
@@ -308,19 +351,13 @@ Notation "'{$$' r 'With' y ':=' v '$$}'" := (@setPruvendoRecord _ _ _ y v r) : s
 
 End RecordsDefinitions .
 
- Require Import UMLang.ProofEnvironment2. 
- 
- Module LedgerClass (xt: XTypesSig) (sm: StateMonadSig) . 
- 
- Module Export SMLClass := SML xt sm . 
- Export SolidityNotationsSML. 
- (* Module Import SolidityNotationsClass := SolidityNotationsSML xt sm. *) 
- 
- Existing Instance monadStateS. 
- Existing Instance monadStateStateS. 
- 
- 
- Definition IFLeXNotifyPtrP := XInteger . 
+Require Import UMLang.ProofEnvironment2.
+
+Module LedgerClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSig xt.
+Module Export SolidityNotationsClass := SolidityNotations xt  sm.
+Import xt. 
+Existing Instance monadStateT. 
+Existing Instance monadStateStateT.
 
 Definition TickTock := @ TickTockP
 XBool
@@ -346,9 +383,8 @@ XInteger8 XInteger32 XInteger128 XInteger256
 Definition OrderRet := @ OrderRetP
 XInteger32 XInteger128
 .
-Print dealerP.
 Definition dealer := @ dealerP
-XInteger    XInteger16     XInteger32 XInteger128 XAddress XMaybe
+XInteger XInteger32   XInteger16   XInteger128 XAddress XMaybe
 .
 Definition FLeXSellArgsAddrs := @ FLeXSellArgsAddrsP
 XAddress
@@ -371,10 +407,10 @@ XInteger8 XInteger128 TvmCell
 Definition FLeXXchgCancelArgs := @ FLeXXchgCancelArgsP
 XInteger8 XInteger128 XBool TvmCell
 .
-Definition DFLeXClient := @ DFLeXClientP
+Definition FLeXClient := @ FLeXClientP
 XInteger8 XInteger128 XInteger256 XAddress TvmCell
 .
-Definition DFLeX := @ DFLeXP
+Definition FLeX := @ FLeXP
 XInteger8 XInteger128 XInteger256 XAddress TvmCell XMaybe
 .
 Definition process_ret := @ process_retP
@@ -386,10 +422,12 @@ XInteger8 XInteger128 XInteger256
 Definition DetailsInfo := @ DetailsInfoP
 XInteger128
 .
-Print DPriceP.
-Definition DPrice := @ DPriceP
-XInteger8    XInteger16    XInteger128 XInteger256 XAddress TvmCell XString
+
+Print PriceP.
+Definition Price := @ PriceP
+XInteger8   XInteger16   XInteger128 XInteger256 XAddress TvmCell XString
 .
+
 Definition RationalPrice := @ RationalPriceP
 XInteger128
 .
@@ -402,9 +440,8 @@ XInteger8 XInteger32 XInteger128 XInteger256
 Definition DetailsInfoXchg := @ DetailsInfoXchgP
 XInteger128
 .
-Print DPriceXchgP.
-Definition DPriceXchg := @ DPriceXchgP
-XInteger8   XInteger16    XInteger128 XInteger256 XAddress TvmCell XString
+Definition PriceXchg := @ PriceXchgP
+XInteger8   XInteger16   XInteger128 XInteger256 XAddress TvmCell XString
 .
 Definition DTradingPair := @ DTradingPairP
 XInteger128 XAddress
@@ -412,18 +449,17 @@ XInteger128 XAddress
 Definition DXchgPair := @ DXchgPairP
 XInteger128 XAddress
 .
-Print VMCommitP.
 Definition VMCommit := @ VMCommitP
-XInteger    XInteger16      XInteger32 XInteger128 XAddress XMaybe
-. 
-Print LocalStateP . 
+XInteger8    XInteger16    XInteger128 XInteger256 XAddress TvmCell XString XMaybe
+.
 Definition LocalState := @ LocalStateP
-XInteger XInteger8   XInteger16   XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
+XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
 .
-Print LedgerP .
 Definition Ledger := @ LedgerP
-XInteger XInteger8   XInteger16   XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
+XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
 .
+Definition LedgerFields := LedgerFieldsI.
+
 Global Instance TickTock_default : XDefault TickTock := { 
   	 default := ( default , default ) } .
 Global Instance allowance_info_default : XDefault allowance_info := { 
@@ -439,7 +475,7 @@ Global Instance addr_std_fixed_default : XDefault addr_std_fixed := {
 Global Instance OrderInfo_default : XDefault OrderInfo := { 
   	 default := ( default , default , default , default , default , default ) } .
 Global Instance OrderRet_default : XDefault OrderRet := { 
-  	 default := ( default , default , default ) } . 
+  	 default := ( default , default , default ) } .
 Global Instance dealer_default : XDefault dealer := { 
   	 default := ( default , default , default , default , default , default , default , default ) } .
 Global Instance FLeXSellArgsAddrs_default : XDefault FLeXSellArgsAddrs := { 
@@ -457,20 +493,18 @@ Global Instance FLeXCancelArgs_default : XDefault FLeXCancelArgs := {
   	 default := ( default , default , default , default , default , default ) } .
 Global Instance FLeXXchgCancelArgs_default : XDefault FLeXXchgCancelArgs := { 
   	 default := ( default , default , default , default , default , default , default , default ) } .
-Global Instance DFLeXClient_default : XDefault DFLeXClient := { 
+Global Instance FLeXClient_default : XDefault FLeXClient := { 
   	 default := ( default , default , default , default , default , default , default ) } .
-Global Instance DFLeX_default : XDefault DFLeX := { 
+Global Instance FLeX_default : XDefault FLeX := { 
   	 default := ( default , default , default , default , default , default , default , default , default ) } .
 Global Instance process_ret_default : XDefault process_ret := { 
   	 default := ( default , default , default ) } .
 Global Instance SellArgs_default : XDefault SellArgs := { 
   	 default := ( default , default ) } .
 Global Instance DetailsInfo_default : XDefault DetailsInfo := { 
-  	 default := ( default , default , default , default ) } .
-Global Instance DPrice_default : XDefault DPrice := { 
-  	 default := ( default , default , default , default , default , 
-                  default , default , default , default , default , 
-                  default ) } .
+  	 default := ( default , default , default , default ) } . 
+Global Instance Price_default : XDefault Price := { 
+  	 default := ( default , default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance RationalPrice_default : XDefault RationalPrice := { 
   	 default := ( default , default ) } .
 Global Instance PayloadArgs_default : XDefault PayloadArgs := { 
@@ -479,18 +513,19 @@ Global Instance OrderInfoXchg_default : XDefault OrderInfoXchg := {
   	 default := ( default , default , default , default , default , default , default ) } .
 Global Instance DetailsInfoXchg_default : XDefault DetailsInfoXchg := { 
   	 default := ( default , default , default , default , default ) } .
-Global Instance DPriceXchg_default : XDefault DPriceXchg := { 
+Global Instance PriceXchg_default : XDefault PriceXchg := { 
   	 default := ( default , default , default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance DTradingPair_default : XDefault DTradingPair := { 
   	 default := ( default , default , default ) } .
 Global Instance DXchgPair_default : XDefault DXchgPair := { 
   	 default := ( default , default , default , default ) } .
 Global Instance VMCommit_default : XDefault VMCommit := { 
-  	 default := ( default ) } .
-Global Instance LocalState_default : XDefault LocalState := { 
-  	 default := ( default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default ) } .
-Global Instance Ledger_default : XDefault Ledger := { 
   	 default := ( default , default , default , default ) } .
+Global Instance LocalState_default : XDefault LocalState := { 
+  	 default := ( default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default ,
+                  default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default) } .
+Global Instance Ledger_default : XDefault Ledger := { 
+  	 default := ( default , default , default , default , default , default , default ) } .
 
  Unset Implicit Arguments. 
  Set Strict Implicit. 
@@ -538,21 +573,73 @@ Notation " 'fst37' x " := ( fst ( fst36 x ) ) (at level 60, right associativity)
 Notation " 'fst38' x " := ( fst ( fst37 x ) ) (at level 60, right associativity).
 Notation " 'fst39' x " := ( fst ( fst38 x ) ) (at level 60, right associativity).
 Notation " 'fst40' x " := ( fst ( fst39 x ) ) (at level 60, right associativity).
+Notation " 'fst41' x " := ( fst ( fst40 x ) ) (at level 60, right associativity).
+Notation " 'fst42' x " := ( fst ( fst41 x ) ) (at level 60, right associativity).
+Notation " 'fst43' x " := ( fst ( fst42 x ) ) (at level 60, right associativity).
+Notation " 'fst44' x " := ( fst ( fst43 x ) ) (at level 60, right associativity).
+Notation " 'fst45' x " := ( fst ( fst44 x ) ) (at level 60, right associativity).
+Notation " 'fst46' x " := ( fst ( fst45 x ) ) (at level 60, right associativity).
+Notation " 'fst47' x " := ( fst ( fst46 x ) ) (at level 60, right associativity).
+Notation " 'fst48' x " := ( fst ( fst47 x ) ) (at level 60, right associativity).
+Notation " 'fst49' x " := ( fst ( fst48 x ) ) (at level 60, right associativity).
+Notation " 'fst50' x " := ( fst ( fst49 x ) ) (at level 60, right associativity).
+Notation " 'fst51' x " := ( fst ( fst50 x ) ) (at level 60, right associativity).
+Notation " 'fst52' x " := ( fst ( fst51 x ) ) (at level 60, right associativity).
+Notation " 'fst53' x " := ( fst ( fst52 x ) ) (at level 60, right associativity).
+Notation " 'fst54' x " := ( fst ( fst53 x ) ) (at level 60, right associativity).
+Notation " 'fst55' x " := ( fst ( fst54 x ) ) (at level 60, right associativity).
+Notation " 'fst56' x " := ( fst ( fst55 x ) ) (at level 60, right associativity).
+Notation " 'fst57' x " := ( fst ( fst56 x ) ) (at level 60, right associativity).
+Notation " 'fst58' x " := ( fst ( fst57 x ) ) (at level 60, right associativity).
+Notation " 'fst59' x " := ( fst ( fst58 x ) ) (at level 60, right associativity).
+Notation " 'fst60' x " := ( fst ( fst59 x ) ) (at level 60, right associativity).
+Notation " 'fst61' x " := ( fst ( fst60 x ) ) (at level 60, right associativity).
+Notation " 'fst62' x " := ( fst ( fst61 x ) ) (at level 60, right associativity).
+Notation " 'fst63' x " := ( fst ( fst62 x ) ) (at level 60, right associativity).
+Notation " 'fst64' x " := ( fst ( fst63 x ) ) (at level 60, right associativity).
+Notation " 'fst65' x " := ( fst ( fst64 x ) ) (at level 60, right associativity).
+Notation " 'fst66' x " := ( fst ( fst65 x ) ) (at level 60, right associativity).
+Notation " 'fst67' x " := ( fst ( fst66 x ) ) (at level 60, right associativity).
+Notation " 'fst68' x " := ( fst ( fst67 x ) ) (at level 60, right associativity).
+Notation " 'fst69' x " := ( fst ( fst68 x ) ) (at level 60, right associativity).
+Notation " 'fst70' x " := ( fst ( fst69 x ) ) (at level 60, right associativity).
+Notation " 'fst71' x " := ( fst ( fst70 x ) ) (at level 60, right associativity).
+Notation " 'fst72' x " := ( fst ( fst71 x ) ) (at level 60, right associativity).
+Notation " 'fst73' x " := ( fst ( fst72 x ) ) (at level 60, right associativity).
+Notation " 'fst74' x " := ( fst ( fst73 x ) ) (at level 60, right associativity).
+Notation " 'fst75' x " := ( fst ( fst74 x ) ) (at level 60, right associativity).
+Notation " 'fst76' x " := ( fst ( fst75 x ) ) (at level 60, right associativity).
+Notation " 'fst77' x " := ( fst ( fst76 x ) ) (at level 60, right associativity).
+Notation " 'fst78' x " := ( fst ( fst77 x ) ) (at level 60, right associativity).
+Notation " 'fst79' x " := ( fst ( fst78 x ) ) (at level 60, right associativity).
+Notation " 'fst80' x " := ( fst ( fst79 x ) ) (at level 60, right associativity).
+Notation " 'fst81' x " := ( fst ( fst80 x ) ) (at level 60, right associativity).
+Notation " 'fst82' x " := ( fst ( fst81 x ) ) (at level 60, right associativity).
+Notation " 'fst83' x " := ( fst ( fst82 x ) ) (at level 60, right associativity).
+Notation " 'fst84' x " := ( fst ( fst83 x ) ) (at level 60, right associativity).
+Notation " 'fst85' x " := ( fst ( fst84 x ) ) (at level 60, right associativity).
+Notation " 'fst86' x " := ( fst ( fst85 x ) ) (at level 60, right associativity).
+Notation " 'fst87' x " := ( fst ( fst86 x ) ) (at level 60, right associativity).
+Notation " 'fst88' x " := ( fst ( fst87 x ) ) (at level 60, right associativity).
+Notation " 'fst89' x " := ( fst ( fst88 x ) ) (at level 60, right associativity).
+Notation " 'fst90' x " := ( fst ( fst89 x ) ) (at level 60, right associativity).
+Notation " 'fst91' x " := ( fst ( fst90 x ) ) (at level 60, right associativity).
+Notation " 'fst92' x " := ( fst ( fst91 x ) ) (at level 60, right associativity).
+Notation " 'fst93' x " := ( fst ( fst92 x ) ) (at level 60, right associativity).
+Notation " 'fst94' x " := ( fst ( fst93 x ) ) (at level 60, right associativity).
+Notation " 'fst95' x " := ( fst ( fst94 x ) ) (at level 60, right associativity).
+Notation " 'fst96' x " := ( fst ( fst95 x ) ) (at level 60, right associativity).
+Notation " 'fst97' x " := ( fst ( fst96 x ) ) (at level 60, right associativity).
+Notation " 'fst98' x " := ( fst ( fst97 x ) ) (at level 60, right associativity).
+Notation " 'fst99' x " := ( fst ( fst98 x ) ) (at level 60, right associativity).
+Notation " 'fst100' x " := ( fst ( fst99 x ) ) (at level 60, right associativity).
 (* 3 *) Definition TickTock_field_type f : Type :=  
 match f with | TickTock_ι_tick => XBool | TickTock_ι_tock => XBool end .
-
-Class Countable (X: Type) :=
-{
-   rength : nat;
-   rth : nat -> X -> {t: Type & t}
-}.
-
 (* 4 *) Definition TickTock_get (f: TickTockFields )(r: TickTock ) :  TickTock_field_type f := 
- match f with 
- | TickTock_ι_tick => fst1 r 
- | TickTock_ι_tock => snd r 
+ match f , r with 
+ | TickTock_ι_tick , (r1,r2) => r1 
+ | TickTock_ι_tock , (r1,r2)  => r2 
  end .
-
 (* 5 *) Coercion TickTock_get : TickTockFields >-> Funclass .
 (* 6 *) Definition TickTock_set (f: TickTockFields ) 
 (v: TickTock_field_type f) (r: TickTock ): TickTock  :=
@@ -585,7 +672,13 @@ match f with | allowance_info_ι_spender => XAddress | allowance_info_ι_remaini
   setPruvendoRecord := @allowance_info_set ;
 } .
 (* 3 *) Definition StateInit_field_type f : Type :=  
-match f with | StateInit_ι_split_depth => XMaybe XInteger8 | StateInit_ι_special => XMaybe TickTock | StateInit_ι_code => TvmCell | StateInit_ι_data => TvmCell | StateInit_ι_library => TvmCell end .
+match f with 
+| StateInit_ι_split_depth => XMaybe XInteger8 
+| StateInit_ι_special => XMaybe TickTock 
+| StateInit_ι_code => XMaybe TvmCell 
+| StateInit_ι_data => XMaybe TvmCell 
+| StateInit_ι_library => XMaybe TvmCell 
+end .
 (* 4 *) Definition StateInit_get (f: StateInitFields )(r: StateInit ) :  StateInit_field_type f := 
  match f with | StateInit_ι_split_depth => fst4 r 
  | StateInit_ι_special => snd ( fst3 r ) 
@@ -734,7 +827,7 @@ match f with | OrderRet_ι_err_code => XInteger32 | OrderRet_ι_processed => XIn
   getPruvendoRecord := @OrderRet_get ;
   setPruvendoRecord := @OrderRet_set ;
 } .
-(* 3 *) Definition dealer_field_type f : Type :=
+(* 3 *) Definition dealer_field_type f : Type :=  
 match f with 
 | dealer_ι_tip3root_ => XAddress 
 | dealer_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) 
@@ -745,6 +838,7 @@ match f with
 | dealer_ι_buys_amount_ => XInteger128 
 | dealer_ι_ret_ => XMaybe OrderRet 
 end .
+
 (* 4 *) Definition dealer_get (f: dealerFields )(r: dealer ) :  dealer_field_type f := 
  match f with | dealer_ι_tip3root_ => fst7 r 
  | dealer_ι_notify_addr_ => snd ( fst6 r ) 
@@ -969,65 +1063,65 @@ match f with | FLeXXchgCancelArgs_ι_sell => XBool | FLeXXchgCancelArgs_ι_price
   getPruvendoRecord := @FLeXXchgCancelArgs_get ;
   setPruvendoRecord := @FLeXXchgCancelArgs_set ;
 } .
-(* 3 *) Definition DFLeXClient_field_type f : Type :=  
-match f with | DFLeXClient_ι_owner_ => XInteger256 | DFLeXClient_ι_trading_pair_code_ => TvmCell | DFLeXClient_ι_xchg_pair_code_ => TvmCell | DFLeXClient_ι_workchain_id_ => XInteger8 | DFLeXClient_ι_tons_cfg_ => TonsConfig | DFLeXClient_ι_flex_ => XAddress | DFLeXClient_ι_notify_addr_ => XAddress end .
-(* 4 *) Definition DFLeXClient_get (f: DFLeXClientFields )(r: DFLeXClient ) :  DFLeXClient_field_type f := 
- match f with | DFLeXClient_ι_owner_ => fst6 r 
- | DFLeXClient_ι_trading_pair_code_ => snd ( fst5 r ) 
- | DFLeXClient_ι_xchg_pair_code_ => snd ( fst4 r ) 
- | DFLeXClient_ι_workchain_id_ => snd ( fst3 r ) 
- | DFLeXClient_ι_tons_cfg_ => snd ( fst2 r ) 
- | DFLeXClient_ι_flex_ => snd ( fst1 r ) 
- | DFLeXClient_ι_notify_addr_ => snd r 
+(* 3 *) Definition FLeXClient_field_type f : Type :=  
+match f with | FLeXClient_ι_owner_ => XInteger256 | FLeXClient_ι_trading_pair_code_ => TvmCell | FLeXClient_ι_xchg_pair_code_ => TvmCell | FLeXClient_ι_workchain_id_ => XInteger8 | FLeXClient_ι_tons_cfg_ => TonsConfig | FLeXClient_ι_flex_ => XAddress | FLeXClient_ι_notify_addr_ => XAddress end .
+(* 4 *) Definition FLeXClient_get (f: FLeXClientFields )(r: FLeXClient ) :  FLeXClient_field_type f := 
+ match f with | FLeXClient_ι_owner_ => fst6 r 
+ | FLeXClient_ι_trading_pair_code_ => snd ( fst5 r ) 
+ | FLeXClient_ι_xchg_pair_code_ => snd ( fst4 r ) 
+ | FLeXClient_ι_workchain_id_ => snd ( fst3 r ) 
+ | FLeXClient_ι_tons_cfg_ => snd ( fst2 r ) 
+ | FLeXClient_ι_flex_ => snd ( fst1 r ) 
+ | FLeXClient_ι_notify_addr_ => snd r 
  end .
-(* 5 *) Coercion DFLeXClient_get : DFLeXClientFields >-> Funclass .
-(* 6 *) Definition DFLeXClient_set (f: DFLeXClientFields ) 
-(v: DFLeXClient_field_type f) (r: DFLeXClient ): DFLeXClient  :=
-  match f, v with | DFLeXClient_ι_owner_ , v' => ( v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeXClient_ι_trading_pair_code_ , v' => ( fst6 r , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeXClient_ι_xchg_pair_code_ , v' => ( fst6 r , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeXClient_ι_workchain_id_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeXClient_ι_tons_cfg_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | DFLeXClient_ι_flex_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | DFLeXClient_ι_notify_addr_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+(* 5 *) Coercion FLeXClient_get : FLeXClientFields >-> Funclass .
+(* 6 *) Definition FLeXClient_set (f: FLeXClientFields ) 
+(v: FLeXClient_field_type f) (r: FLeXClient ): FLeXClient  :=
+  match f, v with | FLeXClient_ι_owner_ , v' => ( v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXClient_ι_trading_pair_code_ , v' => ( fst6 r , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXClient_ι_xchg_pair_code_ , v' => ( fst6 r , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXClient_ι_workchain_id_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXClient_ι_tons_cfg_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | FLeXClient_ι_flex_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | FLeXClient_ι_notify_addr_ , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
-(* 7 *) Global Instance DFLeXClient_PruvendoRecord : PruvendoRecord DFLeXClient DFLeXClientFields :=
+(* 7 *) Global Instance FLeXClient_PruvendoRecord : PruvendoRecord FLeXClient FLeXClientFields :=
 {
-  field_type := DFLeXClient_field_type; 
-  getPruvendoRecord := @DFLeXClient_get ;
-  setPruvendoRecord := @DFLeXClient_set ;
+  field_type := FLeXClient_field_type; 
+  getPruvendoRecord := @FLeXClient_get ;
+  setPruvendoRecord := @FLeXClient_set ;
 } .
-(* 3 *) Definition DFLeX_field_type f : Type :=  
-match f with | DFLeX_ι_deployer_pubkey_ => XInteger256 | DFLeX_ι_tons_cfg_ => TonsConfig | DFLeX_ι_pair_code_ => XMaybe TvmCell | DFLeX_ι_xchg_pair_code_ => XMaybe TvmCell | DFLeX_ι_price_code_ => XMaybe TvmCell | DFLeX_ι_xchg_price_code_ => XMaybe TvmCell | DFLeX_ι_min_amount_ => XInteger128 | DFLeX_ι_deals_limit_ => XInteger8 | DFLeX_ι_notify_addr_ => XAddress end .
-(* 4 *) Definition DFLeX_get (f: DFLeXFields )(r: DFLeX ) :  DFLeX_field_type f := 
- match f with | DFLeX_ι_deployer_pubkey_ => fst8 r 
- | DFLeX_ι_tons_cfg_ => snd ( fst7 r ) 
- | DFLeX_ι_pair_code_ => snd ( fst6 r ) 
- | DFLeX_ι_xchg_pair_code_ => snd ( fst5 r ) 
- | DFLeX_ι_price_code_ => snd ( fst4 r ) 
- | DFLeX_ι_xchg_price_code_ => snd ( fst3 r ) 
- | DFLeX_ι_min_amount_ => snd ( fst2 r ) 
- | DFLeX_ι_deals_limit_ => snd ( fst1 r ) 
- | DFLeX_ι_notify_addr_ => snd r 
+(* 3 *) Definition FLeX_field_type f : Type :=  
+match f with | FLeX_ι_deployer_pubkey_ => XInteger256 | FLeX_ι_tons_cfg_ => TonsConfig | FLeX_ι_pair_code_ => XMaybe TvmCell | FLeX_ι_xchg_pair_code_ => XMaybe TvmCell | FLeX_ι_price_code_ => XMaybe TvmCell | FLeX_ι_xchg_price_code_ => XMaybe TvmCell | FLeX_ι_min_amount_ => XInteger128 | FLeX_ι_deals_limit_ => XInteger8 | FLeX_ι_notify_addr_ => XAddress end .
+(* 4 *) Definition FLeX_get (f: FLeXFields )(r: FLeX ) :  FLeX_field_type f := 
+ match f with | FLeX_ι_deployer_pubkey_ => fst8 r 
+ | FLeX_ι_tons_cfg_ => snd ( fst7 r ) 
+ | FLeX_ι_pair_code_ => snd ( fst6 r ) 
+ | FLeX_ι_xchg_pair_code_ => snd ( fst5 r ) 
+ | FLeX_ι_price_code_ => snd ( fst4 r ) 
+ | FLeX_ι_xchg_price_code_ => snd ( fst3 r ) 
+ | FLeX_ι_min_amount_ => snd ( fst2 r ) 
+ | FLeX_ι_deals_limit_ => snd ( fst1 r ) 
+ | FLeX_ι_notify_addr_ => snd r 
  end .
-(* 5 *) Coercion DFLeX_get : DFLeXFields >-> Funclass .
-(* 6 *) Definition DFLeX_set (f: DFLeXFields ) 
-(v: DFLeX_field_type f) (r: DFLeX ): DFLeX  :=
-  match f, v with | DFLeX_ι_deployer_pubkey_ , v' => ( v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_tons_cfg_ , v' => ( fst8 r , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_pair_code_ , v' => ( fst8 r , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_xchg_pair_code_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_price_code_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_xchg_price_code_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_min_amount_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | DFLeX_ι_deals_limit_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | DFLeX_ι_notify_addr_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+(* 5 *) Coercion FLeX_get : FLeXFields >-> Funclass .
+(* 6 *) Definition FLeX_set (f: FLeXFields ) 
+(v: FLeX_field_type f) (r: FLeX ): FLeX  :=
+  match f, v with | FLeX_ι_deployer_pubkey_ , v' => ( v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeX_ι_tons_cfg_ , v' => ( fst8 r , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeX_ι_pair_code_ , v' => ( fst8 r , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeX_ι_xchg_pair_code_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeX_ι_price_code_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeX_ι_xchg_price_code_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeX_ι_min_amount_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | FLeX_ι_deals_limit_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | FLeX_ι_notify_addr_ , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
-(* 7 *) Global Instance DFLeX_PruvendoRecord : PruvendoRecord DFLeX DFLeXFields :=
+(* 7 *) Global Instance FLeX_PruvendoRecord : PruvendoRecord FLeX FLeXFields :=
 {
-  field_type := DFLeX_field_type; 
-  getPruvendoRecord := @DFLeX_get ;
-  setPruvendoRecord := @DFLeX_set ;
+  field_type := FLeX_field_type; 
+  getPruvendoRecord := @FLeX_get ;
+  setPruvendoRecord := @FLeX_set ;
 } .
 (* 3 *) Definition process_ret_field_type f : Type :=  
 match f with | process_ret_ι_sells_amount => XInteger128 | process_ret_ι_buys_amount => XInteger128 | process_ret_ι_ret_ => XMaybe OrderRet end .
@@ -1089,41 +1183,53 @@ match f with | DetailsInfo_ι_price => XInteger128 | DetailsInfo_ι_min_amount =
   getPruvendoRecord := @DetailsInfo_get ;
   setPruvendoRecord := @DetailsInfo_set ;
 } .
-(* 3 *) Definition DPrice_field_type f : Type :=  
-match f with | DPrice_ι_price_ => XInteger128 | DPrice_ι_sells_amount_ => XInteger128 | DPrice_ι_buys_amount_ => XInteger128 | DPrice_ι_flex_ => addr_std_fixed | DPrice_ι_min_amount_ => XInteger128 | DPrice_ι_deals_limit_ => XInteger8 | DPrice_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) | DPrice_ι_workchain_id_ => XInteger8 | DPrice_ι_tons_cfg_ => TonsConfig | DPrice_ι_tip3_code_ => TvmCell | DPrice_ι_tip3cfg_ => Tip3Config end .
-(* 4 *) Definition DPrice_get (f: DPriceFields )(r: DPrice ) :  DPrice_field_type f := 
- match f with | DPrice_ι_price_ => fst10 r 
- | DPrice_ι_sells_amount_ => snd ( fst9 r ) 
- | DPrice_ι_buys_amount_ => snd ( fst8 r ) 
- | DPrice_ι_flex_ => snd ( fst7 r ) 
- | DPrice_ι_min_amount_ => snd ( fst6 r ) 
- | DPrice_ι_deals_limit_ => snd ( fst5 r ) 
- | DPrice_ι_notify_addr_ => snd ( fst4 r ) 
- | DPrice_ι_workchain_id_ => snd ( fst3 r ) 
- | DPrice_ι_tons_cfg_ => snd ( fst2 r ) 
- | DPrice_ι_tip3_code_ => snd ( fst1 r ) 
- | DPrice_ι_tip3cfg_ => snd r 
+(* 3 *) Definition Price_field_type f : Type :=  
+match f with 
+| Price_ι_price_ => XInteger128 
+| Price_ι_sells_amount_ => XInteger128 
+| Price_ι_buys_amount_ => XInteger128 
+| Price_ι_flex_ => addr_std_fixed 
+| Price_ι_min_amount_ => XInteger128 
+| Price_ι_deals_limit_ => XInteger8 
+| Price_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *)
+| Price_ι_workchain_id_ => XInteger8 | Price_ι_tons_cfg_ => TonsConfig 
+| Price_ι_tip3_code_ => TvmCell 
+| Price_ι_tip3cfg_ => Tip3Config 
+end .
+
+(* 4 *) Definition Price_get (f: PriceFields )(r: Price ) :  Price_field_type f := 
+ match f with | Price_ι_price_ => fst10 r 
+ | Price_ι_sells_amount_ => snd ( fst9 r ) 
+ | Price_ι_buys_amount_ => snd ( fst8 r ) 
+ | Price_ι_flex_ => snd ( fst7 r ) 
+ | Price_ι_min_amount_ => snd ( fst6 r ) 
+ | Price_ι_deals_limit_ => snd ( fst5 r ) 
+ | Price_ι_notify_addr_ => snd ( fst4 r ) 
+ | Price_ι_workchain_id_ => snd ( fst3 r ) 
+ | Price_ι_tons_cfg_ => snd ( fst2 r ) 
+ | Price_ι_tip3_code_ => snd ( fst1 r ) 
+ | Price_ι_tip3cfg_ => snd r 
  end .
-(* 5 *) Coercion DPrice_get : DPriceFields >-> Funclass .
-(* 6 *) Definition DPrice_set (f: DPriceFields ) 
-(v: DPrice_field_type f) (r: DPrice ): DPrice  :=
-  match f, v with | DPrice_ι_price_ , v' => ( v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPrice_ι_sells_amount_ , v' => ( fst10 r , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPrice_ι_buys_amount_ , v' => ( fst10 r , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPrice_ι_flex_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPrice_ι_min_amount_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPrice_ι_deals_limit_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPrice_ι_notify_addr_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPrice_ι_workchain_id_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPrice_ι_tons_cfg_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | DPrice_ι_tip3_code_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | DPrice_ι_tip3cfg_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+(* 5 *) Coercion Price_get : PriceFields >-> Funclass .
+(* 6 *) Definition Price_set (f: PriceFields ) 
+(v: Price_field_type f) (r: Price ): Price  :=
+  match f, v with | Price_ι_price_ , v' => ( v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_sells_amount_ , v' => ( fst10 r , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_buys_amount_ , v' => ( fst10 r , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_flex_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_min_amount_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_deals_limit_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_notify_addr_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_workchain_id_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_tons_cfg_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | Price_ι_tip3_code_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | Price_ι_tip3cfg_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
-(* 7 *) Global Instance DPrice_PruvendoRecord : PruvendoRecord DPrice DPriceFields :=
+(* 7 *) Global Instance Price_PruvendoRecord : PruvendoRecord Price PriceFields :=
 {
-  field_type := DPrice_field_type; 
-  getPruvendoRecord := @DPrice_get ;
-  setPruvendoRecord := @DPrice_set ;
+  field_type := Price_field_type; 
+  getPruvendoRecord := @Price_get ;
+  setPruvendoRecord := @Price_set ;
 } .
 (* 3 *) Definition RationalPrice_field_type f : Type :=  
 match f with | RationalPrice_ι_num => XInteger128 | RationalPrice_ι_denum => XInteger128 end .
@@ -1217,43 +1323,57 @@ match f with | DetailsInfoXchg_ι_price_num => XInteger128 | DetailsInfoXchg_ι_
   getPruvendoRecord := @DetailsInfoXchg_get ;
   setPruvendoRecord := @DetailsInfoXchg_set ;
 } .
-(* 3 *) Definition DPriceXchg_field_type f : Type :=  
-match f with | DPriceXchg_ι_price_ => RationalPrice | DPriceXchg_ι_sells_amount_ => XInteger128 | DPriceXchg_ι_buys_amount_ => XInteger128 | DPriceXchg_ι_flex_ => addr_std_fixed | DPriceXchg_ι_min_amount_ => XInteger128 | DPriceXchg_ι_deals_limit_ => XInteger8 | DPriceXchg_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) | DPriceXchg_ι_workchain_id_ => XInteger8 | DPriceXchg_ι_tons_cfg_ => TonsConfig | DPriceXchg_ι_tip3_code_ => TvmCell | DPriceXchg_ι_major_tip3cfg_ => Tip3Config | DPriceXchg_ι_minor_tip3cfg_ => Tip3Config end .
-(* 4 *) Definition DPriceXchg_get (f: DPriceXchgFields )(r: DPriceXchg ) :  DPriceXchg_field_type f := 
- match f with | DPriceXchg_ι_price_ => fst11 r 
- | DPriceXchg_ι_sells_amount_ => snd ( fst10 r ) 
- | DPriceXchg_ι_buys_amount_ => snd ( fst9 r ) 
- | DPriceXchg_ι_flex_ => snd ( fst8 r ) 
- | DPriceXchg_ι_min_amount_ => snd ( fst7 r ) 
- | DPriceXchg_ι_deals_limit_ => snd ( fst6 r ) 
- | DPriceXchg_ι_notify_addr_ => snd ( fst5 r ) 
- | DPriceXchg_ι_workchain_id_ => snd ( fst4 r ) 
- | DPriceXchg_ι_tons_cfg_ => snd ( fst3 r ) 
- | DPriceXchg_ι_tip3_code_ => snd ( fst2 r ) 
- | DPriceXchg_ι_major_tip3cfg_ => snd ( fst1 r ) 
- | DPriceXchg_ι_minor_tip3cfg_ => snd r 
+(* 3 *) Definition PriceXchg_field_type f : Type :=  
+match f with 
+| PriceXchg_ι_price_ => RationalPrice 
+| PriceXchg_ι_sells_amount_ => XInteger128 
+| PriceXchg_ι_buys_amount_ => XInteger128 
+| PriceXchg_ι_flex_ => addr_std_fixed 
+| PriceXchg_ι_min_amount_ => XInteger128 
+| PriceXchg_ι_deals_limit_ => XInteger8 
+| PriceXchg_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *)
+| PriceXchg_ι_workchain_id_ => XInteger8 
+| PriceXchg_ι_tons_cfg_ => TonsConfig 
+| PriceXchg_ι_tip3_code_ => TvmCell 
+| PriceXchg_ι_major_tip3cfg_ => Tip3Config 
+| PriceXchg_ι_minor_tip3cfg_ => Tip3Config 
+end .
+
+(* 4 *) Definition PriceXchg_get (f: PriceXchgFields )(r: PriceXchg ) :  PriceXchg_field_type f := 
+ match f with | PriceXchg_ι_price_ => fst11 r 
+ | PriceXchg_ι_sells_amount_ => snd ( fst10 r ) 
+ | PriceXchg_ι_buys_amount_ => snd ( fst9 r ) 
+ | PriceXchg_ι_flex_ => snd ( fst8 r ) 
+ | PriceXchg_ι_min_amount_ => snd ( fst7 r ) 
+ | PriceXchg_ι_deals_limit_ => snd ( fst6 r ) 
+ | PriceXchg_ι_notify_addr_ => snd ( fst5 r ) 
+ | PriceXchg_ι_workchain_id_ => snd ( fst4 r ) 
+ | PriceXchg_ι_tons_cfg_ => snd ( fst3 r ) 
+ | PriceXchg_ι_tip3_code_ => snd ( fst2 r ) 
+ | PriceXchg_ι_major_tip3cfg_ => snd ( fst1 r ) 
+ | PriceXchg_ι_minor_tip3cfg_ => snd r 
  end .
-(* 5 *) Coercion DPriceXchg_get : DPriceXchgFields >-> Funclass .
-(* 6 *) Definition DPriceXchg_set (f: DPriceXchgFields ) 
-(v: DPriceXchg_field_type f) (r: DPriceXchg ): DPriceXchg  :=
-  match f, v with | DPriceXchg_ι_price_ , v' => ( v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_sells_amount_ , v' => ( fst11 r , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_buys_amount_ , v' => ( fst11 r , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_flex_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_min_amount_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_deals_limit_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_notify_addr_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_workchain_id_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_tons_cfg_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_tip3_code_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | DPriceXchg_ι_major_tip3cfg_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | DPriceXchg_ι_minor_tip3cfg_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+(* 5 *) Coercion PriceXchg_get : PriceXchgFields >-> Funclass .
+(* 6 *) Definition PriceXchg_set (f: PriceXchgFields ) 
+(v: PriceXchg_field_type f) (r: PriceXchg ): PriceXchg  :=
+  match f, v with | PriceXchg_ι_price_ , v' => ( v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_sells_amount_ , v' => ( fst11 r , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_buys_amount_ , v' => ( fst11 r , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_flex_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_min_amount_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_deals_limit_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_notify_addr_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_workchain_id_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_tons_cfg_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_tip3_code_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_major_tip3cfg_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | PriceXchg_ι_minor_tip3cfg_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
-(* 7 *) Global Instance DPriceXchg_PruvendoRecord : PruvendoRecord DPriceXchg DPriceXchgFields :=
+(* 7 *) Global Instance PriceXchg_PruvendoRecord : PruvendoRecord PriceXchg PriceXchgFields :=
 {
-  field_type := DPriceXchg_field_type; 
-  getPruvendoRecord := @DPriceXchg_get ;
-  setPruvendoRecord := @DPriceXchg_set ;
+  field_type := PriceXchg_field_type; 
+  getPruvendoRecord := @PriceXchg_get ;
+  setPruvendoRecord := @PriceXchg_set ;
 } .
 (* 3 *) Definition DTradingPair_field_type f : Type :=  
 match f with | DTradingPair_ι_flex_addr_ => XAddress | DTradingPair_ι_tip3_root_ => XAddress | DTradingPair_ι_deploy_value_ => XInteger128 end .
@@ -1298,14 +1418,20 @@ match f with | DXchgPair_ι_flex_addr_ => XAddress | DXchgPair_ι_tip3_major_roo
   setPruvendoRecord := @DXchgPair_set ;
 } .
 (* 3 *) Definition VMCommit_field_type f : Type :=  
-match f with | VMCommit_ι_dealer => dealer end .
+match f with | VMCommit_ι_FLeX => FLeX | VMCommit_ι_FLeXClient => FLeXClient | VMCommit_ι_Price => Price | VMCommit_ι_PriceXchg => PriceXchg end .
 (* 4 *) Definition VMCommit_get (f: VMCommitFields )(r: VMCommit ) :  VMCommit_field_type f := 
- match f with | VMCommit_ι_dealer => fst0 r 
+ match f with | VMCommit_ι_FLeX => fst3 r 
+ | VMCommit_ι_FLeXClient => snd ( fst2 r ) 
+ | VMCommit_ι_Price => snd ( fst1 r ) 
+ | VMCommit_ι_PriceXchg => snd r 
  end .
 (* 5 *) Coercion VMCommit_get : VMCommitFields >-> Funclass .
 (* 6 *) Definition VMCommit_set (f: VMCommitFields ) 
 (v: VMCommit_field_type f) (r: VMCommit ): VMCommit  :=
-  match f, v with | VMCommit_ι_dealer , v' => ( v' ) 
+  match f, v with | VMCommit_ι_FLeX , v' => ( v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | VMCommit_ι_FLeXClient , v' => ( fst3 r , v' , snd ( fst1 r ) , snd r ) 
+ | VMCommit_ι_Price , v' => ( fst3 r , snd ( fst2 r ) , v' , snd r ) 
+ | VMCommit_ι_PriceXchg , v' => ( fst3 r , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
 (* 7 *) Global Instance VMCommit_PruvendoRecord : PruvendoRecord VMCommit VMCommitFields :=
 {
@@ -1313,130 +1439,154 @@ match f with | VMCommit_ι_dealer => dealer end .
   getPruvendoRecord := @VMCommit_get ;
   setPruvendoRecord := @VMCommit_set ;
 } .
-
+ 
 (* 3 *) Definition LocalState_field_type f : Type :=  
-match f with | LocalState_ι_uint256 => XHMap string XInteger256 | LocalState_ι_cell => XHMap string TvmCell | LocalState_ι_TonsConfig => XHMap string TonsConfig | LocalState_ι_address => XHMap string XAddress | LocalState_ι_uint128 => XHMap string XInteger128 | LocalState_ι_StateInit => XHMap string StateInit | LocalState_ι_DTradingPair => XHMap string DTradingPair | LocalState_ι_handle_ITradingPair_ => XHMap string XInteger16 (* handle_ITradingPair_ *) | LocalState_ι_DXchgPair => XHMap string DXchgPair | LocalState_ι_handle_IXchgPair_ => XHMap string XInteger16 (* handle_IXchgPair_ *) | LocalState_ι_parse_FLeXSellArgs_ => XHMap string XInteger16 (* parse_FLeXSellArgs_ *) | LocalState_ι_handle_IPrice_ => XHMap string XInteger16 (* handle_IPrice_ *) | LocalState_ι_SellArgs => XHMap string SellArgs | LocalState_ι_parse_FLeXBuyArgs_ => XHMap string XInteger16 (* parse_FLeXBuyArgs_ *) | LocalState_ι_price_addr => XHMap string XInteger16 | LocalState_ι_parse_FLeXCancelArgs_ => XHMap string XInteger16 (* parse_FLeXCancelArgs_ *) | LocalState_ι_parse_FLeXXchgCancelArgs_ => XHMap string XInteger16 (* parse_FLeXXchgCancelArgs_ *) | LocalState_ι_handle_IPriceXchg_ => XHMap string XInteger16 (* handle_IPriceXchg_ *) | LocalState_ι_bool_t => XHMap string XBool | LocalState_ι_parse_FLeXXchgArgs_ => XHMap string XInteger16 (* parse_FLeXXchgArgs_ *) | LocalState_ι_PayloadArgs => XHMap string PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ => XHMap string XInteger16 (* handle_ITONTokenWallet_ *) | LocalState_ι_uint8 => XHMap string XInteger8 | LocalState_ι_Tip3Config => XHMap string Tip3Config | LocalState_ι_DPrice => XHMap string DPrice | LocalState_ι_DPriceXchg => XHMap string DPriceXchg | LocalState_ι_tuple_address_address => XHMap string (XAddress*XAddress) | LocalState_ι_uint32 => XHMap string XInteger32 | LocalState_ι_unsigned => XHMap string XInteger | LocalState_ι_OrderInfo => XHMap string OrderInfo | LocalState_ι_int => XHMap string XInteger | LocalState_ι_optional_uint128_ => XHMap string (XMaybe XInteger128) | LocalState_ι_bool => XHMap string XBool | LocalState_ι_optional_OrderInfoWithIdx_ => XHMap string (XMaybe (XInteger*OrderInfo)) | LocalState_ι_queue_OrderInfo_ => XHMap string XInteger16 (* queue_OrderInfo_ *) | LocalState_ι_pair_unsigned_OrderInfo_ => XHMap string (XInteger*OrderInfo) end .
-Compute LocalState_field_type LocalState_ι_uint256 .
-Variable r : LocalState .
-Check fst35 r.
-(* 4 *) Definition LocalState_get (f: LocalStateFields )(r: LocalState ) :  LocalState_field_type f (* := *)
-.
-destruct f. refine ( fst35 r ) .
-refine ( snd ( fst34 r ) ) .
-refine ( snd ( fst33 r ) ) .
-refine ( snd ( fst32 r ) ) .
-refine ( snd ( fst31 r ) ) .
-refine ( snd ( fst30 r ) ) .
-refine ( snd ( fst29 r ) ) .
-refine ( snd ( fst28 r ) ) .
-refine ( snd ( fst27 r ) ) .
-refine ( snd ( fst26 r ) ) .
-refine ( snd ( fst25 r ) ) .
-refine ( snd ( fst24 r ) ) .
-refine ( snd ( fst23 r ) ) .
-refine ( snd ( fst22 r ) ) .
-refine ( snd ( fst21 r ) ) .
-refine ( snd ( fst20 r ) ) .
-refine ( snd ( fst19 r ) ) .
-refine ( snd ( fst18 r ) ) .
-refine ( snd ( fst17 r ) ) .
-refine ( snd ( fst16 r ) ) .
-refine ( snd ( fst15 r ) ) .
-refine ( snd ( fst14 r ) ) .
-refine ( snd ( fst13 r ) ) .
-refine ( snd ( fst12 r ) ) .
-refine ( snd ( fst11 r ) ) .
-refine ( snd ( fst10 r ) ) .
-refine ( snd ( fst9 r ) ) .
-refine ( snd ( fst8 r ) ) .
-refine ( snd ( fst7 r ) ) .
-refine ( snd ( fst6 r ) ) .
-refine ( snd ( fst5 r ) ) .
-refine ( snd ( fst4 r ) ) .
-refine ( snd ( fst3 r ) ) .
-refine ( snd ( fst2 r ) ) . 
-refine ( snd ( fst1 r ) ) .
-refine ( snd r ) .
-Defined.
-
- (* match f with 
- | LocalState_ι_uint256 => fst35 r : XHMap string XInteger256
- | LocalState_ι_cell => snd ( fst34 r ) 
- | LocalState_ι_TonsConfig => snd ( fst33 r ) 
- | LocalState_ι_address => snd ( fst32 r ) 
- | LocalState_ι_uint128 => snd ( fst31 r ) 
- | LocalState_ι_StateInit => snd ( fst30 r ) 
- | LocalState_ι_DTradingPair => snd ( fst29 r ) 
- | LocalState_ι_handle_ITradingPair_ => snd ( fst28 r ) 
- | LocalState_ι_DXchgPair => snd ( fst27 r ) 
- | LocalState_ι_handle_IXchgPair_ => snd ( fst26 r ) 
- | LocalState_ι_parse_FLeXSellArgs_ => snd ( fst25 r ) 
- | LocalState_ι_handle_IPrice_ => snd ( fst24 r ) 
- | LocalState_ι_SellArgs => snd ( fst23 r ) 
- | LocalState_ι_parse_FLeXBuyArgs_ => snd ( fst22 r ) 
- | LocalState_ι_price_addr => snd ( fst21 r ) 
- | LocalState_ι_parse_FLeXCancelArgs_ => snd ( fst20 r ) 
- | LocalState_ι_parse_FLeXXchgCancelArgs_ => snd ( fst19 r ) 
- | LocalState_ι_handle_IPriceXchg_ => snd ( fst18 r ) 
- | LocalState_ι_bool_t => snd ( fst17 r ) 
- | LocalState_ι_parse_FLeXXchgArgs_ => snd ( fst16 r ) 
- | LocalState_ι_PayloadArgs => snd ( fst15 r ) 
- | LocalState_ι_handle_ITONTokenWallet_ => snd ( fst14 r ) 
- | LocalState_ι_uint8 => snd ( fst13 r ) 
- | LocalState_ι_Tip3Config => snd ( fst12 r ) 
- | LocalState_ι_DPrice => snd ( fst11 r ) 
- | LocalState_ι_DPriceXchg => snd ( fst10 r ) 
- | LocalState_ι_tuple_address_address => snd ( fst9 r ) 
- | LocalState_ι_uint32 => snd ( fst8 r ) 
- | LocalState_ι_unsigned => snd ( fst7 r ) 
- | LocalState_ι_OrderInfo => snd ( fst6 r ) 
- | LocalState_ι_int => snd ( fst5 r ) 
- | LocalState_ι_optional_uint128_ => snd ( fst4 r ) 
- | LocalState_ι_bool => snd ( fst3 r ) 
- | LocalState_ι_optional_OrderInfoWithIdx_ => snd ( fst2 r ) 
- | LocalState_ι_queue_OrderInfo_ => snd ( fst1 r ) 
- | LocalState_ι_pair_unsigned_OrderInfo_ => snd r 
- end . *)
-
+match f with | LocalState_ι_uint256 => XHMap (string*nat) XInteger256 | LocalState_ι_cell => XHMap (string*nat) TvmCell | LocalState_ι_TonsConfig => XHMap (string*nat) TonsConfig | LocalState_ι_address => XHMap (string*nat) XAddress | LocalState_ι_uint128 => XHMap (string*nat) XInteger128 | LocalState_ι_StateInit => XHMap (string*nat) StateInit | LocalState_ι_DTradingPair => XHMap (string*nat) DTradingPair | LocalState_ι_handle_ITradingPair_ => XHMap (string*nat) XInteger16 (* handle_ITradingPair_ *) | LocalState_ι_DXchgPair => XHMap (string*nat) DXchgPair | LocalState_ι_handle_IXchgPair_ => XHMap (string*nat) XInteger16 (* handle_IXchgPair_ *) | LocalState_ι_parse_FLeXSellArgs_ => XHMap (string*nat) XInteger16 (* parse_FLeXSellArgs_ *) | LocalState_ι_handle_IPrice_ => XHMap (string*nat) XInteger16 (* handle_IPrice_ *) | LocalState_ι_SellArgs => XHMap (string*nat) SellArgs | LocalState_ι_parse_FLeXBuyArgs_ => XHMap (string*nat) XInteger16 (* parse_FLeXBuyArgs_ *) | LocalState_ι_parse_FLeXCancelArgs_ => XHMap (string*nat) XInteger16 (* parse_FLeXCancelArgs_ *) | LocalState_ι_parse_FLeXXchgCancelArgs_ => XHMap (string*nat) XInteger16 (* parse_FLeXXchgCancelArgs_ *) | LocalState_ι_handle_IPriceXchg_ => XHMap (string*nat) XInteger16 (* handle_IPriceXchg_ *) | LocalState_ι_bool_t => XHMap (string*nat) XBool | LocalState_ι_parse_FLeXXchgArgs_ => XHMap (string*nat) XInteger16 (* parse_FLeXXchgArgs_ *) | LocalState_ι_PayloadArgs => XHMap (string*nat) PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ => XHMap (string*nat) XInteger16 (* handle_ITONTokenWallet_ *) | LocalState_ι_uint8 => XHMap (string*nat) XInteger8 | LocalState_ι_Tip3Config => XHMap (string*nat) Tip3Config | LocalState_ι_DPrice => XHMap (string*nat) Price | LocalState_ι_DPriceXchg => XHMap (string*nat) PriceXchg | LocalState_ι_tuple_address_address => XHMap (string*nat) (XAddress*XAddress) | LocalState_ι_uint32 => XHMap (string*nat) XInteger32 | LocalState_ι_unsigned => XHMap (string*nat) XInteger | LocalState_ι_OrderInfo => XHMap (string*nat) OrderInfo | LocalState_ι_int => XHMap (string*nat) XInteger | LocalState_ι_optional_uint128_ => XHMap (string*nat) (XMaybe XInteger128) | LocalState_ι_bool => XHMap (string*nat) XBool | LocalState_ι_optional_OrderInfoWithIdx_ => XHMap (string*nat) (XMaybe (XInteger*OrderInfo)) | LocalState_ι_queue_OrderInfo_ => XHMap (string*nat) XInteger16 (* queue_OrderInfo_ *) | LocalState_ι_pair_unsigned_OrderInfo_ => XHMap (string*nat) (XInteger*OrderInfo) | LocalState_ι_uint256Index => XHMap string nat | LocalState_ι_cellIndex => XHMap string nat | LocalState_ι_TonsConfigIndex => XHMap string nat | LocalState_ι_addressIndex => XHMap string nat | LocalState_ι_uint128Index => XHMap string nat | LocalState_ι_StateInitIndex => XHMap string nat | LocalState_ι_DTradingPairIndex => XHMap string nat | LocalState_ι_handle_ITradingPair_Index => XHMap string nat | LocalState_ι_DXchgPairIndex => XHMap string nat | LocalState_ι_handle_IXchgPair_Index => XHMap string nat | LocalState_ι_parse_FLeXSellArgs_Index => XHMap string nat | LocalState_ι_handle_IPrice_Index => XHMap string nat | LocalState_ι_SellArgsIndex => XHMap string nat | LocalState_ι_parse_FLeXBuyArgs_Index => XHMap string nat | LocalState_ι_parse_FLeXCancelArgs_Index => XHMap string nat | LocalState_ι_parse_FLeXXchgCancelArgs_Index => XHMap string nat | LocalState_ι_handle_IPriceXchg_Index => XHMap string nat | LocalState_ι_bool_tIndex => XHMap string nat | LocalState_ι_parse_FLeXXchgArgs_Index => XHMap string nat | LocalState_ι_PayloadArgsIndex => XHMap string nat | LocalState_ι_handle_ITONTokenWallet_Index => XHMap string nat | LocalState_ι_uint8Index => XHMap string nat | LocalState_ι_Tip3ConfigIndex => XHMap string nat | LocalState_ι_DPriceIndex => XHMap string nat | LocalState_ι_DPriceXchgIndex => XHMap string nat | LocalState_ι_tuple_address_addressIndex => XHMap string nat | LocalState_ι_uint32Index => XHMap string nat | LocalState_ι_unsignedIndex => XHMap string nat | LocalState_ι_OrderInfoIndex => XHMap string nat | LocalState_ι_intIndex => XHMap string nat | LocalState_ι_optional_uint128_Index => XHMap string nat | LocalState_ι_boolIndex => XHMap string nat | LocalState_ι_optional_OrderInfoWithIdx_Index => XHMap string nat | LocalState_ι_queue_OrderInfo_Index => XHMap string nat | LocalState_ι_pair_unsigned_OrderInfo_Index => XHMap string nat end .
+(* 4 *) Definition LocalState_get (f: LocalStateFields )(r: LocalState ) :  LocalState_field_type f := 
+ match f with | LocalState_ι_uint256 => fst69 r 
+ | LocalState_ι_cell => snd ( fst68 r ) 
+ | LocalState_ι_TonsConfig => snd ( fst67 r ) 
+ | LocalState_ι_address => snd ( fst66 r ) 
+ | LocalState_ι_uint128 => snd ( fst65 r ) 
+ | LocalState_ι_StateInit => snd ( fst64 r ) 
+ | LocalState_ι_DTradingPair => snd ( fst63 r ) 
+ | LocalState_ι_handle_ITradingPair_ => snd ( fst62 r ) 
+ | LocalState_ι_DXchgPair => snd ( fst61 r ) 
+ | LocalState_ι_handle_IXchgPair_ => snd ( fst60 r ) 
+ | LocalState_ι_parse_FLeXSellArgs_ => snd ( fst59 r ) 
+ | LocalState_ι_handle_IPrice_ => snd ( fst58 r ) 
+ | LocalState_ι_SellArgs => snd ( fst57 r ) 
+ | LocalState_ι_parse_FLeXBuyArgs_ => snd ( fst56 r ) 
+ | LocalState_ι_parse_FLeXCancelArgs_ => snd ( fst55 r ) 
+ | LocalState_ι_parse_FLeXXchgCancelArgs_ => snd ( fst54 r ) 
+ | LocalState_ι_handle_IPriceXchg_ => snd ( fst53 r ) 
+ | LocalState_ι_bool_t => snd ( fst52 r ) 
+ | LocalState_ι_parse_FLeXXchgArgs_ => snd ( fst51 r ) 
+ | LocalState_ι_PayloadArgs => snd ( fst50 r ) 
+ | LocalState_ι_handle_ITONTokenWallet_ => snd ( fst49 r ) 
+ | LocalState_ι_uint8 => snd ( fst48 r ) 
+ | LocalState_ι_Tip3Config => snd ( fst47 r ) 
+ | LocalState_ι_DPrice => snd ( fst46 r ) 
+ | LocalState_ι_DPriceXchg => snd ( fst45 r ) 
+ | LocalState_ι_tuple_address_address => snd ( fst44 r ) 
+ | LocalState_ι_uint32 => snd ( fst43 r ) 
+ | LocalState_ι_unsigned => snd ( fst42 r ) 
+ | LocalState_ι_OrderInfo => snd ( fst41 r ) 
+ | LocalState_ι_int => snd ( fst40 r ) 
+ | LocalState_ι_optional_uint128_ => snd ( fst39 r ) 
+ | LocalState_ι_bool => snd ( fst38 r ) 
+ | LocalState_ι_optional_OrderInfoWithIdx_ => snd ( fst37 r ) 
+ | LocalState_ι_queue_OrderInfo_ => snd ( fst36 r ) 
+ | LocalState_ι_pair_unsigned_OrderInfo_ => snd ( fst35 r ) 
+ | LocalState_ι_uint256Index => snd ( fst34 r ) 
+ | LocalState_ι_cellIndex => snd ( fst33 r ) 
+ | LocalState_ι_TonsConfigIndex => snd ( fst32 r ) 
+ | LocalState_ι_addressIndex => snd ( fst31 r ) 
+ | LocalState_ι_uint128Index => snd ( fst30 r ) 
+ | LocalState_ι_StateInitIndex => snd ( fst29 r ) 
+ | LocalState_ι_DTradingPairIndex => snd ( fst28 r ) 
+ | LocalState_ι_handle_ITradingPair_Index => snd ( fst27 r ) 
+ | LocalState_ι_DXchgPairIndex => snd ( fst26 r ) 
+ | LocalState_ι_handle_IXchgPair_Index => snd ( fst25 r ) 
+ | LocalState_ι_parse_FLeXSellArgs_Index => snd ( fst24 r ) 
+ | LocalState_ι_handle_IPrice_Index => snd ( fst23 r ) 
+ | LocalState_ι_SellArgsIndex => snd ( fst22 r ) 
+ | LocalState_ι_parse_FLeXBuyArgs_Index => snd ( fst21 r ) 
+ | LocalState_ι_parse_FLeXCancelArgs_Index => snd ( fst20 r ) 
+ | LocalState_ι_parse_FLeXXchgCancelArgs_Index => snd ( fst19 r ) 
+ | LocalState_ι_handle_IPriceXchg_Index => snd ( fst18 r ) 
+ | LocalState_ι_bool_tIndex => snd ( fst17 r ) 
+ | LocalState_ι_parse_FLeXXchgArgs_Index => snd ( fst16 r ) 
+ | LocalState_ι_PayloadArgsIndex => snd ( fst15 r ) 
+ | LocalState_ι_handle_ITONTokenWallet_Index => snd ( fst14 r ) 
+ | LocalState_ι_uint8Index => snd ( fst13 r ) 
+ | LocalState_ι_Tip3ConfigIndex => snd ( fst12 r ) 
+ | LocalState_ι_DPriceIndex => snd ( fst11 r ) 
+ | LocalState_ι_DPriceXchgIndex => snd ( fst10 r ) 
+ | LocalState_ι_tuple_address_addressIndex => snd ( fst9 r ) 
+ | LocalState_ι_uint32Index => snd ( fst8 r ) 
+ | LocalState_ι_unsignedIndex => snd ( fst7 r ) 
+ | LocalState_ι_OrderInfoIndex => snd ( fst6 r ) 
+ | LocalState_ι_intIndex => snd ( fst5 r ) 
+ | LocalState_ι_optional_uint128_Index => snd ( fst4 r ) 
+ | LocalState_ι_boolIndex => snd ( fst3 r ) 
+ | LocalState_ι_optional_OrderInfoWithIdx_Index => snd ( fst2 r ) 
+ | LocalState_ι_queue_OrderInfo_Index => snd ( fst1 r ) 
+ | LocalState_ι_pair_unsigned_OrderInfo_Index => snd r 
+ end .
 (* 5 *) Coercion LocalState_get : LocalStateFields >-> Funclass .
 (* 6 *) Definition LocalState_set (f: LocalStateFields ) 
 (v: LocalState_field_type f) (r: LocalState ): LocalState  :=
-  match f, v with | LocalState_ι_uint256 , v' => ( v' , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_cell , v' => ( fst35 r , v' , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_TonsConfig , v' => ( fst35 r , snd ( fst34 r ) , v' , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_address , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , v' , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_uint128 , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , v' , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_StateInit , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , v' , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_DTradingPair , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , v' , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_handle_ITradingPair_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , v' , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_DXchgPair , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , v' , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_handle_IXchgPair_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , v' , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_parse_FLeXSellArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , v' , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_handle_IPrice_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , v' , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_SellArgs , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , v' , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_parse_FLeXBuyArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , v' , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_price_addr , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , v' , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_parse_FLeXCancelArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , v' , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_parse_FLeXXchgCancelArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , v' , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_handle_IPriceXchg_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , v' , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_bool_t , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , v' , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_parse_FLeXXchgArgs_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , v' , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_PayloadArgs , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , v' , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_handle_ITONTokenWallet_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , v' , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_uint8 , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , v' , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_Tip3Config , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , v' , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_DPrice , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_DPriceXchg , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_tuple_address_address , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_uint32 , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_unsigned , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_OrderInfo , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_int , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_optional_uint128_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_bool , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_optional_OrderInfoWithIdx_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_queue_OrderInfo_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | LocalState_ι_pair_unsigned_OrderInfo_ , v' => ( fst35 r , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | LocalState_ι_uint256 , v' => ( v' , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_cell , v' => ( fst69 r , v' , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_TonsConfig , v' => ( fst69 r , snd ( fst68 r ) , v' , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_address , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , v' , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint128 , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , v' , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_StateInit , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , v' , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DTradingPair , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , v' , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_ITradingPair_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , v' , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DXchgPair , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , v' , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_IXchgPair_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , v' , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXSellArgs_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , v' , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_IPrice_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , v' , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_SellArgs , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , v' , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXBuyArgs_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , v' , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXCancelArgs_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , v' , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXXchgCancelArgs_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , v' , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_IPriceXchg_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , v' , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_bool_t , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , v' , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXXchgArgs_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , v' , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_PayloadArgs , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , v' , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_ITONTokenWallet_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , v' , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint8 , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , v' , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_Tip3Config , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , v' , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DPrice , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , v' , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DPriceXchg , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , v' , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_tuple_address_address , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , v' , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint32 , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , v' , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_unsigned , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , v' , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_OrderInfo , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , v' , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_int , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , v' , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_optional_uint128_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , v' , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_bool , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , v' , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_optional_OrderInfoWithIdx_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , v' , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_queue_OrderInfo_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , v' , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_pair_unsigned_OrderInfo_ , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , v' , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint256Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , v' , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_cellIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , v' , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_TonsConfigIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , v' , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_addressIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , v' , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint128Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , v' , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_StateInitIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , v' , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DTradingPairIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , v' , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_ITradingPair_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , v' , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DXchgPairIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , v' , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_IXchgPair_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , v' , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXSellArgs_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , v' , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_IPrice_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , v' , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_SellArgsIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , v' , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXBuyArgs_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , v' , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXCancelArgs_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , v' , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXXchgCancelArgs_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , v' , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_IPriceXchg_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , v' , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_bool_tIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , v' , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_parse_FLeXXchgArgs_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , v' , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_PayloadArgsIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , v' , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_handle_ITONTokenWallet_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , v' , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint8Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , v' , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_Tip3ConfigIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , v' , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DPriceIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_DPriceXchgIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_tuple_address_addressIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_uint32Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_unsignedIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_OrderInfoIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_intIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_optional_uint128_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_boolIndex , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_optional_OrderInfoWithIdx_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | LocalState_ι_queue_OrderInfo_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | LocalState_ι_pair_unsigned_OrderInfo_Index , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
 (* 7 *) Global Instance LocalState_PruvendoRecord : PruvendoRecord LocalState LocalStateFields :=
 {
@@ -1444,21 +1594,30 @@ Defined.
   getPruvendoRecord := @LocalState_get ;
   setPruvendoRecord := @LocalState_set ;
 } .
+
+
+
 (* 3 *) Definition Ledger_field_type f : Type :=  
-match f with | Ledger_ι_dealer => dealer | Ledger_ι_VMCommit => VMCommit | Ledger_ι_LocalState => LocalState | Ledger_ι_LocalStateCopy => LocalState end .
-(* 4 *) Definition Ledger_get (f: LedgerFields )(r: Ledger ) :  Ledger_field_type f := 
- match f with | Ledger_ι_dealer => fst3 r 
+match f with | Ledger_ι_FLeX => FLeX | Ledger_ι_FLeXClient => FLeXClient | Ledger_ι_Price => Price | Ledger_ι_PriceXchg => PriceXchg | Ledger_ι_VMCommit => VMCommit | Ledger_ι_LocalState => LocalState | Ledger_ι_LocalStateCopy => LocalState end .
+(* 4 *) Definition Ledger_get (f: LedgerFieldsI )(r: Ledger ) :  Ledger_field_type f := 
+ match f with | Ledger_ι_FLeX => fst6 r 
+ | Ledger_ι_FLeXClient => snd ( fst5 r ) 
+ | Ledger_ι_Price => snd ( fst4 r ) 
+ | Ledger_ι_PriceXchg => snd ( fst3 r ) 
  | Ledger_ι_VMCommit => snd ( fst2 r ) 
  | Ledger_ι_LocalState => snd ( fst1 r ) 
  | Ledger_ι_LocalStateCopy => snd r 
  end .
-(* 5 *) Coercion Ledger_get : LedgerFields >-> Funclass .
+(* 5 *) Coercion Ledger_get : LedgerFieldsI >-> Funclass .
 (* 6 *) Definition Ledger_set (f: LedgerFields ) 
 (v: Ledger_field_type f) (r: Ledger ): Ledger  :=
-  match f, v with | Ledger_ι_dealer , v' => ( v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | Ledger_ι_VMCommit , v' => ( fst3 r , v' , snd ( fst1 r ) , snd r ) 
- | Ledger_ι_LocalState , v' => ( fst3 r , snd ( fst2 r ) , v' , snd r ) 
- | Ledger_ι_LocalStateCopy , v' => ( fst3 r , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | Ledger_ι_FLeX , v' => ( v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Ledger_ι_FLeXClient , v' => ( fst6 r , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Ledger_ι_Price , v' => ( fst6 r , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Ledger_ι_PriceXchg , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Ledger_ι_VMCommit , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | Ledger_ι_LocalState , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | Ledger_ι_LocalStateCopy , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
 (* 7 *) Global Instance Ledger_PruvendoRecord : PruvendoRecord Ledger LedgerFields :=
 {
@@ -1466,14 +1625,19 @@ match f with | Ledger_ι_dealer => dealer | Ledger_ι_VMCommit => VMCommit | Led
   getPruvendoRecord := @Ledger_get ;
   setPruvendoRecord := @Ledger_set ;
 } .
-Definition T1 := dealer .
-Definition T2 := VMCommit .
-Definition T3 := LocalState .
-Definition T4 := LocalState .
+
+
+Definition T1 := FLeX .
+Definition T2 := FLeXClient .
+Definition T3 := Price .
+Definition T4 := PriceXchg .
+Definition T5 := VMCommit .
+Definition T6 := LocalState .
+Definition T7 := LocalState .
 
  
- Definition projEmbed_T1 : Ledger -> T1 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_dealer. 
- Definition injEmbed_T1 : T1 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_dealer. 
+ Definition projEmbed_T1 : Ledger -> T1 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_FLeX. 
+ Definition injEmbed_T1 : T1 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_FLeX. 
  
  Lemma projinj_T1 : forall ( t : T1 ) ( s : Ledger ), projEmbed_T1 ( injEmbed_T1 t s ) = t . 
  Proof. 
@@ -1512,8 +1676,8 @@ Definition T4 := LocalState .
 
 
  
- Definition projEmbed_T2 : Ledger -> T2 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_VMCommit. 
- Definition injEmbed_T2 : T2 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_VMCommit. 
+ Definition projEmbed_T2 : Ledger -> T2 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_FLeXClient. 
+ Definition injEmbed_T2 : T2 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_FLeXClient. 
  
  Lemma projinj_T2 : forall ( t : T2 ) ( s : Ledger ), projEmbed_T2 ( injEmbed_T2 t s ) = t . 
  Proof. 
@@ -1552,8 +1716,8 @@ Definition T4 := LocalState .
 
 
  
- Definition projEmbed_T3 : Ledger -> T3 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_LocalState. 
- Definition injEmbed_T3 : T3 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_LocalState. 
+ Definition projEmbed_T3 : Ledger -> T3 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_Price. 
+ Definition injEmbed_T3 : T3 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_Price. 
  
  Lemma projinj_T3 : forall ( t : T3 ) ( s : Ledger ), projEmbed_T3 ( injEmbed_T3 t s ) = t . 
  Proof. 
@@ -1592,8 +1756,8 @@ Definition T4 := LocalState .
 
 
  
- Definition projEmbed_T4 : Ledger -> T4 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_LocalStateCopy. 
- Definition injEmbed_T4 : T4 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_LocalStateCopy. 
+ Definition projEmbed_T4 : Ledger -> T4 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_PriceXchg. 
+ Definition injEmbed_T4 : T4 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_PriceXchg. 
  
  Lemma projinj_T4 : forall ( t : T4 ) ( s : Ledger ), projEmbed_T4 ( injEmbed_T4 t s ) = t . 
  Proof. 
@@ -1628,15 +1792,137 @@ Definition T4 := LocalState .
  injproj := injproj_T4 ; 
  injinj := injinj_T4 ; 
  } . 
+ 
 
-(* Lemma *) Axiom injcommute_T1_T2: 
+
+ 
+ Definition projEmbed_T5 : Ledger -> T5 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_VMCommit. 
+ Definition injEmbed_T5 : T5 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_VMCommit. 
+ 
+ Lemma projinj_T5 : forall ( t : T5 ) ( s : Ledger ), projEmbed_T5 ( injEmbed_T5 t s ) = t . 
+ Proof. 
+ intros. auto. 
+ Qed. 
+ 
+ Lemma injproj_T5 : forall ( s : Ledger ) , injEmbed_T5 ( projEmbed_T5 s ) s = s . 
+ Proof. 
+ intros. 
+ destruct s. 
+ repeat match goal with 
+ | p : _ * _ |- _ => destruct p 
+ end. auto. 
+ Qed. 
+ 
+ 
+ Lemma injinj_T5 : forall ( t1 t2 : T5 ) ( s : Ledger ) , 
+ injEmbed_T5 t1 ( injEmbed_T5 t2 s) = 
+ injEmbed_T5 t1 s . 
+ Proof. 
+ intros. destruct s. 
+ repeat match goal with 
+ | p : _ * _ |- _ => destruct p 
+ end. auto. 
+ Qed. 
+ 
+ Global Instance embeddedT5 : EmbeddedType Ledger T5 := 
+ { 
+ projEmbed := projEmbed_T5 ; 
+ injEmbed := injEmbed_T5 ; 
+ projinj := projinj_T5 ; 
+ injproj := injproj_T5 ; 
+ injinj := injinj_T5 ; 
+ } . 
+ 
+
+
+ 
+ Definition projEmbed_T6 : Ledger -> T6 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_LocalState. 
+ Definition injEmbed_T6 : T6 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_LocalState. 
+ 
+ Lemma projinj_T6 : forall ( t : T6 ) ( s : Ledger ), projEmbed_T6 ( injEmbed_T6 t s ) = t . 
+ Proof. 
+ intros. auto. 
+ Qed. 
+ 
+ Lemma injproj_T6 : forall ( s : Ledger ) , injEmbed_T6 ( projEmbed_T6 s ) s = s . 
+ Proof. 
+ intros. 
+ destruct s. 
+ repeat match goal with 
+ | p : _ * _ |- _ => destruct p 
+ end. auto. 
+ Qed. 
+ 
+ 
+ Lemma injinj_T6 : forall ( t1 t2 : T6 ) ( s : Ledger ) , 
+ injEmbed_T6 t1 ( injEmbed_T6 t2 s) = 
+ injEmbed_T6 t1 s . 
+ Proof. 
+ intros. destruct s. 
+ repeat match goal with 
+ | p : _ * _ |- _ => destruct p 
+ end. auto. 
+ Qed. 
+ 
+ Global Instance embeddedT6 : EmbeddedType Ledger T6 := 
+ { 
+ projEmbed := projEmbed_T6 ; 
+ injEmbed := injEmbed_T6 ; 
+ projinj := projinj_T6 ; 
+ injproj := injproj_T6 ; 
+ injinj := injinj_T6 ; 
+ } . 
+ 
+
+
+ 
+ Definition projEmbed_T7 : Ledger -> T7 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_LocalStateCopy. 
+ Definition injEmbed_T7 : T7 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_LocalStateCopy. 
+ 
+ Lemma projinj_T7 : forall ( t : T7 ) ( s : Ledger ), projEmbed_T7 ( injEmbed_T7 t s ) = t . 
+ Proof. 
+ intros. auto. 
+ Qed. 
+ 
+ Lemma injproj_T7 : forall ( s : Ledger ) , injEmbed_T7 ( projEmbed_T7 s ) s = s . 
+ Proof. 
+ intros. 
+ destruct s. 
+ repeat match goal with 
+ | p : _ * _ |- _ => destruct p 
+ end. auto. 
+ Qed. 
+ 
+ 
+ Lemma injinj_T7 : forall ( t1 t2 : T7 ) ( s : Ledger ) , 
+ injEmbed_T7 t1 ( injEmbed_T7 t2 s) = 
+ injEmbed_T7 t1 s . 
+ Proof. 
+ intros. destruct s. 
+ repeat match goal with 
+ | p : _ * _ |- _ => destruct p 
+ end. auto. 
+ Qed. 
+ 
+ Global Instance embeddedT7 : EmbeddedType Ledger T7 := 
+ { 
+ projEmbed := projEmbed_T7 ; 
+ injEmbed := injEmbed_T7 ; 
+ projinj := projinj_T7 ; 
+ injproj := injproj_T7 ; 
+ injinj := injinj_T7 ; 
+ } . 
+ 
+
+
+
+Lemma injcommute_T1_T2: 
                forall ( u : T2 ) ( t : T1 ) 
                       ( s:Ledger ), 
-      ( injEmbed (EmbeddedType:=embeddedT2) u ( injEmbed t s ) ) = 
-      ( injEmbed t ( injEmbed (EmbeddedType:=embeddedT2) u s ) ).
-(* Proof. 
- intros. auto.
-Qed. *)
+      ( injEmbed (EmbeddedType:=embeddedT2) u ( injEmbed t s ) ) = ( injEmbed t ( injEmbed (EmbeddedType:=embeddedT2) u s ) ).
+Proof.
+ intros.  auto.
+Qed.
 
 Instance InjectCommutableStates_T1_T2 : 
 @InjectCommutableStates Ledger ( T1 ) T2 := 
@@ -1659,7 +1945,7 @@ Lemma injcommute_T1xT2_T3 :
                       ( s:Ledger ), 
       ( injEmbed (EmbeddedType:=embeddedT3) u ( injEmbed t s ) ) = 
       ( injEmbed t ( injEmbed (EmbeddedType:=embeddedT3) u s ) ).
-Proof. 
+Proof.
  intros. auto.
 Qed.
 
@@ -1704,49 +1990,129 @@ Definition embeddedProduct_T1xT2xT3_T4 :=
 Existing Instance embeddedProduct_T1xT2xT3_T4 . 
 
 
+Lemma injcommute_T1xT2xT3xT4_T5 : 
+               forall ( u : T5 ) ( t :  (((T1 * T2)%xprod* T3)%xprod* T4)%xprod ) 
+                      ( s:Ledger ), 
+      ( injEmbed (EmbeddedType:=embeddedT5) u ( injEmbed t s ) ) = 
+      ( injEmbed t ( injEmbed (EmbeddedType:=embeddedT5) u s ) ).
+Proof.
+ intros. auto.
+Qed.
 
- (* Lemma *) Axiom fullState_T1xT2xT3_T4 : forall s s0, 
- injEmbed ( T := (((T1 * T2)%xprod * T3)%xprod * T4)%xprod ) 
- ( projEmbed s ) ( injEmbed ( T := T4 ) ( projEmbed s ) s0 ) = s. 
-(*  Proof. 
+Instance InjectCommutableStates_T1xT2xT3xT4_T5 : 
+@InjectCommutableStates Ledger (((T1 * T2)%xprod* T3)%xprod* T4)%xprod T5 := 
+{
+  embeddedTypeU := embeddedT5 ;
+
+  injcommute := injcommute_T1xT2xT3xT4_T5 
+}.
+
+Definition embeddedProduct_T1xT2xT3xT4_T5 := 
+           @embeddedProduct Ledger (((T1 * T2)%xprod* T3)%xprod* T4)%xprod T5
+  
+           InjectCommutableStates_T1xT2xT3xT4_T5.
+
+Existing Instance embeddedProduct_T1xT2xT3xT4_T5 . 
+
+
+Lemma injcommute_T1xT2xT3xT4xT5_T6 : 
+               forall ( u : T6 ) ( t :  ((((T1 * T2)%xprod* T3)%xprod* T4)%xprod* T5)%xprod ) 
+                      ( s:Ledger ), 
+      ( injEmbed (EmbeddedType:=embeddedT6) u ( injEmbed t s ) ) = 
+      ( injEmbed t ( injEmbed (EmbeddedType:=embeddedT6) u s ) ).
+Proof.
+ intros. auto.
+Qed.
+
+Instance InjectCommutableStates_T1xT2xT3xT4xT5_T6 : 
+@InjectCommutableStates Ledger ((((T1 * T2)%xprod* T3)%xprod* T4)%xprod* T5)%xprod T6 := 
+{
+  embeddedTypeU := embeddedT6 ;
+
+  injcommute := injcommute_T1xT2xT3xT4xT5_T6 
+}.
+
+Definition embeddedProduct_T1xT2xT3xT4xT5_T6 := 
+           @embeddedProduct Ledger ((((T1 * T2)%xprod* T3)%xprod* T4)%xprod* T5)%xprod T6
+  
+           InjectCommutableStates_T1xT2xT3xT4xT5_T6.
+
+Existing Instance embeddedProduct_T1xT2xT3xT4xT5_T6 . 
+
+
+Lemma injcommute_T1xT2xT3xT4xT5xT6_T7 : 
+               forall ( u : T7 ) ( t :  (((((T1 * T2)%xprod* T3)%xprod* T4)%xprod* T5)%xprod* T6)%xprod ) 
+                      ( s:Ledger ), 
+      ( injEmbed (EmbeddedType:=embeddedT7) u ( injEmbed t s ) ) = 
+      ( injEmbed t ( injEmbed (EmbeddedType:=embeddedT7) u s ) ).
+Proof.
+ intros. auto.
+Qed.
+
+Instance InjectCommutableStates_T1xT2xT3xT4xT5xT6_T7 : 
+@InjectCommutableStates Ledger (((((T1 * T2)%xprod* T3)%xprod* T4)%xprod* T5)%xprod* T6)%xprod T7 := 
+{
+  embeddedTypeU := embeddedT7 ;
+
+  injcommute := injcommute_T1xT2xT3xT4xT5xT6_T7 
+}.
+
+Definition embeddedProduct_T1xT2xT3xT4xT5xT6_T7 := 
+           @embeddedProduct Ledger (((((T1 * T2)%xprod* T3)%xprod* T4)%xprod* T5)%xprod* T6)%xprod T7
+  
+           InjectCommutableStates_T1xT2xT3xT4xT5xT6_T7.
+
+Existing Instance embeddedProduct_T1xT2xT3xT4xT5xT6_T7 . 
+
+
+ 
+ Lemma fullState_T1xT2xT3xT4xT5xT6_T7 : forall s s0, 
+ injEmbed ( T := ((((((T1 * T2)%xprod * T3)%xprod * T4)%xprod * T5)%xprod * T6)%xprod * T7)%xprod ) 
+ ( projEmbed s ) ( injEmbed ( T := T7 ) ( projEmbed s ) s0 ) = s. 
+ Proof. 
  intros. destruct s. 
  repeat match goal with 
  | p : _ * _ |- _ => destruct p 
- end. 
+ end. auto. 
+ Qed. 
 
-  auto. 
- Qed.  *)
- 
- Check FullState. 
- 
- Instance FullState_T1xT2xT3_T4 : 
- FullState Ledger ((T1 * T2)%xprod * T3)%xprod T4 := 
+Instance FullState_T1xT2xT3xT4xT5xT6_T7 : 
+ FullState Ledger (((((T1 * T2)%xprod * T3)%xprod * T4)%xprod * T5)%xprod * T6)%xprod T7 := 
  { 
- injComm := InjectCommutableStates_T1xT2xT3_T4 ; 
- fullState := fullState_T1xT2xT3_T4 
+ injComm := InjectCommutableStates_T1xT2xT3xT4xT5xT6_T7 ; 
+ fullState := fullState_T1xT2xT3xT4xT5xT6_T7 
  } . 
  
 
 Local Open Scope solidity_scope.
+Notation "'↑ε7' m ":= (liftEmbeddedState ( H := embeddedT7 ) ( ε m )%sol ) (at level 10, left associativity): solidity_scope.
+Notation "'↑ε6' m ":= (liftEmbeddedState ( H := embeddedT6 ) ( ε m )%sol ) (at level 10, left associativity): solidity_scope.
+Notation "'↑ε5' m ":= (liftEmbeddedState ( H := embeddedT5 ) ( ε m )%sol ) (at level 10, left associativity): solidity_scope.
 Notation "'↑ε4' m ":= (liftEmbeddedState ( H := embeddedT4 ) ( ε m )%sol ) (at level 10, left associativity): solidity_scope.
 Notation "'↑ε3' m ":= (liftEmbeddedState ( H := embeddedT3 ) ( ε m )%sol ) (at level 10, left associativity): solidity_scope.
 Notation "'↑ε2' m ":= (liftEmbeddedState ( H := embeddedT2 ) ( ε m )%sol ) (at level 10, left associativity): solidity_scope.
 Notation "'↑ε1' m ":= (liftEmbeddedState ( H := embeddedT1 ) ( ε m )%sol ) (at level 10, left associativity): solidity_scope.
 
+Notation "'↑7' m ":= (liftEmbeddedState ( H := embeddedT7 ) ( m ) ) (at level 10, left associativity): solidity_scope.
+Notation "'↑6' m ":= (liftEmbeddedState ( H := embeddedT6 ) ( m ) ) (at level 10, left associativity): solidity_scope.
+Notation "'↑5' m ":= (liftEmbeddedState ( H := embeddedT5 ) ( m ) ) (at level 10, left associativity): solidity_scope.
 Notation "'↑4' m ":= (liftEmbeddedState ( H := embeddedT4 ) ( m ) ) (at level 10, left associativity): solidity_scope.
 Notation "'↑3' m ":= (liftEmbeddedState ( H := embeddedT3 ) ( m ) ) (at level 10, left associativity): solidity_scope.
 Notation "'↑2' m ":= (liftEmbeddedState ( H := embeddedT2 ) ( m ) ) (at level 10, left associativity): solidity_scope.
 Notation "'↑1' m ":= (liftEmbeddedState ( H := embeddedT1 ) ( m ) ) (at level 10, left associativity): solidity_scope.
 
+Notation "'↑↑7' m ":= (liftEmbeddedState ( H := embeddedT7 ) ) (at level 10, left associativity): solidity_scope.
+Notation "'↑↑6' m ":= (liftEmbeddedState ( H := embeddedT6 ) ) (at level 10, left associativity): solidity_scope.
+Notation "'↑↑5' m ":= (liftEmbeddedState ( H := embeddedT5 ) ) (at level 10, left associativity): solidity_scope.
 Notation "'↑↑4' m ":= (liftEmbeddedState ( H := embeddedT4 ) ) (at level 10, left associativity): solidity_scope.
 Notation "'↑↑3' m ":= (liftEmbeddedState ( H := embeddedT3 ) ) (at level 10, left associativity): solidity_scope.
 Notation "'↑↑2' m ":= (liftEmbeddedState ( H := embeddedT2 ) ) (at level 10, left associativity): solidity_scope.
 Notation "'↑↑1' m ":= (liftEmbeddedState ( H := embeddedT1 ) ) (at level 10, left associativity): solidity_scope.
 
-Notation "'↑0' m " := ( liftEmbeddedState ( H :=  embeddedProduct_T1xT2xT3_T4 ) ( m )) (at level 10, left associativity): solidity_scope.
-Notation "'↑↑0'" := ( liftEmbeddedState ( H :=  embeddedProduct_T1xT2xT3_T4 )) (at level 32, left associativity): solidity_scope.
-Notation " ↓ m " := ( callEmbeddedStateAdj m default (H0 :=  FullState_T1xT2xT3_T4 ) ) (at level 31, left associativity): solidity_scope.
-Global Instance iso_T1 : IsoTypes T1 (field_type (R:=Ledger) Ledger_ι_dealer) :=
+Notation "'↑0' m " := ( liftEmbeddedState ( H :=  embeddedProduct_T1xT2xT3xT4xT5xT6_T7 ) ( m )) (at level 10, left associativity): solidity_scope.
+Notation "'↑↑0'" := ( liftEmbeddedState ( H :=  embeddedProduct_T1xT2xT3xT4xT5xT6_T7 )) (at level 32, left associativity): solidity_scope.
+Notation " ↓ m " := ( callEmbeddedStateAdj m default (H0 :=  FullState_T1xT2xT3xT4xT5xT6_T7 ) ) (at level 31, left associativity): solidity_scope.
+Global Instance iso_T1 : IsoTypes T1 (field_type (R:=Ledger) Ledger_ι_FLeX) :=
 {
   x2y := Datatypes.id;
   y2x := Datatypes.id;
@@ -1754,7 +2120,7 @@ Global Instance iso_T1 : IsoTypes T1 (field_type (R:=Ledger) Ledger_ι_dealer) :
   y2y := eq_refl
 }.
 
-Global Instance iso_T2 : IsoTypes T2 (field_type (R:=Ledger) Ledger_ι_VMCommit) :=
+Global Instance iso_T2 : IsoTypes T2 (field_type (R:=Ledger) Ledger_ι_FLeXClient) :=
 {
   x2y := Datatypes.id;
   y2x := Datatypes.id;
@@ -1762,7 +2128,7 @@ Global Instance iso_T2 : IsoTypes T2 (field_type (R:=Ledger) Ledger_ι_VMCommit)
   y2y := eq_refl
 }.
 
-Global Instance iso_T3 : IsoTypes T3 (field_type (R:=Ledger) Ledger_ι_LocalState) :=
+Global Instance iso_T3 : IsoTypes T3 (field_type (R:=Ledger) Ledger_ι_Price) :=
 {
   x2y := Datatypes.id;
   y2x := Datatypes.id;
@@ -1770,7 +2136,7 @@ Global Instance iso_T3 : IsoTypes T3 (field_type (R:=Ledger) Ledger_ι_LocalStat
   y2y := eq_refl
 }.
 
-Global Instance iso_T4 : IsoTypes T4 (field_type (R:=Ledger) Ledger_ι_LocalStateCopy) :=
+Global Instance iso_T4 : IsoTypes T4 (field_type (R:=Ledger) Ledger_ι_PriceXchg) :=
 {
   x2y := Datatypes.id;
   y2x := Datatypes.id;
@@ -1778,5 +2144,1726 @@ Global Instance iso_T4 : IsoTypes T4 (field_type (R:=Ledger) Ledger_ι_LocalStat
   y2y := eq_refl
 }.
 
+Global Instance iso_T5 : IsoTypes T5 (field_type (R:=Ledger) Ledger_ι_VMCommit) :=
+{
+  x2y := Datatypes.id;
+  y2x := Datatypes.id;
+  x2x := eq_refl;
+  y2y := eq_refl
+}.
+
+Global Instance iso_T6 : IsoTypes T6 (field_type (R:=Ledger) Ledger_ι_LocalState) :=
+{
+  x2y := Datatypes.id;
+  y2x := Datatypes.id;
+  x2x := eq_refl;
+  y2y := eq_refl
+}.
+
+Global Instance iso_T7 : IsoTypes T7 (field_type (R:=Ledger) Ledger_ι_LocalStateCopy) :=
+{
+  x2y := Datatypes.id;
+  y2x := Datatypes.id;
+  x2x := eq_refl;
+  y2y := eq_refl
+}.
+
+Definition  FLeX_ι_tons_cfg_TonsConfig  :
+ PruvendoRecord (field_type (R:=FLeX) 
+                 FLeX_ι_tons_cfg_ ) TonsConfigFields := 
+  TonsConfig_PruvendoRecord.
+
+Existing Instance FLeX_ι_tons_cfg_TonsConfig.
+(* Existing Instance Ledger_PruvendoRecord.  *)
+ 
+Definition  FLeXClient_ι_tons_cfg_TonsConfig  :
+ PruvendoRecord (field_type (R:=FLeXClient) 
+                 FLeXClient_ι_tons_cfg_ ) TonsConfigFields := 
+  TonsConfig_PruvendoRecord.
+
+Existing Instance FLeXClient_ι_tons_cfg_TonsConfig.
+(* Existing Instance Ledger_PruvendoRecord.  *)
+
+Definition  Price_ι_flex_addr_std_fixed  :
+ PruvendoRecord (field_type (R:=Price) 
+                 Price_ι_flex_ ) addr_std_fixedFields := 
+  addr_std_fixed_PruvendoRecord.
+
+Existing Instance Price_ι_flex_addr_std_fixed.
+(* Existing Instance Ledger_PruvendoRecord.  *)
+
+Definition  Price_ι_tons_cfg_TonsConfig  :
+ PruvendoRecord (field_type (R:=Price) 
+                 Price_ι_tons_cfg_ ) TonsConfigFields := 
+  TonsConfig_PruvendoRecord.
+
+Existing Instance Price_ι_tons_cfg_TonsConfig.
+(* Existing Instance Ledger_PruvendoRecord.  *)
+
+Definition  PriceXchg_ι_price_RationalPrice  :
+ PruvendoRecord (field_type (R:=PriceXchg) 
+                 PriceXchg_ι_price_ ) RationalPriceFields := 
+  RationalPrice_PruvendoRecord.
+
+Existing Instance PriceXchg_ι_price_RationalPrice.
+(* Existing Instance Ledger_PruvendoRecord.  *)
+
+Definition  PriceXchg_ι_flex_addr_std_fixed  :
+ PruvendoRecord (field_type (R:=PriceXchg) 
+                 PriceXchg_ι_flex_ ) addr_std_fixedFields := 
+  addr_std_fixed_PruvendoRecord.
+
+Existing Instance PriceXchg_ι_flex_addr_std_fixed.
+(* Existing Instance Ledger_PruvendoRecord.  *)
+
+Compute field_type (R:=PriceXchg) 
+                 PriceXchg_ι_tons_cfg_ .
+
+Definition  PriceXchg_ι_tons_cfg_TonsConfig  :
+ PruvendoRecord (field_type (R:=PriceXchg) 
+                 PriceXchg_ι_tons_cfg_ ) TonsConfigFields := 
+  TonsConfig_PruvendoRecord.
+
+Existing Instance PriceXchg_ι_tons_cfg_TonsConfig.
+(* Existing Instance Ledger_PruvendoRecord.  *)
+
+Compute field_type (R:=PriceXchg) 
+                 PriceXchg_ι_minor_tip3cfg_ .
+
+Definition  PriceXchg_ι_minor_tip3cfg_Tip3Config  :
+ PruvendoRecord (field_type (R:=PriceXchg) 
+                 PriceXchg_ι_minor_tip3cfg_ ) Tip3ConfigFields := 
+  Tip3Config_PruvendoRecord.
+
+Existing Instance PriceXchg_ι_minor_tip3cfg_Tip3Config.
+
+Definition  PriceXchg_ι_major_tip3cfg_Tip3Config  :
+ PruvendoRecord (field_type (R:=PriceXchg) 
+                 PriceXchg_ι_major_tip3cfg_ ) Tip3ConfigFields := 
+  Tip3Config_PruvendoRecord.
+Existing Instance PriceXchg_ι_major_tip3cfg_Tip3Config.
+Existing Instance Ledger_PruvendoRecord.  
+
+(***************************************************************)
+
+Class Countable (X: Type) :=
+{
+   rength : nat;
+   rth : nat -> X -> {t: Type & t}
+}.
+
+Program Instance CountablePair0 : forall X Y, Countable (X*Y).
+Next Obligation.
+exact 2%nat.
+Defined.
+Next Obligation.
+destruct H.
+refine (existT id X x).
+refine (existT id Y y).
+Defined.
+Fail Next Obligation.
+
+Program Instance CountablePair_Next : forall X`{Countable X} Y, Countable (X*Y) .
+Next Obligation.
+exact (S rength).
+Defined.
+Next Obligation.
+remember (Nat.ltb H0 rength).
+destruct b.
+refine (rth  H0 x).
+refine (existT id Y y).
+Defined.
+Fail Next Obligation.
+
+Existing Instance CountablePair_Next | 0.
+Existing Instance CountablePair0 | 100.
+
+Opaque FLeXP.
+
+Lemma Ledger1Type_eq: forall (l: Ledger), projT1 (rth 0 l) = FLeX.
+Proof.
+   intros.
+   compute.
+   destruct l.
+   repeat destruct p.
+   reflexivity.  
+Defined.
+
+Lemma Ledger2Type_eq: forall (l: Ledger), projT1 (rth 1 l) = FLeXClient.
+Proof.
+   intros.
+   compute.
+   destruct l.
+   repeat destruct p.
+   reflexivity.  
+Defined.
+
+Lemma Ledger3Type_eq: forall (l: Ledger), projT1 (rth 2 l) = Price.
+Proof.
+   intros.
+   compute.
+   destruct l.
+   repeat destruct p.
+   reflexivity.  
+Defined.
+
+Lemma Ledger4Type_eq: forall (l: Ledger), projT1 (rth 3 l) = PriceXchg.
+Proof.
+   intros.
+   compute.
+   destruct l.
+   repeat destruct p.
+   reflexivity.  
+Defined.
+
+Definition Ledger1Type (l: Ledger) := projT1 (rth 0 l).
+Definition Ledger2Type (l: Ledger) := projT1 (rth 1 l).
+Definition Ledger3Type (l: Ledger) := projT1 (rth 2 l).
+Definition Ledger4Type (l: Ledger) := projT1 (rth 3 l).
+
+Definition Ledger1TypeFLeX : forall (l:Ledger), Ledger1Type l -> FLeX.
+intros.
+unfold Ledger1Type in X.
+rewrite Ledger1Type_eq in X.
+exact X.
+Defined.
+
+Definition Ledger2TypeFLeXClient : forall l, Ledger2Type l -> FLeXClient.
+intros.
+unfold Ledger2Type in X.
+rewrite Ledger2Type_eq in X.
+exact X.
+Defined.
+
+Definition Ledger3TypePrice : forall l, Ledger3Type l -> Price.
+intros.
+unfold Ledger3Type in X.
+rewrite Ledger3Type_eq in X.
+exact X.
+Defined.
+
+Definition Ledger4TypePriceXchg : forall l, Ledger4Type l -> PriceXchg.
+intros.
+unfold Ledger4Type in X.
+rewrite Ledger4Type_eq in X.
+exact X.
+Defined.
+
+Coercion Ledger1TypeFLeX       : Ledger1Type >-> FLeX.
+Coercion Ledger2TypeFLeXClient : Ledger2Type >-> FLeXClient.
+Coercion Ledger3TypePrice      : Ledger3Type >-> Price.
+Coercion Ledger4TypePriceXchg  : Ledger4Type >-> PriceXchg.
+
+Notation "r ₁" := ((projT2 (rth 0 r) : Ledger1Type r) : FLeX) (at level 10).
+Notation "r ₂" := ((projT2 (rth 1 r) : Ledger2Type r) : FLeXClient) (at level 10).
+Notation "r ₃" := ((projT2 (rth 2 r) : Ledger3Type r) : Price) (at level 10).
+Notation "r ₄" := ((projT2 (rth 3 r) : Ledger4Type r) : PriceXchg) (at level 10).
+
+Transparent FLeXP.
+
+Definition LedgerPruvendoRecord := Ledger_PruvendoRecord.
+Definition LedgerLocalState := LocalState.
+Definition LedgerLocalFields := LocalStateFields.
+Definition LedgerLocalPruvendoRecord := LocalState_PruvendoRecord.
+Definition LocalEmbedded := embeddedT7.
+Definition LocalCopyEmbedded := embeddedT6.
+Definition LocalDefault := LocalState_default.
+Definition Ledger_LocalState := Ledger_ι_LocalState.
+Definition Ledger_LocalStateCopy := Ledger_ι_LocalStateCopy.
+Definition iso_local := iso_T7.
+
+Lemma LedgerFieldsDec: forall (m1 m2: LedgerFields), {m1=m2}+{m1<>m2}.
+Proof.
+  intros.
+  decide equality.
+Defined.
+
+Lemma LocalCopySameType: field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_LocalState = 
+field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_LocalStateCopy.
+Proof.
+  reflexivity.
+Defined.
+
+
+(****************************************************************************)
+Definition  LocalState_ι_uint256Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_uint256Index l.
+
+Definition  LocalState_ι_uint256Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_uint256Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_uint256Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_uint256Index_Embedded_projEmbed (LocalState_ι_uint256Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_uint256Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_uint256Index_Embedded_injEmbed (LocalState_ι_uint256Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_uint256Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_uint256Index_Embedded_injEmbed t1 (LocalState_ι_uint256Index_Embedded_injEmbed t2 s) = LocalState_ι_uint256Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_uint256Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_uint256Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_uint256Index_Embedded_injEmbed;
+  projinj := LocalState_ι_uint256Index_Embedded_projinj;
+  injproj := LocalState_ι_uint256Index_Embedded_injproj;
+  injinj := LocalState_ι_uint256Index_Embedded_injinj
+}.
+
+Definition  LocalState_ι_cellIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_cellIndex l.
+
+Definition  LocalState_ι_cellIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_cellIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_cellIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_cellIndex_Embedded_projEmbed (LocalState_ι_cellIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_cellIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_cellIndex_Embedded_injEmbed (LocalState_ι_cellIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_cellIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_cellIndex_Embedded_injEmbed t1 (LocalState_ι_cellIndex_Embedded_injEmbed t2 s) = LocalState_ι_cellIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_cellIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_cellIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_cellIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_cellIndex_Embedded_projinj;
+  injproj := LocalState_ι_cellIndex_Embedded_injproj;
+  injinj := LocalState_ι_cellIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_TonsConfigIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_TonsConfigIndex l.
+
+Definition  LocalState_ι_TonsConfigIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_TonsConfigIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_TonsConfigIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_TonsConfigIndex_Embedded_projEmbed (LocalState_ι_TonsConfigIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_TonsConfigIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_TonsConfigIndex_Embedded_injEmbed (LocalState_ι_TonsConfigIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_TonsConfigIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_TonsConfigIndex_Embedded_injEmbed t1 (LocalState_ι_TonsConfigIndex_Embedded_injEmbed t2 s) = LocalState_ι_TonsConfigIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_TonsConfigIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_TonsConfigIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_TonsConfigIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_TonsConfigIndex_Embedded_projinj;
+  injproj := LocalState_ι_TonsConfigIndex_Embedded_injproj;
+  injinj := LocalState_ι_TonsConfigIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_addressIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_addressIndex l.
+
+Definition  LocalState_ι_addressIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_addressIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_addressIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_addressIndex_Embedded_projEmbed (LocalState_ι_addressIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_addressIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_addressIndex_Embedded_injEmbed (LocalState_ι_addressIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_addressIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_addressIndex_Embedded_injEmbed t1 (LocalState_ι_addressIndex_Embedded_injEmbed t2 s) = LocalState_ι_addressIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_addressIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_addressIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_addressIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_addressIndex_Embedded_projinj;
+  injproj := LocalState_ι_addressIndex_Embedded_injproj;
+  injinj := LocalState_ι_addressIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_uint128Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_uint128Index l.
+
+Definition  LocalState_ι_uint128Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_uint128Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_uint128Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_uint128Index_Embedded_projEmbed (LocalState_ι_uint128Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_uint128Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_uint128Index_Embedded_injEmbed (LocalState_ι_uint128Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_uint128Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_uint128Index_Embedded_injEmbed t1 (LocalState_ι_uint128Index_Embedded_injEmbed t2 s) = LocalState_ι_uint128Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_uint128Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_uint128Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_uint128Index_Embedded_injEmbed;
+  projinj := LocalState_ι_uint128Index_Embedded_projinj;
+  injproj := LocalState_ι_uint128Index_Embedded_injproj;
+  injinj := LocalState_ι_uint128Index_Embedded_injinj
+}.
+Definition  LocalState_ι_StateInitIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_StateInitIndex l.
+
+Definition  LocalState_ι_StateInitIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_StateInitIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_StateInitIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_StateInitIndex_Embedded_projEmbed (LocalState_ι_StateInitIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_StateInitIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_StateInitIndex_Embedded_injEmbed (LocalState_ι_StateInitIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_StateInitIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_StateInitIndex_Embedded_injEmbed t1 (LocalState_ι_StateInitIndex_Embedded_injEmbed t2 s) = LocalState_ι_StateInitIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_StateInitIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_StateInitIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_StateInitIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_StateInitIndex_Embedded_projinj;
+  injproj := LocalState_ι_StateInitIndex_Embedded_injproj;
+  injinj := LocalState_ι_StateInitIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_DTradingPairIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_DTradingPairIndex l.
+
+Definition  LocalState_ι_DTradingPairIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_DTradingPairIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_DTradingPairIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_DTradingPairIndex_Embedded_projEmbed (LocalState_ι_DTradingPairIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_DTradingPairIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_DTradingPairIndex_Embedded_injEmbed (LocalState_ι_DTradingPairIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_DTradingPairIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_DTradingPairIndex_Embedded_injEmbed t1 (LocalState_ι_DTradingPairIndex_Embedded_injEmbed t2 s) = LocalState_ι_DTradingPairIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_DTradingPairIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_DTradingPairIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_DTradingPairIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_DTradingPairIndex_Embedded_projinj;
+  injproj := LocalState_ι_DTradingPairIndex_Embedded_injproj;
+  injinj := LocalState_ι_DTradingPairIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_handle_ITradingPair_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_handle_ITradingPair_Index l.
+
+Definition  LocalState_ι_handle_ITradingPair_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_handle_ITradingPair_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_handle_ITradingPair_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_handle_ITradingPair_Index_Embedded_projEmbed (LocalState_ι_handle_ITradingPair_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_handle_ITradingPair_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_handle_ITradingPair_Index_Embedded_injEmbed (LocalState_ι_handle_ITradingPair_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_handle_ITradingPair_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_handle_ITradingPair_Index_Embedded_injEmbed t1 (LocalState_ι_handle_ITradingPair_Index_Embedded_injEmbed t2 s) = LocalState_ι_handle_ITradingPair_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_handle_ITradingPair_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_handle_ITradingPair_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_handle_ITradingPair_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_handle_ITradingPair_Index_Embedded_projinj;
+  injproj := LocalState_ι_handle_ITradingPair_Index_Embedded_injproj;
+  injinj := LocalState_ι_handle_ITradingPair_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_DXchgPairIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_DXchgPairIndex l.
+
+Definition  LocalState_ι_DXchgPairIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_DXchgPairIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_DXchgPairIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_DXchgPairIndex_Embedded_projEmbed (LocalState_ι_DXchgPairIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_DXchgPairIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_DXchgPairIndex_Embedded_injEmbed (LocalState_ι_DXchgPairIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_DXchgPairIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_DXchgPairIndex_Embedded_injEmbed t1 (LocalState_ι_DXchgPairIndex_Embedded_injEmbed t2 s) = LocalState_ι_DXchgPairIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_DXchgPairIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_DXchgPairIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_DXchgPairIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_DXchgPairIndex_Embedded_projinj;
+  injproj := LocalState_ι_DXchgPairIndex_Embedded_injproj;
+  injinj := LocalState_ι_DXchgPairIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_handle_IXchgPair_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_handle_IXchgPair_Index l.
+
+Definition  LocalState_ι_handle_IXchgPair_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_handle_IXchgPair_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_handle_IXchgPair_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_handle_IXchgPair_Index_Embedded_projEmbed (LocalState_ι_handle_IXchgPair_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_handle_IXchgPair_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_handle_IXchgPair_Index_Embedded_injEmbed (LocalState_ι_handle_IXchgPair_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_handle_IXchgPair_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_handle_IXchgPair_Index_Embedded_injEmbed t1 (LocalState_ι_handle_IXchgPair_Index_Embedded_injEmbed t2 s) = LocalState_ι_handle_IXchgPair_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_handle_IXchgPair_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_handle_IXchgPair_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_handle_IXchgPair_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_handle_IXchgPair_Index_Embedded_projinj;
+  injproj := LocalState_ι_handle_IXchgPair_Index_Embedded_injproj;
+  injinj := LocalState_ι_handle_IXchgPair_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_parse_FLeXSellArgs_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_parse_FLeXSellArgs_Index l.
+
+Definition  LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_parse_FLeXSellArgs_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_parse_FLeXSellArgs_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_parse_FLeXSellArgs_Index_Embedded_projEmbed (LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injEmbed (LocalState_ι_parse_FLeXSellArgs_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injEmbed t1 (LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injEmbed t2 s) = LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_parse_FLeXSellArgs_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_parse_FLeXSellArgs_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_parse_FLeXSellArgs_Index_Embedded_projinj;
+  injproj := LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injproj;
+  injinj := LocalState_ι_parse_FLeXSellArgs_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_handle_IPrice_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_handle_IPrice_Index l.
+
+Definition  LocalState_ι_handle_IPrice_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_handle_IPrice_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_handle_IPrice_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_handle_IPrice_Index_Embedded_projEmbed (LocalState_ι_handle_IPrice_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_handle_IPrice_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_handle_IPrice_Index_Embedded_injEmbed (LocalState_ι_handle_IPrice_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_handle_IPrice_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_handle_IPrice_Index_Embedded_injEmbed t1 (LocalState_ι_handle_IPrice_Index_Embedded_injEmbed t2 s) = LocalState_ι_handle_IPrice_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_handle_IPrice_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_handle_IPrice_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_handle_IPrice_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_handle_IPrice_Index_Embedded_projinj;
+  injproj := LocalState_ι_handle_IPrice_Index_Embedded_injproj;
+  injinj := LocalState_ι_handle_IPrice_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_SellArgsIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_SellArgsIndex l.
+
+Definition  LocalState_ι_SellArgsIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_SellArgsIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_SellArgsIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_SellArgsIndex_Embedded_projEmbed (LocalState_ι_SellArgsIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_SellArgsIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_SellArgsIndex_Embedded_injEmbed (LocalState_ι_SellArgsIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_SellArgsIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_SellArgsIndex_Embedded_injEmbed t1 (LocalState_ι_SellArgsIndex_Embedded_injEmbed t2 s) = LocalState_ι_SellArgsIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_SellArgsIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_SellArgsIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_SellArgsIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_SellArgsIndex_Embedded_projinj;
+  injproj := LocalState_ι_SellArgsIndex_Embedded_injproj;
+  injinj := LocalState_ι_SellArgsIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_parse_FLeXBuyArgs_Index l.
+
+Definition  LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_parse_FLeXBuyArgs_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_projEmbed (LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injEmbed (LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injEmbed t1 (LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injEmbed t2 s) = LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_parse_FLeXBuyArgs_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_projinj;
+  injproj := LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injproj;
+  injinj := LocalState_ι_parse_FLeXBuyArgs_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_parse_FLeXCancelArgs_Index l.
+
+Definition  LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_parse_FLeXCancelArgs_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_projEmbed (LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injEmbed (LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injEmbed t1 (LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injEmbed t2 s) = LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_parse_FLeXCancelArgs_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_projinj;
+  injproj := LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injproj;
+  injinj := LocalState_ι_parse_FLeXCancelArgs_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_parse_FLeXXchgCancelArgs_Index l.
+
+Definition  LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_parse_FLeXXchgCancelArgs_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_projEmbed (LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injEmbed (LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injEmbed t1 (LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injEmbed t2 s) = LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_projinj;
+  injproj := LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injproj;
+  injinj := LocalState_ι_parse_FLeXXchgCancelArgs_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_handle_IPriceXchg_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_handle_IPriceXchg_Index l.
+
+Definition  LocalState_ι_handle_IPriceXchg_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_handle_IPriceXchg_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_handle_IPriceXchg_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_handle_IPriceXchg_Index_Embedded_projEmbed (LocalState_ι_handle_IPriceXchg_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_handle_IPriceXchg_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_handle_IPriceXchg_Index_Embedded_injEmbed (LocalState_ι_handle_IPriceXchg_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_handle_IPriceXchg_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_handle_IPriceXchg_Index_Embedded_injEmbed t1 (LocalState_ι_handle_IPriceXchg_Index_Embedded_injEmbed t2 s) = LocalState_ι_handle_IPriceXchg_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_handle_IPriceXchg_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_handle_IPriceXchg_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_handle_IPriceXchg_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_handle_IPriceXchg_Index_Embedded_projinj;
+  injproj := LocalState_ι_handle_IPriceXchg_Index_Embedded_injproj;
+  injinj := LocalState_ι_handle_IPriceXchg_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_bool_tIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_bool_tIndex l.
+
+Definition  LocalState_ι_bool_tIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_bool_tIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_bool_tIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_bool_tIndex_Embedded_projEmbed (LocalState_ι_bool_tIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_bool_tIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_bool_tIndex_Embedded_injEmbed (LocalState_ι_bool_tIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_bool_tIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_bool_tIndex_Embedded_injEmbed t1 (LocalState_ι_bool_tIndex_Embedded_injEmbed t2 s) = LocalState_ι_bool_tIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_bool_tIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_bool_tIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_bool_tIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_bool_tIndex_Embedded_projinj;
+  injproj := LocalState_ι_bool_tIndex_Embedded_injproj;
+  injinj := LocalState_ι_bool_tIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_parse_FLeXXchgArgs_Index l.
+
+Definition  LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_parse_FLeXXchgArgs_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_projEmbed (LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injEmbed (LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injEmbed t1 (LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injEmbed t2 s) = LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_parse_FLeXXchgArgs_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_projinj;
+  injproj := LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injproj;
+  injinj := LocalState_ι_parse_FLeXXchgArgs_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_PayloadArgsIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_PayloadArgsIndex l.
+
+Definition  LocalState_ι_PayloadArgsIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_PayloadArgsIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_PayloadArgsIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_PayloadArgsIndex_Embedded_projEmbed (LocalState_ι_PayloadArgsIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_PayloadArgsIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_PayloadArgsIndex_Embedded_injEmbed (LocalState_ι_PayloadArgsIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_PayloadArgsIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_PayloadArgsIndex_Embedded_injEmbed t1 (LocalState_ι_PayloadArgsIndex_Embedded_injEmbed t2 s) = LocalState_ι_PayloadArgsIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_PayloadArgsIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_PayloadArgsIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_PayloadArgsIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_PayloadArgsIndex_Embedded_projinj;
+  injproj := LocalState_ι_PayloadArgsIndex_Embedded_injproj;
+  injinj := LocalState_ι_PayloadArgsIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_handle_ITONTokenWallet_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_handle_ITONTokenWallet_Index l.
+
+Definition  LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_handle_ITONTokenWallet_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_handle_ITONTokenWallet_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_handle_ITONTokenWallet_Index_Embedded_projEmbed (LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injEmbed (LocalState_ι_handle_ITONTokenWallet_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injEmbed t1 (LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injEmbed t2 s) = LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_handle_ITONTokenWallet_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_handle_ITONTokenWallet_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_handle_ITONTokenWallet_Index_Embedded_projinj;
+  injproj := LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injproj;
+  injinj := LocalState_ι_handle_ITONTokenWallet_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_uint8Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_uint8Index l.
+
+Definition  LocalState_ι_uint8Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_uint8Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_uint8Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_uint8Index_Embedded_projEmbed (LocalState_ι_uint8Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_uint8Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_uint8Index_Embedded_injEmbed (LocalState_ι_uint8Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_uint8Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_uint8Index_Embedded_injEmbed t1 (LocalState_ι_uint8Index_Embedded_injEmbed t2 s) = LocalState_ι_uint8Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_uint8Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_uint8Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_uint8Index_Embedded_injEmbed;
+  projinj := LocalState_ι_uint8Index_Embedded_projinj;
+  injproj := LocalState_ι_uint8Index_Embedded_injproj;
+  injinj := LocalState_ι_uint8Index_Embedded_injinj
+}.
+Definition  LocalState_ι_Tip3ConfigIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_Tip3ConfigIndex l.
+
+Definition  LocalState_ι_Tip3ConfigIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_Tip3ConfigIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_Tip3ConfigIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_Tip3ConfigIndex_Embedded_projEmbed (LocalState_ι_Tip3ConfigIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_Tip3ConfigIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_Tip3ConfigIndex_Embedded_injEmbed (LocalState_ι_Tip3ConfigIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_Tip3ConfigIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_Tip3ConfigIndex_Embedded_injEmbed t1 (LocalState_ι_Tip3ConfigIndex_Embedded_injEmbed t2 s) = LocalState_ι_Tip3ConfigIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_Tip3ConfigIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_Tip3ConfigIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_Tip3ConfigIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_Tip3ConfigIndex_Embedded_projinj;
+  injproj := LocalState_ι_Tip3ConfigIndex_Embedded_injproj;
+  injinj := LocalState_ι_Tip3ConfigIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_DPriceIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_DPriceIndex l.
+
+Definition  LocalState_ι_DPriceIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_DPriceIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_DPriceIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_DPriceIndex_Embedded_projEmbed (LocalState_ι_DPriceIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_DPriceIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_DPriceIndex_Embedded_injEmbed (LocalState_ι_DPriceIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_DPriceIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_DPriceIndex_Embedded_injEmbed t1 (LocalState_ι_DPriceIndex_Embedded_injEmbed t2 s) = LocalState_ι_DPriceIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_DPriceIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_DPriceIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_DPriceIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_DPriceIndex_Embedded_projinj;
+  injproj := LocalState_ι_DPriceIndex_Embedded_injproj;
+  injinj := LocalState_ι_DPriceIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_DPriceXchgIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_DPriceXchgIndex l.
+
+Definition  LocalState_ι_DPriceXchgIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_DPriceXchgIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_DPriceXchgIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_DPriceXchgIndex_Embedded_projEmbed (LocalState_ι_DPriceXchgIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_DPriceXchgIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_DPriceXchgIndex_Embedded_injEmbed (LocalState_ι_DPriceXchgIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_DPriceXchgIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_DPriceXchgIndex_Embedded_injEmbed t1 (LocalState_ι_DPriceXchgIndex_Embedded_injEmbed t2 s) = LocalState_ι_DPriceXchgIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_DPriceXchgIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_DPriceXchgIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_DPriceXchgIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_DPriceXchgIndex_Embedded_projinj;
+  injproj := LocalState_ι_DPriceXchgIndex_Embedded_injproj;
+  injinj := LocalState_ι_DPriceXchgIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_tuple_address_addressIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_tuple_address_addressIndex l.
+
+Definition  LocalState_ι_tuple_address_addressIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_tuple_address_addressIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_tuple_address_addressIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_tuple_address_addressIndex_Embedded_projEmbed (LocalState_ι_tuple_address_addressIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_tuple_address_addressIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_tuple_address_addressIndex_Embedded_injEmbed (LocalState_ι_tuple_address_addressIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_tuple_address_addressIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_tuple_address_addressIndex_Embedded_injEmbed t1 (LocalState_ι_tuple_address_addressIndex_Embedded_injEmbed t2 s) = LocalState_ι_tuple_address_addressIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_tuple_address_addressIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_tuple_address_addressIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_tuple_address_addressIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_tuple_address_addressIndex_Embedded_projinj;
+  injproj := LocalState_ι_tuple_address_addressIndex_Embedded_injproj;
+  injinj := LocalState_ι_tuple_address_addressIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_uint32Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_uint32Index l.
+
+Definition  LocalState_ι_uint32Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_uint32Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_uint32Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_uint32Index_Embedded_projEmbed (LocalState_ι_uint32Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_uint32Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_uint32Index_Embedded_injEmbed (LocalState_ι_uint32Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_uint32Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_uint32Index_Embedded_injEmbed t1 (LocalState_ι_uint32Index_Embedded_injEmbed t2 s) = LocalState_ι_uint32Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_uint32Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_uint32Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_uint32Index_Embedded_injEmbed;
+  projinj := LocalState_ι_uint32Index_Embedded_projinj;
+  injproj := LocalState_ι_uint32Index_Embedded_injproj;
+  injinj := LocalState_ι_uint32Index_Embedded_injinj
+}.
+Definition  LocalState_ι_unsignedIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_unsignedIndex l.
+
+Definition  LocalState_ι_unsignedIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_unsignedIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_unsignedIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_unsignedIndex_Embedded_projEmbed (LocalState_ι_unsignedIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_unsignedIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_unsignedIndex_Embedded_injEmbed (LocalState_ι_unsignedIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_unsignedIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_unsignedIndex_Embedded_injEmbed t1 (LocalState_ι_unsignedIndex_Embedded_injEmbed t2 s) = LocalState_ι_unsignedIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_unsignedIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_unsignedIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_unsignedIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_unsignedIndex_Embedded_projinj;
+  injproj := LocalState_ι_unsignedIndex_Embedded_injproj;
+  injinj := LocalState_ι_unsignedIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_OrderInfoIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_OrderInfoIndex l.
+
+Definition  LocalState_ι_OrderInfoIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_OrderInfoIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_OrderInfoIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_OrderInfoIndex_Embedded_projEmbed (LocalState_ι_OrderInfoIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_OrderInfoIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_OrderInfoIndex_Embedded_injEmbed (LocalState_ι_OrderInfoIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_OrderInfoIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_OrderInfoIndex_Embedded_injEmbed t1 (LocalState_ι_OrderInfoIndex_Embedded_injEmbed t2 s) = LocalState_ι_OrderInfoIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_OrderInfoIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_OrderInfoIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_OrderInfoIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_OrderInfoIndex_Embedded_projinj;
+  injproj := LocalState_ι_OrderInfoIndex_Embedded_injproj;
+  injinj := LocalState_ι_OrderInfoIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_intIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_intIndex l.
+
+Definition  LocalState_ι_intIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_intIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_intIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_intIndex_Embedded_projEmbed (LocalState_ι_intIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_intIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_intIndex_Embedded_injEmbed (LocalState_ι_intIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_intIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_intIndex_Embedded_injEmbed t1 (LocalState_ι_intIndex_Embedded_injEmbed t2 s) = LocalState_ι_intIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_intIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_intIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_intIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_intIndex_Embedded_projinj;
+  injproj := LocalState_ι_intIndex_Embedded_injproj;
+  injinj := LocalState_ι_intIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_optional_uint128_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_optional_uint128_Index l.
+
+Definition  LocalState_ι_optional_uint128_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_optional_uint128_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_optional_uint128_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_optional_uint128_Index_Embedded_projEmbed (LocalState_ι_optional_uint128_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_optional_uint128_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_optional_uint128_Index_Embedded_injEmbed (LocalState_ι_optional_uint128_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_optional_uint128_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_optional_uint128_Index_Embedded_injEmbed t1 (LocalState_ι_optional_uint128_Index_Embedded_injEmbed t2 s) = LocalState_ι_optional_uint128_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_optional_uint128_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_optional_uint128_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_optional_uint128_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_optional_uint128_Index_Embedded_projinj;
+  injproj := LocalState_ι_optional_uint128_Index_Embedded_injproj;
+  injinj := LocalState_ι_optional_uint128_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_boolIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_boolIndex l.
+
+Definition  LocalState_ι_boolIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_boolIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_boolIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_boolIndex_Embedded_projEmbed (LocalState_ι_boolIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_boolIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_boolIndex_Embedded_injEmbed (LocalState_ι_boolIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_boolIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_boolIndex_Embedded_injEmbed t1 (LocalState_ι_boolIndex_Embedded_injEmbed t2 s) = LocalState_ι_boolIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_boolIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_boolIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_boolIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_boolIndex_Embedded_projinj;
+  injproj := LocalState_ι_boolIndex_Embedded_injproj;
+  injinj := LocalState_ι_boolIndex_Embedded_injinj
+}.
+Definition  LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_optional_OrderInfoWithIdx_Index l.
+
+Definition  LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_optional_OrderInfoWithIdx_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_projEmbed (LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injEmbed (LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injEmbed t1 (LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injEmbed t2 s) = LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_projinj;
+  injproj := LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injproj;
+  injinj := LocalState_ι_optional_OrderInfoWithIdx_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_queue_OrderInfo_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_queue_OrderInfo_Index l.
+
+Definition  LocalState_ι_queue_OrderInfo_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_queue_OrderInfo_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_queue_OrderInfo_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_queue_OrderInfo_Index_Embedded_projEmbed (LocalState_ι_queue_OrderInfo_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_queue_OrderInfo_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_queue_OrderInfo_Index_Embedded_injEmbed (LocalState_ι_queue_OrderInfo_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_queue_OrderInfo_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_queue_OrderInfo_Index_Embedded_injEmbed t1 (LocalState_ι_queue_OrderInfo_Index_Embedded_injEmbed t2 s) = LocalState_ι_queue_OrderInfo_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_queue_OrderInfo_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_queue_OrderInfo_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_queue_OrderInfo_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_queue_OrderInfo_Index_Embedded_projinj;
+  injproj := LocalState_ι_queue_OrderInfo_Index_Embedded_injproj;
+  injinj := LocalState_ι_queue_OrderInfo_Index_Embedded_injinj
+}.
+Definition  LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_pair_unsigned_OrderInfo_Index l.
+
+Definition  LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_pair_unsigned_OrderInfo_Index := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_projEmbed (LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injEmbed (LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injEmbed t1 (LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injEmbed t2 s) = LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_projEmbed;
+	injEmbed := LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injEmbed;
+  projinj := LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_projinj;
+  injproj := LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injproj;
+  injinj := LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded_injinj
+}.
+(****************************************************************************)
+
+Class LocalStateField (X:Type): Type := 
+{
+    local_index_embedded:> EmbeddedType LedgerLocalState (XHMap string nat) ;
+    local_state_field: LedgerLocalFields;
+    local_field_type_correct: field_type (PruvendoRecord:=LedgerLocalPruvendoRecord) local_state_field = XHMap (string*nat)%type X;
+}.    
 
 End LedgerClass .
