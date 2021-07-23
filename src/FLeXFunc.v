@@ -21,23 +21,31 @@ Require Import FinProof.MonadTransformers21.
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.ProofEnvironment2.
 
-Require Import classFlex.
-
 Require Import FLeXContractTypes.
-
-Require Import FLeXContractConsts.  
-Require Import FLeXConstSig. 
-
+Require Import classFlex.
+Require Import FLeXConstSig.  
 Require Import ZArith.
 Require Import FLeXFuncNotations.
+Require Import UMLang.SolidityNotations2.
+Require Import UMLang.SML_NG25.
 
-Module FLeXFunc (dc : FLeXConstsTypesSig XTypesModule StateMonadModule ).
-
+Module stdFuncProofs (* (xt: XTypesSig) 
+               (sm: StateMonadSig)  *)
+               (dc : FLeXConstsTypesSig XTypesModule StateMonadModule )  (cs : ClassSig XTypesModule).
+Import cs.
 Module Export FLeXFuncNotationsModule := FLeXFuncNotations XTypesModule StateMonadModule dc.
 Import SMLNotations.
 Local Open Scope sml_scope.
 Local Open Scope struct_scope.
 Local Open Scope Z_scope.
+
+Definition plusassign (a b: XInteger) : SMLExpression  XInteger false :=
+    {{
+        a : XInteger @ "a" ; b : XInteger @ "b" ;
+       { a } := !{a} + !{b}
+    }}.
+
+
 
 Definition test_ref (a b: XBool): SMLExpression XInteger false :=
     {{
