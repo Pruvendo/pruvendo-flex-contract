@@ -27,14 +27,11 @@ Require Import FLeXContractTypes.
 
 Require Import FLeXContractConsts.  
 Require Import FLeXConstSig. 
-(* Require Import trainContractVariables.
-Require Import trainContractVars. *)
+
 Require Import ZArith.
 Require Import FLeXFuncNotations.
 
-Module FLeXFunc (* (xt: XTypesSig) 
-               (sm: StateMonadSig)  *)
-               (dc : trainConstsTypesSig XTypesModule StateMonadModule ).
+Module FLeXFunc (dc : FLeXConstsTypesSig XTypesModule StateMonadModule ).
 
 Module Export FLeXFuncNotationsModule := FLeXFuncNotations XTypesModule StateMonadModule dc.
 Import SMLNotations.
