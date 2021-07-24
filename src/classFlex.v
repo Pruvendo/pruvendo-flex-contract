@@ -108,7 +108,8 @@
  I8 * 
  I256 * 
  A )%type .
-(* 1 *) Inductive FLeXSellArgsFields := | FLeXSellArgs_ι_price | FLeXSellArgs_ι_amount | FLeXSellArgs_ι_lend_finish_time | FLeXSellArgs_ι_min_amount | FLeXSellArgs_ι_deals_limit | FLeXSellArgs_ι_tons_value | FLeXSellArgs_ι_price_code | FLeXSellArgs_ι_tip3_code .
+
+(* 1 *) Inductive FLeXSellArgsFields := | FLeXSellArgs_ι_price | FLeXSellArgs_ι_amount | FLeXSellArgs_ι_lend_finish_time | FLeXSellArgs_ι_min_amount | FLeXSellArgs_ι_deals_limit | FLeXSellArgs_ι_tons_value | FLeXSellArgs_ι_price_code | FLeXSellArgs_ι_addrs | FLeXSellArgs_ι_tip3_code | FLeXSellArgs_ι_tip3cfg .
 (* 2 *) Definition FLeXSellArgsP := 
  ( I128 * 
  I128 * 
@@ -117,8 +118,11 @@
  I8 * 
  I128 * 
  C * 
- C )%type .
-(* 1 *) Inductive FLeXBuyArgsFields := | FLeXBuyArgs_ι_price | FLeXBuyArgs_ι_amount | FLeXBuyArgs_ι_order_finish_time | FLeXBuyArgs_ι_min_amount | FLeXBuyArgs_ι_deals_limit | FLeXBuyArgs_ι_deploy_value | FLeXBuyArgs_ι_price_code | FLeXBuyArgs_ι_my_tip3_addr | FLeXBuyArgs_ι_tip3_code .
+ R FLeXSellArgsAddrsP * 
+ C * 
+ R Tip3ConfigP )%type .
+
+(* 1 *) Inductive FLeXBuyArgsFields := | FLeXBuyArgs_ι_price | FLeXBuyArgs_ι_amount | FLeXBuyArgs_ι_order_finish_time | FLeXBuyArgs_ι_min_amount | FLeXBuyArgs_ι_deals_limit | FLeXBuyArgs_ι_deploy_value | FLeXBuyArgs_ι_price_code | FLeXBuyArgs_ι_my_tip3_addr | FLeXBuyArgs_ι_tip3_code | FLeXBuyArgs_ι_tip3cfg .
 (* 2 *) Definition FLeXBuyArgsP := 
  ( I128 * 
  I128 * 
@@ -128,8 +132,15 @@
  I128 * 
  C * 
  A * 
- C )%type .
-(* 1 *) Inductive FLeXXchgArgsFields := | FLeXXchgArgs_ι_sell | FLeXXchgArgs_ι_price_num | FLeXXchgArgs_ι_price_denum | FLeXXchgArgs_ι_amount | FLeXXchgArgs_ι_lend_amount | FLeXXchgArgs_ι_lend_finish_time | FLeXXchgArgs_ι_min_amount | FLeXXchgArgs_ι_deals_limit | FLeXXchgArgs_ι_tons_value | FLeXXchgArgs_ι_xchg_price_code | FLeXXchgArgs_ι_tip3_code .
+ C * 
+ R Tip3ConfigP )%type .
+
+(* 1 *) Inductive FLeXXchgCfgsFields := | FLeXXchgCfgs_ι_major_tip3cfg | FLeXXchgCfgs_ι_minor_tip3cfg .
+(* 2 *) Definition FLeXXchgCfgsP := 
+ ( R Tip3ConfigP * 
+ R Tip3ConfigP )%type .
+
+(* 1 *) Inductive FLeXXchgArgsFields := | FLeXXchgArgs_ι_sell | FLeXXchgArgs_ι_price_num | FLeXXchgArgs_ι_price_denum | FLeXXchgArgs_ι_amount | FLeXXchgArgs_ι_lend_amount | FLeXXchgArgs_ι_lend_finish_time | FLeXXchgArgs_ι_min_amount | FLeXXchgArgs_ι_deals_limit | FLeXXchgArgs_ι_tons_value | FLeXXchgArgs_ι_xchg_price_code | FLeXXchgArgs_ι_addrs | FLeXXchgArgs_ι_tip3_code | FLeXXchgArgs_ι_tip3cfgs .
 (* 2 *) Definition FLeXXchgArgsP := 
  ( B * 
  I128 * 
@@ -141,15 +152,20 @@
  I8 * 
  I128 * 
  C * 
- C )%type .
-(* 1 *) Inductive FLeXCancelArgsFields := | FLeXCancelArgs_ι_price | FLeXCancelArgs_ι_min_amount | FLeXCancelArgs_ι_deals_limit | FLeXCancelArgs_ι_value | FLeXCancelArgs_ι_price_code | FLeXCancelArgs_ι_tip3_code .
+ R FLeXSellArgsAddrsP * 
+ C * 
+ R FLeXXchgCfgsP )%type .
+
+(* 1 *) Inductive FLeXCancelArgsFields := | FLeXCancelArgs_ι_price | FLeXCancelArgs_ι_min_amount | FLeXCancelArgs_ι_deals_limit | FLeXCancelArgs_ι_value | FLeXCancelArgs_ι_price_code | FLeXCancelArgs_ι_tip3_code | FLeXCancelArgs_ι_tip3cfg .
 (* 2 *) Definition FLeXCancelArgsP := 
  ( I128 * 
  I128 * 
  I8 * 
  I128 * 
  C * 
- C )%type .
+ C * 
+ R Tip3ConfigP )%type .
+
 (* 1 *) Inductive FLeXXchgCancelArgsFields := | FLeXXchgCancelArgs_ι_sell | FLeXXchgCancelArgs_ι_price_num | FLeXXchgCancelArgs_ι_price_denum | FLeXXchgCancelArgs_ι_min_amount | FLeXXchgCancelArgs_ι_deals_limit | FLeXXchgCancelArgs_ι_value | FLeXXchgCancelArgs_ι_xchg_price_code | FLeXXchgCancelArgs_ι_tip3_code .
 (* 2 *) Definition FLeXXchgCancelArgsP := 
  ( B * 
@@ -180,10 +196,12 @@
  I128 * 
  I8 * 
  A )%type .
-(* 1 *) Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_buys_amount | process_ret_ι_ret_ .
+(* 1 *) Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_sells_ | process_ret_ι_buys_amount | process_ret_ι_buys_ | process_ret_ι_ret_ .
 (* 2 *) Definition process_retP := 
  ( I128 * 
+ Q OrderInfoP * 
  I128 * 
+ Q OrderInfoP * 
  M OrderRetP )%type .
 (* 1 *) Inductive SellArgsFields := | SellArgs_ι_amount | SellArgs_ι_receive_wallet .
 (* 2 *) Definition SellArgsP := 
@@ -195,7 +213,8 @@
  I128 * 
  I128 * 
  I128 )%type .
-(* 1 *) Inductive PriceFields := | Price_ι_price_ | Price_ι_sells_amount_ | Price_ι_buys_amount_ | Price_ι_flex_ | Price_ι_min_amount_ | Price_ι_deals_limit_ | Price_ι_notify_addr_ | Price_ι_workchain_id_ | Price_ι_tons_cfg_ | Price_ι_tip3_code_ | Price_ι_tip3cfg_ .
+
+(* 1 *) Inductive PriceFields := | Price_ι_price_ | Price_ι_sells_amount_ | Price_ι_buys_amount_ | Price_ι_flex_ | Price_ι_min_amount_ | Price_ι_deals_limit_ | Price_ι_notify_addr_ | Price_ι_workchain_id_ | Price_ι_tons_cfg_ | Price_ι_tip3_code_ | Price_ι_tip3cfg_ | Price_ι_sells_ | Price_ι_buys_ .
 (* 2 *) Definition PriceP := 
  ( I128 * 
  I128 * 
@@ -207,7 +226,10 @@
  I8 * 
  TonsConfigP * 
  C * 
- Tip3ConfigP )%type .
+ Tip3ConfigP * 
+ Q OrderInfoP * 
+ Q OrderInfoP )%type .
+
 (* 1 *) Inductive RationalPriceFields := | RationalPrice_ι_num | RationalPrice_ι_denum .
 (* 2 *) Definition RationalPriceP := 
  ( I128 * 
@@ -360,6 +382,9 @@ Module Export SolidityNotationsClass := SolidityNotations xt  sm.
 Import xt. 
 Existing Instance monadStateT. 
 Existing Instance monadStateStateT.
+Print FLeXXchgCfgsP.
+Definition FLeXXchgCfgs := @ FLeXXchgCfgsP 
+XInteger8 XInteger256 XAddress XString XMaybe.
 
 Definition TickTock := @ TickTockP
 XBool
@@ -393,18 +418,22 @@ XAddress
 .
 Definition Tip3Config := @ Tip3ConfigP
 XInteger8 XInteger256 XAddress XString
-.
+. 
+Print FLeXSellArgsP.
 Definition FLeXSellArgs := @ FLeXSellArgsP
-XInteger8 XInteger32 XInteger128 TvmCell
+XInteger8 XInteger32 XInteger128 XInteger256 XAddress TvmCell XString XMaybe
 .
+Print FLeXBuyArgsP .
 Definition FLeXBuyArgs := @ FLeXBuyArgsP
-XInteger8 XInteger32 XInteger128 XAddress TvmCell
+XInteger8 XInteger32 XInteger128 XInteger256 XAddress TvmCell XString XMaybe
 .
+Print FLeXXchgArgsP .
 Definition FLeXXchgArgs := @ FLeXXchgArgsP
-XInteger8 XInteger32 XInteger128 XBool TvmCell
+XInteger8 XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe
 .
+Print FLeXCancelArgsP .
 Definition FLeXCancelArgs := @ FLeXCancelArgsP
-XInteger8 XInteger128 TvmCell
+XInteger8 XInteger128 XInteger256 XAddress TvmCell XString XMaybe
 .
 Definition FLeXXchgCancelArgs := @ FLeXXchgCancelArgsP
 XInteger8 XInteger128 XBool TvmCell
@@ -415,8 +444,9 @@ XInteger8 XInteger128 XInteger256 XAddress TvmCell
 Definition FLeX := @ FLeXP
 XInteger8 XInteger128 XInteger256 XAddress TvmCell XMaybe
 .
+Print process_retP .
 Definition process_ret := @ process_retP
-XInteger32 XInteger128 XMaybe
+XInteger8 XInteger32 XInteger128 XInteger256 XMaybe XMaybe
 .
 Definition SellArgs := @ SellArgsP
 XInteger8 XInteger128 XInteger256
@@ -427,7 +457,7 @@ XInteger128
 
 Print PriceP.
 Definition Price := @ PriceP
-XInteger8   XInteger16   XInteger128 XInteger256 XAddress TvmCell XString
+XInteger8   XInteger16  XInteger32  XInteger128 XInteger256 XAddress TvmCell XString XMaybe
 .
 
 Definition RationalPrice := @ RationalPriceP
@@ -451,17 +481,22 @@ XInteger128 XAddress
 Definition DXchgPair := @ DXchgPairP
 XInteger128 XAddress
 .
+Print VMCommitP .
 Definition VMCommit := @ VMCommitP
-XInteger8    XInteger16    XInteger128 XInteger256 XAddress TvmCell XString XMaybe
+XInteger8    XInteger16  XInteger32  XInteger128 XInteger256 XAddress TvmCell XString XMaybe XMaybe
 .
+Print LocalStateP .
 Definition LocalState := @ LocalStateP
-XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
+XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XMaybe XHMap
 .
+Print LedgerP .
 Definition Ledger := @ LedgerP
-XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
+XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XMaybe XHMap
 .
 Definition LedgerFields := LedgerFieldsI.
 
+Global Instance FLeXXchgCfgs_default : XDefault FLeXXchgCfgs := { 
+  	 default := ( default , default ) } .
 Global Instance TickTock_default : XDefault TickTock := { 
   	 default := ( default , default ) } .
 Global Instance allowance_info_default : XDefault allowance_info := { 
@@ -485,14 +520,13 @@ Global Instance FLeXSellArgsAddrs_default : XDefault FLeXSellArgsAddrs := {
 Global Instance Tip3Config_default : XDefault Tip3Config := { 
   	 default := ( default , default , default , default , default ) } .
 Global Instance FLeXSellArgs_default : XDefault FLeXSellArgs := { 
-  	 default := ( default , default , default , default , default , default , default , default ) } .
+  	 default := ( default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance FLeXBuyArgs_default : XDefault FLeXBuyArgs := { 
-  	 default := ( default , default , default , default , default , default , default , default , default ) } .
-
+  	 default := ( default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance FLeXXchgArgs_default : XDefault FLeXXchgArgs := { 
   	 default := ( default , default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance FLeXCancelArgs_default : XDefault FLeXCancelArgs := { 
-  	 default := ( default , default , default , default , default , default ) } .
+  	 default := ( default , default , default , default , default , default , default ) } .
 Global Instance FLeXXchgCancelArgs_default : XDefault FLeXXchgCancelArgs := { 
   	 default := ( default , default , default , default , default , default , default , default ) } .
 Global Instance FLeXClient_default : XDefault FLeXClient := { 
@@ -500,7 +534,7 @@ Global Instance FLeXClient_default : XDefault FLeXClient := {
 Global Instance FLeX_default : XDefault FLeX := { 
   	 default := ( default , default , default , default , default , default , default , default , default ) } .
 Global Instance process_ret_default : XDefault process_ret := { 
-  	 default := ( default , default , default ) } .
+  	 default := ( default , default , default , default , default ) } .
 Global Instance SellArgs_default : XDefault SellArgs := { 
   	 default := ( default , default ) } .
 Global Instance DetailsInfo_default : XDefault DetailsInfo := { 
@@ -635,6 +669,26 @@ Notation " 'fst97' x " := ( fst ( fst96 x ) ) (at level 60, right associativity)
 Notation " 'fst98' x " := ( fst ( fst97 x ) ) (at level 60, right associativity).
 Notation " 'fst99' x " := ( fst ( fst98 x ) ) (at level 60, right associativity).
 Notation " 'fst100' x " := ( fst ( fst99 x ) ) (at level 60, right associativity).
+(* 3 *) Definition FLeXXchgCfgs_field_type f : Type :=  
+match f with 
+ | FLeXXchgCfgs_ι_major_tip3cfg => XMaybe (* XReference *) Tip3Config | FLeXXchgCfgs_ι_minor_tip3cfg => XMaybe (* XReference *) Tip3Config end .
+(* 4 *) Definition FLeXXchgCfgs_get (f: FLeXXchgCfgsFields )(r: FLeXXchgCfgs ) :  FLeXXchgCfgs_field_type f := 
+ match f with 
+ | FLeXXchgCfgs_ι_major_tip3cfg => fst1 r 
+ | FLeXXchgCfgs_ι_minor_tip3cfg => snd r 
+ end .
+(* 5 *) Coercion FLeXXchgCfgs_get : FLeXXchgCfgsFields >-> Funclass .
+(* 6 *) Definition FLeXXchgCfgs_set (f: FLeXXchgCfgsFields ) 
+(v: FLeXXchgCfgs_field_type f) (r: FLeXXchgCfgs ): FLeXXchgCfgs  :=
+  match f, v with | FLeXXchgCfgs_ι_major_tip3cfg , v' => ( v' , snd r ) 
+ | FLeXXchgCfgs_ι_minor_tip3cfg , v' => ( fst1 r , v' ) 
+ end .
+(* 7 *) Global Instance FLeXXchgCfgs_PruvendoRecord : PruvendoRecord FLeXXchgCfgs FLeXXchgCfgsFields :=
+{
+  field_type := FLeXXchgCfgs_field_type; 
+  getPruvendoRecord := @FLeXXchgCfgs_get ;
+  setPruvendoRecord := @FLeXXchgCfgs_set ;
+} .
 (* 3 *) Definition TickTock_field_type f : Type :=  
 match f with | TickTock_ι_tick => XBool | TickTock_ι_tock => XBool end .
 (* 4 *) Definition TickTock_get (f: TickTockFields )(r: TickTock ) :  TickTock_field_type f := 
@@ -909,98 +963,120 @@ match f with | Tip3Config_ι_name => XString | Tip3Config_ι_symbol => XString |
   getPruvendoRecord := @Tip3Config_get ;
   setPruvendoRecord := @Tip3Config_set ;
 } .
+
 (* 3 *) Definition FLeXSellArgs_field_type f : Type :=  
-match f with | FLeXSellArgs_ι_price => XInteger128 | FLeXSellArgs_ι_amount => XInteger128 | FLeXSellArgs_ι_lend_finish_time => XInteger32 | FLeXSellArgs_ι_min_amount => XInteger128 | FLeXSellArgs_ι_deals_limit => XInteger8 | FLeXSellArgs_ι_tons_value => XInteger128 | FLeXSellArgs_ι_price_code => TvmCell | FLeXSellArgs_ι_tip3_code => TvmCell end .
+match f with 
+ | FLeXSellArgs_ι_price => XInteger128 | FLeXSellArgs_ι_amount => XInteger128 | FLeXSellArgs_ι_lend_finish_time => XInteger32 | FLeXSellArgs_ι_min_amount => XInteger128 | FLeXSellArgs_ι_deals_limit => XInteger8 | FLeXSellArgs_ι_tons_value => XInteger128 | FLeXSellArgs_ι_price_code => TvmCell | FLeXSellArgs_ι_addrs => XMaybe (* XReference *) FLeXSellArgsAddrs | FLeXSellArgs_ι_tip3_code => TvmCell | FLeXSellArgs_ι_tip3cfg => XMaybe (* XReference *) Tip3Config end .
 (* 4 *) Definition FLeXSellArgs_get (f: FLeXSellArgsFields )(r: FLeXSellArgs ) :  FLeXSellArgs_field_type f := 
- match f with | FLeXSellArgs_ι_price => fst7 r 
- | FLeXSellArgs_ι_amount => snd ( fst6 r ) 
- | FLeXSellArgs_ι_lend_finish_time => snd ( fst5 r ) 
- | FLeXSellArgs_ι_min_amount => snd ( fst4 r ) 
- | FLeXSellArgs_ι_deals_limit => snd ( fst3 r ) 
- | FLeXSellArgs_ι_tons_value => snd ( fst2 r ) 
- | FLeXSellArgs_ι_price_code => snd ( fst1 r ) 
- | FLeXSellArgs_ι_tip3_code => snd r 
+ match f with 
+ | FLeXSellArgs_ι_price => fst9 r 
+ | FLeXSellArgs_ι_amount => snd ( fst8 r ) 
+ | FLeXSellArgs_ι_lend_finish_time => snd ( fst7 r ) 
+ | FLeXSellArgs_ι_min_amount => snd ( fst6 r ) 
+ | FLeXSellArgs_ι_deals_limit => snd ( fst5 r ) 
+ | FLeXSellArgs_ι_tons_value => snd ( fst4 r ) 
+ | FLeXSellArgs_ι_price_code => snd ( fst3 r ) 
+ | FLeXSellArgs_ι_addrs => snd ( fst2 r ) 
+ | FLeXSellArgs_ι_tip3_code => snd ( fst1 r ) 
+ | FLeXSellArgs_ι_tip3cfg => snd r 
  end .
 (* 5 *) Coercion FLeXSellArgs_get : FLeXSellArgsFields >-> Funclass .
 (* 6 *) Definition FLeXSellArgs_set (f: FLeXSellArgsFields ) 
 (v: FLeXSellArgs_field_type f) (r: FLeXSellArgs ): FLeXSellArgs  :=
-  match f, v with | FLeXSellArgs_ι_price , v' => ( v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXSellArgs_ι_amount , v' => ( fst7 r , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXSellArgs_ι_lend_finish_time , v' => ( fst7 r , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXSellArgs_ι_min_amount , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXSellArgs_ι_deals_limit , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXSellArgs_ι_tons_value , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | FLeXSellArgs_ι_price_code , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | FLeXSellArgs_ι_tip3_code , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | FLeXSellArgs_ι_price , v' => ( v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXSellArgs_ι_amount , v' => ( fst9 r , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXSellArgs_ι_lend_finish_time , v' => ( fst9 r , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXSellArgs_ι_min_amount , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXSellArgs_ι_deals_limit , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXSellArgs_ι_tons_value , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXSellArgs_ι_price_code , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXSellArgs_ι_addrs , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | FLeXSellArgs_ι_tip3_code , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | FLeXSellArgs_ι_tip3cfg , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
+
 (* 7 *) Global Instance FLeXSellArgs_PruvendoRecord : PruvendoRecord FLeXSellArgs FLeXSellArgsFields :=
 {
   field_type := FLeXSellArgs_field_type; 
   getPruvendoRecord := @FLeXSellArgs_get ;
   setPruvendoRecord := @FLeXSellArgs_set ;
 } .
+
 (* 3 *) Definition FLeXBuyArgs_field_type f : Type :=  
-match f with | FLeXBuyArgs_ι_price => XInteger128 | FLeXBuyArgs_ι_amount => XInteger128 | FLeXBuyArgs_ι_order_finish_time => XInteger32 | FLeXBuyArgs_ι_min_amount => XInteger128 | FLeXBuyArgs_ι_deals_limit => XInteger8 | FLeXBuyArgs_ι_deploy_value => XInteger128 | FLeXBuyArgs_ι_price_code => TvmCell | FLeXBuyArgs_ι_my_tip3_addr => XAddress | FLeXBuyArgs_ι_tip3_code => TvmCell end .
+match f with 
+ | FLeXBuyArgs_ι_price => XInteger128 | FLeXBuyArgs_ι_amount => XInteger128 | FLeXBuyArgs_ι_order_finish_time => XInteger32 | FLeXBuyArgs_ι_min_amount => XInteger128 | FLeXBuyArgs_ι_deals_limit => XInteger8 | FLeXBuyArgs_ι_deploy_value => XInteger128 | FLeXBuyArgs_ι_price_code => TvmCell | FLeXBuyArgs_ι_my_tip3_addr => XAddress | FLeXBuyArgs_ι_tip3_code => TvmCell | FLeXBuyArgs_ι_tip3cfg => XMaybe (* XReference *) Tip3Config end .
 (* 4 *) Definition FLeXBuyArgs_get (f: FLeXBuyArgsFields )(r: FLeXBuyArgs ) :  FLeXBuyArgs_field_type f := 
- match f with | FLeXBuyArgs_ι_price => fst8 r 
- | FLeXBuyArgs_ι_amount => snd ( fst7 r ) 
- | FLeXBuyArgs_ι_order_finish_time => snd ( fst6 r ) 
- | FLeXBuyArgs_ι_min_amount => snd ( fst5 r ) 
- | FLeXBuyArgs_ι_deals_limit => snd ( fst4 r ) 
- | FLeXBuyArgs_ι_deploy_value => snd ( fst3 r ) 
- | FLeXBuyArgs_ι_price_code => snd ( fst2 r ) 
- | FLeXBuyArgs_ι_my_tip3_addr => snd ( fst1 r ) 
- | FLeXBuyArgs_ι_tip3_code => snd r 
+ match f  with 
+ | FLeXBuyArgs_ι_price => fst9 r 
+ | FLeXBuyArgs_ι_amount => snd ( fst8 r ) 
+ | FLeXBuyArgs_ι_order_finish_time => snd ( fst7 r ) 
+ | FLeXBuyArgs_ι_min_amount => snd ( fst6 r ) 
+ | FLeXBuyArgs_ι_deals_limit => snd ( fst5 r ) 
+ | FLeXBuyArgs_ι_deploy_value => snd ( fst4 r ) 
+ | FLeXBuyArgs_ι_price_code => snd ( fst3 r ) 
+ | FLeXBuyArgs_ι_my_tip3_addr => snd ( fst2 r ) 
+ | FLeXBuyArgs_ι_tip3_code => snd ( fst1 r ) 
+ | FLeXBuyArgs_ι_tip3cfg => snd r 
  end .
 (* 5 *) Coercion FLeXBuyArgs_get : FLeXBuyArgsFields >-> Funclass .
 (* 6 *) Definition FLeXBuyArgs_set (f: FLeXBuyArgsFields ) 
 (v: FLeXBuyArgs_field_type f) (r: FLeXBuyArgs ): FLeXBuyArgs  :=
-  match f, v with | FLeXBuyArgs_ι_price , v' => ( v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXBuyArgs_ι_amount , v' => ( fst8 r , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXBuyArgs_ι_order_finish_time , v' => ( fst8 r , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXBuyArgs_ι_min_amount , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXBuyArgs_ι_deals_limit , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXBuyArgs_ι_deploy_value , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXBuyArgs_ι_price_code , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | FLeXBuyArgs_ι_my_tip3_addr , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | FLeXBuyArgs_ι_tip3_code , v' => ( fst8 r , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | FLeXBuyArgs_ι_price , v' => ( v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXBuyArgs_ι_amount , v' => ( fst9 r , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXBuyArgs_ι_order_finish_time , v' => ( fst9 r , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXBuyArgs_ι_min_amount , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXBuyArgs_ι_deals_limit , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXBuyArgs_ι_deploy_value , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXBuyArgs_ι_price_code , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXBuyArgs_ι_my_tip3_addr , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | FLeXBuyArgs_ι_tip3_code , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | FLeXBuyArgs_ι_tip3cfg , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
+
 (* 7 *) Global Instance FLeXBuyArgs_PruvendoRecord : PruvendoRecord FLeXBuyArgs FLeXBuyArgsFields :=
 {
   field_type := FLeXBuyArgs_field_type; 
   getPruvendoRecord := @FLeXBuyArgs_get ;
   setPruvendoRecord := @FLeXBuyArgs_set ;
 } .
+
 (* 3 *) Definition FLeXXchgArgs_field_type f : Type :=  
-match f with | FLeXXchgArgs_ι_sell => XBool | FLeXXchgArgs_ι_price_num => XInteger128 | FLeXXchgArgs_ι_price_denum => XInteger128 | FLeXXchgArgs_ι_amount => XInteger128 | FLeXXchgArgs_ι_lend_amount => XInteger128 | FLeXXchgArgs_ι_lend_finish_time => XInteger32 | FLeXXchgArgs_ι_min_amount => XInteger128 | FLeXXchgArgs_ι_deals_limit => XInteger8 | FLeXXchgArgs_ι_tons_value => XInteger128 | FLeXXchgArgs_ι_xchg_price_code => TvmCell | FLeXXchgArgs_ι_tip3_code => TvmCell end .
+match f with 
+ | FLeXXchgArgs_ι_sell => XBool | FLeXXchgArgs_ι_price_num => XInteger128 | FLeXXchgArgs_ι_price_denum => XInteger128 | FLeXXchgArgs_ι_amount => XInteger128 | FLeXXchgArgs_ι_lend_amount => XInteger128 | FLeXXchgArgs_ι_lend_finish_time => XInteger32 | FLeXXchgArgs_ι_min_amount => XInteger128 | FLeXXchgArgs_ι_deals_limit => XInteger8 | FLeXXchgArgs_ι_tons_value => XInteger128 | FLeXXchgArgs_ι_xchg_price_code => TvmCell | FLeXXchgArgs_ι_addrs => XReference FLeXSellArgsAddrs | FLeXXchgArgs_ι_tip3_code => TvmCell | FLeXXchgArgs_ι_tip3cfgs => XReference FLeXXchgCfgs end .
 (* 4 *) Definition FLeXXchgArgs_get (f: FLeXXchgArgsFields )(r: FLeXXchgArgs ) :  FLeXXchgArgs_field_type f := 
- match f with | FLeXXchgArgs_ι_sell => fst10 r 
- | FLeXXchgArgs_ι_price_num => snd ( fst9 r ) 
- | FLeXXchgArgs_ι_price_denum => snd ( fst8 r ) 
- | FLeXXchgArgs_ι_amount => snd ( fst7 r ) 
- | FLeXXchgArgs_ι_lend_amount => snd ( fst6 r ) 
- | FLeXXchgArgs_ι_lend_finish_time => snd ( fst5 r ) 
- | FLeXXchgArgs_ι_min_amount => snd ( fst4 r ) 
- | FLeXXchgArgs_ι_deals_limit => snd ( fst3 r ) 
- | FLeXXchgArgs_ι_tons_value => snd ( fst2 r ) 
- | FLeXXchgArgs_ι_xchg_price_code => snd ( fst1 r ) 
- | FLeXXchgArgs_ι_tip3_code => snd r 
+ match f , r with 
+ | FLeXXchgArgs_ι_sell => fst12 r 
+ | FLeXXchgArgs_ι_price_num => snd ( fst11 r ) 
+ | FLeXXchgArgs_ι_price_denum => snd ( fst10 r ) 
+ | FLeXXchgArgs_ι_amount => snd ( fst9 r ) 
+ | FLeXXchgArgs_ι_lend_amount => snd ( fst8 r ) 
+ | FLeXXchgArgs_ι_lend_finish_time => snd ( fst7 r ) 
+ | FLeXXchgArgs_ι_min_amount => snd ( fst6 r ) 
+ | FLeXXchgArgs_ι_deals_limit => snd ( fst5 r ) 
+ | FLeXXchgArgs_ι_tons_value => snd ( fst4 r ) 
+ | FLeXXchgArgs_ι_xchg_price_code => snd ( fst3 r ) 
+ | FLeXXchgArgs_ι_addrs => snd ( fst2 r ) 
+ | FLeXXchgArgs_ι_tip3_code => snd ( fst1 r ) 
+ | FLeXXchgArgs_ι_tip3cfgs => snd r 
  end .
 (* 5 *) Coercion FLeXXchgArgs_get : FLeXXchgArgsFields >-> Funclass .
 (* 6 *) Definition FLeXXchgArgs_set (f: FLeXXchgArgsFields ) 
 (v: FLeXXchgArgs_field_type f) (r: FLeXXchgArgs ): FLeXXchgArgs  :=
-  match f, v with | FLeXXchgArgs_ι_sell , v' => ( v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXXchgArgs_ι_price_num , v' => ( fst10 r , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXXchgArgs_ι_price_denum , v' => ( fst10 r , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXXchgArgs_ι_amount , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXXchgArgs_ι_lend_amount , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXXchgArgs_ι_lend_finish_time , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXXchgArgs_ι_min_amount , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXXchgArgs_ι_deals_limit , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXXchgArgs_ι_tons_value , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | FLeXXchgArgs_ι_xchg_price_code , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | FLeXXchgArgs_ι_tip3_code , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | FLeXXchgArgs_ι_sell , v' => ( v' , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_price_num , v' => ( fst12 r , v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_price_denum , v' => ( fst12 r , snd ( fst11 r ) , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_amount , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_lend_amount , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_lend_finish_time , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_min_amount , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_deals_limit , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_tons_value , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_xchg_price_code , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_addrs , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | FLeXXchgArgs_ι_tip3_code , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | FLeXXchgArgs_ι_tip3cfgs , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
+
 (* 7 *) Global Instance FLeXXchgArgs_PruvendoRecord : PruvendoRecord FLeXXchgArgs FLeXXchgArgsFields :=
 {
   field_type := FLeXXchgArgs_field_type; 
@@ -1123,20 +1199,29 @@ match f with | FLeX_ι_deployer_pubkey_ => XInteger256 | FLeX_ι_tons_cfg_ => To
   getPruvendoRecord := @FLeX_get ;
   setPruvendoRecord := @FLeX_set ;
 } .
+
 (* 3 *) Definition process_ret_field_type f : Type :=  
-match f with | process_ret_ι_sells_amount => XInteger128 | process_ret_ι_buys_amount => XInteger128 | process_ret_ι_ret_ => XMaybe OrderRet end .
+match f with 
+ | process_ret_ι_sells_amount => XInteger128 | process_ret_ι_sells_ => XMaybe (* XQueue *) OrderInfo | process_ret_ι_buys_amount => XInteger128 | process_ret_ι_buys_ => XMaybe (* XQueue *) OrderInfo | process_ret_ι_ret_ => XMaybe OrderRet end .
 (* 4 *) Definition process_ret_get (f: process_retFields )(r: process_ret ) :  process_ret_field_type f := 
- match f with | process_ret_ι_sells_amount => fst2 r 
- | process_ret_ι_buys_amount => snd ( fst1 r ) 
+ match f with 
+ | process_ret_ι_sells_amount => fst4 r 
+ | process_ret_ι_sells_ => snd ( fst3 r ) 
+ | process_ret_ι_buys_amount => snd ( fst2 r ) 
+ | process_ret_ι_buys_ => snd ( fst1 r ) 
  | process_ret_ι_ret_ => snd r 
  end .
 (* 5 *) Coercion process_ret_get : process_retFields >-> Funclass .
 (* 6 *) Definition process_ret_set (f: process_retFields ) 
 (v: process_ret_field_type f) (r: process_ret ): process_ret  :=
-  match f, v with | process_ret_ι_sells_amount , v' => ( v' , snd ( fst1 r ) , snd r ) 
- | process_ret_ι_buys_amount , v' => ( fst2 r , v' , snd r ) 
- | process_ret_ι_ret_ , v' => ( fst2 r , snd ( fst1 r ) , v' ) 
+  match f, v with | process_ret_ι_sells_amount , v' => ( v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | process_ret_ι_sells_ , v' => ( fst4 r , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | process_ret_ι_buys_amount , v' => ( fst4 r , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | process_ret_ι_buys_ , v' => ( fst4 r , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | process_ret_ι_ret_ , v' => ( fst4 r , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
+
+
 (* 7 *) Global Instance process_ret_PruvendoRecord : PruvendoRecord process_ret process_retFields :=
 {
   field_type := process_ret_field_type; 
@@ -1183,48 +1268,44 @@ match f with | DetailsInfo_ι_price => XInteger128 | DetailsInfo_ι_min_amount =
   getPruvendoRecord := @DetailsInfo_get ;
   setPruvendoRecord := @DetailsInfo_set ;
 } .
+
 (* 3 *) Definition Price_field_type f : Type :=  
 match f with 
-| Price_ι_price_ => XInteger128 
-| Price_ι_sells_amount_ => XInteger128 
-| Price_ι_buys_amount_ => XInteger128 
-| Price_ι_flex_ => addr_std_fixed 
-| Price_ι_min_amount_ => XInteger128 
-| Price_ι_deals_limit_ => XInteger8 
-| Price_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *)
-| Price_ι_workchain_id_ => XInteger8 | Price_ι_tons_cfg_ => TonsConfig 
-| Price_ι_tip3_code_ => TvmCell 
-| Price_ι_tip3cfg_ => Tip3Config 
-end .
-
+ | Price_ι_price_ => XInteger128 | Price_ι_sells_amount_ => XInteger128 | Price_ι_buys_amount_ => XInteger128 | Price_ι_flex_ => addr_std_fixed | Price_ι_min_amount_ => XInteger128 | Price_ι_deals_limit_ => XInteger8 | Price_ι_notify_addr_ => XInteger16 (* handle<IFLeXNotify> *) | Price_ι_workchain_id_ => XInteger8 | Price_ι_tons_cfg_ => TonsConfig | Price_ι_tip3_code_ => TvmCell | Price_ι_tip3cfg_ => Tip3Config | Price_ι_sells_ => XMaybe (* XQueue *) OrderInfo | Price_ι_buys_ => XMaybe (* XQueue *) OrderInfo end .
 (* 4 *) Definition Price_get (f: PriceFields )(r: Price ) :  Price_field_type f := 
- match f with | Price_ι_price_ => fst10 r 
- | Price_ι_sells_amount_ => snd ( fst9 r ) 
- | Price_ι_buys_amount_ => snd ( fst8 r ) 
- | Price_ι_flex_ => snd ( fst7 r ) 
- | Price_ι_min_amount_ => snd ( fst6 r ) 
- | Price_ι_deals_limit_ => snd ( fst5 r ) 
- | Price_ι_notify_addr_ => snd ( fst4 r ) 
- | Price_ι_workchain_id_ => snd ( fst3 r ) 
- | Price_ι_tons_cfg_ => snd ( fst2 r ) 
- | Price_ι_tip3_code_ => snd ( fst1 r ) 
- | Price_ι_tip3cfg_ => snd r 
+ match f with 
+ | Price_ι_price_ => fst12 r 
+ | Price_ι_sells_amount_ => snd ( fst11 r ) 
+ | Price_ι_buys_amount_ => snd ( fst10 r ) 
+ | Price_ι_flex_ => snd ( fst9 r ) 
+ | Price_ι_min_amount_ => snd ( fst8 r ) 
+ | Price_ι_deals_limit_ => snd ( fst7 r ) 
+ | Price_ι_notify_addr_ => snd ( fst6 r ) 
+ | Price_ι_workchain_id_ => snd ( fst5 r ) 
+ | Price_ι_tons_cfg_ => snd ( fst4 r ) 
+ | Price_ι_tip3_code_ => snd ( fst3 r ) 
+ | Price_ι_tip3cfg_ => snd ( fst2 r ) 
+ | Price_ι_sells_ => snd ( fst1 r ) 
+ | Price_ι_buys_ => snd r 
  end .
 (* 5 *) Coercion Price_get : PriceFields >-> Funclass .
 (* 6 *) Definition Price_set (f: PriceFields ) 
 (v: Price_field_type f) (r: Price ): Price  :=
-  match f, v with | Price_ι_price_ , v' => ( v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | Price_ι_sells_amount_ , v' => ( fst10 r , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | Price_ι_buys_amount_ , v' => ( fst10 r , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | Price_ι_flex_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | Price_ι_min_amount_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | Price_ι_deals_limit_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | Price_ι_notify_addr_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | Price_ι_workchain_id_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | Price_ι_tons_cfg_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | Price_ι_tip3_code_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | Price_ι_tip3cfg_ , v' => ( fst10 r , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | Price_ι_price_ , v' => ( v' , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_sells_amount_ , v' => ( fst12 r , v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_buys_amount_ , v' => ( fst12 r , snd ( fst11 r ) , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_flex_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_min_amount_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_deals_limit_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_notify_addr_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_workchain_id_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_tons_cfg_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_tip3_code_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | Price_ι_tip3cfg_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | Price_ι_sells_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | Price_ι_buys_ , v' => ( fst12 r , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
+
 (* 7 *) Global Instance Price_PruvendoRecord : PruvendoRecord Price PriceFields :=
 {
   field_type := Price_field_type; 
