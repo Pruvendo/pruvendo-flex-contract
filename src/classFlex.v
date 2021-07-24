@@ -25,7 +25,7 @@
  
  Variables I I8 I16 I32 I64 I128 I256 : Type. 
  Variables A B C S Bs : Type. 
- Variables L M H Q R : Type -> Type. (* H - handle<type> , Q - queue<type> , R - ref<type> *) 
+ Variables L M H Q R Bq : Type -> Type. (* H - handle<type> , Q - queue<type> , R - ref<type> Bq - big_queue<type>*) 
  Variables HM P : Type -> Type -> Type. 
  Variables T G Sl Bt Bi : Type. 
  
@@ -256,7 +256,8 @@
  I128 * 
  I128 * 
  I128 )%type .
-(* 1 *) Inductive PriceXchgFields := | PriceXchg_ι_price_ | PriceXchg_ι_sells_amount_ | PriceXchg_ι_buys_amount_ | PriceXchg_ι_flex_ | PriceXchg_ι_min_amount_ | PriceXchg_ι_deals_limit_ | PriceXchg_ι_notify_addr_ | PriceXchg_ι_workchain_id_ | PriceXchg_ι_tons_cfg_ | PriceXchg_ι_tip3_code_ | PriceXchg_ι_major_tip3cfg_ | PriceXchg_ι_minor_tip3cfg_ .
+
+(* 1 *) Inductive PriceXchgFields := | PriceXchg_ι_price_ | PriceXchg_ι_sells_amount_ | PriceXchg_ι_buys_amount_ | PriceXchg_ι_flex_ | PriceXchg_ι_min_amount_ | PriceXchg_ι_deals_limit_ | PriceXchg_ι_notify_addr_ | PriceXchg_ι_workchain_id_ | PriceXchg_ι_tons_cfg_ | PriceXchg_ι_tip3_code_ | PriceXchg_ι_major_tip3cfg_ | PriceXchg_ι_minor_tip3cfg_ | PriceXchg_ι_sells_ | PriceXchg_ι_buys_ .
 (* 2 *) Definition PriceXchgP := 
  ( RationalPriceP * 
  I128 * 
@@ -264,12 +265,15 @@
  addr_std_fixedP * 
  I128 * 
  I8 * 
- I16 (* handle<IFLeXNotify> *) * 
+ H I16 (* IFLeXNotify *)  * 
  I8 * 
  TonsConfigP * 
  C * 
  Tip3ConfigP * 
- Tip3ConfigP )%type .
+ Tip3ConfigP * 
+ Bq OrderInfoXchgP * 
+ Bq OrderInfoXchgP )%type .
+
 (* 1 *) Inductive DTradingPairFields := | DTradingPair_ι_flex_addr_ | DTradingPair_ι_tip3_root_ | DTradingPair_ι_deploy_value_ .
 (* 2 *) Definition DTradingPairP := 
  ( A * 
@@ -472,8 +476,9 @@ XInteger8 XInteger32 XInteger128 XInteger256
 Definition DetailsInfoXchg := @ DetailsInfoXchgP
 XInteger128
 .
+Print PriceXchgP .
 Definition PriceXchg := @ PriceXchgP
-XInteger8   XInteger16   XInteger128 XInteger256 XAddress TvmCell XString
+XInteger8   XInteger16  XInteger32  XInteger128 XInteger256 XAddress TvmCell XString XMaybe XMaybe
 .
 Definition DTradingPair := @ DTradingPairP
 XInteger128 XAddress
@@ -483,15 +488,15 @@ XInteger128 XAddress
 .
 Print VMCommitP .
 Definition VMCommit := @ VMCommitP
-XInteger8    XInteger16  XInteger32  XInteger128 XInteger256 XAddress TvmCell XString XMaybe XMaybe
-.
+XInteger8    XInteger16  XInteger32  XInteger128 XInteger256 XAddress TvmCell XString XMaybe XMaybe XMaybe XMaybe 
+. 
 Print LocalStateP .
 Definition LocalState := @ LocalStateP
-XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XMaybe XHMap
+XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XMaybe XMaybe XMaybe XHMap
 .
 Print LedgerP .
 Definition Ledger := @ LedgerP
-XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XMaybe XHMap
+XInteger XInteger8    XInteger16    XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XMaybe XMaybe XMaybe XHMap
 .
 Definition LedgerFields := LedgerFieldsI.
 
@@ -550,7 +555,7 @@ Global Instance OrderInfoXchg_default : XDefault OrderInfoXchg := {
 Global Instance DetailsInfoXchg_default : XDefault DetailsInfoXchg := { 
   	 default := ( default , default , default , default , default ) } .
 Global Instance PriceXchg_default : XDefault PriceXchg := { 
-  	 default := ( default , default , default , default , default , default , default , default , default , default , default , default ) } .
+  	 default := ( default , default , default , default , default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance DTradingPair_default : XDefault DTradingPair := { 
   	 default := ( default , default , default ) } .
 Global Instance DXchgPair_default : XDefault DXchgPair := { 
@@ -1404,52 +1409,48 @@ match f with | DetailsInfoXchg_ι_price_num => XInteger128 | DetailsInfoXchg_ι_
   getPruvendoRecord := @DetailsInfoXchg_get ;
   setPruvendoRecord := @DetailsInfoXchg_set ;
 } .
+
 (* 3 *) Definition PriceXchg_field_type f : Type :=  
 match f with 
-| PriceXchg_ι_price_ => RationalPrice 
-| PriceXchg_ι_sells_amount_ => XInteger128 
-| PriceXchg_ι_buys_amount_ => XInteger128 
-| PriceXchg_ι_flex_ => addr_std_fixed 
-| PriceXchg_ι_min_amount_ => XInteger128 
-| PriceXchg_ι_deals_limit_ => XInteger8 
-| PriceXchg_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *)
-| PriceXchg_ι_workchain_id_ => XInteger8 
-| PriceXchg_ι_tons_cfg_ => TonsConfig 
-| PriceXchg_ι_tip3_code_ => TvmCell 
-| PriceXchg_ι_major_tip3cfg_ => Tip3Config 
-| PriceXchg_ι_minor_tip3cfg_ => Tip3Config 
-end .
-
+ | PriceXchg_ι_price_ => RationalPrice | PriceXchg_ι_sells_amount_ => XInteger128 | PriceXchg_ι_buys_amount_ => XInteger128 | PriceXchg_ι_flex_ => addr_std_fixed | PriceXchg_ι_min_amount_ => XInteger128 | PriceXchg_ι_deals_limit_ => XInteger8 | PriceXchg_ι_notify_addr_ => XMaybe XInteger16 (* IFLeXNotifyPtr *) | PriceXchg_ι_workchain_id_ => XInteger8 | PriceXchg_ι_tons_cfg_ => TonsConfig | PriceXchg_ι_tip3_code_ => TvmCell | PriceXchg_ι_major_tip3cfg_ => Tip3Config | PriceXchg_ι_minor_tip3cfg_ => Tip3Config | PriceXchg_ι_sells_ => XMaybe (* XBigQueue *) OrderInfoXchg | PriceXchg_ι_buys_ => XMaybe (* XBigQueue *) OrderInfoXchg end .
 (* 4 *) Definition PriceXchg_get (f: PriceXchgFields )(r: PriceXchg ) :  PriceXchg_field_type f := 
- match f with | PriceXchg_ι_price_ => fst11 r 
- | PriceXchg_ι_sells_amount_ => snd ( fst10 r ) 
- | PriceXchg_ι_buys_amount_ => snd ( fst9 r ) 
- | PriceXchg_ι_flex_ => snd ( fst8 r ) 
- | PriceXchg_ι_min_amount_ => snd ( fst7 r ) 
- | PriceXchg_ι_deals_limit_ => snd ( fst6 r ) 
- | PriceXchg_ι_notify_addr_ => snd ( fst5 r ) 
- | PriceXchg_ι_workchain_id_ => snd ( fst4 r ) 
- | PriceXchg_ι_tons_cfg_ => snd ( fst3 r ) 
- | PriceXchg_ι_tip3_code_ => snd ( fst2 r ) 
- | PriceXchg_ι_major_tip3cfg_ => snd ( fst1 r ) 
- | PriceXchg_ι_minor_tip3cfg_ => snd r 
+ match f with 
+ | PriceXchg_ι_price_ => fst13 r 
+ | PriceXchg_ι_sells_amount_ => snd ( fst12 r ) 
+ | PriceXchg_ι_buys_amount_ => snd ( fst11 r ) 
+ | PriceXchg_ι_flex_ => snd ( fst10 r ) 
+ | PriceXchg_ι_min_amount_ => snd ( fst9 r ) 
+ | PriceXchg_ι_deals_limit_ => snd ( fst8 r ) 
+ | PriceXchg_ι_notify_addr_ => snd ( fst7 r ) 
+ | PriceXchg_ι_workchain_id_ => snd ( fst6 r ) 
+ | PriceXchg_ι_tons_cfg_ => snd ( fst5 r ) 
+ | PriceXchg_ι_tip3_code_ => snd ( fst4 r ) 
+ | PriceXchg_ι_major_tip3cfg_ => snd ( fst3 r ) 
+ | PriceXchg_ι_minor_tip3cfg_ => snd ( fst2 r ) 
+ | PriceXchg_ι_sells_ => snd ( fst1 r ) 
+ | PriceXchg_ι_buys_ => snd r 
  end .
 (* 5 *) Coercion PriceXchg_get : PriceXchgFields >-> Funclass .
 (* 6 *) Definition PriceXchg_set (f: PriceXchgFields ) 
 (v: PriceXchg_field_type f) (r: PriceXchg ): PriceXchg  :=
-  match f, v with | PriceXchg_ι_price_ , v' => ( v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_sells_amount_ , v' => ( fst11 r , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_buys_amount_ , v' => ( fst11 r , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_flex_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_min_amount_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_deals_limit_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_notify_addr_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_workchain_id_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_tons_cfg_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_tip3_code_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | PriceXchg_ι_major_tip3cfg_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | PriceXchg_ι_minor_tip3cfg_ , v' => ( fst11 r , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | PriceXchg_ι_price_ , v' => ( v' , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_sells_amount_ , v' => ( fst13 r , v' , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_buys_amount_ , v' => ( fst13 r , snd ( fst12 r ) , v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_flex_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_min_amount_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_deals_limit_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_notify_addr_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_workchain_id_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_tons_cfg_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_tip3_code_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_major_tip3cfg_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_minor_tip3cfg_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | PriceXchg_ι_sells_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | PriceXchg_ι_buys_ , v' => ( fst13 r , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
+
+
+
 (* 7 *) Global Instance PriceXchg_PruvendoRecord : PruvendoRecord PriceXchg PriceXchgFields :=
 {
   field_type := PriceXchg_field_type; 
