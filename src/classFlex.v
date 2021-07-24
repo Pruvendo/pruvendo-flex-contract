@@ -85,15 +85,17 @@
  ( I32 * 
  I128 * 
  I128 )%type .
-(* 1 *) Inductive dealerFields := | dealer_ι_tip3root_ | dealer_ι_notify_addr_ | dealer_ι_price_ | dealer_ι_deals_limit_ | dealer_ι_tons_cfg_ | dealer_ι_sells_amount_ | dealer_ι_buys_amount_ | dealer_ι_ret_ .
-(* 2 *) Definition dealerP := 
+  (* 1 *) Inductive dealerFields := | dealer_ι_tip3root_ | dealer_ι_notify_addr_ | dealer_ι_price_ | dealer_ι_deals_limit_ | dealer_ι_tons_cfg_ | dealer_ι_sells_amount_ | dealer_ι_sells_ | dealer_ι_buys_amount_ | dealer_ι_buys_ | dealer_ι_ret_ .
+  (* 2 *) Definition dealerP := 
  ( A * 
  I16 (* handle<IFLeXNotify> *) * 
  I128 * 
  I * 
  TonsConfigP * 
  I128 * 
+ Q OrderInfoP * 
  I128 * 
+ Q OrderInfoP * 
  M OrderRetP )%type .
 (* 1 *) Inductive FLeXSellArgsAddrsFields := | FLeXSellArgsAddrs_ι_my_tip3_addr | FLeXSellArgsAddrs_ι_receive_wallet .
 (* 2 *) Definition FLeXSellArgsAddrsP := 
@@ -384,7 +386,7 @@ Definition OrderRet := @ OrderRetP
 XInteger32 XInteger128
 .
 Definition dealer := @ dealerP
-XInteger XInteger32   XInteger16   XInteger128 XAddress XMaybe
+XInteger XInteger8     XInteger16     XInteger32  XInteger128 XInteger256 XAddress XMaybe XMaybe
 .
 Definition FLeXSellArgsAddrs := @ FLeXSellArgsAddrsP
 XAddress
@@ -827,40 +829,38 @@ match f with | OrderRet_ι_err_code => XInteger32 | OrderRet_ι_processed => XIn
   getPruvendoRecord := @OrderRet_get ;
   setPruvendoRecord := @OrderRet_set ;
 } .
+
 (* 3 *) Definition dealer_field_type f : Type :=  
 match f with 
-| dealer_ι_tip3root_ => XAddress 
-| dealer_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) 
-| dealer_ι_price_ => XInteger128 
-| dealer_ι_deals_limit_ => XInteger 
-| dealer_ι_tons_cfg_ => TonsConfig 
-| dealer_ι_sells_amount_ => XInteger128 
-| dealer_ι_buys_amount_ => XInteger128 
-| dealer_ι_ret_ => XMaybe OrderRet 
-end .
-
+ | dealer_ι_tip3root_ => XAddress | dealer_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) | dealer_ι_price_ => XInteger128 | dealer_ι_deals_limit_ => XInteger | dealer_ι_tons_cfg_ => TonsConfig | dealer_ι_sells_amount_ => XInteger128 | dealer_ι_sells_ => XMaybe (* XQueue *) OrderInfo | dealer_ι_buys_amount_ => XInteger128 | dealer_ι_buys_ => XMaybe (* XQueue *) OrderInfo | dealer_ι_ret_ => XMaybe OrderRet end .
 (* 4 *) Definition dealer_get (f: dealerFields )(r: dealer ) :  dealer_field_type f := 
- match f with | dealer_ι_tip3root_ => fst7 r 
- | dealer_ι_notify_addr_ => snd ( fst6 r ) 
- | dealer_ι_price_ => snd ( fst5 r ) 
- | dealer_ι_deals_limit_ => snd ( fst4 r ) 
- | dealer_ι_tons_cfg_ => snd ( fst3 r ) 
- | dealer_ι_sells_amount_ => snd ( fst2 r ) 
- | dealer_ι_buys_amount_ => snd ( fst1 r ) 
+ match f  with 
+ | dealer_ι_tip3root_ => fst9 r 
+ | dealer_ι_notify_addr_ => snd ( fst8 r ) 
+ | dealer_ι_price_ => snd ( fst7 r ) 
+ | dealer_ι_deals_limit_ => snd ( fst6 r ) 
+ | dealer_ι_tons_cfg_ => snd ( fst5 r ) 
+ | dealer_ι_sells_amount_ => snd ( fst4 r ) 
+ | dealer_ι_sells_ => snd ( fst3 r ) 
+ | dealer_ι_buys_amount_ => snd ( fst2 r ) 
+ | dealer_ι_buys_ => snd ( fst1 r ) 
  | dealer_ι_ret_ => snd r 
  end .
 (* 5 *) Coercion dealer_get : dealerFields >-> Funclass .
 (* 6 *) Definition dealer_set (f: dealerFields ) 
 (v: dealer_field_type f) (r: dealer ): dealer  :=
-  match f, v with | dealer_ι_tip3root_ , v' => ( v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | dealer_ι_notify_addr_ , v' => ( fst7 r , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | dealer_ι_price_ , v' => ( fst7 r , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | dealer_ι_deals_limit_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | dealer_ι_tons_cfg_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | dealer_ι_sells_amount_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | dealer_ι_buys_amount_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | dealer_ι_ret_ , v' => ( fst7 r , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | dealer_ι_tip3root_ , v' => ( v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_notify_addr_ , v' => ( fst9 r , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_price_ , v' => ( fst9 r , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_deals_limit_ , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_tons_cfg_ , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_sells_amount_ , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_sells_ , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_buys_amount_ , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | dealer_ι_buys_ , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | dealer_ι_ret_ , v' => ( fst9 r , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
+
 (* 7 *) Global Instance dealer_PruvendoRecord : PruvendoRecord dealer dealerFields :=
 {
   field_type := dealer_field_type; 
@@ -1641,7 +1641,7 @@ Definition T7 := LocalState .
  
  Lemma projinj_T1 : forall ( t : T1 ) ( s : Ledger ), projEmbed_T1 ( injEmbed_T1 t s ) = t . 
  Proof. 
- intros. auto. 
+         intros. auto. 
  Qed. 
  
  Lemma injproj_T1 : forall ( s : Ledger ) , injEmbed_T1 ( projEmbed_T1 s ) s = s . 
