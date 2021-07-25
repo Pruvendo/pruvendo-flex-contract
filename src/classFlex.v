@@ -430,7 +430,7 @@ XInteger8 XInteger32 XInteger128 XInteger256 XAddress TvmCell XString XMaybe
 Print FLeXBuyArgsP .
 Definition FLeXBuyArgs := @ FLeXBuyArgsP
 XInteger8 XInteger32 XInteger128 XInteger256 XAddress TvmCell XString XMaybe
-.
+. 
 Print FLeXXchgArgsP .
 Definition FLeXXchgArgs := @ FLeXXchgArgsP
 XInteger8 XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe
@@ -529,7 +529,7 @@ Global Instance FLeXSellArgs_default : XDefault FLeXSellArgs := {
 Global Instance FLeXBuyArgs_default : XDefault FLeXBuyArgs := { 
   	 default := ( default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance FLeXXchgArgs_default : XDefault FLeXXchgArgs := { 
-  	 default := ( default , default , default , default , default , default , default , default , default , default , default ) } .
+  	 default := ( default , default , default , default , default , default , default , default , default , default , default , default , default ) } .
 Global Instance FLeXCancelArgs_default : XDefault FLeXCancelArgs := { 
   	 default := ( default , default , default , default , default , default , default ) } .
 Global Instance FLeXXchgCancelArgs_default : XDefault FLeXXchgCancelArgs := { 
@@ -1044,12 +1044,12 @@ match f with
   getPruvendoRecord := @FLeXBuyArgs_get ;
   setPruvendoRecord := @FLeXBuyArgs_set ;
 } .
-
+ 
 (* 3 *) Definition FLeXXchgArgs_field_type f : Type :=  
 match f with 
- | FLeXXchgArgs_ι_sell => XBool | FLeXXchgArgs_ι_price_num => XInteger128 | FLeXXchgArgs_ι_price_denum => XInteger128 | FLeXXchgArgs_ι_amount => XInteger128 | FLeXXchgArgs_ι_lend_amount => XInteger128 | FLeXXchgArgs_ι_lend_finish_time => XInteger32 | FLeXXchgArgs_ι_min_amount => XInteger128 | FLeXXchgArgs_ι_deals_limit => XInteger8 | FLeXXchgArgs_ι_tons_value => XInteger128 | FLeXXchgArgs_ι_xchg_price_code => TvmCell | FLeXXchgArgs_ι_addrs => XReference FLeXSellArgsAddrs | FLeXXchgArgs_ι_tip3_code => TvmCell | FLeXXchgArgs_ι_tip3cfgs => XReference FLeXXchgCfgs end .
+ | FLeXXchgArgs_ι_sell => XBool | FLeXXchgArgs_ι_price_num => XInteger128 | FLeXXchgArgs_ι_price_denum => XInteger128 | FLeXXchgArgs_ι_amount => XInteger128 | FLeXXchgArgs_ι_lend_amount => XInteger128 | FLeXXchgArgs_ι_lend_finish_time => XInteger32 | FLeXXchgArgs_ι_min_amount => XInteger128 | FLeXXchgArgs_ι_deals_limit => XInteger8 | FLeXXchgArgs_ι_tons_value => XInteger128 | FLeXXchgArgs_ι_xchg_price_code => TvmCell | FLeXXchgArgs_ι_addrs => XMaybe (* XReference *) FLeXSellArgsAddrs | FLeXXchgArgs_ι_tip3_code => TvmCell | FLeXXchgArgs_ι_tip3cfgs => XMaybe (* XReference *) FLeXXchgCfgs end .
 (* 4 *) Definition FLeXXchgArgs_get (f: FLeXXchgArgsFields )(r: FLeXXchgArgs ) :  FLeXXchgArgs_field_type f := 
- match f , r with 
+ match f with 
  | FLeXXchgArgs_ι_sell => fst12 r 
  | FLeXXchgArgs_ι_price_num => snd ( fst11 r ) 
  | FLeXXchgArgs_ι_price_denum => snd ( fst10 r ) 
@@ -1088,25 +1088,38 @@ match f with
   getPruvendoRecord := @FLeXXchgArgs_get ;
   setPruvendoRecord := @FLeXXchgArgs_set ;
 } .
+
 (* 3 *) Definition FLeXCancelArgs_field_type f : Type :=  
-match f with | FLeXCancelArgs_ι_price => XInteger128 | FLeXCancelArgs_ι_min_amount => XInteger128 | FLeXCancelArgs_ι_deals_limit => XInteger8 | FLeXCancelArgs_ι_value => XInteger128 | FLeXCancelArgs_ι_price_code => TvmCell | FLeXCancelArgs_ι_tip3_code => TvmCell end .
+match f with 
+| FLeXCancelArgs_ι_price => XInteger128 
+| FLeXCancelArgs_ι_min_amount => XInteger128 
+| FLeXCancelArgs_ι_deals_limit => XInteger8 
+| FLeXCancelArgs_ι_value => XInteger128 
+| FLeXCancelArgs_ι_price_code => TvmCell 
+| FLeXCancelArgs_ι_tip3_code => TvmCell 
+| FLeXCancelArgs_ι_tip3cfg => XMaybe (* R *) Tip3Config
+ end .
+
 (* 4 *) Definition FLeXCancelArgs_get (f: FLeXCancelArgsFields )(r: FLeXCancelArgs ) :  FLeXCancelArgs_field_type f := 
- match f with | FLeXCancelArgs_ι_price => fst5 r 
- | FLeXCancelArgs_ι_min_amount => snd ( fst4 r ) 
- | FLeXCancelArgs_ι_deals_limit => snd ( fst3 r ) 
- | FLeXCancelArgs_ι_value => snd ( fst2 r ) 
- | FLeXCancelArgs_ι_price_code => snd ( fst1 r ) 
- | FLeXCancelArgs_ι_tip3_code => snd r 
+ match f with 
+ | FLeXCancelArgs_ι_price => fst6 r 
+ | FLeXCancelArgs_ι_min_amount => snd ( fst5 r ) 
+ | FLeXCancelArgs_ι_deals_limit => snd ( fst4 r ) 
+ | FLeXCancelArgs_ι_value => snd ( fst3 r ) 
+ | FLeXCancelArgs_ι_price_code => snd ( fst2 r ) 
+ | FLeXCancelArgs_ι_tip3_code => snd ( fst1 r ) 
+ | FLeXCancelArgs_ι_tip3cfg => snd r
  end .
 (* 5 *) Coercion FLeXCancelArgs_get : FLeXCancelArgsFields >-> Funclass .
 (* 6 *) Definition FLeXCancelArgs_set (f: FLeXCancelArgsFields ) 
 (v: FLeXCancelArgs_field_type f) (r: FLeXCancelArgs ): FLeXCancelArgs  :=
-  match f, v with | FLeXCancelArgs_ι_price , v' => ( v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXCancelArgs_ι_min_amount , v' => ( fst5 r , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXCancelArgs_ι_deals_limit , v' => ( fst5 r , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | FLeXCancelArgs_ι_value , v' => ( fst5 r , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | FLeXCancelArgs_ι_price_code , v' => ( fst5 r , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | FLeXCancelArgs_ι_tip3_code , v' => ( fst5 r , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+  match f, v with | FLeXCancelArgs_ι_price , v' => ( v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXCancelArgs_ι_min_amount , v' => ( fst6 r , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXCancelArgs_ι_deals_limit , v' => ( fst6 r , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXCancelArgs_ι_value , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+ | FLeXCancelArgs_ι_price_code , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
+ | FLeXCancelArgs_ι_tip3_code , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
+ | FLeXCancelArgs_ι_tip3cfg , v' => ( fst6 r , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
  end .
 (* 7 *) Global Instance FLeXCancelArgs_PruvendoRecord : PruvendoRecord FLeXCancelArgs FLeXCancelArgsFields :=
 {
@@ -1599,7 +1612,8 @@ match f with | LocalState_ι_uint256 => XHMap (string*nat) XInteger256 | LocalSt
 (* 5 *) Coercion LocalState_get : LocalStateFields >-> Funclass .
 (* 6 *) Definition LocalState_set (f: LocalStateFields ) 
 (v: LocalState_field_type f) (r: LocalState ): LocalState  :=
-  match f, v with | LocalState_ι_uint256 , v' => ( v' , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
+  match f, v with 
+ | LocalState_ι_uint256 , v' => ( v' , snd ( fst68 r ) , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
  | LocalState_ι_cell , v' => ( fst69 r , v' , snd ( fst67 r ) , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
  | LocalState_ι_TonsConfig , v' => ( fst69 r , snd ( fst68 r ) , v' , snd ( fst66 r ) , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
  | LocalState_ι_address , v' => ( fst69 r , snd ( fst68 r ) , snd ( fst67 r ) , v' , snd ( fst65 r ) , snd ( fst64 r ) , snd ( fst63 r ) , snd ( fst62 r ) , snd ( fst61 r ) , snd ( fst60 r ) , snd ( fst59 r ) , snd ( fst58 r ) , snd ( fst57 r ) , snd ( fst56 r ) , snd ( fst55 r ) , snd ( fst54 r ) , snd ( fst53 r ) , snd ( fst52 r ) , snd ( fst51 r ) , snd ( fst50 r ) , snd ( fst49 r ) , snd ( fst48 r ) , snd ( fst47 r ) , snd ( fst46 r ) , snd ( fst45 r ) , snd ( fst44 r ) , snd ( fst43 r ) , snd ( fst42 r ) , snd ( fst41 r ) , snd ( fst40 r ) , snd ( fst39 r ) , snd ( fst38 r ) , snd ( fst37 r ) , snd ( fst36 r ) , snd ( fst35 r ) , snd ( fst34 r ) , snd ( fst33 r ) , snd ( fst32 r ) , snd ( fst31 r ) , snd ( fst30 r ) , snd ( fst29 r ) , snd ( fst28 r ) , snd ( fst27 r ) , snd ( fst26 r ) , snd ( fst25 r ) , snd ( fst24 r ) , snd ( fst23 r ) , snd ( fst22 r ) , snd ( fst21 r ) , snd ( fst20 r ) , snd ( fst19 r ) , snd ( fst18 r ) , snd ( fst17 r ) , snd ( fst16 r ) , snd ( fst15 r ) , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
