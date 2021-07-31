@@ -29,20 +29,28 @@ Require Import FLeXFuncNotations.
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.SML_NG25.
 
-Module stdFuncProofs (* (xt: XTypesSig) 
+(* Module stdFuncProofs (* (xt: XTypesSig) 
                (sm: StateMonadSig)  *)
                (dc : FLeXConstsTypesSig XTypesModule StateMonadModule )  (cs : ClassSig XTypesModule).
 Import cs. 
 Module Export FLeXFuncNotationsModule := FLeXFuncNotations XTypesModule StateMonadModule dc.
 Import UrsusNotations.
+ *)
 
+Module FLeXFuncs (* (xt: XTypesSig) 
+               (sm: StateMonadSig)  *)
+               (dc : FLeXConstsTypesSig XTypesModule StateMonadModule ).
+ 
+Module Export FLeXFuncNotationsModule := FLeXFuncNotations XTypesModule StateMonadModule dc.
+Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope struct_scope.
 Local Open Scope Z_scope.
 
+
 Definition plusassign (a b: XInteger) : UExpression  XInteger false :=
     {{
-        a : XInteger @ "a" ; b : XInteger @ "b" ;
+        a : XInteger @ "a" ; b : XInteger @ "b"  ; FLeXClient.owner_ := 0 ;
        { a } := !{a} + !{b}
     }}.
 
@@ -70,9 +78,9 @@ Definition bar33 (b0 b1: XBool): UExpression XBool false :=
    b0 : XBool @ "b0";
    b1 : XBool @ "b1";
 
-   test_ref_ ( !{b0} , {b1} ) ;
+   test_ref_ ( !{b0} , {b1} ) 
 
-   new 'b : XBool @ "b" := !{b1} ;
+   new 'b : XBool @ "b" := !{b1} ; 
    return_ !{b}
 }}.
 
@@ -2229,4 +2237,4 @@ Definition XchgPair_Ф__fallback ( cell : (P ) : SMLExpression XInteger false :=
  (*end*) 
  
 
-End FLeXFunc.
+End FLeXFuncs.
