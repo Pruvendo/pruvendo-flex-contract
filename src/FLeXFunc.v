@@ -32,14 +32,15 @@ Require Import UMLang.SML_NG25.
 Module stdFuncProofs (* (xt: XTypesSig) 
                (sm: StateMonadSig)  *)
                (dc : FLeXConstsTypesSig XTypesModule StateMonadModule )  (cs : ClassSig XTypesModule).
-Import cs.
+Import cs. 
 Module Export FLeXFuncNotationsModule := FLeXFuncNotations XTypesModule StateMonadModule dc.
-Import SMLNotations.
-Local Open Scope sml_scope.
+Import UrsusNotations.
+
+Local Open Scope ursus_scope.
 Local Open Scope struct_scope.
 Local Open Scope Z_scope.
 
-Definition plusassign (a b: XInteger) : SMLExpression  XInteger false :=
+Definition plusassign (a b: XInteger) : UExpression  XInteger false :=
     {{
         a : XInteger @ "a" ; b : XInteger @ "b" ;
        { a } := !{a} + !{b}
@@ -47,24 +48,24 @@ Definition plusassign (a b: XInteger) : SMLExpression  XInteger false :=
 
 
 
-Definition test_ref (a b: XBool): SMLExpression XInteger false :=
+Definition test_ref (a b: XBool): UExpression XInteger false :=
     {{
        a : XBool @ "a" ;
        b : XBool @ "b" ;
        {b} := !{a}
     }}.
 
-Definition test_ref_call {b} (x: SMLRValue XBool b) (y: SMLLValue XBool) := 
-   🏓 sml_call_with_args (LedgerableWithArgs := λ2) test_ref 
-   (SimpleLedgerableArg SMLRValue {{ Λ "a" }} (local_right_copy x)) (RefLedgerableArg SMLRValue {{ Λ "b" }} (local_left_copy y)) .
+Definition test_ref_call {b} (x: URValue XBool b) (y: ULValue XBool) := 
+   🏓 ursus_call_with_args (LedgerableWithArgs := λ2) test_ref 
+   (SimpleLedgerableArg URValue {{ Λ "a" }} (local_right_copy x)) (RefLedgerableArg URValue {{ Λ "b" }} (local_left_copy y)) .
 
-Notation " 'test_ref_' '(' x , y ')' " := ( SMLRResult (test_ref_call x y))  
-   (in custom SMLRValue at level 0 , x custom SMLRValue at level 0, y custom SMLLValue at level 0) : sml_scope.
+Notation " 'test_ref_' '(' x , y ')' " := ( URResult (test_ref_call x y))  
+   (in custom URValue at level 0 , x custom URValue at level 0, y custom ULValue at level 0) : ursus_scope.
 
 Notation " 'test_ref_' '(' x , y ')' " := ( FuncallExpression (test_ref_call x y))  
-   (in custom SMLLValue at level 0 , x custom SMLRValue at level 0, y custom SMLLValue at level 0) : sml_scope.
+   (in custom ULValue at level 0 , x custom URValue at level 0, y custom ULValue at level 0) : ursus_scope.
 
-Definition bar33 (b0 b1: XBool): SMLExpression XBool false :=
+Definition bar33 (b0 b1: XBool): UExpression XBool false :=
 {{
    b0 : XBool @ "b0";
    b1 : XBool @ "b1";
@@ -75,18 +76,31 @@ Definition bar33 (b0 b1: XBool): SMLExpression XBool false :=
    return_ !{b}
 }}.
 
-
-Definition bar33_call (x y: SMLRValue XBool false)  := 
-   🏓 sml_call_with_args (LedgerableWithArgs := λ2) bar33 
-(SimpleLedgerableArg SMLRValue {{ Λ "b0" }} x) (SimpleLedgerableArg SMLRValue {{ Λ "b1" }} y) .
-
+Definition bar33_call (x y: URValue XBool false)  := 
+   🏓 ursus_call_with_args (LedgerableWithArgs := λ2) bar33 
+(SimpleLedgerableArg URValue {{ Λ "b0" }} x) (SimpleLedgerableArg URValue {{ Λ "b1" }} y) .
 
 
-Definition FLeXClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_code : TvmCell ) ( xchg_pair_code : TvmCell ) : SMLExpression True false := 
- {{ 
- owner_ = pubkey ; 
- trading_pair_code_ = trading_pair_code ; 
- xchg_pair_code_ = xchg_pair_code ; 
+Notation " 'bar33_' '(' x , y ')' " := ( URResult (bar33_call x y))  
+   (in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0) : ursus_scope.
+
+Notation " 'bar33_' '(' x , y ')' " := ( FuncallExpression (bar33_call x y))  
+   (in custom ULValue at level 0 , x custom URValue at level 0, y custom URValue at level 0) : ursus_scope.
+
+
+Definition FLeXClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_code : TvmCell ) ( xchg_pair_code : TvmCell ) 
+: UExpression True false.
+
+  refine {{ pubkey : XInteger256 @ "pubkey" ; { _ } }} .
+  refine {{ trading_pair_code : TvmCell @ "trading_pair_code" ; { _ } }} .
+  refine {{ xchg_pair_code : TvmCell @ "xchg_pair_code" ; { _ } }} .
+
+ refine {{ FLeXClient.owner_ := !{ pubkey } ; { _ } }} . 
+
+
+
+ trading_pair_code_ := trading_pair_code ; 
+ xchg_pair_code_ := xchg_pair_code ; 
  workchain_id_ = std : : get < addr_std > ( address { tvm_myaddr ( ) } . val ( ) FLeXClient.) ^^ workchain_id ; 
  flex_ = address : : make_std ( int8 ( 0 ) , uint256 ( 0 ) ) ; 
  notify_addr_ = address : : make_std ( int8 ( 0 ) , uint256 ( 0 ) ) ; 
