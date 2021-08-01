@@ -5,7 +5,7 @@ Require Import UMLang.SolidityNotations2.
 Module Type FLeXConstsTypesSig (xt: XTypesSig) (sm: StateMonadSig). 
 Module Import SolidityNotations := SolidityNotations xt sm .   
  
-Import xt. (* Import sm.  *)
+Import xt.
 
 Parameter TIMESTAMP_DELAY : XInteger.
 Parameter error_code_ι_message_sender_is_not_my_owner : XInteger . 

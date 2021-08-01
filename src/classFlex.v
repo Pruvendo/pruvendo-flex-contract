@@ -1,27 +1,28 @@
-
  Require Import Coq.Program.Basics. 
  Require Import Coq.Logic.FunctionalExtensionality. 
  Require Import Coq.Program.Combinators. 
  Require Import FinProof.ProgrammingWith. 
- Require Import FinProof.Types.IsoTypes. 
- 
  Require Import String. 
  
- Local Open Scope record. 
- Local Open Scope program_scope. 
- Require Import FinProof.Common. 
- Require Import FinProof.MonadTransformers21. 
- Require Import FinProof.StateMonad21. 
+Require Import FinProof.ProgrammingWith.
+Require Import FinProof.Types.IsoTypes.
+Require Import FinProof.Common.
+Require Import FinProof.MonadTransformers21.
+Require Import FinProof.StateMonad21.
+Require Import FinProof.EpsilonMonad.
+
+Require Import UMLang.SolidityNotations2.
+Require Import UMLang.SML_NG25.
+  
+Local Open Scope record.
+Local Open Scope program_scope. 
  
- Require Import UMLang.SolidityNotations2. 
- Require Import UMLang.SML_NG25. 
- 
- Section RecordsDefinitions. 
- 
- Set Implicit Arguments. 
- Unset Strict Implicit. 
- Set Contextual Implicit. 
- Set Maximal Implicit Insertion. 
+Section RecordsDefinitions.
+
+Set Implicit Arguments.
+Unset Strict Implicit.
+Set Contextual Implicit.
+Set Maximal Implicit Insertion.
  
  Variables I I8 I16 I32 I64 I128 I256 : Type. 
  Variables A B C S Bs : Type. 

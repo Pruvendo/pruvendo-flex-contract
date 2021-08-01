@@ -1,12 +1,11 @@
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.SML_NG25.
-Require Import classFlex.
 
+Require Import classFlex.
 Require Import stdFunc.
 Require Import stdFuncNotations.
 
 Module specFlexSpec (xt: XTypesSig) (sm: StateMonadSig).
-
 Module Export LedgerClassModule := LedgerClass xt sm . 
 Module Export stdFuncNotationsModule := stdFuncNotations xt sm LedgerClassModule.
 
