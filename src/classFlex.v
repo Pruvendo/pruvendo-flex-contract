@@ -293,7 +293,36 @@ Set Maximal Implicit Insertion.
  PriceP * 
  PriceXchgP )%type .
 
-(* 1 *) Inductive LocalStateFields := | LocalState_ι_uint256 | LocalState_ι_cell | LocalState_ι_TonsConfig | LocalState_ι_address | LocalState_ι_uint128 | LocalState_ι_StateInit | LocalState_ι_DTradingPair | LocalState_ι_handle_ITradingPair_ | LocalState_ι_DXchgPair | LocalState_ι_handle_IXchgPair_ | LocalState_ι_parse_FLeXSellArgs_ | LocalState_ι_handle_IPrice_ | LocalState_ι_SellArgs | LocalState_ι_parse_FLeXBuyArgs_ | LocalState_ι_parse_FLeXCancelArgs_ | LocalState_ι_parse_FLeXXchgCancelArgs_ | LocalState_ι_handle_IPriceXchg_ | LocalState_ι_bool_t | LocalState_ι_parse_FLeXXchgArgs_ | LocalState_ι_PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ | LocalState_ι_uint8 | LocalState_ι_Tip3Config | LocalState_ι_DPrice | LocalState_ι_DPriceXchg | LocalState_ι_tuple_address_address | LocalState_ι_uint32 | LocalState_ι_unsigned | LocalState_ι_OrderInfo | LocalState_ι_int | LocalState_ι_optional_uint128_ | LocalState_ι_bool | LocalState_ι_optional_OrderInfoWithIdx_ | LocalState_ι_queue_OrderInfo_ | LocalState_ι_pair_unsigned_OrderInfo_ | LocalState_ι_uint256Index | LocalState_ι_cellIndex | LocalState_ι_TonsConfigIndex | LocalState_ι_addressIndex | LocalState_ι_uint128Index | LocalState_ι_StateInitIndex | LocalState_ι_DTradingPairIndex | LocalState_ι_handle_ITradingPair_Index | LocalState_ι_DXchgPairIndex | LocalState_ι_handle_IXchgPair_Index | LocalState_ι_parse_FLeXSellArgs_Index | LocalState_ι_handle_IPrice_Index | LocalState_ι_SellArgsIndex | LocalState_ι_parse_FLeXBuyArgs_Index | LocalState_ι_parse_FLeXCancelArgs_Index | LocalState_ι_parse_FLeXXchgCancelArgs_Index | LocalState_ι_handle_IPriceXchg_Index | LocalState_ι_bool_tIndex | LocalState_ι_parse_FLeXXchgArgs_Index | LocalState_ι_PayloadArgsIndex | LocalState_ι_handle_ITONTokenWallet_Index | LocalState_ι_uint8Index | LocalState_ι_Tip3ConfigIndex | LocalState_ι_DPriceIndex | LocalState_ι_DPriceXchgIndex | LocalState_ι_tuple_address_addressIndex | LocalState_ι_uint32Index | LocalState_ι_unsignedIndex | LocalState_ι_OrderInfoIndex | LocalState_ι_intIndex | LocalState_ι_optional_uint128_Index | LocalState_ι_boolIndex | LocalState_ι_optional_OrderInfoWithIdx_Index | LocalState_ι_queue_OrderInfo_Index | LocalState_ι_pair_unsigned_OrderInfo_Index .
+(* 1 *) Inductive LocalStateFields := | LocalState_ι_uint256 | LocalState_ι_cell | LocalState_ι_TonsConfig | LocalState_ι_address | LocalState_ι_uint128 | LocalState_ι_StateInit | LocalState_ι_DTradingPair | LocalState_ι_handle_ITradingPair_ | LocalState_ι_DXchgPair | LocalState_ι_handle_IXchgPair_ | LocalState_ι_parse_FLeXSellArgs_ | LocalState_ι_handle_IPrice_ | LocalState_ι_SellArgs | LocalState_ι_parse_FLeXBuyArgs_ | LocalState_ι_parse_FLeXCancelArgs_ | LocalState_ι_parse_FLeXXchgCancelArgs_ | LocalState_ι_handle_IPriceXchg_ | LocalState_ι_bool_t | LocalState_ι_parse_FLeXXchgArgs_ | LocalState_ι_PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ | LocalState_ι_uint8 | LocalState_ι_Tip3Config | LocalState_ι_DPrice | LocalState_ι_DPriceXchg | LocalState_ι_tuple_address_address | LocalState_ι_uint32 | LocalState_ι_unsigned | LocalState_ι_OrderInfo | LocalState_ι_int | LocalState_ι_optional_uint128_ | LocalState_ι_bool 
+| LocalState_ι_optional_OrderInfoWithIdx_ 
+| LocalState_ι_queue_OrderInfo_ 
+| LocalState_ι_pair_unsigned_OrderInfo_ 
+
+| LocalState_ι_uint256Index 
+| LocalState_ι_cellIndex 
+| LocalState_ι_TonsConfigIndex 
+| LocalState_ι_addressIndex 
+| LocalState_ι_uint128Index 
+| LocalState_ι_StateInitIndex 
+| LocalState_ι_DTradingPairIndex 
+| LocalState_ι_handle_ITradingPair_Index 
+| LocalState_ι_DXchgPairIndex 
+| LocalState_ι_handle_IXchgPair_Index 
+| LocalState_ι_parse_FLeXSellArgs_Index 
+| LocalState_ι_handle_IPrice_Index 
+| LocalState_ι_SellArgsIndex 
+| LocalState_ι_parse_FLeXBuyArgs_Index 
+| LocalState_ι_parse_FLeXCancelArgs_Index 
+| LocalState_ι_parse_FLeXXchgCancelArgs_Index 
+| LocalState_ι_handle_IPriceXchg_Index 
+| LocalState_ι_bool_tIndex 
+| LocalState_ι_parse_FLeXXchgArgs_Index 
+| LocalState_ι_PayloadArgsIndex 
+| LocalState_ι_handle_ITONTokenWallet_Index 
+| LocalState_ι_uint8Index 
+| LocalState_ι_Tip3ConfigIndex 
+| LocalState_ι_DPriceIndex 
+| LocalState_ι_DPriceXchgIndex | LocalState_ι_tuple_address_addressIndex | LocalState_ι_uint32Index | LocalState_ι_unsignedIndex | LocalState_ι_OrderInfoIndex | LocalState_ι_intIndex | LocalState_ι_optional_uint128_Index | LocalState_ι_boolIndex | LocalState_ι_optional_OrderInfoWithIdx_Index | LocalState_ι_queue_OrderInfo_Index | LocalState_ι_pair_unsigned_OrderInfo_Index .
 (* 2 *) Definition LocalStateP := 
  ( HM (string*nat) I256 * 
  HM (string*nat) C * 
@@ -382,7 +411,10 @@ End RecordsDefinitions .
 
 Require Import UMLang.ProofEnvironment2.
 
+
 Module LedgerClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSig xt.
+
+
 Module Export SolidityNotationsClass := SolidityNotations xt  sm.
 Import xt. 
 Existing Instance monadStateT. 
@@ -2559,7 +2591,16 @@ Proof.
   reflexivity.
 Defined.
 
+eldsDec: forall (m1 m2: LedgerFields), {m1=m2}+{m1<>m2}.
+Proof.
+  intros.
+  decide equality.
+Defined.
 
+Lemma LocalCopySameType: field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_LocalState = 
+field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_LocalStateCopy.
+Proof.
+  reflexivity.
 Global Instance LocalState_ι_cellIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
 {
   projEmbed := LocalState_ι_cellIndex_Embedded_projEmbed;
@@ -3976,6 +4017,344 @@ Global Instance LocalStateField_XInteger: LocalStateField XInteger :=
   local_state_field := LocalState_ι_int; 
   local_field_type_correct := eq_refl
 }.
+
+
+Global Instance LocalState_ι_uint256: LocalStateField XInteger256 :=
+{
+  local_index_embedded := LocalState_ι_uint256Index_Embedded;
+  local_state_field := LocalState_ι_uint256; 
+  local_field_type_correct := eq_refl
+}.
+
+Global Instance LocalState_ι_cell: LocalStateField TvmCell :=
+{
+  local_index_embedded := LocalState_ι_cellIndex_Embedded;
+  local_state_field := LocalState_ι_cell; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_TonsConfig: LocalStateField TonsConfig :=
+{
+  local_index_embedded := LocalState_ι_TonsConfigIndex_Embedded;
+  local_state_field := LocalState_ι_TonsConfig; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_address: LocalStateField XAddress :=
+{
+  local_index_embedded := LocalState_ι_addressIndex_Embedded;
+  local_state_field := LocalState_ι_address; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_uint128Index: LocalStateField XInteger128 :=
+{
+  local_index_embedded := LocalState_ι_uint128Index_Embedded;
+  local_state_field := LocalState_ι_uint128; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_StateInitIndex: LocalStateField StateInit :=
+{
+  local_index_embedded := LocalState_ι_StateInitIndex_Embedded;
+  local_state_field := LocalState_ι_StateInit; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_DTradingPairIndex: LocalStateField DTradingPair :=
+{
+  local_index_embedded := LocalState_ι_DTradingPairIndex_Embedded;
+  local_state_field := LocalState_ι_DTradingPair; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+(* Global Instance LocalState_ι_hndlITradingPairIndex: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_hndlITradingPairIndex_Embedded;
+  local_state_field := LocalState_ι_hndlITradingPairIndex; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+Global Instance LocalState_ι_DXchgPairIndex: LocalStateField DXchgPair :=
+{
+  local_index_embedded := LocalState_ι_DXchgPairIndex_Embedded;
+  local_state_field := LocalState_ι_DXchgPair; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+(* Global Instance LocalState_ι_hndlIXchgPairIndex: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_hndlIXchgPairIndex_Embedded;
+  local_state_field := LocalState_ι_hndlIXchgPairIndex; 
+  local_field_type_correct := eq_refl
+}.
+ *)
+
+
+Global Instance LocalState_ι_prsFLeXSellArgsIndex: LocalStateField FLeXSellArgs :=
+{
+  local_index_embedded := LocalState_ι_prsFLeXSellArgsIndex_Embedded;
+  local_state_field := LocalState_ι_prsFLeXSellArgsIndex; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+(* Global Instance LocalState_ι_hndlIPriceIndex: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_hndlIPriceIndex_Embedded;
+  local_state_field := LocalState_ι_hndlIPriceIndex; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+Global Instance LocalState_ι_SellArgsIndex: LocalStateField SellArgs :=
+{
+  local_index_embedded := LocalState_ι_SellArgsIndex_Embedded;
+  local_state_field := LocalState_ι_SellArgs; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+(* Global Instance LocalState_ι_prsFLeXBuyArgsIndex: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_prsFLeXBuyArgsIndex_Embedded;
+  local_state_field := LocalState_ι_prsFLeXBuyArgsIndex; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+(* Global Instance LocalState_ι_prsFLeXCancelArgsIndex: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_prsFLeXCancelArgsIndex_Embedded;
+  local_state_field := LocalState_ι_prsFLeXCancelArgsIndex; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+(* Global Instance LocalState_ι_prsFLeXXchgCancelArgsIndex: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_prsFLeXXchgCancelArgsIndex_Embedded;
+  local_state_field := LocalState_ι_prsFLeXXchgCancelArgsIndex; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+(* Global Instance LocalState_ι_hndlIPriceXchgIndex: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_hndlIPriceXchgIndex_Embedded;
+  local_state_field := LocalState_ι_hndlIPriceXchgIndex; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+Global Instance LocalState_ι_bool_tIndex: LocalStateField XBool :=
+{
+  local_index_embedded := LocalState_ι_bool_tIndex_Embedded;
+  local_state_field := LocalState_ι_bool_t; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+(* Global Instance LocalState_ι_prsFLeXXchgArgsIndex: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_prsFLeXXchgArgsIndex_Embedded;
+  local_state_field := LocalState_ι_prsFLeXXchgArgsIndex; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+Global Instance LocalState_ι_PayloadArgsIndex: LocalStateField PayloadArgs :=
+{
+  local_index_embedded := LocalState_ι_PayloadArgsIndex_Embedded;
+  local_state_field := LocalState_ι_PayloadArgs; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+(* Global Instance LocalState_ι_hndlITONTokenWalletIndex: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_hndlITONTokenWalletIndex_Embedded;
+  local_state_field := LocalState_ι_hndlITONTokenWalletIndex; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+Global Instance LocalState_ι_uint8Index: LocalStateField XInteger8 :=
+{
+  local_index_embedded := LocalState_ι_uint8Index_Embedded;
+  local_state_field := LocalState_ι_uint8; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_Tip3ConfigIndex: LocalStateField Tip3Config :=
+{
+  local_index_embedded := LocalState_ι_Tip3ConfigIndex_Embedded;
+  local_state_field := LocalState_ι_Tip3Config; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_DPriceIndex: LocalStateField Price :=
+{
+  local_index_embedded := LocalState_ι_DPriceIndex_Embedded;
+  local_state_field := LocalState_ι_DPrice; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_DPriceXchgIndex: LocalStateField PriceXchg :=
+{
+  local_index_embedded := LocalState_ι_DPriceXchgIndex_Embedded;
+  local_state_field := LocalState_ι_DPriceXchg; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_uint32Index: LocalStateField XInteger32 :=
+{
+  local_index_embedded := LocalState_ι_uint32Index_Embedded;
+  local_state_field := LocalState_ι_uint32; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_unsignedIndex: LocalStateField XInteger :=
+{
+  local_index_embedded := LocalState_ι_unsignedIndex_Embedded;
+  local_state_field := LocalState_ι_unsigned; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_OrderInfoIndex: LocalStateField OrderInfo :=
+{
+  local_index_embedded := LocalState_ι_OrderInfoIndex_Embedded;
+  local_state_field := LocalState_ι_OrderInfo; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_intIndex: LocalStateField XInteger :=
+{
+  local_index_embedded := LocalState_ι_intIndex_Embedded;
+  local_state_field := LocalState_ι_int; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_optional_uint128_Index: LocalStateField (XMaybe XInteger128) :=
+{
+  local_index_embedded := LocalState_ι_optional_uint128_Index_Embedded;
+  local_state_field := LocalState_ι_optional_uint128_; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_boolIndex: LocalStateField XBool :=
+{
+  local_index_embedded := LocalState_ι_boolIndex_Embedded;
+  local_state_field := LocalState_ι_bool; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+(* Global Instance LocalState_ι_optOrderInfoWithIdxIndex: LocalStateField (XMaybe (XInteger*OrderInfo)) :=
+{
+  local_index_embedded := LocalState_ι_optOrderInfoWithIdxIndex_Embedded;
+  local_state_field := LocalState_ι_optOrderInfoWithIdx; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+Global Instance LocalState_ι_pair_unsigned_OrderInfo_Index: LocalStateField (XInteger*OrderInfo) :=
+{
+  local_index_embedded := LocalState_ι_pair_unsigned_OrderInfo_Index_Embedded;
+  local_state_field := LocalState_ι_pair_unsigned_OrderInfo_; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+(* Global Instance LocalState_ι_optOrderRetIndex: LocalStateField (XMaybe OrderRet) :=
+{
+  local_index_embedded := LocalState_ι_optOrderRetIndex_Embedded;
+  local_state_field := LocalState_ι_optOrderRet; 
+  local_field_type_correct := eq_refl
+}. *)
+
+
+
+(* Global Instance LocalState_ι_optaddressIndex: LocalStateField (XMaybe XAddress) :=
+{
+  local_index_embedded := LocalState_ι_optaddressIndex_Embedded;
+  local_state_field := LocalState_ι_optaddress; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_optOrderInfoXchg
+Index: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_optOrderInfoXchg
+Index_Embedded;
+  local_state_field := LocalState_ι_optOrderInfoXchg
+Index; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+Global Instance LocalState_ι_optOrderInfoXchgWithIdx
+Index: LocalStateField ***** :=
+{
+  local_index_embedded := LocalState_ι_optOrderInfoXchgWithIdx
+Index_Embedded;
+  local_state_field := LocalState_ι_optOrderInfoXchgWithIdx
+Index; 
+  local_field_type_correct := eq_refl
+}.
+ *)
+
 
 
 End LedgerClass .
