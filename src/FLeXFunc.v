@@ -281,7 +281,7 @@ Definition FLeXClient_Ф_deployXchgPair ( tip3_major_root : XAddress )
     refine {{ std_addr           : XInteger256 @ "pair_data" ; { _ } }} .
     refine {{ trade_pair           : XAddress @ "trade_pair" ; { _ } }} .
  
-(*     refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , error_code::message_sender_is_not_my_owner ) ; { _ } }} . *)
+(*  refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , error_code::message_sender_is_not_my_owner ) ; { _ } }} . *)
 (*  tvm_accept ( ) ;  *)
     (* DXchgPair pair_data {
       .flex_addr_ = flex_,
@@ -432,7 +432,7 @@ Definition FLeXClient_Ф_deployPriceWithSell ( args_cl : TvmCell ) : UExpression
    (*  my_tip3(Grams(args.tons_value.get()), DEFAULT_MSG_FLAGS, false).
       lendOwnership(std_addr, args.amount, args.lend_finish_time, deploy_init_cl, payload); *)
     refine {{ return_ !{price_addr} }} .
-
+Defined.
  
  (*begin*) 
  Definition FLeXClient_Ф_deployPriceWithSell_call ( args_cl : URValue TvmCell false ) := 
@@ -440,19 +440,21 @@ Definition FLeXClient_Ф_deployPriceWithSell ( args_cl : TvmCell ) : UExpression
  ( SimpleLedgerableArg URValue {{ Λ "args_cl" }} args_cl ) 
  . 
  Notation " 'FLeXClient_Ф_deployPriceWithSell_ref_' '(' args_cl ')' " := 
- ( URResult ( FLeXClient_Ф_deployPriceWithSell_ref_call 
+ ( URResult ( FLeXClient_Ф_deployPriceWithSell_call 
  args_cl )) 
  (in custom URValue at level 0 , args_cl custom URValue at level 0 ) : ursus_scope. 
  (*end*) 
  
 
-Definition Ф_calc_cost ( amount : XInteger128 ) ( price : XInteger128 ) : UExpression ( XMaybe XInteger128 ) false := 
- {{ 
- Л_tons_cost_ := ^ .amount ^^ get ( ) * .price ^^ get ( ) ; 
- if ( tons_cost > > 128 ) return { } ; 
- return uint128 ( tons_cost ) ; 
- 
- }} . 
+Definition Ф_calc_cost ( amount : XInteger128 ) 
+                       ( price : XInteger128 ): UExpression ( (* XMaybe *) XInteger128 ) false .
+
+    refine {{ amount         : XInteger128 @ "amount" ; { _ } }} . 
+    refine {{ price          : XInteger128 @ "price" ; { _ } }} .
+    refine {{ tons_cost      : XInteger @ "tons_cost" ; { _ } }} .
+    refine {{ {tons_cost} := !{amount} * !{price} ; { _ } }} .
+    refine {{ if ( TRUE (* !{tons_cost} >> 128 *) ) then { return_ {} } else { return_ !{tons_cost} } }} .
+Defined . 
  
  (*begin*) 
  Definition Ф_calc_cost_call ( amount : URValue XInteger128 false ) ( price : URValue XInteger128 false ) := 
@@ -461,18 +463,16 @@ Definition Ф_calc_cost ( amount : XInteger128 ) ( price : XInteger128 ) : UExpr
  ( SimpleLedgerableArg URValue {{ Λ "price" }} price ) 
  . 
  Notation " 'Ф_calc_cost_ref_' '(' amount price ')' " := 
- ( URResult ( Ф_calc_cost_ref_call 
+ ( URResult ( Ф_calc_cost_call 
  amount price )) 
  (in custom URValue at level 0 , amount custom URValue at level 0 
  , price custom ULValue at level 0 ) : ursus_scope. 
  (*end*) 
- 
 
-Definition Ф_is_active_time ( order_finish_time : XInteger32 ) : UExpression XBool false := 
- {{ 
- return tvm_now ( ) + safe_delay_period < .order_finish_time ^^ get ( ) ; 
- 
- }} . 
+Definition Ф_is_active_time ( order_finish_time : XInteger32 ) : UExpression XBool false . 
+    refine {{ order_finish_time  : XInteger32 @ "order_finish_time" ; { _ } }} . 
+    refine {{ return_ (0 + safe_delay_period) < !{order_finish_time} }} . (* tvm_now() + safe_delay_period < order_finish_time.get(); *)
+Defined . 
  
  (*begin*) 
  Definition Ф_is_active_time_call ( order_finish_time : URValue XInteger32 false ) := 
@@ -480,27 +480,43 @@ Definition Ф_is_active_time ( order_finish_time : XInteger32 ) : UExpression XB
  ( SimpleLedgerableArg URValue {{ Λ "order_finish_time" }} order_finish_time ) 
  . 
  Notation " 'Ф_is_active_time_ref_' '(' order_finish_time ')' " := 
- ( URResult ( Ф_is_active_time_ref_call 
+ ( URResult ( Ф_is_active_time_call 
  order_finish_time )) 
  (in custom URValue at level 0 , order_finish_time custom URValue at level 0 ) : ursus_scope. 
  (*end*) 
  
+Existing Instance xlist_default.
+Definition dealer_Ф_extract_active_order ( cur_order : ( XMaybe (XInteger # OrderInfo)%sol ) ) 
+                                         ( orders : ( (* XQueue *) XList OrderInfo ) ) 
+                                         ( all_amount : XInteger128 ) 
+                                         ( sell : XBool ) 
+                                         : UExpression ( (* XQueue *) XList OrderInfo ) false . 
+    refine {{ cur_order         : ( XMaybe (XInteger # OrderInfo)%sol ) @ "cur_order" ; { _ } }} . 
+    refine {{ orders             : XList OrderInfo @ "orders" ; { _ } }} .
+    refine {{ all_amount      : XInteger128 @ "all_amount" ; { _ } }} .
+    refine {{ sell            : XBool @ "sell" ; { _ } }} .
+(*     refine {{ std_addr        : XInteger256 @ "std_addr" ; { _ } }} .
+    refine {{ price_addr      : XAddress @ "price_addr" ; { _ } }} .
+ *)
+    refine {{ if ( TRUE (* !{cur_order} *)) then { return_ {} (* cur_order, orders, all_amount *) } 
+                                            else { return_ {} }  ; { _ } }} . (* убрать else *)
 
-Definition dealer_Ф_extract_active_order ( cur_order : ( XMaybe OrderInfoWithIdxP ) ) ( orders : ( XQueue OrderInfoP ) ) ( all_amount : XInteger128 ) ( sell : XBool ) : UExpression ( XQueue OrderInfoP ) false := 
- {{ 
- if ( cur_order ) return { cur_order , orders , all_amount } ; 
- while ( ! dealer.orders ^^ empty ( ) ) { cur_order = dealer.orders ^^ front_with_idx_opt ( ) ; 
- Л_ord_ := ^ cur_order - > second ; 
- if ( ! is_active_time ( dealer.ord ^^ order_finish_time ) ) { all_amount - = dealer.ord ^^ amount ; 
- Л_ret_ { uint32 ( ec : : expired ) , dealer.ord ^^ original_amount - dealer.ord ^^ amount , uint128 { 0 } } ; 
- IPriceCallbackPtr ( dealer.ord ^^ client_addr ) ( Grams ( dealer.ord ^^ account . get ( ) ) , IGNORE_ACTION_ERRORS dealer.) ^^ onOrderFinished ( ret , sell ) ; 
- dealer.orders ^^ pop ( ) ; 
- dealer.cur_order ^^ reset ( ) ; 
- continue ; 
- } break ; 
- } return { cur_order , orders , all_amount } ; 
+    (* while (!orders.empty()) {
+      cur_order = orders.front_with_idx_opt();
+      auto ord = cur_order->second;
+      if (!is_active_time(ord.order_finish_time)) {
+        all_amount -= ord.amount;
+        OrderRet ret { uint32(ec::expired), ord.original_amount - ord.amount, uint128{0} };
+        IPriceCallbackPtr(ord.client_addr)(Grams(ord.account.get()), IGNORE_ACTION_ERRORS).
+          onOrderFinished(ret, sell);
+        orders.pop();
+        cur_order.reset();
+        continue;
+      }
+      break;
+    } *)
+    refine {{ return_ {}(* cur_order, orders, all_amount *) }} .
  
- }} . 
  
  (*begin*) 
  Definition dealer_Ф_extract_active_order_call ( cur_order : URValue ( XMaybe OrderInfoWithIdxP ) false ) ( orders : URValue ( XQueue OrderInfoP ) false ) ( all_amount : URValue XInteger128 false ) ( sell : URValue XBool false ) := 

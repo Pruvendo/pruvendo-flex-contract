@@ -4,14 +4,9 @@ Module FLeXContractTypes (xt: XTypesSig).
 
 Import xt.
 
-Definition XTokensType     := XInteger.
-Definition WalletGramsType256 := XInteger.
-Definition WalletGramsType128 := XInteger.
-Definition XGrams := XInteger.
-Definition XHandle := XMaybe . (*interesting*)
-Definition XBytes := XHMap XInteger XInteger .
-Definition TokenId := XInteger.
-Definition RightId := XInteger.
-Definition RightsType := XInteger .
+Definition XHandle   := XAddress . 
+Definition XQueue    := XList .
+Definition XBigQueue := XList .
+Definition XBytes    := XList .
 
 End FLeXContractTypes.
