@@ -118,17 +118,20 @@ Definition tvm_accept : UExpression True false := {{ return_ I }} .
  ( FuncallExpression ( tvm_accept ) )
  (in custom ULValue at level 0 ) : ursus_scope. 
 
+Instance FLeXClient_ι_owner_int: intFunRec_gen XBool (field_type FLeXClient_ι_owner_)
+ := ifr.
+
 Definition FLeXClient_Ф_setFLeXCfg ( tons_cfg : TonsConfig ) 
                                    ( flex : XAddress ) 
                                    ( notify_addr : XAddress ) 
-                                   : UExpression PhantomType false .
+                                   : UExpression PhantomType true .
     refine {{ tons_cfg       : TonsConfig @ "tons_cfg" ; { _ } }} . 
     refine {{ flex           : XAddress @ "flex" ; { _ } }} .
     refine {{ notify_addr    : XAddress @ "notify_addr" ; { _ } }} .
 
-(*    refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , 
+refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , 
                        error_code::message_sender_is_not_my_owner ) ; { _ } }} .
- *)
+
 (*  refine {{ tvm_accept ( ) ; { _ } }} .  *)
   refine {{ FLeXClient.tons_cfg_ := !{tons_cfg} ; { _ } }} .
   refine {{ FLeXClient.flex_ := !{flex} ; { _ } }} .
@@ -201,7 +204,7 @@ Defined.
 Definition FLeXClient_Ф_deployTradingPair ( tip3_root : XAddress ) 
                                           ( deploy_min_value : XInteger128 ) 
                                           ( deploy_value : XInteger128 ) 
-                                         : UExpression XAddress false . 
+                                         : UExpression XAddress true . 
 
     refine {{ tip3_root        : XAddress @ "tip3_root" ; { _ } }} . 
     refine {{ deploy_min_value : XInteger128 @ "deploy_min_value" ; { _ } }} .
@@ -209,7 +212,7 @@ Definition FLeXClient_Ф_deployTradingPair ( tip3_root : XAddress )
     refine {{ state_init_      : StateInit @ "state_init_" ; { _ } }} .
     refine {{ std_addr_       : XAddress @ "std_addr_" ; { _ } }} .
     refine {{ trade_pair     : XAddress @ "trade_pair" ; { _ } }} .
-(*  refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , error_code::message_sender_is_not_my_owner ) ; { _ } }} . *)
+refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
 (*  tvm_accept ( ) ;  *)
 (*    DTradingPair pair_data {
       .flex_addr_ = flex_,
@@ -271,7 +274,7 @@ Definition FLeXClient_Ф_deployXchgPair ( tip3_major_root : XAddress )
                                        ( tip3_minor_root : XAddress ) 
                                        ( deploy_min_value : XInteger128 ) 
                                        ( deploy_value : XInteger128 ) 
-                                       : UExpression XAddress false . 
+                                       : UExpression XAddress true . 
     refine {{ tip3_major_root        : XAddress @ "tip3_major_root" ; { _ } }} . 
     refine {{ tip3_minor_root        : XAddress @ "tip3_minor_root" ; { _ } }} .
     refine {{ deploy_min_value    : XInteger128 @ "deploy_min_value" ; { _ } }} .
@@ -281,7 +284,7 @@ Definition FLeXClient_Ф_deployXchgPair ( tip3_major_root : XAddress )
     refine {{ std_addr           : XInteger256 @ "pair_data" ; { _ } }} .
     refine {{ trade_pair           : XAddress @ "trade_pair" ; { _ } }} .
  
-(*  refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , error_code::message_sender_is_not_my_owner ) ; { _ } }} . *)
+  refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , error_code::message_sender_is_not_my_owner ) ; { _ } }} .
 (*  tvm_accept ( ) ;  *)
     (* DXchgPair pair_data {
       .flex_addr_ = flex_,
@@ -406,7 +409,7 @@ Defined.
  (*end*) 
  
 
-Definition FLeXClient_Ф_deployPriceWithSell ( args_cl : TvmCell ) : UExpression XAddress false . 
+Definition FLeXClient_Ф_deployPriceWithSell ( args_cl : TvmCell ) : UExpression XAddress true . 
     refine {{ args_cl         : TvmCell @ "args_cl" ; { _ } }} . 
     refine {{ args             : FLeXSellArgs @ "args" ; { _ } }} .
     refine {{ state_init      : StateInit @ "state_init" ; { _ } }} .
@@ -417,7 +420,7 @@ Definition FLeXClient_Ф_deployPriceWithSell ( args_cl : TvmCell ) : UExpression
     refine {{ sell_args       : SellArgs @ "sell_args" ; { _ } }} .
     refine {{ payload        : TvmCell @ "payload" ; { _ } }} .
  
-(* refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , error_code::message_sender_is_not_my_owner ) ; { _ } }} . *)
+ refine {{ require_ ( (* msg_pubkey ( ) *) 0 == FLeXClient.owner_ , error_code::message_sender_is_not_my_owner ) ; { _ } }} .
 (*  tvm_accept ( ) ;  *)
     refine {{ {args} := !{args} ; { _ } }} . (* parse<FLeXSellArgs>(args_cl.ctos()); *) 
     refine {{ [ {state_init} , {addr} (* , {std_addr} *) ] := [ !{state_init} , !{addr} (* , !{std_addr} *) ] ; { _ } }} . (* preparePrice(args.price, args.min_amount, args.deals_limit, args.tip3_code, args.tip3cfg(), args.price_code); *)
@@ -485,7 +488,13 @@ Defined .
  (in custom URValue at level 0 , order_finish_time custom URValue at level 0 ) : ursus_scope. 
  (*end*) 
  
-Existing Instance xlist_default.
+Global Instance  LocalState_ι_queue_OrderInfo_Index : LocalStateField (XList OrderInfo) :=
+{
+  local_index_embedded :=  LocalState_ι_queue_OrderInfo_Index_Embedded;
+  local_state_field :=  LocalState_ι_queue_OrderInfo_; 
+  local_field_type_correct := eq_refl
+}. 
+
 Definition dealer_Ф_extract_active_order ( cur_order : ( XMaybe (XInteger # OrderInfo)%sol ) ) 
                                          ( orders : ( (* XQueue *) XList OrderInfo ) ) 
                                          ( all_amount : XInteger128 ) 
@@ -516,10 +525,14 @@ Definition dealer_Ф_extract_active_order ( cur_order : ( XMaybe (XInteger # Ord
       break;
     } *)
     refine {{ return_ {}(* cur_order, orders, all_amount *) }} .
+Defined.
  
  
  (*begin*) 
- Definition dealer_Ф_extract_active_order_call ( cur_order : URValue ( XMaybe OrderInfoWithIdxP ) false ) ( orders : URValue ( XQueue OrderInfoP ) false ) ( all_amount : URValue XInteger128 false ) ( sell : URValue XBool false ) := 
+ Definition dealer_Ф_extract_active_order_call ( cur_order : URValue ( XMaybe (XInteger # OrderInfo)%sol ) false ) 
+                                               ( orders : URValue ( XList OrderInfo ) false ) 
+                                               ( all_amount : URValue XInteger128 false ) 
+                                               ( sell : URValue XBool false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ4 ) dealer_Ф_extract_active_order 
  ( SimpleLedgerableArg URValue {{ Λ "cur_order" }} cur_order ) 
  ( SimpleLedgerableArg URValue {{ Λ "orders" }} orders ) 
@@ -527,7 +540,7 @@ Definition dealer_Ф_extract_active_order ( cur_order : ( XMaybe (XInteger # Ord
  ( SimpleLedgerableArg URValue {{ Λ "sell" }} sell ) 
  . 
  Notation " 'dealer_Ф_extract_active_order_ref_' '(' cur_order orders all_amount sell ')' " := 
- ( URResult ( dealer_Ф_extract_active_order_ref_call 
+ ( URResult ( dealer_Ф_extract_active_order_call 
  cur_order orders all_amount sell )) 
  (in custom URValue at level 0 , cur_order custom URValue at level 0 
  , orders custom ULValue at level 0 
@@ -536,8 +549,8 @@ Definition dealer_Ф_extract_active_order ( cur_order : ( XMaybe (XInteger # Ord
  (*end*) 
  
 
-Definition dealer_Ф_process_queue ( sell_idx : XInteger ) ( buy_idx : XInteger ) : UExpression True false := 
- {{ 
+Definition dealer_Ф_process_queue ( sell_idx : XInteger ) ( buy_idx : XInteger ) : UExpression True false . 
+
  std : : optional < OrderInfoWithIdx > sell_opt ; 
  std : : optional < OrderInfoWithIdx > buy_opt ; 
  Л_deals_count_ := ^ 0 ; 
