@@ -1,0 +1,17 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "SMV contracts tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js --exit"
+  },
+  "author": "TON Labs",
+  "license": "ISC",
+  "dependencies": {
+    "ton-client-node-js": "^0.25.0"
+  },
+  "devDependencies": {
+    "mocha": "^7.0.1"
+  }
+}
