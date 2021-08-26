@@ -1772,7 +1772,7 @@ end .
  | LocalState_ι_queue_OrderInfo_Index => snd ( fst1 r ) 
  | LocalState_ι_pair_unsigned_OrderInfo_Index => snd r 
  end . 
-(* 5 *) Coercion LocalState_get : LocalStateFields >-> Funclass .
+(* 5 *) Coercion LocalState_get : LocalStateFields >-> Funclass . 
 (* 6 *) Definition LocalState_set (f: LocalStateFields ) 
 (v: LocalState_field_type f) (r: LocalState ): LocalState  :=
   let '(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20,
