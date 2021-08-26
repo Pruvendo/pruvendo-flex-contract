@@ -67,8 +67,8 @@ Definition FLeX_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  Defined . 
  
  
- (* Definition FLeX_Ф_isFullyInitialized : UExpression XBool false . 
- 	 	 refine {{ return_ !{pair_code_} && !{price_code_} && xchg_pair_code_ && xchg_price_code_ ; { _ } }} . 
+Definition FLeX_Ф_isFullyInitialized : UExpression XBool false . 
+ 	 	 refine {{ return_  TRUE (* FLeX.pair_code_ && FLeX.price_code_ && FLeX.xchg_pair_code_ && FLeX.xchg_price_code_ *) }} . 
  Defined . 
  
  (*begin*) 
@@ -80,10 +80,10 @@ Definition FLeX_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
  (*end*) 
- 
- Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true . 
+(*
+Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
- 	 	 refine {{ require ( ( ! isFullyInitialized ( ) . get ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require ( ( ! FLeX_Ф_isFullyInitialized_ref_ ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require ( ( msg_pubkey ( ) == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm_accept ( ) ; { _ } }} . 
  	 	 refine {{ require ( ( ! FLeX.pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
