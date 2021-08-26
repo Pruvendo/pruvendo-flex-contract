@@ -1,8 +1,8 @@
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.SML_NG25.
 
-Require Import classFlex.
-Require Import stdFunc.
+Require Import FLeXClassSelf.
+(* Require Import FLeXFuncSelf. *)
 Require Import stdFuncNotations.
 
 Module specFlexSpec (xt: XTypesSig) (sm: StateMonadSig).
@@ -12,8 +12,10 @@ Module Export stdFuncNotationsModule := stdFuncNotations xt sm LedgerClassModule
 Module Type specFLeXSig.
 (* Import xt. Import sm. *)
 
-Parameter Ф_prepare_trading_pair_state_init_and_addr : StateInit -> XInteger256 -> UExpression ( TradingPair # TvmCell )%sol false . 
+(* Parameter Ф_prepare_trading_pair_state_init_and_addr : StateInit -> XInteger256 -> UExpression ( TradingPair # TvmCell )%sol false . 
 Parameter Ф_prepare_xchg_pair_state_init_and_addr : StateInit -> XInteger256 -> UExpression ( XchgPair # TvmCell )%sol false . 
+ *)
+
 Parameter FLeX_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XAddress -> UExpression PhantomType false . 
 Parameter FLeX_Ф_setPairCode : TvmCell -> UExpression PhantomType false . 
 Parameter FLeX_Ф_setXchgPairCode : TvmCell -> UExpression PhantomType false . 
