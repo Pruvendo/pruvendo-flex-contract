@@ -1,5 +1,5 @@
 Require Import UMLang.SolidityNotations2.
-Require Import UMLang.SML_NG25.
+Require Import UMLang.SML_NG26.
 
 Require Import FLeXClassSelf.
 (* Require Import FLeXFuncSelf. *)

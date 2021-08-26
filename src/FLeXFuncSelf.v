@@ -27,7 +27,7 @@ Require Import FLeXConstSig.
 Require Import ZArith.
 Require Import FLeXFuncNotations.
 Require Import UMLang.SolidityNotations2.
-Require Import UMLang.SML_NG25.
+Require Import UMLang.SML_NG26.
 
 Module FLeXFuncs (dc : FLeXConstsTypesSig XTypesModule StateMonadModule ).
  
@@ -66,34 +66,6 @@ Definition FLeX_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  	 	 refine {{ FLeX.tons_cfg_ := {} (* { !{ transfer_tip3 } , !{ return_ownership } , !{ trading_pair_deploy } , !{ order_answer } , !{ process_queue } , !{ send_notify } }  *) }} . 
  Defined . 
  
- (*begin*) 
- Definition FLeX_Ф_constructor_call  ( deployer_pubkey : URValue XInteger256 false ) ( transfer_tip3 : URValue XInteger128 false ) ( return_ownership : URValue XInteger128 false ) ( trading_pair_deploy : URValue XInteger128 false ) ( order_answer : URValue XInteger128 false ) ( process_queue : URValue XInteger128 false ) ( send_notify : URValue XInteger128 false ) ( min_amount : URValue XInteger128 false ) ( deals_limit : URValue XInteger8 false ) ( notify_addr : URValue XAddress false ) := 
- 🏓 ursus_call_with_args ( LedgerableWithArgs := λ10 ) FLeX_Ф_constructor 
- ( SimpleLedgerableArg URValue {{ Λ "deployer_pubkey" }} deployer_pubkey ) 
- ( SimpleLedgerableArg URValue {{ Λ "transfer_tip3" }} transfer_tip3 ) 
- ( SimpleLedgerableArg URValue {{ Λ "return_ownership" }} return_ownership ) 
- ( SimpleLedgerableArg URValue {{ Λ "trading_pair_deploy" }} trading_pair_deploy ) 
- ( SimpleLedgerableArg URValue {{ Λ "order_answer" }} order_answer ) 
- ( SimpleLedgerableArg URValue {{ Λ "process_queue" }} process_queue ) 
- ( SimpleLedgerableArg URValue {{ Λ "send_notify" }} send_notify ) 
- ( SimpleLedgerableArg URValue {{ Λ "min_amount" }} min_amount ) 
- ( SimpleLedgerableArg URValue {{ Λ "deals_limit" }} deals_limit ) 
- ( SimpleLedgerableArg URValue {{ Λ "notify_addr" }} notify_addr ) 
- . 
- Notation " 'FLeX_Ф_constructor_ref_' '(' deployer_pubkey transfer_tip3 return_ownership trading_pair_deploy order_answer process_queue send_notify min_amount deals_limit notify_addr ')' " := 
- ( URResult ( FLeX_Ф_constructor_call 
- deployer_pubkey transfer_tip3 return_ownership trading_pair_deploy order_answer process_queue send_notify min_amount deals_limit notify_addr )) 
- (in custom URValue at level 0 , deployer_pubkey custom URValue at level 0 
- , transfer_tip3 custom ULValue at level 0 
- , return_ownership custom ULValue at level 0 
- , trading_pair_deploy custom ULValue at level 0 
- , order_answer custom ULValue at level 0 
- , process_queue custom ULValue at level 0 
- , send_notify custom ULValue at level 0 
- , min_amount custom ULValue at level 0 
- , deals_limit custom ULValue at level 0 
- , notify_addr custom ULValue at level 0 ) : ursus_scope . 
- (*end*) 
  
  (* Definition FLeX_Ф_isFullyInitialized : UExpression XBool false . 
  	 	 refine {{ return_ !{pair_code_} && !{price_code_} && xchg_pair_code_ && xchg_price_code_ ; { _ } }} . 
@@ -417,19 +389,19 @@ Definition FLeX_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  (in custom URValue at level 0 ) : ursus_scope . 
  (*end*) 
  
- Definition FLeX_Ф__fallback ( cell : ( ) : UExpression XInteger false . 
+ Definition FLeX_Ф__fallback ( _ : cell ) : UExpression XInteger false . 
  	 	 refine {{ cell : ( ( ) @ "cell" ; { _ } }} . 
  	 	 refine {{ return_ 0 ; { _ } }} . 
  Defined . 
  
  (*begin*) 
- Definition FLeX_Ф__fallback_call  ( cell : URValue (P false ) := 
+ Definition FLeX_Ф__fallback_call  ( _ : cell : URValue false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) FLeX_Ф__fallback 
- ( SimpleLedgerableArg URValue {{ Λ "cell" }} cell ) 
+ ( SimpleLedgerableArg URValue {{ Λ "x" }} cell ) 
  . 
- Notation " 'FLeX_Ф__fallback_ref_' '(' cell ')' " := 
+ Notation " 'FLeX_Ф__fallback_ref_' '(' x ')' " := 
  ( URResult ( FLeX_Ф__fallback_call 
- cell )) 
+ x )) 
  (in custom URValue at level 0 , cell custom URValue at level 0 ) : ursus_scope . 
  (*end*) 
   *)
