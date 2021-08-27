@@ -80,15 +80,15 @@ Definition FLeX_Ф_isFullyInitialized : UExpression XBool false .
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
  (*end*) 
-(*
+
 Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
- 	 	 refine {{ require ( ( ! FLeX_Ф_isFullyInitialized_ref_ ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require ( ( msg_pubkey ( ) == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
- 	 	 refine {{ tvm_accept ( ) ; { _ } }} . 
- 	 	 refine {{ require ( ( ! FLeX.pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require ( ( code ^^ TvmCell:ctos ( ) . srefs ( ) == 2 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
- 	 	 refine {{ FLeX.pair_code_ := builder ( ) . stslice ( !{ code } . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ~ ( FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( VMState.msg_pubkey == FLeX.deployer_pubkey_ , error_code::sender_is_not_deployer ) ; { _ } }} . 
+(*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
+ 	 	 refine {{ require_( TRUE (* ! FLeX.pair_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( TRUE (* code.ctos ( ) . srefs ( ) == 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+ 	 	 refine {{ FLeX.pair_code_ := {} (* builder ( ) . stslice ( !{ code } . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
  
  (*begin*) 
@@ -104,12 +104,12 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  
  Definition FLeX_Ф_setXchgPairCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
- 	 	 refine {{ require ( ( ! isFullyInitialized ( ) . get ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require ( ( msg_pubkey ( ) == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
- 	 	 refine {{ tvm_accept ( ) ; { _ } }} . 
- 	 	 refine {{ require ( ( ! FLeX.xchg_pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require ( ( code ^^ TvmCell:ctos ( ) . srefs ( ) == 2 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
- 	 	 refine {{ FLeX.xchg_pair_code_ := builder ( ) . stslice ( !{ code } . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( ~ FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( VMState.msg_pubkey == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
+(*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
+ 	 	 refine {{ require_( TRUE (* ! FLeX.xchg_pair_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( TRUE (* code.ctos ( ) . srefs ( ) == 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+ 	 	 refine {{ FLeX.xchg_pair_code_ := {} (* builder ( ) . stslice ( !{ code } . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
  
  (*begin*) 
@@ -125,11 +125,11 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  
  Definition FLeX_Ф_setPriceCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
- 	 	 refine {{ require ( ( ! isFullyInitialized ( ) . get ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require ( ( msg_pubkey ( ) == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
- 	 	 refine {{ tvm_accept ( ) ; { _ } }} . 
- 	 	 refine {{ require ( ( ! FLeX.price_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ FLeX.price_code_ := !{ code } ; { _ } }} . 
+ 	 	 refine {{ require_( ( ~ FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( VMState.msg_pubkey == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
+(*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
+ 	 	 refine {{ require_( TRUE (* ! FLeX.price_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ FLeX.price_code_ ->set !{ code } }} . 
  Defined . 
  
  (*begin*) 
@@ -145,10 +145,10 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  
  Definition FLeX_Ф_setXchgPriceCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
- 	 	 refine {{ require ( ( ! isFullyInitialized ( ) . get ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require ( ( msg_pubkey ( ) == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( ! isFullyInitialized ( ) . get ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( msg_pubkey ( ) == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm_accept ( ) ; { _ } }} . 
- 	 	 refine {{ require ( ( ! FLeX.xchg_price_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( ! FLeX.xchg_price_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ FLeX.xchg_price_code_ := !{ code } ; { _ } }} . 
  Defined . 
  
@@ -207,7 +207,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  
  Definition FLeX_Ф_getSellPriceCode ( tip3_addr : XAddress ) : UExpression TvmCell true . 
  	 	 refine {{ tip3_addr : ( XAddress ) @ "tip3_addr" ; { _ } }} . 
- 	 	 refine {{ require ( ( FLeX.price_code_ - > ctos ( ) . srefs ( ) == 2 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( FLeX.price_code_ - > ctos ( ) . srefs ( ) == 2 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ salt : ( TvmCell ) @ "salt" ; { _ } }} . 
  	 	 refine {{ { salt } := builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( !{ tip3_addr } . sl ( ) ) . endc ( ) ; { _ } }} . 
  	 	 refine {{ return_ builder ( ) . stslice ( FLeX.price_code_ - > ctos ( ) ) . stref ( !{ salt } ) . endc ( ) ; { _ } }} . 
@@ -227,7 +227,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  Definition FLeX_Ф_getXchgPriceCode ( tip3_addr1 : XAddress ) ( tip3_addr2 : XAddress ) : UExpression TvmCell true . 
  	 	 refine {{ tip3_addr1 : ( XAddress ) @ "tip3_addr1" ; { _ } }} . 
  	 	 refine {{ tip3_addr2 : ( XAddress ) @ "tip3_addr2" ; { _ } }} . 
- 	 	 refine {{ require ( ( FLeX.price_code_ - > ctos ( ) . srefs ( ) == 2 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( FLeX.price_code_ - > ctos ( ) . srefs ( ) == 2 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ keys : ( auto ) @ "keys" ; { _ } }} . 
  	 	 refine {{ { keys } := std : : make_tuple ( !{ tip3_addr1 } , !{ tip3_addr2 } ) ; { _ } }} . 
  	 	 refine {{ return_ builder ( ) . stslice ( FLeX.xchg_price_code_ - > ctos ( ) ) . stref ( build ( !{ keys } ) . endc ( ) ) . endc ( ) ; { _ } }} . 

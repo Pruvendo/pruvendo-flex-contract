@@ -115,6 +115,16 @@ Notation " 'error_code::canceled' " := (sInject error_code_ι_canceled) (in cust
 Notation " 'error_code::expired' " := (sInject error_code_ι_expired) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'safe_delay_period' " := (sInject safe_delay_period) (in custom URValue at level 0) : ursus_scope. 
 
+Notation " 'VMState.msg_pubkey' " := ( URState (U:= VMState ) VMState_ι_msg_pubkey ) (in custom URValue at level 0) : ursus_scope.
+Notation " 'VMState.now' " := ( URState (U:= VMState ) VMState_ι_now ) (in custom URValue at level 0) : ursus_scope.
+Notation " 'VMState.accepted' " := ( URState (U:= VMState ) VMState_ι_accepted ) (in custom URValue at level 0) : ursus_scope.
+Notation " 'VMState.msg_value' " := ( URState (U:= VMState ) VMState_ι_msg_value ) (in custom URValue at level 0) : ursus_scope.
+
+Notation " 'VMState.msg_pubkey' " := ( ULState (U:= VMState ) VMState_ι_msg_pubkey ) (in custom ULValue at level 0) : ursus_scope.
+Notation " 'VMState.now' " := ( ULState (U:= VMState ) VMState_ι_now ) (in custom ULValue at level 0) : ursus_scope.
+Notation " 'VMState.accepted' " := ( ULState (U:= VMState ) VMState_ι_accepted ) (in custom ULValue at level 0) : ursus_scope.
+Notation " 'VMState.msg_value' " := ( ULState (U:= VMState ) VMState_ι_msg_value ) (in custom ULValue at level 0) : ursus_scope.
+
 Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_tons) (in custom URValue at level 0) : ursus_scope. 
 
 Parameter FLeX_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XAddress -> UExpression PhantomType false . 
