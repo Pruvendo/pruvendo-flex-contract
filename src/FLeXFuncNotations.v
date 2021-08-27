@@ -20,7 +20,7 @@ Require Import FLeXContractTypes.
 Require Import FLeXClassSelf.
 Require Import FLeXSpecSelf.
 Require Import FLeXConstSig. 
-Require Import stdFunc.
+Require Import UrsusStdLib.stdFunc.
 
 Module FLeXFuncNotations (xt: XTypesSig) 
                           (sm: StateMonadSig) 

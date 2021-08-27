@@ -29,9 +29,14 @@ Require Import FLeXFuncNotations.
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.SML_NG26.
 
+Require Import UrsusStdLib.stdFuncNotations.
+Require Import UrsusStdLib.stdNotations.
+Require Import FLeXSpecSelf.
+
 Module FLeXFuncs (dc : FLeXConstsTypesSig XTypesModule StateMonadModule ).
  
 Module Export FLeXFuncNotationsModule := FLeXFuncNotations XTypesModule StateMonadModule dc.
+
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope struct_scope.
@@ -80,13 +85,14 @@ Definition FLeX_Ф_isFullyInitialized : UExpression XBool false .
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
  (*end*) 
-
+Locate "||".
 Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
  	 	 refine {{ require_ ( ~ ( FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_ ( VMState.msg_pubkey == FLeX.deployer_pubkey_ , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
- 	 	 refine {{ require_( TRUE (* ! FLeX.pair_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
+     refine {{ FLeX.pair_code_ := !{ code } ->set ; { _ } }} .
+	 	 refine {{ require_( ~ TRUE (* FLeX.pair_code_  ->has_value *) , error_code::cant_override_code ) ; { _ } }} .
  	 	 refine {{ require_( TRUE (* code.ctos ( ) . srefs ( ) == 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ FLeX.pair_code_ := {} (* builder ( ) . stslice ( !{ code } . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
@@ -107,7 +113,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  	 	 refine {{ require_( ( ~ FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_( ( VMState.msg_pubkey == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
- 	 	 refine {{ require_( TRUE (* ! FLeX.xchg_pair_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( TRUE (* ! FLeX.xchg_pair_code_  ->has_value *) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_( TRUE (* code.ctos ( ) . srefs ( ) == 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ FLeX.xchg_pair_code_ := {} (* builder ( ) . stslice ( !{ code } . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
@@ -128,8 +134,8 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  	 	 refine {{ require_( ( ~ FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_( ( VMState.msg_pubkey == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
- 	 	 refine {{ require_( TRUE (* ! FLeX.price_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ FLeX.price_code_ ->set !{ code } }} . 
+ 	 	 refine {{ require_( TRUE (* ! FLeX.price_code_  ->has_value *) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ FLeX.price_code_ := {} (* ->set !{ code } *) }} . 
  Defined . 
  
  (*begin*) 
@@ -145,11 +151,11 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  
  Definition FLeX_Ф_setXchgPriceCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
- 	 	 refine {{ require_( ( ! isFullyInitialized ( ) . get ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require_( ( msg_pubkey ( ) == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
- 	 	 refine {{ tvm_accept ( ) ; { _ } }} . 
- 	 	 refine {{ require_( ( ! FLeX.xchg_price_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ FLeX.xchg_price_code_ := !{ code } ; { _ } }} . 
+ 	 	 refine {{ require_( ( ~ FLeX_Ф_isFullyInitialized_ref_ ( )  ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( VMState.msg_pubkey == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
+(*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
+ 	 	 refine {{ require_( TRUE (* ! FLeX.xchg_price_code_ ->has_value *) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ FLeX.xchg_price_code_ := {} (* ->set !{ code } *) }} . 
  Defined . 
  
  (*begin*) 
@@ -164,7 +170,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  (*end*) 
  
  Definition FLeX_Ф_getTonsCfg : UExpression TonsConfig false . 
- 	 	 refine {{ return_ FLeX.tons_cfg_ ; { _ } }} . 
+ 	 	 refine {{ return_ FLeX.tons_cfg_ }} . 
  Defined . 
  
  (*begin*) 
@@ -177,8 +183,8 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  (in custom URValue at level 0 ) : ursus_scope . 
  (*end*) 
  
- Definition FLeX_Ф_getTradingPairCode : UExpression TvmCell false . 
- 	 	 refine {{ return_ *pair_code_ ; { _ } }} . 
+ Definition FLeX_Ф_getTradingPairCode : UExpression ( XMaybe XInteger ) (* TvmCell *) false . 
+ 	 	 refine {{ return_ {} (*FLeX.pair_code_ ->hasValue*) }} . 
  Defined . 
  
  (*begin*) 
@@ -192,7 +198,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  (*end*) 
  
  Definition FLeX_Ф_getXchgPairCode : UExpression TvmCell false . 
- 	 	 refine {{ return_ *xchg_pair_code_ ; { _ } }} . 
+ 	 	 refine {{ return_ {} (*FLeX.xchg_pair_code_ ->get*) (*->get_default*) }} . 
  Defined . 
  
  (*begin*) 
@@ -207,10 +213,10 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  
  Definition FLeX_Ф_getSellPriceCode ( tip3_addr : XAddress ) : UExpression TvmCell true . 
  	 	 refine {{ tip3_addr : ( XAddress ) @ "tip3_addr" ; { _ } }} . 
- 	 	 refine {{ require_( ( FLeX.price_code_ - > ctos ( ) . srefs ( ) == 2 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( TRUE (* FLeX.price_code_ - > ctos ( ) . srefs ( ) == 2 *) ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ salt : ( TvmCell ) @ "salt" ; { _ } }} . 
- 	 	 refine {{ { salt } := builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( !{ tip3_addr } . sl ( ) ) . endc ( ) ; { _ } }} . 
- 	 	 refine {{ return_ builder ( ) . stslice ( FLeX.price_code_ - > ctos ( ) ) . stref ( !{ salt } ) . endc ( ) ; { _ } }} . 
+ 	 	 refine {{ { salt } := {} (* builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( !{ tip3_addr } . sl ( ) ) . endc ( )  *); { _ } }} . 
+ 	 	 refine {{ return_ {} (* builder ( ) . stslice ( FLeX.price_code_ - > ctos ( ) ) . stref ( !{ salt } ) . endc ( ) *) }} . 
  Defined . 
  
  (*begin*) 
@@ -227,10 +233,11 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  Definition FLeX_Ф_getXchgPriceCode ( tip3_addr1 : XAddress ) ( tip3_addr2 : XAddress ) : UExpression TvmCell true . 
  	 	 refine {{ tip3_addr1 : ( XAddress ) @ "tip3_addr1" ; { _ } }} . 
  	 	 refine {{ tip3_addr2 : ( XAddress ) @ "tip3_addr2" ; { _ } }} . 
- 	 	 refine {{ require_( ( FLeX.price_code_ - > ctos ( ) . srefs ( ) == 2 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
- 	 	 refine {{ keys : ( auto ) @ "keys" ; { _ } }} . 
- 	 	 refine {{ { keys } := std : : make_tuple ( !{ tip3_addr1 } , !{ tip3_addr2 } ) ; { _ } }} . 
- 	 	 refine {{ return_ builder ( ) . stslice ( FLeX.xchg_price_code_ - > ctos ( ) ) . stref ( build ( !{ keys } ) . endc ( ) ) . endc ( ) ; { _ } }} . 
+ 	 	 refine {{ require_( TRUE (* FLeX.price_code_ - > ctos ( ) . srefs ( ) == 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+(*  	 	 refine {{ keys : ( XProd XAddress XAddress ) @ "keys" ; { _ } }} . 
+ 	 	 refine {{ { keys } := {} (* [ !{ tip3_addr1 } , !{ tip3_addr2 } ] *) ; { _ } }} . 
+ *) 	 	 
+     refine {{ return_ {} (* builder ( ) . stslice ( FLeX.xchg_price_code_ - > ctos ( ) ) . stref ( build ( !{ keys } ) . endc ( ) ) . endc ( )  *) }} . 
  Defined . 
  
  (*begin*) 
@@ -246,25 +253,25 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  , tip3_addr2 custom ULValue at level 0 ) : ursus_scope . 
  (*end*) 
  
- Definition Ф_prepare_trading_pair_state_init_and_addr ( pair_data : DTradingPair ) ( pair_code : TvmCell ) : UExpression ( StateInit # XInteger256 ) false . 
- 	 	 refine {{ pair_data : ( DTradingPair ) @ "pair_data" ; { _ } }} . 
+ Definition Ф_prepare_trading_pair_state_init_and_addr ( pair_data : TradingPair ) ( pair_code : TvmCell ) : UExpression ( XInteger (* StateInit *) # XInteger256 )%sol false . 
+ 	 	 refine {{ pair_data : ( TradingPair ) @ "pair_data" ; { _ } }} . 
  	 	 refine {{ pair_code : ( TvmCell ) @ "pair_code" ; { _ } }} . 
  	 	 refine {{ pair_data_cl : ( TvmCell ) @ "pair_data_cl" ; { _ } }} . 
- 	 	 refine {{ { pair_data_cl } := prepare_persistent_data ( { } , pair_data ) ; { _ } }} . 
- 	 	 refine {{ pair_init : ( StateInitP ) @ "pair_init" ; { _ } }} . 
- 	 	 refine {{ { pair_init } := new { { } , { } , pair_code , pair_data_cl , { } } ; { _ } }} . 
+ 	 	 refine {{ { pair_data_cl } := {} (* prepare_persistent_data_ref ( {} , !{pair_data} ) *) ; { _ } }} . 
+ 	 	 refine {{ pair_init : ( XInteger (* StateInit *) ) @ "pair_init" ; { _ } }} . 
+ 	 	 refine {{ { pair_init } := {} (* new { { } , { } , pair_code , pair_data_cl , { } } *) ; { _ } }} . 
  	 	 refine {{ pair_init_cl : ( TvmCell ) @ "pair_init_cl" ; { _ } }} . 
- 	 	 refine {{ { pair_init_cl } := build ( !{ pair_init } ) . make_cell ( ) ; { _ } }} . 
- 	 	 refine {{ return_ [ !{ pair_init } , tvm_hash ( pair_init_cl ) ] ; { _ } }} . 
+ 	 	 refine {{ { pair_init_cl } := {} (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
+ 	 	 refine {{ return_ {} (* [ !{ pair_init } , tvm_hash ( pair_init_cl ) ] *) }} . 
  Defined . 
  
  (*begin*) 
- Definition Ф_prepare_trading_pair_state_init_and_addr_call  ( pair_data : URValue DTradingPairP false ) ( pair_code : URValue TvmCell false ) := 
+ Definition Ф_prepare_trading_pair_state_init_and_addr_call  ( pair_data : URValue TradingPair false ) ( pair_code : URValue TvmCell false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ2 ) Ф_prepare_trading_pair_state_init_and_addr 
  ( SimpleLedgerableArg URValue {{ Λ "pair_data" }} pair_data ) 
  ( SimpleLedgerableArg URValue {{ Λ "pair_code" }} pair_code ) 
  . 
- Notation " 'Ф_prepare_trading_pair_state_init_and_addr_ref_' '(' pair_data pair_code ')' " := 
+ Notation " 'Ф_prepare_trading_pair_state_init_and_addr_ref_' '(' pair_data ',' pair_code ')' " := 
  ( URResult ( Ф_prepare_trading_pair_state_init_and_addr_call 
  pair_data pair_code )) 
  (in custom URValue at level 0 , pair_data custom URValue at level 0 
@@ -274,14 +281,14 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  Definition FLeX_Ф_getSellTradingPair ( tip3_root : XAddress ) : UExpression XAddress false . 
  	 	 refine {{ tip3_root : ( XAddress ) @ "tip3_root" ; { _ } }} . 
  	 	 refine {{ myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
- 	 	 refine {{ { myaddr } := new { tvm_myaddr ( ) } ; { _ } }} . 
- 	 	 refine {{ pair_data : ( DTradingPairP ) @ "pair_data" ; { _ } }} . 
- 	 	 refine {{ { pair_data } := new { . flex_addr_ = myaddr , . tip3_root_ = tip3_root , . deploy_value_ = tons_cfg_ . trading_pair_deploy } ; { _ } }} . 
- 	 	 refine {{ std_addr : ( auto ) @ "std_addr" ; { _ } }} . 
- 	 	 refine {{ { std_addr } := prepare_trading_pair_state_init_and_addr ( !{ pair_data } , *pair_code_ ) . second ; { _ } }} . 
- 	 	 refine {{ workchain_id : ( auto ) @ "workchain_id" ; { _ } }} . 
- 	 	 refine {{ { workchain_id } := Std :: get < addr_std > ( !{ myaddr } . Val ( ) ) . workchain_id ; { _ } }} . 
- 	 	 refine {{ return_ Address :: make_std ( !{ workchain_id } , !{ std_addr } ) ; { _ } }} . 
+ 	 	 refine {{ { myaddr } := {} (* new { tvm_myaddr ( ) } *) ; { _ } }} . 
+ 	 	 refine {{ pair_data : ( TradingPair ) @ "pair_data" ; { _ } }} . 
+ 	 	 refine {{ { pair_data } := {} (* new { . flex_addr_ = myaddr , . tip3_root_ = tip3_root , . deploy_value_ = tons_cfg_ . trading_pair_deploy } *) ; { _ } }} . 
+ 	 	 refine {{ std_addr : ( TvmCell ) @ "std_addr" ; { _ } }} . 
+(*  	 	 refine {{ { std_addr } := Ф_prepare_trading_pair_state_init_and_addr_ref_ ( !{ pair_data } , {} (* FLeX.pair_code_ ->get ) . second *) ) ; { _ } }} .  *)
+ 	 	 refine {{ workchain_id : ( XAddress ) @ "workchain_id" ; { _ } }} . 
+ 	 	 refine {{ { workchain_id } := (* Std :: get < addr_std > ( !{ myaddr } . Val ( ) ) . *) !{workchain_id} ; { _ } }} . 
+ 	 	 refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
  Defined . 
  
  (*begin*) 
@@ -295,25 +302,25 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  (in custom URValue at level 0 , tip3_root custom URValue at level 0 ) : ursus_scope . 
  (*end*) 
  
- Definition Ф_prepare_xchg_pair_state_init_and_addr ( pair_data : DXchgPair ) ( pair_code : TvmCell ) : UExpression ( StateInit # XInteger256 ) false . 
- 	 	 refine {{ pair_data : ( DXchgPair ) @ "pair_data" ; { _ } }} . 
+ Definition Ф_prepare_xchg_pair_state_init_and_addr ( pair_data : XchgPair ) ( pair_code : TvmCell ) : UExpression ( XInteger (* StateInit *) # XInteger256 )%sol false . 
+ 	 	 refine {{ pair_data : ( XchgPair ) @ "pair_data" ; { _ } }} . 
  	 	 refine {{ pair_code : ( TvmCell ) @ "pair_code" ; { _ } }} . 
  	 	 refine {{ pair_data_cl : ( TvmCell ) @ "pair_data_cl" ; { _ } }} . 
- 	 	 refine {{ { pair_data_cl } := prepare_persistent_data ( { } , pair_data ) ; { _ } }} . 
- 	 	 refine {{ pair_init : ( StateInitP ) @ "pair_init" ; { _ } }} . 
- 	 	 refine {{ { pair_init } := new { { } , { } , pair_code , pair_data_cl , { } } ; { _ } }} . 
+ 	 	 refine {{ { pair_data_cl } := {} (* prepare_persistent_data ( { } , !{pair_data} ) *) ; { _ } }} . 
+ 	 	 refine {{ pair_init : ( XInteger (* StateInit *) ) @ "pair_init" ; { _ } }} . 
+ 	 	 refine {{ { pair_init } := {} (* new { { } , { } , pair_code , pair_data_cl , { } } *) ; { _ } }} . 
  	 	 refine {{ pair_init_cl : ( TvmCell ) @ "pair_init_cl" ; { _ } }} . 
- 	 	 refine {{ { pair_init_cl } := build ( !{ pair_init } ) . make_cell ( ) ; { _ } }} . 
- 	 	 refine {{ return_ [ !{ pair_init } , tvm_hash ( pair_init_cl ) ] ; { _ } }} . 
+ 	 	 refine {{ { pair_init_cl } := {} (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
+ 	 	 refine {{ return_ {} (* [ !{ pair_init } , tvm_hash ( pair_init_cl ) ] *) }} . 
  Defined . 
  
  (*begin*) 
- Definition Ф_prepare_xchg_pair_state_init_and_addr_call  ( pair_data : URValue DXchgPairP false ) ( pair_code : URValue TvmCell false ) := 
+ Definition Ф_prepare_xchg_pair_state_init_and_addr_call  ( pair_data : URValue XchgPair false ) ( pair_code : URValue TvmCell false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ2 ) Ф_prepare_xchg_pair_state_init_and_addr 
  ( SimpleLedgerableArg URValue {{ Λ "pair_data" }} pair_data ) 
  ( SimpleLedgerableArg URValue {{ Λ "pair_code" }} pair_code ) 
  . 
- Notation " 'Ф_prepare_xchg_pair_state_init_and_addr_ref_' '(' pair_data pair_code ')' " := 
+ Notation " 'Ф_prepare_xchg_pair_state_init_and_addr_ref_' '(' pair_data , pair_code ')' " := 
  ( URResult ( Ф_prepare_xchg_pair_state_init_and_addr_call 
  pair_data pair_code )) 
  (in custom URValue at level 0 , pair_data custom URValue at level 0 
@@ -324,14 +331,14 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  	 	 refine {{ tip3_major_root : ( XAddress ) @ "tip3_major_root" ; { _ } }} . 
  	 	 refine {{ tip3_minor_root : ( XAddress ) @ "tip3_minor_root" ; { _ } }} . 
  	 	 refine {{ myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
- 	 	 refine {{ { myaddr } := new { tvm_myaddr ( ) } ; { _ } }} . 
- 	 	 refine {{ pair_data : ( DXchgPairP ) @ "pair_data" ; { _ } }} . 
- 	 	 refine {{ { pair_data } := new { . flex_addr_ = myaddr , . tip3_major_root_ = tip3_major_root , . tip3_minor_root_ = tip3_minor_root , . deploy_value_ = tons_cfg_ . trading_pair_deploy } ; { _ } }} . 
- 	 	 refine {{ std_addr : ( auto ) @ "std_addr" ; { _ } }} . 
- 	 	 refine {{ { std_addr } := prepare_xchg_pair_state_init_and_addr ( !{ pair_data } , *xchg_pair_code_ ) . second ; { _ } }} . 
- 	 	 refine {{ workchain_id : ( auto ) @ "workchain_id" ; { _ } }} . 
- 	 	 refine {{ { workchain_id } := Std :: get < addr_std > ( !{ myaddr } . Val ( ) ) . workchain_id ; { _ } }} . 
- 	 	 refine {{ return_ Address :: make_std ( !{ workchain_id } , !{ std_addr } ) ; { _ } }} . 
+ 	 	 refine {{ { myaddr } := {} (* new { tvm_myaddr ( ) } *) ; { _ } }} . 
+ 	 	 refine {{ pair_data : ( XchgPair ) @ "pair_data" ; { _ } }} . 
+ 	 	 refine {{ { pair_data } := {} (* new { . flex_addr_ = myaddr , . tip3_major_root_ = tip3_major_root , . tip3_minor_root_ = tip3_minor_root , . deploy_value_ = tons_cfg_ . trading_pair_deploy } *) ; { _ } }} . 
+ (* 	 	 refine {{ std_addr : ( ( XInteger (* StateInit *) * XInteger256 ) ) @ "std_addr" ; { _ } }} . 
+ 	 	 refine {{ { std_addr } := {} (* Ф_prepare_xchg_pair_state_init_and_addr_ref_ ( !{ pair_data } , {} (* FLeX.xchg_pair_code_ ->get *) ) . second *) ; { _ } }} . 
+ *)  refine {{ workchain_id : ( XAddress ) @ "workchain_id" ; { _ } }} . 
+ 	 	 refine {{ { workchain_id } := (* Std :: get < addr_std > ( !{ myaddr } . Val ( ) ) . *) !{workchain_id} ; { _ } }} . 
+ 	 	 refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
  Defined . 
  
  (*begin*) 
@@ -348,7 +355,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  (*end*) 
  
  Definition FLeX_Ф_getMinAmount : UExpression XInteger128 false . 
- 	 	 refine {{ return_ FLeX.min_amount_ ; { _ } }} . 
+ 	 	 refine {{ return_ FLeX.min_amount_ }} . 
  Defined . 
  
  (*begin*) 
@@ -362,7 +369,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  (*end*) 
  
  Definition FLeX_Ф_getDealsLimit : UExpression XInteger8 false . 
- 	 	 refine {{ return_ FLeX.deals_limit_ ; { _ } }} . 
+ 	 	 refine {{ return_ FLeX.deals_limit_ }} . 
  Defined . 
  
  (*begin*) 
@@ -376,7 +383,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  (*end*) 
  
  Definition FLeX_Ф_getNotifyAddr : UExpression XAddress false . 
- 	 	 refine {{ return_ FLeX.notify_addr_ ; { _ } }} . 
+ 	 	 refine {{ return_ FLeX.notify_addr_ }} . 
  Defined . 
  
  (*begin*) 
@@ -388,22 +395,21 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
  (*end*) 
- 
- Definition FLeX_Ф__fallback ( _ : cell ) : UExpression XInteger false . 
- 	 	 refine {{ cell : ( ( ) @ "cell" ; { _ } }} . 
- 	 	 refine {{ return_ 0 ; { _ } }} . 
+
+ Definition FLeX_Ф__fallback ( _ : TvmCell ) : UExpression XInteger false . 
+ 	 	 refine {{ return_ 0  }} . 
  Defined . 
  
  (*begin*) 
- Definition FLeX_Ф__fallback_call  ( _ : cell : URValue false ) := 
+ Definition FLeX_Ф__fallback_call  ( x : URValue TvmCell false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) FLeX_Ф__fallback 
- ( SimpleLedgerableArg URValue {{ Λ "x" }} cell ) 
+ ( SimpleLedgerableArg URValue {{ Λ "x" }} x ) 
  . 
  Notation " 'FLeX_Ф__fallback_ref_' '(' x ')' " := 
  ( URResult ( FLeX_Ф__fallback_call 
  x )) 
- (in custom URValue at level 0 , cell custom URValue at level 0 ) : ursus_scope . 
+ (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope . 
  (*end*) 
-  *)
+
 
 End FLeXFuncs .

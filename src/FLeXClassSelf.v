@@ -1174,6 +1174,12 @@ Global Instance LocalState_ι_uint128Index: LocalStateField XInteger128 :=
   local_field_type_correct := eq_refl
 }.
 
+Global Instance LocalState_ι_DTradingPairIndex : LocalStateField TradingPair :=
+{
+  local_index_embedded := LocalState_ι_DTradingPairIndex_Embedded;
+  local_state_field := LocalState_ι_DTradingPair; 
+  local_field_type_correct := eq_refl
+}.
 
 
 Global Instance LocalState_ι_DXchgPairIndex: LocalStateField XchgPair :=

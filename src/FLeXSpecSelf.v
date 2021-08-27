@@ -3,10 +3,12 @@ Require Import UMLang.SML_NG26.
 
 Require Import FLeXClassSelf.
 (* Require Import FLeXFuncSelf. *)
-Require Import stdFuncNotations.
+Require Import UrsusStdLib.stdFuncNotations.
+Require Import UrsusStdLib.stdNotations.
 
 Module specFlexSpec (xt: XTypesSig) (sm: StateMonadSig).
 Module Export LedgerClassModule := LedgerClass xt sm . 
+
 Module Export stdFuncNotationsModule := stdFuncNotations xt sm LedgerClassModule.
 
 Module Type specFLeXSig.
