@@ -17,12 +17,14 @@ depends: [
   "pruvendo-base" { >= "0.2.0" }
   "pruvendo-base-lib" { >= "0.1.0" }
   "pruvendo-umlang" 
+  "ursus-standard-library"
 ]
 
 pin-depends: [
   [ "pruvendo-base.latest-git" "../coq-finproof-base#dune-test" ]
   [ "pruvendo-base-lib.latest-git" "../pruvendo-base-lib#master" ]
   [ "pruvendo-umlang.latest-git" "../solidity-monadic-language#dune-test" ]
+  [ "ursus-standard-library.latest-git" "../ursus-standard-library#master" ]    
 ]
 
 build: [ "dune" "build" "-p" name "-j" jobs ]
