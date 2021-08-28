@@ -164,7 +164,13 @@ Notation "" 'fst20' x "" := ( fst ( fst19 x ) ) (at level 60, right associativit
 
 (* 3 *) Definition TonsConfig_field_type f : Type :=  
 match f with 
- | TonsConfig_ι_transfer_tip3 => XInteger128 | TonsConfig_ι_return_ownership => XInteger128 | TonsConfig_ι_trading_pair_deploy => XInteger128 | TonsConfig_ι_order_answer => XInteger128 | TonsConfig_ι_process_queue => XInteger128 | TonsConfig_ι_send_notify => XInteger128 end .
+ | TonsConfig_ι_transfer_tip3 => XInteger128 
+ | TonsConfig_ι_return_ownership => XInteger128 
+ | TonsConfig_ι_trading_pair_deploy => XInteger128 
+ | TonsConfig_ι_order_answer => XInteger128 
+ | TonsConfig_ι_process_queue => XInteger128 
+ | TonsConfig_ι_send_notify => XInteger128 
+end .
 
 (* 4 *) Definition TonsConfig_get (f: TonsConfigFields )(r: TonsConfig ) :  TonsConfig_field_type f := 
  match f with 
