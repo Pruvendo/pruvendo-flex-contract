@@ -103,10 +103,12 @@ Existing Instance monadStateT.
 Existing Instance monadStateStateT.
 
 Definition TonsConfig := @ TonsConfigP
-XInteger128
+XInteger128 
 .
+
+Print FLeXP.
 Definition FLeX := @ FLeXP
-XInteger8 XInteger128 XInteger256 XAddress TvmCell XMaybe
+XInteger8 XInteger128  XInteger256 XAddress  TvmCell XMaybe 
 .
 Definition TradingPair := @ TradingPairP
 XInteger128 XAddress
@@ -125,42 +127,28 @@ XInteger8 XInteger64 XInteger128 XInteger256 XAddress XBool TvmCell XMaybe XHMap
 .
 Definition LedgerFields := LedgerFieldsI.
 
-Global Instance TonsConfig_default : XDefault TonsConfig := { 
-  	 default := ( default , default , default , default , default , default ) } .
-Global Instance FLeX_default : XDefault FLeX := { 
-  	 default := ( default , default , default , default , default , default , default , default , default ) } .
-Global Instance TradingPair_default : XDefault TradingPair := { 
-  	 default := ( default , default , default ) } .
-Global Instance XchgPair_default : XDefault XchgPair := { 
-  	 default := ( default , default , default , default ) } .
-Global Instance VMState_default : XDefault VMState := { 
-  	 default := ( default , default , default , default ) } .
-Global Instance LocalState_default : XDefault LocalState := { 
-  	 default := ( default , default , default , default , default , default , default , default , default , default , default , default , default , default , default , default ) } .
-Global Instance Ledger_default : XDefault Ledger := { 
-  	 default := ( default , default , default , default ) } .
 
-Notation "" 'fst0' x "" := ( x ) (at level 60, right associativity).
-Notation "" 'fst1' x "" := ( fst ( fst0 x ) ) (at level 60, right associativity).
-Notation "" 'fst2' x "" := ( fst ( fst1 x ) ) (at level 60, right associativity).
-Notation "" 'fst3' x "" := ( fst ( fst2 x ) ) (at level 60, right associativity).
-Notation "" 'fst4' x "" := ( fst ( fst3 x ) ) (at level 60, right associativity).
-Notation "" 'fst5' x "" := ( fst ( fst4 x ) ) (at level 60, right associativity).
-Notation "" 'fst6' x "" := ( fst ( fst5 x ) ) (at level 60, right associativity).
-Notation "" 'fst7' x "" := ( fst ( fst6 x ) ) (at level 60, right associativity).
-Notation "" 'fst8' x "" := ( fst ( fst7 x ) ) (at level 60, right associativity).
-Notation "" 'fst9' x "" := ( fst ( fst8 x ) ) (at level 60, right associativity).
-Notation "" 'fst10' x "" := ( fst ( fst9 x ) ) (at level 60, right associativity).
-Notation "" 'fst11' x "" := ( fst ( fst10 x ) ) (at level 60, right associativity).
-Notation "" 'fst12' x "" := ( fst ( fst11 x ) ) (at level 60, right associativity).
-Notation "" 'fst13' x "" := ( fst ( fst12 x ) ) (at level 60, right associativity).
-Notation "" 'fst14' x "" := ( fst ( fst13 x ) ) (at level 60, right associativity).
-Notation "" 'fst15' x "" := ( fst ( fst14 x ) ) (at level 60, right associativity).
-Notation "" 'fst16' x "" := ( fst ( fst15 x ) ) (at level 60, right associativity).
-Notation "" 'fst17' x "" := ( fst ( fst16 x ) ) (at level 60, right associativity).
-Notation "" 'fst18' x "" := ( fst ( fst17 x ) ) (at level 60, right associativity).
-Notation "" 'fst19' x "" := ( fst ( fst18 x ) ) (at level 60, right associativity).
-Notation "" 'fst20' x "" := ( fst ( fst19 x ) ) (at level 60, right associativity).
+Notation " 'fst0' x " := ( x ) (at level 60, right associativity).
+Notation " 'fst1' x " := ( fst ( fst0 x ) ) (at level 60, right associativity).
+Notation " 'fst2' x " := ( fst ( fst1 x ) ) (at level 60, right associativity).
+Notation " 'fst3' x " := ( fst ( fst2 x ) ) (at level 60, right associativity).
+Notation " 'fst4' x " := ( fst ( fst3 x ) ) (at level 60, right associativity).
+Notation " 'fst5' x " := ( fst ( fst4 x ) ) (at level 60, right associativity).
+Notation " 'fst6' x " := ( fst ( fst5 x ) ) (at level 60, right associativity).
+Notation " 'fst7' x " := ( fst ( fst6 x ) ) (at level 60, right associativity).
+Notation " 'fst8' x " := ( fst ( fst7 x ) ) (at level 60, right associativity).
+Notation " 'fst9' x " := ( fst ( fst8 x ) ) (at level 60, right associativity).
+Notation " 'fst10' x " := ( fst ( fst9 x ) ) (at level 60, right associativity).
+Notation " 'fst11' x " := ( fst ( fst10 x ) ) (at level 60, right associativity).
+Notation " 'fst12' x " := ( fst ( fst11 x ) ) (at level 60, right associativity).
+Notation " 'fst13' x " := ( fst ( fst12 x ) ) (at level 60, right associativity).
+Notation " 'fst14' x " := ( fst ( fst13 x ) ) (at level 60, right associativity).
+Notation " 'fst15' x " := ( fst ( fst14 x ) ) (at level 60, right associativity).
+Notation " 'fst16' x " := ( fst ( fst15 x ) ) (at level 60, right associativity).
+Notation " 'fst17' x " := ( fst ( fst16 x ) ) (at level 60, right associativity).
+Notation " 'fst18' x " := ( fst ( fst17 x ) ) (at level 60, right associativity).
+Notation " 'fst19' x " := ( fst ( fst18 x ) ) (at level 60, right associativity).
+Notation " 'fst20' x " := ( fst ( fst19 x ) ) (at level 60, right associativity).
 
 (* 3 *) Definition TonsConfig_field_type f : Type :=  
 match f with 
@@ -180,7 +168,7 @@ end .
  | TonsConfig_ι_order_answer => snd ( fst2 r ) 
  | TonsConfig_ι_process_queue => snd ( fst1 r ) 
  | TonsConfig_ι_send_notify => snd r 
- end .
+ end . 
 (* 5 *) Coercion TonsConfig_get : TonsConfigFields >-> Funclass .
 (* 6 *) Definition TonsConfig_set (f: TonsConfigFields ) 
 (v: TonsConfig_field_type f) (r: TonsConfig ): TonsConfig  :=
@@ -763,7 +751,7 @@ Definition LedgerLocalFields := LocalStateFields.
 Definition LedgerLocalPruvendoRecord := LocalState_PruvendoRecord.
 Definition LocalEmbedded := embeddedT4.
 Definition LocalCopyEmbedded := embeddedT3.
-Definition LocalDefault := LocalState_default.
+Definition LocalDefault : XDefault LocalState := prod_default.
 Definition Ledger_LocalState := Ledger_ι_LocalState.
 Definition Ledger_LocalStateCopy := Ledger_ι_LocalStateCopy.
 Definition iso_local := iso_T4.
