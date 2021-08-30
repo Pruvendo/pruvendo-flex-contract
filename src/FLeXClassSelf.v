@@ -1,8 +1,8 @@
 Require Import Coq.Program.Basics. 
- Require Import Coq.Logic.FunctionalExtensionality. 
- Require Import Coq.Program.Combinators. 
- Require Import FinProof.ProgrammingWith. 
- Require Import String. 
+Require Import Coq.Logic.FunctionalExtensionality. 
+Require Import Coq.Program.Combinators. 
+Require Import FinProof.ProgrammingWith. 
+Require Import String. 
  
 Require Import FinProof.ProgrammingWith.
 Require Import FinProof.Types.IsoTypes.
@@ -13,84 +13,84 @@ Require Import FinProof.EpsilonMonad.
 
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.SML_NG26.
-  
+Require Import UrsusTVM.tvmFunc.
+
 Local Open Scope record.
 Local Open Scope program_scope. 
- 
+
+(*
 Section RecordsDefinitions.
 
- Variables I I8 I16 I32 I64 I128 I256 : Type. 
- Variables A B C S Bs : Type. 
- Variables L M H Q R Bq Bt : Type -> Type. (* H - handle<type> , Q - queue<type> , R - ref<type> Bq - big_queue<type>*) 
- Variables HM P : Type -> Type -> Type. 
+ Variables I XInteger8  I16 I32 I64 XInteger128 XInteger256 : Type. 
+ Variables XAddress B TvmCell S Bs : Type. 
+ Variables L XMaybe H Q R Bq Bt : Type -> Type. (* H - handle<type> , Q - queue<type> , R - ref<type> Bq - big_queue<type>*) 
+ Variables XHMap P : Type -> Type -> Type. 
  Variables T G Sl Bi : Type. 
 (* 1 *) Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
 (* 2 *) Definition TonsConfigP := 
- ( I128 * 
- I128 * 
- I128 * 
- I128 * 
- I128 * 
- I128 )%type .
+ ( XInteger128 * 
+ XInteger128 * 
+ XInteger128 * 
+ XInteger128 * 
+ XInteger128 * 
+ XInteger128 )%type .
 (* 1 *) Inductive FLeXFields := | FLeX_ι_deployer_pubkey_ | FLeX_ι_tons_cfg_ | FLeX_ι_pair_code_ | FLeX_ι_xchg_pair_code_ | FLeX_ι_price_code_ | FLeX_ι_xchg_price_code_ | FLeX_ι_min_amount_ | FLeX_ι_deals_limit_ | FLeX_ι_notify_addr_ .
 (* 2 *) Definition FLeXP := 
- ( I256 * 
+ ( XInteger256 * 
  TonsConfigP * 
- M C * 
- M C * 
- M C * 
- M C * 
- I128 * 
- I8 * 
- A )%type .
+ XMaybe TvmCell * 
+ XMaybe TvmCell * 
+ XMaybe TvmCell * 
+ XMaybe TvmCell * 
+ XInteger128 * 
+ XInteger8  * 
+ XAddress )%type .
 (* 1 *) Inductive TradingPairFields := | TradingPair_ι_flex_addr_ | TradingPair_ι_tip3_root_ | TradingPair_ι_deploy_value_ .
 (* 2 *) Definition TradingPairP := 
- ( A * 
- A * 
- I128 )%type .
+ ( XAddress * 
+ XAddress * 
+ XInteger128 )%type .
 (* 1 *) Inductive XchgPairFields := | XchgPair_ι_flex_addr_ | XchgPair_ι_tip3_major_root_ | XchgPair_ι_tip3_minor_root_ | XchgPair_ι_deploy_value_ .
 (* 2 *) Definition XchgPairP := 
- ( A * 
- A * 
- A * 
- I128 )%type .
-(* 1 *) Inductive VMStateFields := | VMState_ι_msg_pubkey | VMState_ι_now | VMState_ι_accepted | VMState_ι_msg_value .
+ ( XAddress * 
+ XAddress * 
+ XAddress * 
+ XInteger128 )%type .
+(* (* 1 *) Inductive VMStateFields := | VMState_ι_msg_pubkey | VMState_ι_now | VMState_ι_accepted | VMState_ι_msg_value .
 (* 2 *) Definition VMStateP := 
- ( I256 * 
+ ( XInteger256 * 
  I64 * 
  B * 
- I256 )%type .
-
+ XInteger256 )%type .
+ *)
 (* 1 *) Inductive LocalStateFields := | LocalState_ι_uint256 | LocalState_ι_uint128 | LocalState_ι_uint8 | LocalState_ι_address | LocalState_ι_DTradingPair | LocalState_ι_cell | LocalState_ι_DXchgPair | LocalState_ι_bool | LocalState_ι_uint256Index | LocalState_ι_uint128Index | LocalState_ι_uint8Index | LocalState_ι_addressIndex | LocalState_ι_DTradingPairIndex | LocalState_ι_cellIndex | LocalState_ι_DXchgPairIndex | LocalState_ι_boolIndex .
 (* 2 *) Definition LocalStateP := 
- ( HM (string*nat) I256 * 
- HM (string*nat) I128 * 
- HM (string*nat) I8 * 
- HM (string*nat) A * 
- HM (string*nat) TradingPairP * 
- HM (string*nat) C * 
- HM (string*nat) XchgPairP * 
- HM (string*nat) B * 
- HM string nat * 
- HM string nat * 
- HM string nat * 
- HM string nat * 
- HM string nat * 
- HM string nat * 
- HM string nat * 
- HM string nat )%type .
+ ( XHMap (string*nat) XInteger256 * 
+ XHMap (string*nat) XInteger128 * 
+ XHMap (string*nat) XInteger8  * 
+ XHMap (string*nat) XAddress * 
+ XHMap (string*nat) TradingPairP * 
+ XHMap (string*nat) TvmCell * 
+ XHMap (string*nat) XchgPairP * 
+ XHMap (string*nat) B * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat )%type .
 
 
 
 (* 1 *) Inductive LedgerFieldsI := | Ledger_ι_FLeX | Ledger_ι_VMState | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
-(* 2 *) Definition LedgerP := 
- ( FLeXP * 
- VMStateP * 
- LocalStateP * 
- LocalStateP )%type .
 (* Notation "'{$$' r 'With' y ':=' v '$$}'" := (@setPruvendoRecord _ _ _ y v r) : struct_scope. *)
 
 End RecordsDefinitions .
+*)
+
+
 Require Import UMLang.ProofEnvironment2.
 
 
@@ -98,33 +98,75 @@ Module LedgerClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSig xt.
 
 
 Module Export SolidityNotationsClass := SolidityNotations xt  sm.
+Module Export VMStateModule := VMStateModule xt  sm.
+
 Import xt. 
 Existing Instance monadStateT. 
 Existing Instance monadStateStateT.
 
-Definition TonsConfig := @ TonsConfigP
-XInteger128 
-.
 
-Print FLeXP.
-Definition FLeX := @ FLeXP
-XInteger8 XInteger128  XInteger256 XAddress  TvmCell XMaybe 
-.
-Definition TradingPair := @ TradingPairP
-XInteger128 XAddress
-.
-Definition XchgPair := @ XchgPairP
-XInteger128 XAddress
-.
-Definition VMState := @ VMStateP
-XInteger64 XInteger256 XBool
-.
-Definition LocalState := @ LocalStateP
-XInteger8 XInteger128 XInteger256 XAddress XBool TvmCell XHMap
-.
-Definition Ledger := @ LedgerP
-XInteger8 XInteger64 XInteger128 XInteger256 XAddress XBool TvmCell XMaybe XHMap
-.
+
+
+(* 1 *) Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
+(* 2 *) Definition TonsConfig := 
+ ( XInteger128 * 
+ XInteger128 * 
+ XInteger128 * 
+ XInteger128 * 
+ XInteger128 * 
+ XInteger128 )%type .
+(* 1 *) Inductive FLeXFields := | FLeX_ι_deployer_pubkey_ | FLeX_ι_tons_cfg_ | FLeX_ι_pair_code_ | FLeX_ι_xchg_pair_code_ | FLeX_ι_price_code_ | FLeX_ι_xchg_price_code_ | FLeX_ι_min_amount_ | FLeX_ι_deals_limit_ | FLeX_ι_notify_addr_ .
+(* 2 *) Definition FLeX := 
+ ( XInteger256 * 
+ TonsConfig * 
+ XMaybe TvmCell * 
+ XMaybe TvmCell * 
+ XMaybe TvmCell * 
+ XMaybe TvmCell * 
+ XInteger128 * 
+ XInteger8  * 
+ XAddress )%type .
+(* 1 *) Inductive TradingPairFields := | TradingPair_ι_flex_addr_ | TradingPair_ι_tip3_root_ | TradingPair_ι_deploy_value_ .
+(* 2 *) Definition TradingPair := 
+ ( XAddress * 
+ XAddress * 
+ XInteger128 )%type .
+(* 1 *) Inductive XchgPairFields := | XchgPair_ι_flex_addr_ | XchgPair_ι_tip3_major_root_ | XchgPair_ι_tip3_minor_root_ | XchgPair_ι_deploy_value_ .
+(* 2 *) Definition XchgPair := 
+ ( XAddress * 
+ XAddress * 
+ XAddress * 
+ XInteger128 )%type .
+
+(* 1 *) Inductive LocalStateFields := | LocalState_ι_uint256 | LocalState_ι_uint128 | LocalState_ι_uint8 | LocalState_ι_address | LocalState_ι_DTradingPair | LocalState_ι_cell | LocalState_ι_DXchgPair | LocalState_ι_bool | LocalState_ι_uint256Index | LocalState_ι_uint128Index | LocalState_ι_uint8Index | LocalState_ι_addressIndex | LocalState_ι_DTradingPairIndex | LocalState_ι_cellIndex | LocalState_ι_DXchgPairIndex | LocalState_ι_boolIndex .
+(* 2 *) Definition LocalState := 
+ ( XHMap (string*nat) XInteger256 * 
+ XHMap (string*nat) XInteger128 * 
+ XHMap (string*nat) XInteger8  * 
+ XHMap (string*nat) XAddress * 
+ XHMap (string*nat) TradingPair * 
+ XHMap (string*nat) TvmCell * 
+ XHMap (string*nat) XchgPair * 
+ XHMap (string*nat) XBool * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat * 
+ XHMap string nat )%type .
+
+
+
+(* 1 *) Inductive LedgerFieldsI := | Ledger_ι_FLeX | Ledger_ι_VMState | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
+(* 2 *) Definition Ledger := 
+ ( FLeX * 
+ VMState * 
+ LocalState * 
+ LocalState )%type .
+
+
 Definition LedgerFields := LedgerFieldsI.
 
 
@@ -265,7 +307,7 @@ match f with
   getPruvendoRecord := @XchgPair_get ;
   setPruvendoRecord := @XchgPair_set ;
 } .
-(* 3 *) Definition VMState_field_type f : Type :=  
+(* (* 3 *) Definition VMState_field_type f : Type :=  
 match f with 
  | VMState_ι_msg_pubkey => XInteger256 | VMState_ι_now => XInteger64 | VMState_ι_accepted => XBool | VMState_ι_msg_value => XInteger256 end .
 (* 4 *) Definition VMState_get (f: VMStateFields )(r: VMState ) :  VMState_field_type f := 
@@ -289,7 +331,7 @@ match f with
   getPruvendoRecord := @VMState_get ;
   setPruvendoRecord := @VMState_set ;
 } .
-
+ *)
 
 (* 3 *) Definition LocalState_field_type f : Type :=  
 match f with 
@@ -350,6 +392,7 @@ match f with
 (* 3 *) Definition Ledger_field_type f : Type :=  
 match f with 
  | Ledger_ι_FLeX => FLeX | Ledger_ι_VMState => VMState | Ledger_ι_LocalState => LocalState | Ledger_ι_LocalStateCopy => LocalState end .
+
 (* 4 *) Definition Ledger_get (f: LedgerFields )(r: Ledger ) :  Ledger_field_type f := 
  match f with 
  | Ledger_ι_FLeX => fst3 r 
@@ -719,7 +762,7 @@ Fail Next Obligation.
 Existing Instance CountablePair_Next | 0.
 Existing Instance CountablePair0 | 100.
 
-Opaque FLeXP.
+Opaque FLeX.
 
 Lemma Ledger1Type_eq: forall (l: Ledger), projT1 (rth 0 l) = FLeX.
 Proof.
@@ -743,7 +786,7 @@ Coercion Ledger1TypeFLeX       : Ledger1Type >-> FLeX.
 
 Notation "r ₁" := ((projT2 (rth 0 r) : Ledger1Type r) : FLeX) (at level 10).
 
-Transparent FLeXP.
+Transparent FLeX.
 
 Definition LedgerPruvendoRecord := Ledger_PruvendoRecord.
 Definition LedgerLocalState := LocalState.
@@ -1125,26 +1168,27 @@ Class LocalStateField (X:Type): Type :=
     local_index_embedded:> EmbeddedType LedgerLocalState (XHMap string nat) ;
     local_state_field: LedgerLocalFields;
     local_field_type_correct: field_type (PruvendoRecord:=LedgerLocalPruvendoRecord) local_state_field = XHMap (string*nat)%type X;
-}.    
+}.
 
-
-Global Instance LocalState_ι_uint256Index: LocalStateField XInteger256 :=
+(* 
+(* Global Instance LocalState_ι_uint256Index: LocalStateField XInteger256 :=
 {
   local_index_embedded := LocalState_ι_uint256Index_Embedded;
   local_state_field := LocalState_ι_uint256; 
   local_field_type_correct := eq_refl
 }.
+ *)
 
-
-
+*)
+(* 
 Global Instance LocalState_ι_cellIndex: LocalStateField TvmCell :=
 {
   local_index_embedded := LocalState_ι_cellIndex_Embedded;
   local_state_field := LocalState_ι_cell; 
   local_field_type_correct := eq_refl
-}.
+}. *)
 
-
+(*
 
 Global Instance LocalState_ι_uint8Index: LocalStateField XInteger8 :=
 {
@@ -1184,7 +1228,7 @@ Global Instance LocalState_ι_DXchgPairIndex: LocalStateField XchgPair :=
   local_index_embedded := LocalState_ι_DXchgPairIndex_Embedded;
   local_state_field := LocalState_ι_DXchgPair; 
   local_field_type_correct := eq_refl
-}.
+}. *)
 
 Global Instance LocalStateField_XInteger: LocalStateField XInteger8 :=
 {
@@ -1199,5 +1243,17 @@ Global Instance LocalStateField_XBool: LocalStateField XBool :=
   local_state_field := LocalState_ι_bool; 
   local_field_type_correct := eq_refl
 }.
+
+Global Instance LocalStateField_TvmCell : LocalStateField TvmCell :=
+{
+  local_index_embedded := LocalState_ι_cellIndex_Embedded;
+  local_state_field := LocalState_ι_cell; 
+  local_field_type_correct := eq_refl
+}.
+
+Definition LedgerVMStateEmbedded := embeddedT2. 
+Definition LedgerVMStateField := Ledger_ι_VMState .
+Definition isoVMState := iso_T2.
+
 
 End LedgerClass .
