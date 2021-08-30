@@ -65,7 +65,30 @@ Existing Instance monadStateStateT.
  XAddress * 
  XInteger128 )%type .
 
-(* 1 *) Inductive LocalStateFields := | LocalState_ι_uint256 | LocalState_ι_uint128 | LocalState_ι_uint8 | LocalState_ι_address | LocalState_ι_DTradingPair | LocalState_ι_cell | LocalState_ι_DXchgPair | LocalState_ι_bool | LocalState_ι_uint256Index | LocalState_ι_uint128Index | LocalState_ι_uint8Index | LocalState_ι_addressIndex | LocalState_ι_DTradingPairIndex | LocalState_ι_cellIndex | LocalState_ι_DXchgPairIndex | LocalState_ι_boolIndex .
+(* 1 *) Inductive LocalStateFields := 
+| LocalState_ι_uint256 
+| LocalState_ι_uint128 
+| LocalState_ι_uint8 
+| LocalState_ι_address 
+| LocalState_ι_DTradingPair 
+| LocalState_ι_cell 
+| LocalState_ι_DXchgPair 
+| LocalState_ι_bool 
+
+| LocalState_ι_XMaybe_TvmCell
+
+| LocalState_ι_uint256Index 
+| LocalState_ι_uint128Index 
+| LocalState_ι_uint8Index 
+| LocalState_ι_addressIndex 
+| LocalState_ι_DTradingPairIndex 
+| LocalState_ι_cellIndex 
+| LocalState_ι_DXchgPairIndex 
+| LocalState_ι_boolIndex 
+
+| LocalState_ι_XMaybe_TvmCellIndex
+.
+
 (* 2 *) Definition LocalState := 
  ( XHMap (string*nat) XInteger256 * 
  XHMap (string*nat) XInteger128 * 
@@ -75,6 +98,9 @@ Existing Instance monadStateStateT.
  XHMap (string*nat) TvmCell * 
  XHMap (string*nat) XchgPair * 
  XHMap (string*nat) XBool * 
+
+ XHMap (string*nat) (XMaybe TvmCell) *
+
  XHMap string nat * 
  XHMap string nat * 
  XHMap string nat * 
@@ -82,7 +108,9 @@ Existing Instance monadStateStateT.
  XHMap string nat * 
  XHMap string nat * 
  XHMap string nat * 
- XHMap string nat )%type .
+ XHMap string nat *
+
+ XHMap string nat)%type .
 
 
 
@@ -234,81 +262,85 @@ match f with
   getPruvendoRecord := @XchgPair_get ;
   setPruvendoRecord := @XchgPair_set ;
 } .
-(* (* 3 *) Definition VMState_field_type f : Type :=  
-match f with 
- | VMState_ι_msg_pubkey => XInteger256 | VMState_ι_now => XInteger64 | VMState_ι_accepted => XBool | VMState_ι_msg_value => XInteger256 end .
-(* 4 *) Definition VMState_get (f: VMStateFields )(r: VMState ) :  VMState_field_type f := 
- match f with 
- | VMState_ι_msg_pubkey => fst3 r 
- | VMState_ι_now => snd ( fst2 r ) 
- | VMState_ι_accepted => snd ( fst1 r ) 
- | VMState_ι_msg_value => snd r 
- end .
-(* 5 *) Coercion VMState_get : VMStateFields >-> Funclass .
-(* 6 *) Definition VMState_set (f: VMStateFields ) 
-(v: VMState_field_type f) (r: VMState ): VMState  :=
-  match f, v with | VMState_ι_msg_pubkey , v' => ( v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | VMState_ι_now , v' => ( fst3 r , v' , snd ( fst1 r ) , snd r ) 
- | VMState_ι_accepted , v' => ( fst3 r , snd ( fst2 r ) , v' , snd r ) 
- | VMState_ι_msg_value , v' => ( fst3 r , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
- end .
-(* 7 *) Global Instance VMState_PruvendoRecord : PruvendoRecord VMState VMStateFields :=
-{
-  field_type := VMState_field_type; 
-  getPruvendoRecord := @VMState_get ;
-  setPruvendoRecord := @VMState_set ;
-} .
- *)
+
 
 (* 3 *) Definition LocalState_field_type f : Type :=  
 match f with 
- | LocalState_ι_uint256 => XHMap (string*nat) XInteger256 | LocalState_ι_uint128 => XHMap (string*nat) XInteger128 | LocalState_ι_uint8 => XHMap (string*nat) XInteger8 | LocalState_ι_address => XHMap (string*nat) XAddress | LocalState_ι_DTradingPair => XHMap (string*nat) TradingPair | LocalState_ι_cell => XHMap (string*nat) TvmCell | LocalState_ι_DXchgPair => XHMap (string*nat) XchgPair | LocalState_ι_bool => XHMap (string*nat) XBool | LocalState_ι_uint256Index => XHMap string nat | LocalState_ι_uint128Index => XHMap string nat | LocalState_ι_uint8Index => XHMap string nat | LocalState_ι_addressIndex => XHMap string nat | LocalState_ι_DTradingPairIndex => XHMap string nat | LocalState_ι_cellIndex => XHMap string nat | LocalState_ι_DXchgPairIndex => XHMap string nat | LocalState_ι_boolIndex => XHMap string nat end .
+ | LocalState_ι_uint256 => XHMap (string*nat) XInteger256 
+| LocalState_ι_uint128 => XHMap (string*nat) XInteger128 
+| LocalState_ι_uint8 => XHMap (string*nat) XInteger8 
+| LocalState_ι_address => XHMap (string*nat) XAddress 
+| LocalState_ι_DTradingPair => XHMap (string*nat) TradingPair 
+| LocalState_ι_cell => XHMap (string*nat) TvmCell 
+| LocalState_ι_DXchgPair => XHMap (string*nat) XchgPair 
+| LocalState_ι_bool => XHMap (string*nat) XBool 
+
+| LocalState_ι_XMaybe_TvmCell => XHMap (string*nat) ( XMaybe TvmCell )
+
+| LocalState_ι_uint256Index => XHMap string nat 
+| LocalState_ι_uint128Index => XHMap string nat 
+| LocalState_ι_uint8Index => XHMap string nat 
+| LocalState_ι_addressIndex => XHMap string nat 
+| LocalState_ι_DTradingPairIndex => XHMap string nat 
+| LocalState_ι_cellIndex => XHMap string nat 
+| LocalState_ι_DXchgPairIndex => XHMap string nat 
+| LocalState_ι_boolIndex => XHMap string nat 
+
+| LocalState_ι_XMaybe_TvmCellIndex => XHMap string nat 
+end .
+
 (* 4 *) Definition LocalState_get (f: LocalStateFields )(r: LocalState ) :  LocalState_field_type f := 
- match f , r with 
- | LocalState_ι_uint256 , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r1 
- | LocalState_ι_uint128 , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r2 
- | LocalState_ι_uint8 , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r3 
- | LocalState_ι_address , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r4 
- | LocalState_ι_DTradingPair , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r5 
- | LocalState_ι_cell , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r6 
- | LocalState_ι_DXchgPair , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r7 
- | LocalState_ι_bool , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r8 
- | LocalState_ι_uint256Index , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r9 
- | LocalState_ι_uint128Index , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r10 
- | LocalState_ι_uint8Index , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r11 
- | LocalState_ι_addressIndex , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r12 
- | LocalState_ι_DTradingPairIndex , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r13 
- | LocalState_ι_cellIndex , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r14 
- | LocalState_ι_DXchgPairIndex , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r15 
- | LocalState_ι_boolIndex , ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 ) => r16 
+let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18) := r in
+ match f with 
+ | LocalState_ι_uint256  => r1 
+ | LocalState_ι_uint128 => r2 
+ | LocalState_ι_uint8  => r3 
+ | LocalState_ι_address  => r4 
+ | LocalState_ι_DTradingPair  => r5 
+ | LocalState_ι_cell  => r6 
+ | LocalState_ι_DXchgPair  => r7 
+ | LocalState_ι_bool  => r8 
+
+ | LocalState_ι_XMaybe_TvmCell => r9
+
+ | LocalState_ι_uint256Index => r10 
+ | LocalState_ι_uint128Index => r11 
+ | LocalState_ι_uint8Index => r12 
+ | LocalState_ι_addressIndex => r13 
+ | LocalState_ι_DTradingPairIndex => r14 
+ | LocalState_ι_cellIndex => r15 
+ | LocalState_ι_DXchgPairIndex => r16 
+ | LocalState_ι_boolIndex => r17 
+
+ | LocalState_ι_XMaybe_TvmCellIndex => r18
  end .
 (* 5 *) Coercion LocalState_get : LocalStateFields >-> Funclass .
 (* 6 *) Definition LocalState_set (f: LocalStateFields ) 
 (v: LocalState_field_type f) (r: LocalState ): LocalState  :=
+let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18) := r in
   match f, v with 
-| LocalState_ι_uint256 , v' => ( v' , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_uint128 , v' => ( fst15 r , v' , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_uint8 , v' => ( fst15 r , snd ( fst14 r ) , v' , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_address , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , v' , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_DTradingPair , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , v' , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_cell , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , v' , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_DXchgPair , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , v' , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_bool , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , v' , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_uint256Index , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , v' , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_uint128Index , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , v' , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_uint8Index , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , v' , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_addressIndex , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , v' , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_DTradingPairIndex , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , v' , snd ( fst2 r ) , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_cellIndex , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , v' , snd ( fst1 r ) , snd r ) 
- | LocalState_ι_DXchgPairIndex , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , v' , snd r ) 
- | LocalState_ι_boolIndex , v' => ( fst15 r , snd ( fst14 r ) , snd ( fst13 r ) , snd ( fst12 r ) , snd ( fst11 r ) , snd ( fst10 r ) , snd ( fst9 r ) , snd ( fst8 r ) , snd ( fst7 r ) , snd ( fst6 r ) , snd ( fst5 r ) , snd ( fst4 r ) , snd ( fst3 r ) , snd ( fst2 r ) , snd ( fst1 r ) , v' ) 
+| LocalState_ι_uint256 , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_uint128 , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18) 
+ | LocalState_ι_uint8 , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_address , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_DTradingPair , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_cell , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_DXchgPair , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_bool , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+ 
+ | LocalState_ι_XMaybe_TvmCell , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+
+ | LocalState_ι_uint256Index , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_uint128Index , v' =>( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , v' , r12 , r13 , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_uint8Index , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , v' , r13 , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_addressIndex , v' =>( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , v' , r14 , r15 , r16 , r17 , r18)
+ | LocalState_ι_DTradingPairIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , v' , r15 , r16 , r17 , r18)
+ | LocalState_ι_cellIndex , v' =>  ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , v' , r16 , r17 , r18)
+ | LocalState_ι_DXchgPairIndex , v' =>  ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , v' , r17 , r18)
+ | LocalState_ι_boolIndex , v' =>  ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , v' , r18)
+
+ | LocalState_ι_XMaybe_TvmCellIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , v')
  end .
-
-
-
-
-
-
 
 (* 7 *) Global Instance LocalState_PruvendoRecord : PruvendoRecord LocalState LocalStateFields :=
 {
@@ -1088,6 +1120,54 @@ Global Instance LocalState_ι_boolIndex_Embedded : EmbeddedType LedgerLocalState
   injinj := LocalState_ι_boolIndex_Embedded_injinj
 }.
 
+
+
+
+
+
+Definition  LocalState_ι_XMaybe_TvmCellIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_XMaybe_TvmCellIndex l.
+
+Definition  LocalState_ι_XMaybe_TvmCellIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_XMaybe_TvmCellIndex := m $$}.
+
+Lemma LocalState_ι_XMaybe_TvmCellIndex_Embedded_projinj : 
+              forall (t : XHMap string nat) (s : LedgerLocalState), 
+              LocalState_ι_XMaybe_TvmCellIndex_Embedded_projEmbed (LocalState_ι_XMaybe_TvmCellIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_XMaybe_TvmCellIndex_Embedded_injproj : forall s : LedgerLocalState, 
+      LocalState_ι_XMaybe_TvmCellIndex_Embedded_injEmbed (LocalState_ι_XMaybe_TvmCellIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_XMaybe_TvmCellIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_XMaybe_TvmCellIndex_Embedded_injEmbed t1 (LocalState_ι_XMaybe_TvmCellIndex_Embedded_injEmbed t2 s) = LocalState_ι_XMaybe_TvmCellIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_XMaybe_TvmCellIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_XMaybe_TvmCellIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_XMaybe_TvmCellIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_XMaybe_TvmCellIndex_Embedded_projinj;
+  injproj := LocalState_ι_XMaybe_TvmCellIndex_Embedded_injproj;
+  injinj := LocalState_ι_XMaybe_TvmCellIndex_Embedded_injinj
+}.
 (****************************************************************************)
 
 Class LocalStateField (X:Type): Type := 
@@ -1096,6 +1176,14 @@ Class LocalStateField (X:Type): Type :=
     local_state_field: LedgerLocalFields;
     local_field_type_correct: field_type (PruvendoRecord:=LedgerLocalPruvendoRecord) local_state_field = XHMap (string*nat)%type X;
 }.
+
+Global Instance LocalState_XMaybe_TvmCellIndex: LocalStateField (XMaybe TvmCell) :=
+{
+  local_index_embedded := LocalState_ι_XMaybe_TvmCellIndex_Embedded;
+  local_state_field := LocalState_ι_XMaybe_TvmCell; 
+  local_field_type_correct := eq_refl
+}.
+
 
 (* 
 (* Global Instance LocalState_ι_uint256Index: LocalStateField XInteger256 :=
