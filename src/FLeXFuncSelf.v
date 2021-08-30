@@ -34,6 +34,8 @@ Require Import UMLang.SolidityNotations2.
 Require Import UMLang.SML_NG26.
 
 Require Import UrsusStdLib.stdNotations.
+Require Import UrsusStdLib.stdUFunc.
+Require Import UrsusStdLib.stdFuncNotations.
 Require Import UrsusTVM.tvmNotations.
 
 Module FLeXFuncsSelf (dc : FLeXConstsTypesSig XTypesModule StateMonadModule ).
@@ -70,7 +72,8 @@ Definition FLeX_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  	 	 refine {{ FLeX.tons_cfg_ := {} (* { !{ transfer_tip3 } , !{ return_ownership } , !{ trading_pair_deploy } , !{ order_answer } , !{ process_queue } , !{ send_notify } }  *) }} . 
  Defined . 
  
- 
+
+Check {{FLeX.pair_code_ ->set {} }}.
  
 Locate "msg.pubkey ()".
 Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true . 
@@ -78,7 +81,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  	 	 refine {{ require_ ( ~ ( FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_ ( msg.pubkey () == FLeX.deployer_pubkey_ , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
-(*      refine {{ FLeX.pair_code_->set !{ code }; { _ } }} . *)
+      refine {{ FLeX.pair_code_->set !{ code }; { _ } }} .
 all:cycle 1.
 	 	 refine {{ require_(  ~TRUE (* FLeX.pair_code_  ->has_value *) , error_code::cant_override_code ) ; { _ } }} .
  	 	 refine {{ require_( TRUE (* code.ctos ( ) . srefs ( ) == 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
