@@ -78,7 +78,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  	 	 refine {{ require_ ( ~ ( FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_ ( msg.pubkey () == FLeX.deployer_pubkey_ , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
-     refine {{ FLeX.pair_code_->set !{ code }; { _ } }} .
+(*      refine {{ FLeX.pair_code_->set !{ code }; { _ } }} . *)
 all:cycle 1.
 	 	 refine {{ require_(  ~TRUE (* FLeX.pair_code_  ->has_value *) , error_code::cant_override_code ) ; { _ } }} .
  	 	 refine {{ require_( TRUE (* code.ctos ( ) . srefs ( ) == 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
@@ -99,7 +99,7 @@ all:cycle 1.
  Definition FLeX_Ф_setXchgPairCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
  	 	 refine {{ require_( ( ~ FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require_( ( VMState.msg_pubkey == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( msg.pubkey () == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
  	 	 refine {{ require_( TRUE (* ! FLeX.xchg_pair_code_  ->has_value *) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_( TRUE (* code.ctos ( ) . srefs ( ) == 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
@@ -120,7 +120,7 @@ all:cycle 1.
  Definition FLeX_Ф_setPriceCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
  	 	 refine {{ require_( ( ~ FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require_( ( VMState.msg_pubkey == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( msg.pubkey () == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
  	 	 refine {{ require_( TRUE (* ! FLeX.price_code_  ->has_value *) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ FLeX.price_code_ := {} (* ->set !{ code } *) }} . 
@@ -140,7 +140,7 @@ all:cycle 1.
  Definition FLeX_Ф_setXchgPriceCode ( code : TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
  	 	 refine {{ require_( ( ~ FLeX_Ф_isFullyInitialized_ref_ ( )  ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require_( ( VMState.msg_pubkey == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
+ 	 	 refine {{ require_( ( msg.pubkey () == FLeX.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
  	 	 refine {{ require_( TRUE (* ! FLeX.xchg_price_code_ ->has_value *) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ FLeX.xchg_price_code_ := {} (* ->set !{ code } *) }} . 
@@ -240,7 +240,7 @@ all:cycle 1.
  (in custom URValue at level 0 , tip3_addr1 custom URValue at level 0 
  , tip3_addr2 custom ULValue at level 0 ) : ursus_scope . 
  (*end*) 
- 
+
  Definition Ф_prepare_trading_pair_state_init_and_addr ( pair_data : TradingPair ) ( pair_code : TvmCell ) : UExpression ( XInteger (* StateInit *) # XInteger256 )%sol false . 
  	 	 refine {{ pair_data : ( TradingPair ) @ "pair_data" ; { _ } }} . 
  	 	 refine {{ pair_code : ( TvmCell ) @ "pair_code" ; { _ } }} . 
@@ -251,22 +251,9 @@ all:cycle 1.
  	 	 refine {{ new 'pair_init_cl : ( TvmCell ) @ "pair_init_cl" := {} ; { _ } }} . 
  	 	        (* build ( !{ pair_init } ) . make_cell ( ) *) 
  	 	 refine {{ return_ {} (* [ !{ pair_init } , tvm_hash ( pair_init_cl ) ] *) }} . 
- Defined . 
+ Admitted . 
  
- (*begin*) 
- Definition Ф_prepare_trading_pair_state_init_and_addr_call  ( pair_data : URValue TradingPair false ) ( pair_code : URValue TvmCell false ) := 
- 🏓 ursus_call_with_args ( LedgerableWithArgs := λ2 ) Ф_prepare_trading_pair_state_init_and_addr 
- ( SimpleLedgerableArg URValue {{ Λ "pair_data" }} pair_data ) 
- ( SimpleLedgerableArg URValue {{ Λ "pair_code" }} pair_code ) 
- . 
- Notation " 'Ф_prepare_trading_pair_state_init_and_addr_ref_' '(' pair_data ',' pair_code ')' " := 
- ( URResult ( Ф_prepare_trading_pair_state_init_and_addr_call 
- pair_data pair_code )) 
- (in custom URValue at level 0 , pair_data custom URValue at level 0 
- , pair_code custom ULValue at level 0 ) : ursus_scope . 
- (*end*) 
- 
- Definition FLeX_Ф_getSellTradingPair ( tip3_root : XAddress ) : UExpression XAddress false . 
+Definition FLeX_Ф_getSellTradingPair ( tip3_root : XAddress ) : UExpression XAddress false . 
  	 	 refine {{ tip3_root : ( XAddress ) @ "tip3_root" ; { _ } }} . 
  	 	 refine {{ new 'myaddr : ( XAddress ) @ "myaddr" := {} ; { _ } }} . 
  	 	       (* new { tvm_myaddr ( ) } *)  
@@ -277,7 +264,7 @@ all:cycle 1.
  	 	 refine {{ new 'workchain_id : ( XAddress ) @ "workchain_id" := {} ; { _ } }} . 
  	 	                  (* Std :: get < addr_std > ( !{ myaddr } . Val ( ) ) . workchain_id *) 
  	 	 refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
- Defined . 
+ Admitted . 
  
  (*begin*) 
  Definition FLeX_Ф_getSellTradingPair_call  ( tip3_root : URValue XAddress false ) := 
@@ -300,34 +287,21 @@ all:cycle 1.
  	 	 refine {{ new 'pair_init_cl : ( TvmCell ) @ "pair_init_cl" := {} ; { _ } }} . 
  	 	           (* build ( !{ pair_init } ) . make_cell ( ) *)  
  	 	 refine {{ return_ {} (* [ !{ pair_init } , tvm_hash ( pair_init_cl ) ] *) }} . 
- Defined . 
+ Admitted . 
  
- (*begin*) 
- Definition Ф_prepare_xchg_pair_state_init_and_addr_call  ( pair_data : URValue XchgPair false ) ( pair_code : URValue TvmCell false ) := 
- 🏓 ursus_call_with_args ( LedgerableWithArgs := λ2 ) Ф_prepare_xchg_pair_state_init_and_addr 
- ( SimpleLedgerableArg URValue {{ Λ "pair_data" }} pair_data ) 
- ( SimpleLedgerableArg URValue {{ Λ "pair_code" }} pair_code ) 
- . 
- Notation " 'Ф_prepare_xchg_pair_state_init_and_addr_ref_' '(' pair_data , pair_code ')' " := 
- ( URResult ( Ф_prepare_xchg_pair_state_init_and_addr_call 
- pair_data pair_code )) 
- (in custom URValue at level 0 , pair_data custom URValue at level 0 
- , pair_code custom ULValue at level 0 ) : ursus_scope . 
- (*end*) 
- 
- Definition FLeX_Ф_getXchgTradingPair ( tip3_major_root : XAddress ) ( tip3_minor_root : XAddress ) : UExpression XAddress false . 
+Definition FLeX_Ф_getXchgTradingPair ( tip3_major_root : XAddress ) ( tip3_minor_root : XAddress ) : UExpression XAddress false . 
  	 	 refine {{ tip3_major_root : ( XAddress ) @ "tip3_major_root" ; { _ } }} . 
  	 	 refine {{ tip3_minor_root : ( XAddress ) @ "tip3_minor_root" ; { _ } }} . 
  	 	 refine {{ new 'myaddr : ( XAddress ) @ "myaddr" := {} ; { _ } }} . 
  	 	                     (* new { tvm_myaddr ( ) } *)  
- 	 	 refine {{ new 'pair_data : ( XchgPair ) @ "pair_data" := {} ; { _ } }} . 
+ (* 	 	 refine {{ new 'pair_data : ( XchgPair ) @ "pair_data" := {} ; { _ } }} . 
  	 	             (* new { . flex_addr_ = myaddr , . tip3_major_root_ = tip3_major_root , . tip3_minor_root_ = tip3_minor_root , . deploy_value_ = tons_cfg_ . trading_pair_deploy } *)
- (* 	 	 refine {{ new 'std_addr : ( ( XInteger (* StateInit *) * XInteger256 ) ) @ "std_addr" ; { _ } }} . 
+ 	 	 refine {{ new 'std_addr : ( ( XInteger (* StateInit *) * XInteger256 ) ) @ "std_addr" ; { _ } }} . 
  	 	 refine {{ { std_addr } := {} (* Ф_prepare_xchg_pair_state_init_and_addr_ref_ ( !{ pair_data } , {} (* FLeX.xchg_pair_code_ ->get *) ) . second *) ; { _ } }} . 
- *)  refine {{ new 'workchain_id : ( XAddress ) @ "workchain_id" := {} ; { _ } }} . 
+   refine {{ new 'workchain_id : ( XAddress ) @ "workchain_id" := {} ; { _ } }} . 
  	 	            (* Std :: get < addr_std > ( !{ myaddr } . Val ( ) ) . workchain_id *) 
- 	 	 refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
- Defined . 
+ 	 *)	 refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
+Defined . 
  
  (*begin*) 
  Definition FLeX_Ф_getXchgTradingPair_call  ( tip3_major_root : URValue XAddress false ) ( tip3_minor_root : URValue XAddress false ) := 
@@ -400,4 +374,4 @@ all:cycle 1.
  (*end*) 
 
 
-End FLeXFuncs .
+End FLeXFuncsSelf .
