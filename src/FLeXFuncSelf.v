@@ -91,7 +91,7 @@ Definition FLeX_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true
  	 	 refine {{ require_ ( ~ ( FLeX_Ф_isFullyInitialized_ref_ ( ) ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_ ( VMState.msg_pubkey == FLeX.deployer_pubkey_ , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept ( ) ; { _ } }} .  *)
-     refine {{ FLeX.pair_code_->set !{ code }; { _ } }} .
+     (* refine {{ FLeX.pair_code_->set !{ code }; { _ } }} . *)
 all:cycle 1.
 	 	 refine {{ require_(  ~TRUE (* FLeX.pair_code_  ->has_value *) , error_code::cant_override_code ) ; { _ } }} .
  	 	 refine {{ require_( TRUE (* code.ctos ( ) . srefs ( ) == 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
