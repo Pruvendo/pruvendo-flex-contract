@@ -1401,7 +1401,26 @@ Global Instance LocalState_tplStateInituint256Index: LocalStateField ( StateInit
   local_field_type_correct := eq_refl
 }.
 
+Global Instance LocalStateField_XInteger: LocalStateField XInteger256 :=
+{
+  local_index_embedded := LocalState_ι_uint256Index_Embedded;
+  local_state_field := LocalState_ι_uint256; 
+  local_field_type_correct := eq_refl
+}.
  
+Global Instance LocalStateField_XBool: LocalStateField XBool :=
+{
+  local_index_embedded := LocalState_ι_boolIndex_Embedded;
+  local_state_field := LocalState_ι_bool; 
+  local_field_type_correct := eq_refl
+}.
+
+Global Instance LocalStateField_TvmCell: LocalStateField TvmCell :=
+{
+  local_index_embedded := LocalState_ι_cellIndex_Embedded;
+  local_state_field := LocalState_ι_cell; 
+  local_field_type_correct := eq_refl
+}.
 
 Definition LedgerVMStateEmbedded := embeddedT2. 
 Definition LedgerVMStateField := Ledger_ι_VMState .
