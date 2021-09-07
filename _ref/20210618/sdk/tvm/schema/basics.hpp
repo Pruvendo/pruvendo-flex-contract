@@ -19,10 +19,10 @@ namespace tvm { namespace schema {
 #endif
 #define DEFAULT_EQUAL(T)                             \
   bool operator==(const T& v) const {                \
-    return to_std_tuple(*this) == to_std_tuple(v);   \
+    return to_std_tuple( *this) == to_std_tuple(v);   \
   }                                                  \
   bool operator!=(const T& v) const {                \
-    return to_std_tuple(*this) != to_std_tuple(v);   \
+    return to_std_tuple( *this) != to_std_tuple(v);   \
   }
 
 #ifdef DEFAULT_PROXY_OPERATORS
@@ -73,8 +73,8 @@ namespace tvm { namespace schema {
   template<unsigned _len> T& operator^=(T<_len> x) { val_ ^= x.val_; return *this; }        \
   T& operator++() { ++val_; return *this; }                                                 \
   T& operator--() { --val_; return *this; }                                                 \
-  T operator++(int) { T old(*this); ++val_; return old; }                                   \
-  T operator--(int) { T old(*this); --val_; return old; }                                   \
+  T operator++(int) { T old( *this); ++val_; return old; }                                   \
+  T operator--(int) { T old( *this); --val_; return old; }                                   \
   T operator~() const { return T(~val_); }
 
 template<unsigned _bitlen, unsigned _code>
