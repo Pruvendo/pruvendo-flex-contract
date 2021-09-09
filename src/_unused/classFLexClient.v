@@ -23,7 +23,7 @@
  Require Import UMLang.ProofEnvironment2. 
  
  
- Module LedgerFLeXClientClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSig xt. 
+ Module LedgerClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSig xt. 
  
  
  Module Export SolidityNotationsClass := SolidityNotations xt sm. 
@@ -2674,4 +2674,4 @@ Definition LedgerVMStateEmbedded := embeddedT2.
 Definition LedgerVMStateField := Ledger_ι_VMState .
 Definition isoVMState := iso_T2.
 
-End LedgerFLeXClientClass .
+End LedgerClass .

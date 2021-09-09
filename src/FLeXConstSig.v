@@ -27,4 +27,9 @@ Parameter safe_delay_period : XInteger .
 
 Parameter error_code_ι_not_enough_tons : XInteger . 
 
+Parameter error_code_ι_zero_owner_pubkey : XInteger . 
+Parameter error_code_ι_missed_flex_wallet_code : XInteger . 
+Parameter error_code_ι_missed_flex_wrapper_code : XInteger . 
+
+
 End FLeXConstsTypesSig.

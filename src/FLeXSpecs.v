@@ -11,7 +11,7 @@ Require Import UrsusTVM.tvmFunc.
 Require Import UrsusTVM.tvmNotations.
 
 Module specFlexSpec (xt: XTypesSig) (sm: StateMonadSig).
-Module Export LedgerClassModule := LedgerClass xt sm . 
+Module Export LedgerClassModule := LedgerFLeXClass xt sm . 
 
 Module Export tvmNotationsModule := tvmNotations xt sm LedgerClassModule.
 

@@ -23,7 +23,7 @@
  Require Import UMLang.ProofEnvironment2. 
  
  
- Module LedgerFLeXClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSig xt. 
+ Module LedgerClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSig xt. 
  
  
  Module Export SolidityNotationsClass := SolidityNotations xt sm. 
@@ -41,6 +41,32 @@
  Definition Grams := XInteger16 . 
  Definition auto := XInteger . 
  Definition addr_std_compact := XAddress . 
+ 
+ Inductive MesagesAndEventsFields := MesagesAndEvents_ι_1. 
+ Definition MesagesAndEvents := ( XInteger )%type. 
+ 
+ (* 3 *) Definition MesagesAndEvents_field_type f : Type := 
+ match f with 
+ | MesagesAndEvents_ι_1 => XInteger end . 
+ 
+ (* 4 *) Definition MesagesAndEvents_get (f: MesagesAndEventsFields )(r: MesagesAndEvents ) : MesagesAndEvents_field_type f := 
+ match f with 
+ | MesagesAndEvents_ι_1 => r 
+ end . 
+ 
+ (* 5 *) Coercion MesagesAndEvents_get : MesagesAndEventsFields >-> Funclass . 
+ 
+ (* 6 *) Definition MesagesAndEvents_set (f: MesagesAndEventsFields ) 
+ (v: MesagesAndEvents_field_type f) (r: MesagesAndEvents ): MesagesAndEvents := 
+ match f, v with 
+ | MesagesAndEvents_ι_1 , v' => v' 
+ end . 
+ (* 7 *) Global Instance MesagesAndEvents_PruvendoRecord : PruvendoRecord MesagesAndEvents MesagesAndEventsFields := 
+ { 
+ field_type := MesagesAndEvents_field_type; 
+ getPruvendoRecord := @MesagesAndEvents_get ; 
+ setPruvendoRecord := @MesagesAndEvents_set ; 
+ } . 
  
 
 (* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
@@ -83,7 +109,7 @@
  XAddress * 
  XAddress * 
  XInteger128 )%type .
-(* 1 *) Inductive LocalStateFields := | LocalState_ι_int | LocalState_ι_optcell | LocalState_ι_tpladdressaddress | LocalState_ι_uint256 | LocalState_ι_uint128 | LocalState_ι_uint8 | LocalState_ι_address | LocalState_ι_cell | LocalState_ι_XchgPair | LocalState_ι_bool | LocalState_ι_TradingPair | LocalState_ι_tplStateInituint256 | LocalState_ι_intIndex | LocalState_ι_optcellIndex | LocalState_ι_tpladdressaddressIndex | LocalState_ι_uint256Index | LocalState_ι_uint128Index | LocalState_ι_uint8Index | LocalState_ι_addressIndex | LocalState_ι_cellIndex | LocalState_ι_XchgPairIndex | LocalState_ι_boolIndex | LocalState_ι_TradingPairIndex | LocalState_ι_tplStateInituint256Index .
+(* 1 *) Inductive LocalStateFields := | LocalState_ι_int | LocalState_ι_optcell | LocalState_ι_tpladdressaddress | LocalState_ι_uint256 | LocalState_ι_uint128 | LocalState_ι_uint8 | LocalState_ι_address | LocalState_ι_cell | LocalState_ι_XchgPair | LocalState_ι_TradingPair | LocalState_ι_tplStateInituint256 | LocalState_ι_bool | LocalState_ι_intIndex | LocalState_ι_optcellIndex | LocalState_ι_tpladdressaddressIndex | LocalState_ι_uint256Index | LocalState_ι_uint128Index | LocalState_ι_uint8Index | LocalState_ι_addressIndex | LocalState_ι_cellIndex | LocalState_ι_XchgPairIndex | LocalState_ι_TradingPairIndex | LocalState_ι_tplStateInituint256Index | LocalState_ι_boolIndex .
 (* 2 *) Definition LocalState := 
  ( XHMap (string*nat) XInteger * 
  XHMap (string*nat) ( XMaybe TvmCell ) * 
@@ -94,9 +120,9 @@
  XHMap (string*nat) XAddress * 
  XHMap (string*nat) TvmCell * 
  XHMap (string*nat) XchgPair * 
- XHMap (string*nat) XBool * 
  XHMap (string*nat) TradingPair * 
  XHMap (string*nat) ( StateInit * XInteger256 ) * 
+ XHMap (string*nat) XBool * 
  XHMap string nat * 
  XHMap string nat * 
  XHMap string nat * 
@@ -291,7 +317,7 @@ match f with
 } .
 (* 3 *) Definition LocalState_field_type f : Type :=  
 match f with 
- | LocalState_ι_int => XHMap (string*nat) XInteger | LocalState_ι_optcell => XHMap (string*nat) ( XMaybe TvmCell ) | LocalState_ι_tpladdressaddress => XHMap (string*nat) ( XAddress * XAddress ) | LocalState_ι_uint256 => XHMap (string*nat) XInteger256 | LocalState_ι_uint128 => XHMap (string*nat) XInteger128 | LocalState_ι_uint8 => XHMap (string*nat) XInteger8 | LocalState_ι_address => XHMap (string*nat) XAddress | LocalState_ι_cell => XHMap (string*nat) TvmCell | LocalState_ι_XchgPair => XHMap (string*nat) XchgPair | LocalState_ι_bool => XHMap (string*nat) XBool | LocalState_ι_TradingPair => XHMap (string*nat) TradingPair | LocalState_ι_tplStateInituint256 => XHMap (string*nat) ( StateInit * XInteger256 ) | LocalState_ι_intIndex => XHMap string nat | LocalState_ι_optcellIndex => XHMap string nat | LocalState_ι_tpladdressaddressIndex => XHMap string nat | LocalState_ι_uint256Index => XHMap string nat | LocalState_ι_uint128Index => XHMap string nat | LocalState_ι_uint8Index => XHMap string nat | LocalState_ι_addressIndex => XHMap string nat | LocalState_ι_cellIndex => XHMap string nat | LocalState_ι_XchgPairIndex => XHMap string nat | LocalState_ι_boolIndex => XHMap string nat | LocalState_ι_TradingPairIndex => XHMap string nat | LocalState_ι_tplStateInituint256Index => XHMap string nat end .
+ | LocalState_ι_int => XHMap (string*nat) XInteger | LocalState_ι_optcell => XHMap (string*nat) ( XMaybe TvmCell ) | LocalState_ι_tpladdressaddress => XHMap (string*nat) ( XAddress * XAddress ) | LocalState_ι_uint256 => XHMap (string*nat) XInteger256 | LocalState_ι_uint128 => XHMap (string*nat) XInteger128 | LocalState_ι_uint8 => XHMap (string*nat) XInteger8 | LocalState_ι_address => XHMap (string*nat) XAddress | LocalState_ι_cell => XHMap (string*nat) TvmCell | LocalState_ι_XchgPair => XHMap (string*nat) XchgPair | LocalState_ι_TradingPair => XHMap (string*nat) TradingPair | LocalState_ι_tplStateInituint256 => XHMap (string*nat) ( StateInit * XInteger256 ) | LocalState_ι_bool => XHMap (string*nat) XBool | LocalState_ι_intIndex => XHMap string nat | LocalState_ι_optcellIndex => XHMap string nat | LocalState_ι_tpladdressaddressIndex => XHMap string nat | LocalState_ι_uint256Index => XHMap string nat | LocalState_ι_uint128Index => XHMap string nat | LocalState_ι_uint8Index => XHMap string nat | LocalState_ι_addressIndex => XHMap string nat | LocalState_ι_cellIndex => XHMap string nat | LocalState_ι_XchgPairIndex => XHMap string nat | LocalState_ι_TradingPairIndex => XHMap string nat | LocalState_ι_tplStateInituint256Index => XHMap string nat | LocalState_ι_boolIndex => XHMap string nat end .
 (* 4 *) Definition LocalState_get (f: LocalStateFields )(r: LocalState ) :  LocalState_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) := r in 
  match f with 
@@ -304,9 +330,9 @@ match f with
  | LocalState_ι_address => r7 
  | LocalState_ι_cell => r8 
  | LocalState_ι_XchgPair => r9 
- | LocalState_ι_bool => r10 
- | LocalState_ι_TradingPair => r11 
- | LocalState_ι_tplStateInituint256 => r12 
+ | LocalState_ι_TradingPair => r10 
+ | LocalState_ι_tplStateInituint256 => r11 
+ | LocalState_ι_bool => r12 
  | LocalState_ι_intIndex => r13 
  | LocalState_ι_optcellIndex => r14 
  | LocalState_ι_tpladdressaddressIndex => r15 
@@ -316,9 +342,9 @@ match f with
  | LocalState_ι_addressIndex => r19 
  | LocalState_ι_cellIndex => r20 
  | LocalState_ι_XchgPairIndex => r21 
- | LocalState_ι_boolIndex => r22 
- | LocalState_ι_TradingPairIndex => r23 
- | LocalState_ι_tplStateInituint256Index => r24 
+ | LocalState_ι_TradingPairIndex => r22 
+ | LocalState_ι_tplStateInituint256Index => r23 
+ | LocalState_ι_boolIndex => r24 
  end .
 (* 5 *) Coercion LocalState_get : LocalStateFields >-> Funclass .
 (* 6 *) Definition LocalState_set (f: LocalStateFields ) 
@@ -334,9 +360,9 @@ match f with
  | LocalState_ι_address , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
  | LocalState_ι_cell , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
  | LocalState_ι_XchgPair , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
- | LocalState_ι_bool , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
- | LocalState_ι_TradingPair , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , v' , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
- | LocalState_ι_tplStateInituint256 , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , v' , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
+ | LocalState_ι_TradingPair , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
+ | LocalState_ι_tplStateInituint256 , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , v' , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
+ | LocalState_ι_bool , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , v' , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
  | LocalState_ι_intIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , v' , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
  | LocalState_ι_optcellIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , v' , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
  | LocalState_ι_tpladdressaddressIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , v' , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 ) 
@@ -346,9 +372,9 @@ match f with
  | LocalState_ι_addressIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , v' , r20 , r21 , r22 , r23 , r24 ) 
  | LocalState_ι_cellIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , v' , r21 , r22 , r23 , r24 ) 
  | LocalState_ι_XchgPairIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , v' , r22 , r23 , r24 ) 
- | LocalState_ι_boolIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , v' , r23 , r24 ) 
- | LocalState_ι_TradingPairIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , v' , r24 ) 
- | LocalState_ι_tplStateInituint256Index , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , v' ) 
+ | LocalState_ι_TradingPairIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , v' , r23 , r24 ) 
+ | LocalState_ι_tplStateInituint256Index , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , v' , r24 ) 
+ | LocalState_ι_boolIndex , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , v' ) 
  end .
 (* 7 *) Global Instance LocalState_PruvendoRecord : PruvendoRecord LocalState LocalStateFields :=
 {
@@ -394,7 +420,7 @@ Definition T4 := LocalState .
  
  Lemma projinj_T1 : forall ( t : T1 ) ( s : Ledger ), projEmbed_T1 ( injEmbed_T1 t s ) = t . 
  Proof. 
- intros. destruct s. destruct p. destruct p. compute. auto. 
+ intros. destruct s. destruct p. destruct p. (* destruct p. destruct p. destruct p. *) compute. auto. 
  Qed. 
  
  Lemma injproj_T1 : forall ( s : Ledger ) , injEmbed_T1 ( projEmbed_T1 s ) s = s . 
@@ -434,7 +460,7 @@ Definition T4 := LocalState .
  
  Lemma projinj_T2 : forall ( t : T2 ) ( s : Ledger ), projEmbed_T2 ( injEmbed_T2 t s ) = t . 
  Proof. 
- intros. destruct s. destruct p. destruct p. compute. auto. 
+ intros. destruct s. destruct p. destruct p. (* destruct p. destruct p. destruct p. *) compute. auto. 
  Qed. 
  
  Lemma injproj_T2 : forall ( s : Ledger ) , injEmbed_T2 ( projEmbed_T2 s ) s = s . 
@@ -474,7 +500,7 @@ Definition T4 := LocalState .
  
  Lemma projinj_T3 : forall ( t : T3 ) ( s : Ledger ), projEmbed_T3 ( injEmbed_T3 t s ) = t . 
  Proof. 
- intros. destruct s. destruct p. destruct p. compute. auto. 
+ intros. destruct s. destruct p. destruct p. (* destruct p. destruct p. destruct p. *) compute. auto. 
  Qed. 
  
  Lemma injproj_T3 : forall ( s : Ledger ) , injEmbed_T3 ( projEmbed_T3 s ) s = s . 
@@ -514,7 +540,7 @@ Definition T4 := LocalState .
  
  Lemma projinj_T4 : forall ( t : T4 ) ( s : Ledger ), projEmbed_T4 ( injEmbed_T4 t s ) = t . 
  Proof. 
- intros. destruct s. destruct p. destruct p. compute. auto. 
+ intros. destruct s. destruct p. destruct p. (* destruct p. destruct p. destruct p. *) compute. auto. 
  Qed. 
  
  Lemma injproj_T4 : forall ( s : Ledger ) , injEmbed_T4 ( projEmbed_T4 s ) s = s . 
@@ -1167,48 +1193,6 @@ Global Instance LocalState_ι_XchgPairIndex_Embedded : EmbeddedType LedgerLocalS
   injproj := LocalState_ι_XchgPairIndex_Embedded_injproj;
   injinj := LocalState_ι_XchgPairIndex_Embedded_injinj
 }.
-Definition  LocalState_ι_boolIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
-  LocalState_ι_boolIndex l.
-
-Definition  LocalState_ι_boolIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
-  {$$ l with  LocalState_ι_boolIndex := m $$}.
-
-Print EmbeddedType.  
-
-Lemma LocalState_ι_boolIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_boolIndex_Embedded_projEmbed (LocalState_ι_boolIndex_Embedded_injEmbed t s) = t.
-Proof.
-  intros.
-  destruct s.
-  repeat destruct p.
-  reflexivity.
-Defined.
-
-Lemma LocalState_ι_boolIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_boolIndex_Embedded_injEmbed (LocalState_ι_boolIndex_Embedded_projEmbed s) s = s.
-Proof.
-  intros.
-  destruct s.
-  repeat destruct p.
-  reflexivity.
-Defined.  
-
-Lemma LocalState_ι_boolIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
-LocalState_ι_boolIndex_Embedded_injEmbed t1 (LocalState_ι_boolIndex_Embedded_injEmbed t2 s) = LocalState_ι_boolIndex_Embedded_injEmbed t1 s.
-Proof.
-  intros.
-  destruct s.
-  repeat destruct p.
-  reflexivity.
-Defined.
-
-
-Global Instance LocalState_ι_boolIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
-{
-  projEmbed := LocalState_ι_boolIndex_Embedded_projEmbed;
-	injEmbed := LocalState_ι_boolIndex_Embedded_injEmbed;
-  projinj := LocalState_ι_boolIndex_Embedded_projinj;
-  injproj := LocalState_ι_boolIndex_Embedded_injproj;
-  injinj := LocalState_ι_boolIndex_Embedded_injinj
-}.
 Definition  LocalState_ι_TradingPairIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
   LocalState_ι_TradingPairIndex l.
 
@@ -1293,6 +1277,48 @@ Global Instance LocalState_ι_tplStateInituint256Index_Embedded : EmbeddedType L
   injproj := LocalState_ι_tplStateInituint256Index_Embedded_injproj;
   injinj := LocalState_ι_tplStateInituint256Index_Embedded_injinj
 }.
+Definition  LocalState_ι_boolIndex_Embedded_projEmbed (l:LedgerLocalState ) : XHMap string nat := 
+  LocalState_ι_boolIndex l.
+
+Definition  LocalState_ι_boolIndex_Embedded_injEmbed (m: XHMap string nat) (l: LedgerLocalState) : LedgerLocalState := 
+  {$$ l with  LocalState_ι_boolIndex := m $$}.
+
+Print EmbeddedType.  
+
+Lemma LocalState_ι_boolIndex_Embedded_projinj : forall (t : XHMap string nat) (s : LedgerLocalState), LocalState_ι_boolIndex_Embedded_projEmbed (LocalState_ι_boolIndex_Embedded_injEmbed t s) = t.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+Lemma LocalState_ι_boolIndex_Embedded_injproj : forall s : LedgerLocalState, LocalState_ι_boolIndex_Embedded_injEmbed (LocalState_ι_boolIndex_Embedded_projEmbed s) s = s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.  
+
+Lemma LocalState_ι_boolIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
+LocalState_ι_boolIndex_Embedded_injEmbed t1 (LocalState_ι_boolIndex_Embedded_injEmbed t2 s) = LocalState_ι_boolIndex_Embedded_injEmbed t1 s.
+Proof.
+  intros.
+  destruct s.
+  repeat destruct p.
+  reflexivity.
+Defined.
+
+
+Global Instance LocalState_ι_boolIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
+{
+  projEmbed := LocalState_ι_boolIndex_Embedded_projEmbed;
+	injEmbed := LocalState_ι_boolIndex_Embedded_injEmbed;
+  projinj := LocalState_ι_boolIndex_Embedded_projinj;
+  injproj := LocalState_ι_boolIndex_Embedded_injproj;
+  injinj := LocalState_ι_boolIndex_Embedded_injinj
+}.
 (****************************************************************************)
 
 Global Instance LocalState_intIndex: LocalStateField XInteger :=
@@ -1376,15 +1402,6 @@ Global Instance LocalState_XchgPairIndex: LocalStateField XchgPair :=
 
  
  
-Global Instance LocalState_boolIndex: LocalStateField XBool :=
-{
-  local_index_embedded := LocalState_ι_boolIndex_Embedded;
-  local_state_field := LocalState_ι_bool; 
-  local_field_type_correct := eq_refl
-}.
-
- 
- 
 Global Instance LocalState_TradingPairIndex: LocalStateField TradingPair :=
 {
   local_index_embedded := LocalState_ι_TradingPairIndex_Embedded;
@@ -1401,7 +1418,18 @@ Global Instance LocalState_tplStateInituint256Index: LocalStateField ( StateInit
   local_field_type_correct := eq_refl
 }.
 
-Global Instance LocalStateField_XInteger: LocalStateField XInteger256 :=
+ 
+ 
+Global Instance LocalState_boolIndex: LocalStateField XBool :=
+{
+  local_index_embedded := LocalState_ι_boolIndex_Embedded;
+  local_state_field := LocalState_ι_bool; 
+  local_field_type_correct := eq_refl
+}.
+
+ 
+
+Global Instance LocalStateField_XInteger: LocalStateField XInteger :=
 {
   local_index_embedded := LocalState_ι_uint256Index_Embedded;
   local_state_field := LocalState_ι_uint256; 
@@ -1426,4 +1454,4 @@ Definition LedgerVMStateEmbedded := embeddedT2.
 Definition LedgerVMStateField := Ledger_ι_VMState .
 Definition isoVMState := iso_T2.
 
-End LedgerFLeXClass .
+End LedgerClass
