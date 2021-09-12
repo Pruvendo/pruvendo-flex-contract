@@ -23,7 +23,7 @@
  Require Import UMLang.ProofEnvironment2. 
  
  
- Module LedgerClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSig xt. 
+ Module LedgerPriceClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSig xt. 
  
  
  Module Export SolidityNotationsClass := SolidityNotations xt sm. 
@@ -175,8 +175,8 @@
  XHMap (string*nat) ( XBool * XBool * XInteger128 ) * 
  XHMap (string*nat) OrderInfo * 
  XHMap (string*nat) XInteger * 
- XHMap (string*nat) (XMaybe (XInteger * OrderInfoXchg) * (XList OrderInfoXchg) * XInteger128 ) * 
- XHMap (string*nat) ( XMaybe (XInteger * OrderInfoXchg) ) * 
+ XHMap (string*nat) (XMaybe (XInteger * OrderInfo) * (XList OrderInfo) * XInteger128 ) * 
+ XHMap (string*nat) ( XMaybe (XInteger * OrderInfo) ) * 
  XHMap (string*nat) ( XList OrderInfo ) * 
  XHMap (string*nat) OrderRet * 
  XHMap (string*nat) XInteger * 
@@ -718,7 +718,7 @@ match f with
 } .
 (* 3 *) Definition LocalState_field_type f : Type :=
 match f with 
- | LocalState_ι_cell => XHMap (string*nat) TvmCell | LocalState_ι_StateInit => XHMap (string*nat) StateInit | LocalState_ι_tplStateInituint256 => XHMap (string*nat) ( StateInit * XInteger256 ) | LocalState_ι_bool => XHMap (string*nat) XBool | LocalState_ι_uint32 => XHMap (string*nat) XInteger32 | LocalState_ι_Price => XHMap (string*nat) Price | LocalState_ι_optuint128 => XHMap (string*nat) ( XMaybe XInteger128 ) | LocalState_ι_uint128 => XHMap (string*nat) XInteger128 | LocalState_ι_tplboolbool => XHMap (string*nat) ( XBool * XBool * XInteger128 ) | LocalState_ι_OrderInfo => XHMap (string*nat) OrderInfo | LocalState_ι_int => XHMap (string*nat) XInteger | LocalState_ι_tploptional_pair_unsigned_OrderInfoqueue_OrderInfo => XHMap (string*nat) (XMaybe (XInteger * OrderInfoXchg) * (XList OrderInfoXchg) * XInteger128 ) | LocalState_ι_optpair_unsigned_OrderInfo__ => XHMap (string*nat) ( XMaybe (XInteger * OrderInfoXchg) ) | LocalState_ι_queueOrderInfo => XHMap (string*nat) ( XList OrderInfo ) | LocalState_ι_OrderRet => XHMap (string*nat) OrderRet | LocalState_ι_unsigned => XHMap (string*nat) XInteger | LocalState_ι_dealer => XHMap (string*nat) dealer | LocalState_ι_process_ret => XHMap (string*nat) process_ret | LocalState_ι_uint8 => XHMap (string*nat) XInteger8 | LocalState_ι_TonsConfig => XHMap (string*nat) TonsConfig | LocalState_ι_tplqueue_OrderInfouint128 => XHMap (string*nat) ( (XList OrderInfo) * XInteger128 ) | LocalState_ι_addr_std_fixed => XHMap (string*nat) addr_std_fixed | LocalState_ι_Grams => XHMap (string*nat) Grams | LocalState_ι_SellArgs => XHMap (string*nat) SellArgs | LocalState_ι_address => XHMap (string*nat) XAddress | LocalState_ι_DetailsInfo => XHMap (string*nat) DetailsInfo | LocalState_ι_dict_arrayOrderInfo => XHMap (string*nat) ( XHMap XInteger OrderInfo ) | LocalState_ι_optaddress => XHMap (string*nat) ( XMaybe XAddress ) | LocalState_ι_TONTokenWallet => XHMap (string*nat) TONTokenWallet | LocalState_ι_tpladdressGrams => XHMap (string*nat) ( XAddress * Grams ) | LocalState_ι_TvmSlice => XHMap (string*nat) TvmSlice | LocalState_ι_optOrderRet => XHMap (string*nat) ( XMaybe OrderRet ) | LocalState_ι_cellIndex => XHMap string nat | LocalState_ι_StateInitIndex => XHMap string nat | LocalState_ι_tplStateInituint256Index => XHMap string nat | LocalState_ι_boolIndex => XHMap string nat | LocalState_ι_uint32Index => XHMap string nat | LocalState_ι_PriceIndex => XHMap string nat | LocalState_ι_optuint128Index => XHMap string nat | LocalState_ι_uint128Index => XHMap string nat | LocalState_ι_tplboolboolIndex => XHMap string nat | LocalState_ι_OrderInfoIndex => XHMap string nat | LocalState_ι_intIndex => XHMap string nat | LocalState_ι_tploptional_pair_unsigned_OrderInfoqueue_OrderInfoIndex => XHMap string nat | LocalState_ι_optpair_unsigned_OrderInfo__Index => XHMap string nat | LocalState_ι_queueOrderInfoIndex => XHMap string nat | LocalState_ι_OrderRetIndex => XHMap string nat | LocalState_ι_unsignedIndex => XHMap string nat | LocalState_ι_dealerIndex => XHMap string nat | LocalState_ι_process_retIndex => XHMap string nat | LocalState_ι_uint8Index => XHMap string nat | LocalState_ι_TonsConfigIndex => XHMap string nat | LocalState_ι_tplqueue_OrderInfouint128Index => XHMap string nat | LocalState_ι_addr_std_fixedIndex => XHMap string nat | LocalState_ι_GramsIndex => XHMap string nat | LocalState_ι_SellArgsIndex => XHMap string nat | LocalState_ι_addressIndex => XHMap string nat | LocalState_ι_DetailsInfoIndex => XHMap string nat | LocalState_ι_dict_arrayOrderInfoIndex => XHMap string nat | LocalState_ι_optaddressIndex => XHMap string nat | LocalState_ι_TONTokenWalletIndex => XHMap string nat | LocalState_ι_tpladdressGramsIndex => XHMap string nat | LocalState_ι_TvmSliceIndex => XHMap string nat | LocalState_ι_optOrderRetIndex => XHMap string nat end .
+ | LocalState_ι_cell => XHMap (string*nat) TvmCell | LocalState_ι_StateInit => XHMap (string*nat) StateInit | LocalState_ι_tplStateInituint256 => XHMap (string*nat) ( StateInit * XInteger256 ) | LocalState_ι_bool => XHMap (string*nat) XBool | LocalState_ι_uint32 => XHMap (string*nat) XInteger32 | LocalState_ι_Price => XHMap (string*nat) Price | LocalState_ι_optuint128 => XHMap (string*nat) ( XMaybe XInteger128 ) | LocalState_ι_uint128 => XHMap (string*nat) XInteger128 | LocalState_ι_tplboolbool => XHMap (string*nat) ( XBool * XBool * XInteger128 ) | LocalState_ι_OrderInfo => XHMap (string*nat) OrderInfo | LocalState_ι_int => XHMap (string*nat) XInteger | LocalState_ι_tploptional_pair_unsigned_OrderInfoqueue_OrderInfo => XHMap (string*nat) (XMaybe (XInteger * OrderInfo) * (XList OrderInfo) * XInteger128 ) | LocalState_ι_optpair_unsigned_OrderInfo__ => XHMap (string*nat) ( XMaybe (XInteger * OrderInfo) ) | LocalState_ι_queueOrderInfo => XHMap (string*nat) ( XList OrderInfo ) | LocalState_ι_OrderRet => XHMap (string*nat) OrderRet | LocalState_ι_unsigned => XHMap (string*nat) XInteger | LocalState_ι_dealer => XHMap (string*nat) dealer | LocalState_ι_process_ret => XHMap (string*nat) process_ret | LocalState_ι_uint8 => XHMap (string*nat) XInteger8 | LocalState_ι_TonsConfig => XHMap (string*nat) TonsConfig | LocalState_ι_tplqueue_OrderInfouint128 => XHMap (string*nat) ( (XList OrderInfo) * XInteger128 ) | LocalState_ι_addr_std_fixed => XHMap (string*nat) addr_std_fixed | LocalState_ι_Grams => XHMap (string*nat) Grams | LocalState_ι_SellArgs => XHMap (string*nat) SellArgs | LocalState_ι_address => XHMap (string*nat) XAddress | LocalState_ι_DetailsInfo => XHMap (string*nat) DetailsInfo | LocalState_ι_dict_arrayOrderInfo => XHMap (string*nat) ( XHMap XInteger OrderInfo ) | LocalState_ι_optaddress => XHMap (string*nat) ( XMaybe XAddress ) | LocalState_ι_TONTokenWallet => XHMap (string*nat) TONTokenWallet | LocalState_ι_tpladdressGrams => XHMap (string*nat) ( XAddress * Grams ) | LocalState_ι_TvmSlice => XHMap (string*nat) TvmSlice | LocalState_ι_optOrderRet => XHMap (string*nat) ( XMaybe OrderRet ) | LocalState_ι_cellIndex => XHMap string nat | LocalState_ι_StateInitIndex => XHMap string nat | LocalState_ι_tplStateInituint256Index => XHMap string nat | LocalState_ι_boolIndex => XHMap string nat | LocalState_ι_uint32Index => XHMap string nat | LocalState_ι_PriceIndex => XHMap string nat | LocalState_ι_optuint128Index => XHMap string nat | LocalState_ι_uint128Index => XHMap string nat | LocalState_ι_tplboolboolIndex => XHMap string nat | LocalState_ι_OrderInfoIndex => XHMap string nat | LocalState_ι_intIndex => XHMap string nat | LocalState_ι_tploptional_pair_unsigned_OrderInfoqueue_OrderInfoIndex => XHMap string nat | LocalState_ι_optpair_unsigned_OrderInfo__Index => XHMap string nat | LocalState_ι_queueOrderInfoIndex => XHMap string nat | LocalState_ι_OrderRetIndex => XHMap string nat | LocalState_ι_unsignedIndex => XHMap string nat | LocalState_ι_dealerIndex => XHMap string nat | LocalState_ι_process_retIndex => XHMap string nat | LocalState_ι_uint8Index => XHMap string nat | LocalState_ι_TonsConfigIndex => XHMap string nat | LocalState_ι_tplqueue_OrderInfouint128Index => XHMap string nat | LocalState_ι_addr_std_fixedIndex => XHMap string nat | LocalState_ι_GramsIndex => XHMap string nat | LocalState_ι_SellArgsIndex => XHMap string nat | LocalState_ι_addressIndex => XHMap string nat | LocalState_ι_DetailsInfoIndex => XHMap string nat | LocalState_ι_dict_arrayOrderInfoIndex => XHMap string nat | LocalState_ι_optaddressIndex => XHMap string nat | LocalState_ι_TONTokenWalletIndex => XHMap string nat | LocalState_ι_tpladdressGramsIndex => XHMap string nat | LocalState_ι_TvmSliceIndex => XHMap string nat | LocalState_ι_optOrderRetIndex => XHMap string nat end .
 (* 4 *) Definition LocalState_get (f: LocalStateFields )(r: LocalState ) :  LocalState_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 , r23 , r24 , r25 , r26 , r27 , r28 , r29 , r30 , r31 , r32 , r33 , r34 , r35 , r36 , r37 , r38 , r39 , r40 , r41 , r42 , r43 , r44 , r45 , r46 , r47 , r48 , r49 , r50 , r51 , r52 , r53 , r54 , r55 , r56 , r57 , r58 , r59 , r60 , r61 , r62 , r63 , r64 ) := r in 
  match f with 
@@ -2746,7 +2746,7 @@ Global Instance LocalState_intIndex: LocalStateField XInteger :=
 
  
  
-Global Instance LocalState_tploptional_pair_unsigned_OrderInfoqueue_OrderInfoIndex: LocalStateField (XMaybe (XInteger * OrderInfoXchg) * (XList OrderInfoXchg) * XInteger128 ) :=
+Global Instance LocalState_tploptional_pair_unsigned_OrderInfoqueue_OrderInfoIndex: LocalStateField (XMaybe (XInteger * OrderInfo) * (XList OrderInfo) * XInteger128 ) :=
 {
   local_index_embedded := LocalState_ι_tploptional_pair_unsigned_OrderInfoqueue_OrderInfoIndex_Embedded;
   local_state_field := LocalState_ι_tploptional_pair_unsigned_OrderInfoqueue_OrderInfo; 
@@ -2755,7 +2755,7 @@ Global Instance LocalState_tploptional_pair_unsigned_OrderInfoqueue_OrderInfoInd
 
  
  
-Global Instance LocalState_optpair_unsigned_OrderInfo__Index: LocalStateField ( XMaybe (XInteger * OrderInfoXchg) ) :=
+Global Instance LocalState_optpair_unsigned_OrderInfo__Index: LocalStateField ( XMaybe (XInteger * OrderInfo) ) :=
 {
   local_index_embedded := LocalState_ι_optpair_unsigned_OrderInfo__Index_Embedded;
   local_state_field := LocalState_ι_optpair_unsigned_OrderInfo__; 
@@ -2933,10 +2933,38 @@ Global Instance LocalState_optOrderRetIndex: LocalStateField ( XMaybe OrderRet )
   local_field_type_correct := eq_refl
 }.
 
+
+
+
+
+Global Instance LocalStateField_XInteger: LocalStateField XInteger :=
+{
+  local_index_embedded := LocalState_ι_intIndex_Embedded;
+  local_state_field := LocalState_ι_int; 
+  local_field_type_correct := eq_refl
+}.
+ 
+Global Instance LocalStateField_XBool: LocalStateField XBool :=
+{
+  local_index_embedded := LocalState_ι_boolIndex_Embedded;
+  local_state_field := LocalState_ι_bool; 
+  local_field_type_correct := eq_refl
+}.
+
+Global Instance LocalStateField_TvmCell: LocalStateField TvmCell :=
+{
+  local_index_embedded := LocalState_ι_cellIndex_Embedded;
+  local_state_field := LocalState_ι_cell; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
+
  
 
 Definition LedgerVMStateEmbedded := embeddedT2. 
 Definition LedgerVMStateField := Ledger_ι_VMState .
 Definition isoVMState := iso_T2.
 
-End LedgerClass .
+End LedgerPriceClass .
