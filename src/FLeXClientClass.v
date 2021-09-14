@@ -33,7 +33,7 @@
  Existing Instance monadStateT. 
  Existing Instance monadStateStateT. 
  
- Definition IFLeXNotifyPtr := XAddress. 
+ Definition IFlexNotifyPtr := XAddress. 
  Definition ITONTokenWalletPtr := XAddress. 
  Definition IPricePtr := XAddress. 
  Definition TokensType := XInteger128. 
@@ -112,8 +112,8 @@ Definition varuint32 := XInteger32 .
  XInteger128 * 
  XInteger128 * 
  XInteger128 )%type .
-(* 1 *) Inductive FLeXClientFields := | FLeXClient_ι_owner_ | FLeXClient_ι_trading_pair_code_ | FLeXClient_ι_xchg_pair_code_ | FLeXClient_ι_workchain_id_ | FLeXClient_ι_tons_cfg_ | FLeXClient_ι_flex_ | FLeXClient_ι_notify_addr_ | FLeXClient_ι_ext_wallet_code_ | FLeXClient_ι_flex_wallet_code_ | FLeXClient_ι_flex_wrapper_code_ .
-(* 2 *) Definition FLeXClient := 
+(* 1 *) Inductive FlexClientFields := | FlexClient_ι_owner_ | FlexClient_ι_trading_pair_code_ | FlexClient_ι_xchg_pair_code_ | FlexClient_ι_workchain_id_ | FlexClient_ι_tons_cfg_ | FlexClient_ι_flex_ | FlexClient_ι_notify_addr_ | FlexClient_ι_ext_wallet_code_ | FlexClient_ι_flex_wallet_code_ | FlexClient_ι_flex_wrapper_code_ .
+(* 2 *) Definition FlexClient := 
  ( XInteger256 * 
  TvmCell * 
  TvmCell * 
@@ -124,11 +124,11 @@ Definition varuint32 := XInteger32 .
  XMaybe TvmCell * 
  XMaybe TvmCell * 
  XMaybe TvmCell )%type .
-(* 1 *) Inductive FLeXSellArgsAddrsFields := | FLeXSellArgsAddrs_ι_my_tip3_addr .
-(* 2 *) Definition FLeXSellArgsAddrs := 
+(* 1 *) Inductive FlexSellArgsAddrsFields := | FlexSellArgsAddrs_ι_my_tip3_addr .
+(* 2 *) Definition FlexSellArgsAddrs := 
  ( XAddress )%type .
-(* 1 *) Inductive FLeXSellArgsFields := | FLeXSellArgs_ι_price | FLeXSellArgs_ι_amount | FLeXSellArgs_ι_lend_finish_time | FLeXSellArgs_ι_min_amount | FLeXSellArgs_ι_deals_limit | FLeXSellArgs_ι_tons_value | FLeXSellArgs_ι_price_code | FLeXSellArgs_ι_addrs | FLeXSellArgs_ι_tip3_code | FLeXSellArgs_ι_tip3cfg .
-(* 2 *) Definition FLeXSellArgs := 
+(* 1 *) Inductive FlexSellArgsFields := | FlexSellArgs_ι_price | FlexSellArgs_ι_amount | FlexSellArgs_ι_lend_finish_time | FlexSellArgs_ι_min_amount | FlexSellArgs_ι_deals_limit | FlexSellArgs_ι_tons_value | FlexSellArgs_ι_price_code | FlexSellArgs_ι_addrs | FlexSellArgs_ι_tip3_code | FlexSellArgs_ι_tip3cfg .
+(* 2 *) Definition FlexSellArgs := 
  ( XInteger128 * 
  XInteger128 * 
  XInteger32 * 
@@ -139,8 +139,8 @@ Definition varuint32 := XInteger32 .
  XAddress * 
  TvmCell * 
  XAddress )%type .
-(* 1 *) Inductive FLeXBuyArgsFields := | FLeXBuyArgs_ι_price | FLeXBuyArgs_ι_amount | FLeXBuyArgs_ι_order_finish_time | FLeXBuyArgs_ι_min_amount | FLeXBuyArgs_ι_deals_limit | FLeXBuyArgs_ι_deploy_value | FLeXBuyArgs_ι_price_code | FLeXBuyArgs_ι_my_tip3_addr | FLeXBuyArgs_ι_tip3_code | FLeXBuyArgs_ι_tip3cfg .
-(* 2 *) Definition FLeXBuyArgs := 
+(* 1 *) Inductive FlexBuyArgsFields := | FlexBuyArgs_ι_price | FlexBuyArgs_ι_amount | FlexBuyArgs_ι_order_finish_time | FlexBuyArgs_ι_min_amount | FlexBuyArgs_ι_deals_limit | FlexBuyArgs_ι_deploy_value | FlexBuyArgs_ι_price_code | FlexBuyArgs_ι_my_tip3_addr | FlexBuyArgs_ι_tip3_code | FlexBuyArgs_ι_tip3cfg .
+(* 2 *) Definition FlexBuyArgs := 
  ( XInteger128 * 
  XInteger128 * 
  XInteger32 * 
@@ -151,12 +151,12 @@ Definition varuint32 := XInteger32 .
  XAddress * 
  TvmCell * 
  XAddress )%type .
-(* 1 *) Inductive FLeXXchgCfgsFields := | FLeXXchgCfgs_ι_major_tip3cfg | FLeXXchgCfgs_ι_minor_tip3cfg .
-(* 2 *) Definition FLeXXchgCfgs := 
+(* 1 *) Inductive FlexXchgCfgsFields := | FlexXchgCfgs_ι_major_tip3cfg | FlexXchgCfgs_ι_minor_tip3cfg .
+(* 2 *) Definition FlexXchgCfgs := 
  ( XAddress * 
  XAddress )%type .
-(* 1 *) Inductive FLeXXchgArgsFields := | FLeXXchgArgs_ι_sell | FLeXXchgArgs_ι_price_num | FLeXXchgArgs_ι_price_denum | FLeXXchgArgs_ι_amount | FLeXXchgArgs_ι_lend_amount | FLeXXchgArgs_ι_lend_finish_time | FLeXXchgArgs_ι_min_amount | FLeXXchgArgs_ι_deals_limit | FLeXXchgArgs_ι_tons_value | FLeXXchgArgs_ι_xchg_price_code | FLeXXchgArgs_ι_addrs | FLeXXchgArgs_ι_tip3_code | FLeXXchgArgs_ι_tip3cfgs .
-(* 2 *) Definition FLeXXchgArgs := 
+(* 1 *) Inductive FlexXchgArgsFields := | FlexXchgArgs_ι_sell | FlexXchgArgs_ι_price_num | FlexXchgArgs_ι_price_denum | FlexXchgArgs_ι_amount | FlexXchgArgs_ι_lend_amount | FlexXchgArgs_ι_lend_finish_time | FlexXchgArgs_ι_min_amount | FlexXchgArgs_ι_deals_limit | FlexXchgArgs_ι_tons_value | FlexXchgArgs_ι_xchg_price_code | FlexXchgArgs_ι_addrs | FlexXchgArgs_ι_tip3_code | FlexXchgArgs_ι_tip3cfgs .
+(* 2 *) Definition FlexXchgArgs := 
  ( XBool * 
  XInteger128 * 
  XInteger128 * 
@@ -170,8 +170,8 @@ Definition varuint32 := XInteger32 .
  XAddress * 
  TvmCell * 
  XAddress )%type .
-(* 1 *) Inductive FLeXCancelArgsFields := | FLeXCancelArgs_ι_price | FLeXCancelArgs_ι_min_amount | FLeXCancelArgs_ι_deals_limit | FLeXCancelArgs_ι_value | FLeXCancelArgs_ι_price_code | FLeXCancelArgs_ι_tip3_code | FLeXCancelArgs_ι_tip3cfg .
-(* 2 *) Definition FLeXCancelArgs := 
+(* 1 *) Inductive FlexCancelArgsFields := | FlexCancelArgs_ι_price | FlexCancelArgs_ι_min_amount | FlexCancelArgs_ι_deals_limit | FlexCancelArgs_ι_value | FlexCancelArgs_ι_price_code | FlexCancelArgs_ι_tip3_code | FlexCancelArgs_ι_tip3cfg .
+(* 2 *) Definition FlexCancelArgs := 
  ( XInteger128 * 
  XInteger128 * 
  XInteger8 * 
@@ -179,8 +179,8 @@ Definition varuint32 := XInteger32 .
  TvmCell * 
  TvmCell * 
  XAddress )%type .
-(* 1 *) Inductive FLeXXchgCancelArgsFields := | FLeXXchgCancelArgs_ι_sell | FLeXXchgCancelArgs_ι_price_num | FLeXXchgCancelArgs_ι_price_denum | FLeXXchgCancelArgs_ι_min_amount | FLeXXchgCancelArgs_ι_deals_limit | FLeXXchgCancelArgs_ι_value | FLeXXchgCancelArgs_ι_xchg_price_code | FLeXXchgCancelArgs_ι_tip3_code | FLeXXchgCancelArgs_ι_tip3cfgs .
-(* 2 *) Definition FLeXXchgCancelArgs := 
+(* 1 *) Inductive FlexXchgCancelArgsFields := | FlexXchgCancelArgs_ι_sell | FlexXchgCancelArgs_ι_price_num | FlexXchgCancelArgs_ι_price_denum | FlexXchgCancelArgs_ι_min_amount | FlexXchgCancelArgs_ι_deals_limit | FlexXchgCancelArgs_ι_value | FlexXchgCancelArgs_ι_xchg_price_code | FlexXchgCancelArgs_ι_tip3_code | FlexXchgCancelArgs_ι_tip3cfgs .
+(* 2 *) Definition FlexXchgCancelArgs := 
  ( XBool * 
  XInteger128 * 
  XInteger128 * 
@@ -219,7 +219,7 @@ Definition varuint32 := XInteger32 .
  addr_std_fixed * 
  XInteger128 * 
  XInteger8 * 
- IFLeXNotifyPtr * 
+ IFlexNotifyPtr * 
  XInteger8 * 
  TonsConfig * 
  TvmCell * 
@@ -238,7 +238,7 @@ Definition varuint32 := XInteger32 .
  addr_std_fixed * 
  XInteger128 * 
  XInteger8 * 
- IFLeXNotifyPtr * 
+ IFlexNotifyPtr * 
  XInteger8 * 
  TonsConfig * 
  TvmCell * 
@@ -301,9 +301,9 @@ Definition varuint32 := XInteger32 .
  XHMap string nat * 
  XHMap string nat * 
  XHMap string nat )%type .
-(* 1 *) Inductive LedgerFieldsI := | Ledger_ι_FLeXClient | Ledger_ι_VMState | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
+(* 1 *) Inductive LedgerFieldsI := | Ledger_ι_FlexClient | Ledger_ι_VMState | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
 (* 2 *) Definition Ledger := 
- ( FLeXClient * 
+ ( FlexClient * 
  VMState * 
  LocalState * 
  LocalState )%type .
@@ -515,281 +515,281 @@ match f with
   getPruvendoRecord := @TonsConfig_get ;
   setPruvendoRecord := @TonsConfig_set ;
 } .
-(* 3 *) Definition FLeXClient_field_type f : Type :=  
-match f with 
- | FLeXClient_ι_owner_ => XInteger256 | FLeXClient_ι_trading_pair_code_ => TvmCell | FLeXClient_ι_xchg_pair_code_ => TvmCell | FLeXClient_ι_workchain_id_ => XInteger8 | FLeXClient_ι_tons_cfg_ => TonsConfig | FLeXClient_ι_flex_ => addr_std_compact | FLeXClient_ι_notify_addr_ => addr_std_compact | FLeXClient_ι_ext_wallet_code_ => XMaybe TvmCell | FLeXClient_ι_flex_wallet_code_ => XMaybe TvmCell | FLeXClient_ι_flex_wrapper_code_ => XMaybe TvmCell end .
-(* 4 *) Definition FLeXClient_get (f: FLeXClientFields )(r: FLeXClient ) :  FLeXClient_field_type f := 
+(* 3 *) Definition FlexClient_field_type f : Type :=  
+match f with
+ | FlexClient_ι_owner_ => XInteger256 | FlexClient_ι_trading_pair_code_ => TvmCell | FlexClient_ι_xchg_pair_code_ => TvmCell | FlexClient_ι_workchain_id_ => XInteger8 | FlexClient_ι_tons_cfg_ => TonsConfig | FlexClient_ι_flex_ => addr_std_compact | FlexClient_ι_notify_addr_ => addr_std_compact | FlexClient_ι_ext_wallet_code_ => XMaybe TvmCell | FlexClient_ι_flex_wallet_code_ => XMaybe TvmCell | FlexClient_ι_flex_wrapper_code_ => XMaybe TvmCell end .
+(* 4 *) Definition FlexClient_get (f: FlexClientFields )(r: FlexClient ) :  FlexClient_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) := r in 
  match f with 
- | FLeXClient_ι_owner_ => r1 
- | FLeXClient_ι_trading_pair_code_ => r2 
- | FLeXClient_ι_xchg_pair_code_ => r3 
- | FLeXClient_ι_workchain_id_ => r4 
- | FLeXClient_ι_tons_cfg_ => r5 
- | FLeXClient_ι_flex_ => r6 
- | FLeXClient_ι_notify_addr_ => r7 
- | FLeXClient_ι_ext_wallet_code_ => r8 
- | FLeXClient_ι_flex_wallet_code_ => r9 
- | FLeXClient_ι_flex_wrapper_code_ => r10 
+ | FlexClient_ι_owner_ => r1 
+ | FlexClient_ι_trading_pair_code_ => r2 
+ | FlexClient_ι_xchg_pair_code_ => r3 
+ | FlexClient_ι_workchain_id_ => r4 
+ | FlexClient_ι_tons_cfg_ => r5 
+ | FlexClient_ι_flex_ => r6 
+ | FlexClient_ι_notify_addr_ => r7 
+ | FlexClient_ι_ext_wallet_code_ => r8 
+ | FlexClient_ι_flex_wallet_code_ => r9 
+ | FlexClient_ι_flex_wrapper_code_ => r10 
  end .
-(* 5 *) Coercion FLeXClient_get : FLeXClientFields >-> Funclass .
-(* 6 *) Definition FLeXClient_set (f: FLeXClientFields ) 
-(v: FLeXClient_field_type f) (r: FLeXClient ): FLeXClient := 
+(* 5 *) Coercion FlexClient_get : FlexClientFields >-> Funclass .
+(* 6 *) Definition FlexClient_set (f: FlexClientFields ) 
+(v: FlexClient_field_type f) (r: FlexClient ): FlexClient := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) := r in 
  match f, v with 
- | FLeXClient_ι_owner_ , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXClient_ι_trading_pair_code_ , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXClient_ι_xchg_pair_code_ , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXClient_ι_workchain_id_ , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXClient_ι_tons_cfg_ , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXClient_ι_flex_ , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 , r10 ) 
- | FLeXClient_ι_notify_addr_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 ) 
- | FLeXClient_ι_ext_wallet_code_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 ) 
- | FLeXClient_ι_flex_wallet_code_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 ) 
- | FLeXClient_ι_flex_wrapper_code_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' ) 
- end .
-(* 7 *) Global Instance FLeXClient_PruvendoRecord : PruvendoRecord FLeXClient FLeXClientFields :=
+ | FlexClient_ι_owner_ , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexClient_ι_trading_pair_code_ , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexClient_ι_xchg_pair_code_ , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexClient_ι_workchain_id_ , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexClient_ι_tons_cfg_ , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexClient_ι_flex_ , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 , r10 ) 
+ | FlexClient_ι_notify_addr_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 ) 
+ | FlexClient_ι_ext_wallet_code_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 ) 
+ | FlexClient_ι_flex_wallet_code_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 ) 
+ | FlexClient_ι_flex_wrapper_code_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' ) 
+ end . 
+(* 7 *) Global Instance FlexClient_PruvendoRecord : PruvendoRecord FlexClient FlexClientFields :=
 {
-  field_type := FLeXClient_field_type; 
-  getPruvendoRecord := @FLeXClient_get ;
-  setPruvendoRecord := @FLeXClient_set ;
+  field_type := FlexClient_field_type; 
+  getPruvendoRecord := @FlexClient_get ;
+  setPruvendoRecord := @FlexClient_set ;
 } .
-(* 3 *) Definition FLeXSellArgsAddrs_field_type f : Type :=  
+(* 3 *) Definition FlexSellArgsAddrs_field_type f : Type :=  
 match f with 
- | FLeXSellArgsAddrs_ι_my_tip3_addr => XAddress end .
-(* 4 *) Definition FLeXSellArgsAddrs_get (f: FLeXSellArgsAddrsFields )(r: FLeXSellArgsAddrs ) :  FLeXSellArgsAddrs_field_type f := 
+ | FlexSellArgsAddrs_ι_my_tip3_addr => XAddress end .
+(* 4 *) Definition FlexSellArgsAddrs_get (f: FlexSellArgsAddrsFields )(r: FlexSellArgsAddrs ) :  FlexSellArgsAddrs_field_type f := 
  let '( r1 ) := r in 
  match f with 
- | FLeXSellArgsAddrs_ι_my_tip3_addr => r1 
+ | FlexSellArgsAddrs_ι_my_tip3_addr => r1 
  end .
-(* 5 *) Coercion FLeXSellArgsAddrs_get : FLeXSellArgsAddrsFields >-> Funclass .
-(* 6 *) Definition FLeXSellArgsAddrs_set (f: FLeXSellArgsAddrsFields ) 
-(v: FLeXSellArgsAddrs_field_type f) (r: FLeXSellArgsAddrs ): FLeXSellArgsAddrs := 
+(* 5 *) Coercion FlexSellArgsAddrs_get : FlexSellArgsAddrsFields >-> Funclass .
+(* 6 *) Definition FlexSellArgsAddrs_set (f: FlexSellArgsAddrsFields ) 
+(v: FlexSellArgsAddrs_field_type f) (r: FlexSellArgsAddrs ): FlexSellArgsAddrs := 
  let '( r1 ) := r in 
  match f, v with 
- | FLeXSellArgsAddrs_ι_my_tip3_addr , v' => ( v' ) 
+ | FlexSellArgsAddrs_ι_my_tip3_addr , v' => ( v' ) 
  end .
-(* 7 *) Global Instance FLeXSellArgsAddrs_PruvendoRecord : PruvendoRecord FLeXSellArgsAddrs FLeXSellArgsAddrsFields :=
+(* 7 *) Global Instance FlexSellArgsAddrs_PruvendoRecord : PruvendoRecord FlexSellArgsAddrs FlexSellArgsAddrsFields :=
 {
-  field_type := FLeXSellArgsAddrs_field_type; 
-  getPruvendoRecord := @FLeXSellArgsAddrs_get ;
-  setPruvendoRecord := @FLeXSellArgsAddrs_set ;
+  field_type := FlexSellArgsAddrs_field_type; 
+  getPruvendoRecord := @FlexSellArgsAddrs_get ;
+  setPruvendoRecord := @FlexSellArgsAddrs_set ;
 } .
-(* 3 *) Definition FLeXSellArgs_field_type f : Type :=  
+(* 3 *) Definition FlexSellArgs_field_type f : Type :=  
 match f with 
- | FLeXSellArgs_ι_price => XInteger128 | FLeXSellArgs_ι_amount => XInteger128 | FLeXSellArgs_ι_lend_finish_time => XInteger32 | FLeXSellArgs_ι_min_amount => XInteger128 | FLeXSellArgs_ι_deals_limit => XInteger8 | FLeXSellArgs_ι_tons_value => XInteger128 | FLeXSellArgs_ι_price_code => TvmCell | FLeXSellArgs_ι_addrs => XAddress | FLeXSellArgs_ι_tip3_code => TvmCell | FLeXSellArgs_ι_tip3cfg => XAddress end .
-(* 4 *) Definition FLeXSellArgs_get (f: FLeXSellArgsFields )(r: FLeXSellArgs ) :  FLeXSellArgs_field_type f := 
+ | FlexSellArgs_ι_price => XInteger128 | FlexSellArgs_ι_amount => XInteger128 | FlexSellArgs_ι_lend_finish_time => XInteger32 | FlexSellArgs_ι_min_amount => XInteger128 | FlexSellArgs_ι_deals_limit => XInteger8 | FlexSellArgs_ι_tons_value => XInteger128 | FlexSellArgs_ι_price_code => TvmCell | FlexSellArgs_ι_addrs => XAddress | FlexSellArgs_ι_tip3_code => TvmCell | FlexSellArgs_ι_tip3cfg => XAddress end .
+(* 4 *) Definition FlexSellArgs_get (f: FlexSellArgsFields )(r: FlexSellArgs ) :  FlexSellArgs_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) := r in 
  match f with 
- | FLeXSellArgs_ι_price => r1 
- | FLeXSellArgs_ι_amount => r2 
- | FLeXSellArgs_ι_lend_finish_time => r3 
- | FLeXSellArgs_ι_min_amount => r4 
- | FLeXSellArgs_ι_deals_limit => r5 
- | FLeXSellArgs_ι_tons_value => r6 
- | FLeXSellArgs_ι_price_code => r7 
- | FLeXSellArgs_ι_addrs => r8 
- | FLeXSellArgs_ι_tip3_code => r9 
- | FLeXSellArgs_ι_tip3cfg => r10 
+ | FlexSellArgs_ι_price => r1 
+ | FlexSellArgs_ι_amount => r2 
+ | FlexSellArgs_ι_lend_finish_time => r3 
+ | FlexSellArgs_ι_min_amount => r4 
+ | FlexSellArgs_ι_deals_limit => r5 
+ | FlexSellArgs_ι_tons_value => r6 
+ | FlexSellArgs_ι_price_code => r7 
+ | FlexSellArgs_ι_addrs => r8 
+ | FlexSellArgs_ι_tip3_code => r9 
+ | FlexSellArgs_ι_tip3cfg => r10 
  end .
-(* 5 *) Coercion FLeXSellArgs_get : FLeXSellArgsFields >-> Funclass .
-(* 6 *) Definition FLeXSellArgs_set (f: FLeXSellArgsFields ) 
-(v: FLeXSellArgs_field_type f) (r: FLeXSellArgs ): FLeXSellArgs := 
+(* 5 *) Coercion FlexSellArgs_get : FlexSellArgsFields >-> Funclass .
+(* 6 *) Definition FlexSellArgs_set (f: FlexSellArgsFields ) 
+(v: FlexSellArgs_field_type f) (r: FlexSellArgs ): FlexSellArgs := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) := r in 
  match f, v with 
- | FLeXSellArgs_ι_price , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXSellArgs_ι_amount , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXSellArgs_ι_lend_finish_time , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXSellArgs_ι_min_amount , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXSellArgs_ι_deals_limit , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXSellArgs_ι_tons_value , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 , r10 ) 
- | FLeXSellArgs_ι_price_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 ) 
- | FLeXSellArgs_ι_addrs , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 ) 
- | FLeXSellArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 ) 
- | FLeXSellArgs_ι_tip3cfg , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' ) 
- end .
-(* 7 *) Global Instance FLeXSellArgs_PruvendoRecord : PruvendoRecord FLeXSellArgs FLeXSellArgsFields :=
+ | FlexSellArgs_ι_price , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexSellArgs_ι_amount , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexSellArgs_ι_lend_finish_time , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexSellArgs_ι_min_amount , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexSellArgs_ι_deals_limit , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexSellArgs_ι_tons_value , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 , r10 ) 
+ | FlexSellArgs_ι_price_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 ) 
+ | FlexSellArgs_ι_addrs , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 ) 
+ | FlexSellArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 ) 
+ | FlexSellArgs_ι_tip3cfg , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' ) 
+ end . 
+(* 7 *) Global Instance FlexSellArgs_PruvendoRecord : PruvendoRecord FlexSellArgs FlexSellArgsFields :=
 {
-  field_type := FLeXSellArgs_field_type; 
-  getPruvendoRecord := @FLeXSellArgs_get ;
-  setPruvendoRecord := @FLeXSellArgs_set ;
+  field_type := FlexSellArgs_field_type; 
+  getPruvendoRecord := @FlexSellArgs_get ;
+  setPruvendoRecord := @FlexSellArgs_set ;
 } .
-(* 3 *) Definition FLeXBuyArgs_field_type f : Type :=  
+(* 3 *) Definition FlexBuyArgs_field_type f : Type :=  
 match f with 
- | FLeXBuyArgs_ι_price => XInteger128 | FLeXBuyArgs_ι_amount => XInteger128 | FLeXBuyArgs_ι_order_finish_time => XInteger32 | FLeXBuyArgs_ι_min_amount => XInteger128 | FLeXBuyArgs_ι_deals_limit => XInteger8 | FLeXBuyArgs_ι_deploy_value => XInteger128 | FLeXBuyArgs_ι_price_code => TvmCell | FLeXBuyArgs_ι_my_tip3_addr => XAddress | FLeXBuyArgs_ι_tip3_code => TvmCell | FLeXBuyArgs_ι_tip3cfg => XAddress end .
-(* 4 *) Definition FLeXBuyArgs_get (f: FLeXBuyArgsFields )(r: FLeXBuyArgs ) :  FLeXBuyArgs_field_type f := 
+ | FlexBuyArgs_ι_price => XInteger128 | FlexBuyArgs_ι_amount => XInteger128 | FlexBuyArgs_ι_order_finish_time => XInteger32 | FlexBuyArgs_ι_min_amount => XInteger128 | FlexBuyArgs_ι_deals_limit => XInteger8 | FlexBuyArgs_ι_deploy_value => XInteger128 | FlexBuyArgs_ι_price_code => TvmCell | FlexBuyArgs_ι_my_tip3_addr => XAddress | FlexBuyArgs_ι_tip3_code => TvmCell | FlexBuyArgs_ι_tip3cfg => XAddress end .
+(* 4 *) Definition FlexBuyArgs_get (f: FlexBuyArgsFields )(r: FlexBuyArgs ) :  FlexBuyArgs_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) := r in 
  match f with 
- | FLeXBuyArgs_ι_price => r1 
- | FLeXBuyArgs_ι_amount => r2 
- | FLeXBuyArgs_ι_order_finish_time => r3 
- | FLeXBuyArgs_ι_min_amount => r4 
- | FLeXBuyArgs_ι_deals_limit => r5 
- | FLeXBuyArgs_ι_deploy_value => r6 
- | FLeXBuyArgs_ι_price_code => r7 
- | FLeXBuyArgs_ι_my_tip3_addr => r8 
- | FLeXBuyArgs_ι_tip3_code => r9 
- | FLeXBuyArgs_ι_tip3cfg => r10 
+ | FlexBuyArgs_ι_price => r1 
+ | FlexBuyArgs_ι_amount => r2 
+ | FlexBuyArgs_ι_order_finish_time => r3 
+ | FlexBuyArgs_ι_min_amount => r4 
+ | FlexBuyArgs_ι_deals_limit => r5 
+ | FlexBuyArgs_ι_deploy_value => r6 
+ | FlexBuyArgs_ι_price_code => r7 
+ | FlexBuyArgs_ι_my_tip3_addr => r8 
+ | FlexBuyArgs_ι_tip3_code => r9 
+ | FlexBuyArgs_ι_tip3cfg => r10 
  end .
-(* 5 *) Coercion FLeXBuyArgs_get : FLeXBuyArgsFields >-> Funclass .
-(* 6 *) Definition FLeXBuyArgs_set (f: FLeXBuyArgsFields ) 
-(v: FLeXBuyArgs_field_type f) (r: FLeXBuyArgs ): FLeXBuyArgs := 
+(* 5 *) Coercion FlexBuyArgs_get : FlexBuyArgsFields >-> Funclass .
+(* 6 *) Definition FlexBuyArgs_set (f: FlexBuyArgsFields ) 
+(v: FlexBuyArgs_field_type f) (r: FlexBuyArgs ): FlexBuyArgs := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) := r in 
  match f, v with 
- | FLeXBuyArgs_ι_price , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXBuyArgs_ι_amount , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXBuyArgs_ι_order_finish_time , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXBuyArgs_ι_min_amount , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXBuyArgs_ι_deals_limit , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 , r10 ) 
- | FLeXBuyArgs_ι_deploy_value , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 , r10 ) 
- | FLeXBuyArgs_ι_price_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 ) 
- | FLeXBuyArgs_ι_my_tip3_addr , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 ) 
- | FLeXBuyArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 ) 
- | FLeXBuyArgs_ι_tip3cfg , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' ) 
+ | FlexBuyArgs_ι_price , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexBuyArgs_ι_amount , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexBuyArgs_ι_order_finish_time , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexBuyArgs_ι_min_amount , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexBuyArgs_ι_deals_limit , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 , r10 ) 
+ | FlexBuyArgs_ι_deploy_value , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 , r10 ) 
+ | FlexBuyArgs_ι_price_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 ) 
+ | FlexBuyArgs_ι_my_tip3_addr , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 ) 
+ | FlexBuyArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 ) 
+ | FlexBuyArgs_ι_tip3cfg , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' ) 
  end .
-(* 7 *) Global Instance FLeXBuyArgs_PruvendoRecord : PruvendoRecord FLeXBuyArgs FLeXBuyArgsFields :=
+(* 7 *) Global Instance FlexBuyArgs_PruvendoRecord : PruvendoRecord FlexBuyArgs FlexBuyArgsFields :=
 {
-  field_type := FLeXBuyArgs_field_type; 
-  getPruvendoRecord := @FLeXBuyArgs_get ;
-  setPruvendoRecord := @FLeXBuyArgs_set ;
+  field_type := FlexBuyArgs_field_type; 
+  getPruvendoRecord := @FlexBuyArgs_get ;
+  setPruvendoRecord := @FlexBuyArgs_set ;
 } .
-(* 3 *) Definition FLeXXchgCfgs_field_type f : Type :=  
+(* 3 *) Definition FlexXchgCfgs_field_type f : Type :=  
 match f with 
- | FLeXXchgCfgs_ι_major_tip3cfg => XAddress | FLeXXchgCfgs_ι_minor_tip3cfg => XAddress end .
-(* 4 *) Definition FLeXXchgCfgs_get (f: FLeXXchgCfgsFields )(r: FLeXXchgCfgs ) :  FLeXXchgCfgs_field_type f := 
+ | FlexXchgCfgs_ι_major_tip3cfg => XAddress | FlexXchgCfgs_ι_minor_tip3cfg => XAddress end .
+(* 4 *) Definition FlexXchgCfgs_get (f: FlexXchgCfgsFields )(r: FlexXchgCfgs ) :  FlexXchgCfgs_field_type f := 
  let '( r1 , r2 ) := r in 
  match f with 
- | FLeXXchgCfgs_ι_major_tip3cfg => r1 
- | FLeXXchgCfgs_ι_minor_tip3cfg => r2 
+ | FlexXchgCfgs_ι_major_tip3cfg => r1 
+ | FlexXchgCfgs_ι_minor_tip3cfg => r2 
  end .
-(* 5 *) Coercion FLeXXchgCfgs_get : FLeXXchgCfgsFields >-> Funclass .
-(* 6 *) Definition FLeXXchgCfgs_set (f: FLeXXchgCfgsFields ) 
-(v: FLeXXchgCfgs_field_type f) (r: FLeXXchgCfgs ): FLeXXchgCfgs := 
+(* 5 *) Coercion FlexXchgCfgs_get : FlexXchgCfgsFields >-> Funclass .
+(* 6 *) Definition FlexXchgCfgs_set (f: FlexXchgCfgsFields ) 
+(v: FlexXchgCfgs_field_type f) (r: FlexXchgCfgs ): FlexXchgCfgs := 
  let '( r1 , r2 ) := r in 
  match f, v with 
- | FLeXXchgCfgs_ι_major_tip3cfg , v' => ( v' , r2 ) 
- | FLeXXchgCfgs_ι_minor_tip3cfg , v' => ( r1 , v' ) 
+ | FlexXchgCfgs_ι_major_tip3cfg , v' => ( v' , r2 ) 
+ | FlexXchgCfgs_ι_minor_tip3cfg , v' => ( r1 , v' ) 
  end .
-(* 7 *) Global Instance FLeXXchgCfgs_PruvendoRecord : PruvendoRecord FLeXXchgCfgs FLeXXchgCfgsFields :=
+(* 7 *) Global Instance FlexXchgCfgs_PruvendoRecord : PruvendoRecord FlexXchgCfgs FlexXchgCfgsFields :=
 {
-  field_type := FLeXXchgCfgs_field_type; 
-  getPruvendoRecord := @FLeXXchgCfgs_get ;
-  setPruvendoRecord := @FLeXXchgCfgs_set ;
+  field_type := FlexXchgCfgs_field_type; 
+  getPruvendoRecord := @FlexXchgCfgs_get ;
+  setPruvendoRecord := @FlexXchgCfgs_set ;
 } .
-(* 3 *) Definition FLeXXchgArgs_field_type f : Type :=  
+(* 3 *) Definition FlexXchgArgs_field_type f : Type :=  
 match f with 
- | FLeXXchgArgs_ι_sell => XBool | FLeXXchgArgs_ι_price_num => XInteger128 | FLeXXchgArgs_ι_price_denum => XInteger128 | FLeXXchgArgs_ι_amount => XInteger128 | FLeXXchgArgs_ι_lend_amount => XInteger128 | FLeXXchgArgs_ι_lend_finish_time => XInteger32 | FLeXXchgArgs_ι_min_amount => XInteger128 | FLeXXchgArgs_ι_deals_limit => XInteger8 | FLeXXchgArgs_ι_tons_value => XInteger128 | FLeXXchgArgs_ι_xchg_price_code => TvmCell | FLeXXchgArgs_ι_addrs => XAddress | FLeXXchgArgs_ι_tip3_code => TvmCell | FLeXXchgArgs_ι_tip3cfgs => XAddress end .
-(* 4 *) Definition FLeXXchgArgs_get (f: FLeXXchgArgsFields )(r: FLeXXchgArgs ) :  FLeXXchgArgs_field_type f := 
+ | FlexXchgArgs_ι_sell => XBool | FlexXchgArgs_ι_price_num => XInteger128 | FlexXchgArgs_ι_price_denum => XInteger128 | FlexXchgArgs_ι_amount => XInteger128 | FlexXchgArgs_ι_lend_amount => XInteger128 | FlexXchgArgs_ι_lend_finish_time => XInteger32 | FlexXchgArgs_ι_min_amount => XInteger128 | FlexXchgArgs_ι_deals_limit => XInteger8 | FlexXchgArgs_ι_tons_value => XInteger128 | FlexXchgArgs_ι_xchg_price_code => TvmCell | FlexXchgArgs_ι_addrs => XAddress | FlexXchgArgs_ι_tip3_code => TvmCell | FlexXchgArgs_ι_tip3cfgs => XAddress end .
+(* 4 *) Definition FlexXchgArgs_get (f: FlexXchgArgsFields )(r: FlexXchgArgs ) :  FlexXchgArgs_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) := r in 
  match f with 
- | FLeXXchgArgs_ι_sell => r1 
- | FLeXXchgArgs_ι_price_num => r2 
- | FLeXXchgArgs_ι_price_denum => r3 
- | FLeXXchgArgs_ι_amount => r4 
- | FLeXXchgArgs_ι_lend_amount => r5 
- | FLeXXchgArgs_ι_lend_finish_time => r6 
- | FLeXXchgArgs_ι_min_amount => r7 
- | FLeXXchgArgs_ι_deals_limit => r8 
- | FLeXXchgArgs_ι_tons_value => r9 
- | FLeXXchgArgs_ι_xchg_price_code => r10 
- | FLeXXchgArgs_ι_addrs => r11 
- | FLeXXchgArgs_ι_tip3_code => r12 
- | FLeXXchgArgs_ι_tip3cfgs => r13 
+ | FlexXchgArgs_ι_sell => r1 
+ | FlexXchgArgs_ι_price_num => r2 
+ | FlexXchgArgs_ι_price_denum => r3 
+ | FlexXchgArgs_ι_amount => r4 
+ | FlexXchgArgs_ι_lend_amount => r5 
+ | FlexXchgArgs_ι_lend_finish_time => r6 
+ | FlexXchgArgs_ι_min_amount => r7 
+ | FlexXchgArgs_ι_deals_limit => r8 
+ | FlexXchgArgs_ι_tons_value => r9 
+ | FlexXchgArgs_ι_xchg_price_code => r10 
+ | FlexXchgArgs_ι_addrs => r11 
+ | FlexXchgArgs_ι_tip3_code => r12 
+ | FlexXchgArgs_ι_tip3cfgs => r13 
  end .
-(* 5 *) Coercion FLeXXchgArgs_get : FLeXXchgArgsFields >-> Funclass .
-(* 6 *) Definition FLeXXchgArgs_set (f: FLeXXchgArgsFields ) 
-(v: FLeXXchgArgs_field_type f) (r: FLeXXchgArgs ): FLeXXchgArgs := 
+(* 5 *) Coercion FlexXchgArgs_get : FlexXchgArgsFields >-> Funclass .
+(* 6 *) Definition FlexXchgArgs_set (f: FlexXchgArgsFields ) 
+(v: FlexXchgArgs_field_type f) (r: FlexXchgArgs ): FlexXchgArgs := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) := r in 
  match f, v with 
- | FLeXXchgArgs_ι_sell , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_price_num , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_price_denum , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_amount , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_lend_amount , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_lend_finish_time , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_min_amount , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_deals_limit , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_tons_value , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_xchg_price_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' , r11 , r12 , r13 ) 
- | FLeXXchgArgs_ι_addrs , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , v' , r12 , r13 ) 
- | FLeXXchgArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , v' , r13 ) 
- | FLeXXchgArgs_ι_tip3cfgs , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , v' ) 
- end .
-(* 7 *) Global Instance FLeXXchgArgs_PruvendoRecord : PruvendoRecord FLeXXchgArgs FLeXXchgArgsFields :=
+ | FlexXchgArgs_ι_sell , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_price_num , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_price_denum , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_amount , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_lend_amount , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_lend_finish_time , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_min_amount , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 , r10 , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_deals_limit , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 , r10 , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_tons_value , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' , r10 , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_xchg_price_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , v' , r11 , r12 , r13 ) 
+ | FlexXchgArgs_ι_addrs , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , v' , r12 , r13 ) 
+ | FlexXchgArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , v' , r13 ) 
+ | FlexXchgArgs_ι_tip3cfgs , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , v' ) 
+ end . 
+(* 7 *) Global Instance FlexXchgArgs_PruvendoRecord : PruvendoRecord FlexXchgArgs FlexXchgArgsFields :=
 {
-  field_type := FLeXXchgArgs_field_type; 
-  getPruvendoRecord := @FLeXXchgArgs_get ;
-  setPruvendoRecord := @FLeXXchgArgs_set ;
+  field_type := FlexXchgArgs_field_type; 
+  getPruvendoRecord := @FlexXchgArgs_get ;
+  setPruvendoRecord := @FlexXchgArgs_set ;
 } .
-(* 3 *) Definition FLeXCancelArgs_field_type f : Type :=  
+(* 3 *) Definition FlexCancelArgs_field_type f : Type :=  
 match f with 
- | FLeXCancelArgs_ι_price => XInteger128 | FLeXCancelArgs_ι_min_amount => XInteger128 | FLeXCancelArgs_ι_deals_limit => XInteger8 | FLeXCancelArgs_ι_value => XInteger128 | FLeXCancelArgs_ι_price_code => TvmCell | FLeXCancelArgs_ι_tip3_code => TvmCell | FLeXCancelArgs_ι_tip3cfg => XAddress end .
-(* 4 *) Definition FLeXCancelArgs_get (f: FLeXCancelArgsFields )(r: FLeXCancelArgs ) :  FLeXCancelArgs_field_type f := 
+ | FlexCancelArgs_ι_price => XInteger128 | FlexCancelArgs_ι_min_amount => XInteger128 | FlexCancelArgs_ι_deals_limit => XInteger8 | FlexCancelArgs_ι_value => XInteger128 | FlexCancelArgs_ι_price_code => TvmCell | FlexCancelArgs_ι_tip3_code => TvmCell | FlexCancelArgs_ι_tip3cfg => XAddress end .
+(* 4 *) Definition FlexCancelArgs_get (f: FlexCancelArgsFields )(r: FlexCancelArgs ) :  FlexCancelArgs_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 ) := r in 
  match f with 
- | FLeXCancelArgs_ι_price => r1 
- | FLeXCancelArgs_ι_min_amount => r2 
- | FLeXCancelArgs_ι_deals_limit => r3 
- | FLeXCancelArgs_ι_value => r4 
- | FLeXCancelArgs_ι_price_code => r5 
- | FLeXCancelArgs_ι_tip3_code => r6 
- | FLeXCancelArgs_ι_tip3cfg => r7 
+ | FlexCancelArgs_ι_price => r1 
+ | FlexCancelArgs_ι_min_amount => r2 
+ | FlexCancelArgs_ι_deals_limit => r3 
+ | FlexCancelArgs_ι_value => r4 
+ | FlexCancelArgs_ι_price_code => r5 
+ | FlexCancelArgs_ι_tip3_code => r6 
+ | FlexCancelArgs_ι_tip3cfg => r7 
  end .
-(* 5 *) Coercion FLeXCancelArgs_get : FLeXCancelArgsFields >-> Funclass .
-(* 6 *) Definition FLeXCancelArgs_set (f: FLeXCancelArgsFields ) 
-(v: FLeXCancelArgs_field_type f) (r: FLeXCancelArgs ): FLeXCancelArgs := 
+(* 5 *) Coercion FlexCancelArgs_get : FlexCancelArgsFields >-> Funclass .
+(* 6 *) Definition FlexCancelArgs_set (f: FlexCancelArgsFields ) 
+(v: FlexCancelArgs_field_type f) (r: FlexCancelArgs ): FlexCancelArgs := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 ) := r in 
  match f, v with 
- | FLeXCancelArgs_ι_price , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 ) 
- | FLeXCancelArgs_ι_min_amount , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 ) 
- | FLeXCancelArgs_ι_deals_limit , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 ) 
- | FLeXCancelArgs_ι_value , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 ) 
- | FLeXCancelArgs_ι_price_code , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 ) 
- | FLeXCancelArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 ) 
- | FLeXCancelArgs_ι_tip3cfg , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' ) 
+ | FlexCancelArgs_ι_price , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 ) 
+ | FlexCancelArgs_ι_min_amount , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 ) 
+ | FlexCancelArgs_ι_deals_limit , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 ) 
+ | FlexCancelArgs_ι_value , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 ) 
+ | FlexCancelArgs_ι_price_code , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 ) 
+ | FlexCancelArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 ) 
+ | FlexCancelArgs_ι_tip3cfg , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' ) 
  end .
-(* 7 *) Global Instance FLeXCancelArgs_PruvendoRecord : PruvendoRecord FLeXCancelArgs FLeXCancelArgsFields :=
+(* 7 *) Global Instance FlexCancelArgs_PruvendoRecord : PruvendoRecord FlexCancelArgs FlexCancelArgsFields :=
 {
-  field_type := FLeXCancelArgs_field_type; 
-  getPruvendoRecord := @FLeXCancelArgs_get ;
-  setPruvendoRecord := @FLeXCancelArgs_set ;
+  field_type := FlexCancelArgs_field_type; 
+  getPruvendoRecord := @FlexCancelArgs_get ;
+  setPruvendoRecord := @FlexCancelArgs_set ;
 } .
-(* 3 *) Definition FLeXXchgCancelArgs_field_type f : Type :=  
+(* 3 *) Definition FlexXchgCancelArgs_field_type f : Type :=  
 match f with 
- | FLeXXchgCancelArgs_ι_sell => XBool | FLeXXchgCancelArgs_ι_price_num => XInteger128 | FLeXXchgCancelArgs_ι_price_denum => XInteger128 | FLeXXchgCancelArgs_ι_min_amount => XInteger128 | FLeXXchgCancelArgs_ι_deals_limit => XInteger8 | FLeXXchgCancelArgs_ι_value => XInteger128 | FLeXXchgCancelArgs_ι_xchg_price_code => TvmCell | FLeXXchgCancelArgs_ι_tip3_code => TvmCell | FLeXXchgCancelArgs_ι_tip3cfgs => XAddress end .
-(* 4 *) Definition FLeXXchgCancelArgs_get (f: FLeXXchgCancelArgsFields )(r: FLeXXchgCancelArgs ) :  FLeXXchgCancelArgs_field_type f := 
+ | FlexXchgCancelArgs_ι_sell => XBool | FlexXchgCancelArgs_ι_price_num => XInteger128 | FlexXchgCancelArgs_ι_price_denum => XInteger128 | FlexXchgCancelArgs_ι_min_amount => XInteger128 | FlexXchgCancelArgs_ι_deals_limit => XInteger8 | FlexXchgCancelArgs_ι_value => XInteger128 | FlexXchgCancelArgs_ι_xchg_price_code => TvmCell | FlexXchgCancelArgs_ι_tip3_code => TvmCell | FlexXchgCancelArgs_ι_tip3cfgs => XAddress end .
+(* 4 *) Definition FlexXchgCancelArgs_get (f: FlexXchgCancelArgsFields )(r: FlexXchgCancelArgs ) :  FlexXchgCancelArgs_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 ) := r in 
  match f with 
- | FLeXXchgCancelArgs_ι_sell => r1 
- | FLeXXchgCancelArgs_ι_price_num => r2 
- | FLeXXchgCancelArgs_ι_price_denum => r3 
- | FLeXXchgCancelArgs_ι_min_amount => r4 
- | FLeXXchgCancelArgs_ι_deals_limit => r5 
- | FLeXXchgCancelArgs_ι_value => r6 
- | FLeXXchgCancelArgs_ι_xchg_price_code => r7 
- | FLeXXchgCancelArgs_ι_tip3_code => r8 
- | FLeXXchgCancelArgs_ι_tip3cfgs => r9 
+ | FlexXchgCancelArgs_ι_sell => r1 
+ | FlexXchgCancelArgs_ι_price_num => r2 
+ | FlexXchgCancelArgs_ι_price_denum => r3 
+ | FlexXchgCancelArgs_ι_min_amount => r4 
+ | FlexXchgCancelArgs_ι_deals_limit => r5 
+ | FlexXchgCancelArgs_ι_value => r6 
+ | FlexXchgCancelArgs_ι_xchg_price_code => r7 
+ | FlexXchgCancelArgs_ι_tip3_code => r8 
+ | FlexXchgCancelArgs_ι_tip3cfgs => r9 
  end .
-(* 5 *) Coercion FLeXXchgCancelArgs_get : FLeXXchgCancelArgsFields >-> Funclass .
-(* 6 *) Definition FLeXXchgCancelArgs_set (f: FLeXXchgCancelArgsFields ) 
-(v: FLeXXchgCancelArgs_field_type f) (r: FLeXXchgCancelArgs ): FLeXXchgCancelArgs := 
+(* 5 *) Coercion FlexXchgCancelArgs_get : FlexXchgCancelArgsFields >-> Funclass .
+(* 6 *) Definition FlexXchgCancelArgs_set (f: FlexXchgCancelArgsFields ) 
+(v: FlexXchgCancelArgs_field_type f) (r: FlexXchgCancelArgs ): FlexXchgCancelArgs := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 ) := r in 
  match f, v with 
- | FLeXXchgCancelArgs_ι_sell , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 ) 
- | FLeXXchgCancelArgs_ι_price_num , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 ) 
- | FLeXXchgCancelArgs_ι_price_denum , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 ) 
- | FLeXXchgCancelArgs_ι_min_amount , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 ) 
- | FLeXXchgCancelArgs_ι_deals_limit , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 ) 
- | FLeXXchgCancelArgs_ι_value , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 ) 
- | FLeXXchgCancelArgs_ι_xchg_price_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 ) 
- | FLeXXchgCancelArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 ) 
- | FLeXXchgCancelArgs_ι_tip3cfgs , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' ) 
- end .
-(* 7 *) Global Instance FLeXXchgCancelArgs_PruvendoRecord : PruvendoRecord FLeXXchgCancelArgs FLeXXchgCancelArgsFields :=
+ | FlexXchgCancelArgs_ι_sell , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 ) 
+ | FlexXchgCancelArgs_ι_price_num , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 , r9 ) 
+ | FlexXchgCancelArgs_ι_price_denum , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 , r9 ) 
+ | FlexXchgCancelArgs_ι_min_amount , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 , r9 ) 
+ | FlexXchgCancelArgs_ι_deals_limit , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 , r9 ) 
+ | FlexXchgCancelArgs_ι_value , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 , r9 ) 
+ | FlexXchgCancelArgs_ι_xchg_price_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 , r9 ) 
+ | FlexXchgCancelArgs_ι_tip3_code , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' , r9 ) 
+ | FlexXchgCancelArgs_ι_tip3cfgs , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , v' ) 
+ end . 
+(* 7 *) Global Instance FlexXchgCancelArgs_PruvendoRecord : PruvendoRecord FlexXchgCancelArgs FlexXchgCancelArgsFields :=
 {
-  field_type := FLeXXchgCancelArgs_field_type; 
-  getPruvendoRecord := @FLeXXchgCancelArgs_get ;
-  setPruvendoRecord := @FLeXXchgCancelArgs_set ;
+  field_type := FlexXchgCancelArgs_field_type; 
+  getPruvendoRecord := @FlexXchgCancelArgs_get ;
+  setPruvendoRecord := @FlexXchgCancelArgs_set ;
 } .
 (* 3 *) Definition XchgPair_field_type f : Type :=  
 match f with 
@@ -880,7 +880,7 @@ match f with
 } .
 (* 3 *) Definition Price_field_type f : Type :=  
 match f with 
- | Price_ι_price_ => XInteger128 | Price_ι_sells_amount_ => XInteger128 | Price_ι_buys_amount_ => XInteger128 | Price_ι_flex_ => addr_std_fixed | Price_ι_min_amount_ => XInteger128 | Price_ι_deals_limit_ => XInteger8 | Price_ι_notify_addr_ => IFLeXNotifyPtr | Price_ι_workchain_id_ => XInteger8 | Price_ι_tons_cfg_ => TonsConfig | Price_ι_tip3_code_ => TvmCell | Price_ι_tip3cfg_ => Tip3Config | Price_ι_sells_ => XList OrderInfo | Price_ι_buys_ => XList OrderInfo end .
+ | Price_ι_price_ => XInteger128 | Price_ι_sells_amount_ => XInteger128 | Price_ι_buys_amount_ => XInteger128 | Price_ι_flex_ => addr_std_fixed | Price_ι_min_amount_ => XInteger128 | Price_ι_deals_limit_ => XInteger8 | Price_ι_notify_addr_ => IFlexNotifyPtr | Price_ι_workchain_id_ => XInteger8 | Price_ι_tons_cfg_ => TonsConfig | Price_ι_tip3_code_ => TvmCell | Price_ι_tip3cfg_ => Tip3Config | Price_ι_sells_ => XList OrderInfo | Price_ι_buys_ => XList OrderInfo end .
 (* 4 *) Definition Price_get (f: PriceFields )(r: Price ) :  Price_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 ) := r in 
  match f with 
@@ -948,7 +948,7 @@ match f with
 } .
 (* 3 *) Definition PriceXchg_field_type f : Type :=  
 match f with 
- | PriceXchg_ι_price_ => RationalPrice | PriceXchg_ι_sells_amount_ => XInteger128 | PriceXchg_ι_buys_amount_ => XInteger128 | PriceXchg_ι_flex_ => addr_std_fixed | PriceXchg_ι_min_amount_ => XInteger128 | PriceXchg_ι_deals_limit_ => XInteger8 | PriceXchg_ι_notify_addr_ => IFLeXNotifyPtr | PriceXchg_ι_workchain_id_ => XInteger8 | PriceXchg_ι_tons_cfg_ => TonsConfig | PriceXchg_ι_tip3_code_ => TvmCell | PriceXchg_ι_major_tip3cfg_ => Tip3Config | PriceXchg_ι_minor_tip3cfg_ => Tip3Config end .
+ | PriceXchg_ι_price_ => RationalPrice | PriceXchg_ι_sells_amount_ => XInteger128 | PriceXchg_ι_buys_amount_ => XInteger128 | PriceXchg_ι_flex_ => addr_std_fixed | PriceXchg_ι_min_amount_ => XInteger128 | PriceXchg_ι_deals_limit_ => XInteger8 | PriceXchg_ι_notify_addr_ => IFlexNotifyPtr | PriceXchg_ι_workchain_id_ => XInteger8 | PriceXchg_ι_tons_cfg_ => TonsConfig | PriceXchg_ι_tip3_code_ => TvmCell | PriceXchg_ι_major_tip3cfg_ => Tip3Config | PriceXchg_ι_minor_tip3cfg_ => Tip3Config end .
 (* 4 *) Definition PriceXchg_get (f: PriceXchgFields )(r: PriceXchg ) :  PriceXchg_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 ) := r in 
  match f with 
@@ -1150,11 +1150,11 @@ match f with
 } .
 (* 3 *) Definition Ledger_field_type f : Type :=  
 match f with 
- | Ledger_ι_FLeXClient => FLeXClient | Ledger_ι_VMState => VMState | Ledger_ι_LocalState => LocalState | Ledger_ι_LocalStateCopy => LocalState end .
+ | Ledger_ι_FlexClient => FlexClient | Ledger_ι_VMState => VMState | Ledger_ι_LocalState => LocalState | Ledger_ι_LocalStateCopy => LocalState end .
 (* 4 *) Definition Ledger_get (f: LedgerFields )(r: Ledger ) :  Ledger_field_type f := 
  let '( r1 , r2 , r3 , r4 ) := r in 
  match f with 
- | Ledger_ι_FLeXClient => r1 
+ | Ledger_ι_FlexClient => r1 
  | Ledger_ι_VMState => r2 
  | Ledger_ι_LocalState => r3 
  | Ledger_ι_LocalStateCopy => r4 
@@ -1164,7 +1164,7 @@ match f with
 (v: Ledger_field_type f) (r: Ledger ): Ledger := 
  let '( r1 , r2 , r3 , r4 ) := r in 
  match f, v with 
- | Ledger_ι_FLeXClient , v' => ( v' , r2 , r3 , r4 ) 
+ | Ledger_ι_FlexClient , v' => ( v' , r2 , r3 , r4 ) 
  | Ledger_ι_VMState , v' => ( r1 , v' , r3 , r4 ) 
  | Ledger_ι_LocalState , v' => ( r1 , r2 , v' , r4 ) 
  | Ledger_ι_LocalStateCopy , v' => ( r1 , r2 , r3 , v' ) 
@@ -1175,14 +1175,14 @@ match f with
   getPruvendoRecord := @Ledger_get ;
   setPruvendoRecord := @Ledger_set ;
 } .
-Definition T1 := FLeXClient .
+Definition T1 := FlexClient .
 Definition T2 := VMState .
 Definition T3 := LocalState .
 Definition T4 := LocalState .
 
  
- Definition projEmbed_T1 : Ledger -> T1 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_FLeXClient. 
- Definition injEmbed_T1 : T1 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_FLeXClient. 
+ Definition projEmbed_T1 : Ledger -> T1 := getPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_FlexClient. 
+ Definition injEmbed_T1 : T1 -> Ledger -> Ledger := setPruvendoRecord (PruvendoRecord := Ledger_PruvendoRecord) Ledger_ι_FlexClient. 
  
  Lemma projinj_T1 : forall ( t : T1 ) ( s : Ledger ), projEmbed_T1 ( injEmbed_T1 t s ) = t . 
  Proof. 
@@ -1456,7 +1456,7 @@ Notation "'↑0' m " := ( liftEmbeddedState ( H :=  embeddedProduct_T1xT2xT3_T4 
 Notation "'↑↑0'" := ( liftEmbeddedState ( H :=  embeddedProduct_T1xT2xT3_T4 )) (at level 32, left associativity): solidity_scope.
 (* Notation " ↓ m " := ( callEmbeddedStateAdj m default (H0 :=  FullState_T1xT2xT3_T4 ) ) (at level 31, left associativity): solidity_scope. *)
 
-Global Instance iso_T1 : IsoTypes T1 (field_type (R:=Ledger) Ledger_ι_FLeXClient) :=
+Global Instance iso_T1 : IsoTypes T1 (field_type (R:=Ledger) Ledger_ι_FlexClient) :=
 {
   x2y := Datatypes.id;
   y2x := Datatypes.id;
@@ -1523,9 +1523,9 @@ Fail Next Obligation.
 Existing Instance CountablePair_Next | 0.
 Existing Instance CountablePair0 | 100.
 
-Opaque FLeXClient.
+Opaque FlexClient.
 
-Lemma Ledger1Type_eq: forall (l: Ledger), projT1 (rth 0 l) = FLeXClient.
+Lemma Ledger1Type_eq: forall (l: Ledger), projT1 (rth 0 l) = FlexClient.
 Proof.
    intros.
    compute.
@@ -1536,18 +1536,18 @@ Defined.
 
 Definition Ledger1Type (l: Ledger) := projT1 (rth 0 l).
 
-Definition Ledger1TypeFLeXClient : forall (l:Ledger), Ledger1Type l -> FLeXClient.
+Definition Ledger1TypeFlexClient : forall (l:Ledger), Ledger1Type l -> FlexClient.
 intros.
 unfold Ledger1Type in X.
 rewrite Ledger1Type_eq in X.
 exact X.
 Defined.
 
-Coercion Ledger1TypeFLeXClient       : Ledger1Type >-> FLeXClient.
+Coercion Ledger1TypeFlexClient       : Ledger1Type >-> FlexClient.
 
-Notation "r ₁" := ((projT2 (rth 0 r) : Ledger1Type r) : FLeXClient) (at level 10).
+Notation "r ₁" := ((projT2 (rth 0 r) : Ledger1Type r) : FlexClient) (at level 10).
 
-Transparent FLeXClient.
+Transparent FlexClient.
 
 Definition LedgerPruvendoRecord := Ledger_PruvendoRecord.
 Definition LedgerLocalState := LocalState.

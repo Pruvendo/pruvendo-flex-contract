@@ -28,7 +28,7 @@ Module FLeXFuncNotations (xt: XTypesSig)
                           (dc : FLeXConstsTypesSig xt sm ).
 Export dc. Export xt. Export sm.
 
-Module Export specFlexSpec := specFlexSpec xt sm.
+Module Export specFLeXSpec := specFlexSpec xt sm.
 Locate ursus_call_with_args.
 Locate UrsusNotations.
 Import ListNotations.
@@ -51,15 +51,15 @@ Notation " 'TonsConfig.transfer_tip3' " := ( ULState (U:= TonsConfig ) TonsConfi
  Notation " 'TonsConfig.send_notify' " := ( ULState (U:= TonsConfig ) TonsConfig_ι_send_notify ) (in custom ULValue at level 0) : ursus_scope. 
 
 
-Notation " 'FLeX.deployer_pubkey_' " := ( ULState (U:= FLeX ) FLeX_ι_deployer_pubkey_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'FLeX.tons_cfg_' " := ( ULState (U:= FLeX ) FLeX_ι_tons_cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'FLeX.pair_code_' " := ( ULState (U:= FLeX ) FLeX_ι_pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'FLeX.xchg_pair_code_' " := ( ULState (U:= FLeX ) FLeX_ι_xchg_pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'FLeX.price_code_' " := ( ULState (U:= FLeX ) FLeX_ι_price_code_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'FLeX.xchg_price_code_' " := ( ULState (U:= FLeX ) FLeX_ι_xchg_price_code_ ) (in custom ULValue at level 0) : ursus_scope. 
-(*  Notation " 'FLeX.min_amount_' " := ( ULState (U:= FLeX ) FLeX_ι_min_amount_ ) (in custom ULValue at level 0) : ursus_scope.  *)
- Notation " 'FLeX.deals_limit_' " := ( ULState (U:= FLeX ) FLeX_ι_deals_limit_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'FLeX.notify_addr_' " := ( ULState (U:= FLeX ) FLeX_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " 'Flex.deployer_pubkey_' " := ( ULState (U:= Flex ) Flex_ι_deployer_pubkey_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.tons_cfg_' " := ( ULState (U:= Flex ) Flex_ι_tons_cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.pair_code_' " := ( ULState (U:= Flex ) Flex_ι_pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.xchg_pair_code_' " := ( ULState (U:= Flex ) Flex_ι_xchg_pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.price_code_' " := ( ULState (U:= Flex ) Flex_ι_price_code_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.xchg_price_code_' " := ( ULState (U:= Flex ) Flex_ι_xchg_price_code_ ) (in custom ULValue at level 0) : ursus_scope. 
+(*  Notation " 'Flex.min_amount_' " := ( ULState (U:= Flex ) Flex_ι_min_amount_ ) (in custom ULValue at level 0) : ursus_scope.  *)
+ Notation " 'Flex.deals_limit_' " := ( ULState (U:= Flex ) Flex_ι_deals_limit_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.notify_addr_' " := ( ULState (U:= Flex ) Flex_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
 
  Notation " 'TradingPair.flex_addr_' " := ( ULState (U:= TradingPair ) TradingPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'TradingPair.tip3_root_' " := ( ULState (U:= TradingPair ) TradingPair_ι_tip3_root_ ) (in custom ULValue at level 0) : ursus_scope. 
@@ -78,15 +78,15 @@ Notation " 'TonsConfig.transfer_tip3' " := ( URState (U:= TonsConfig ) TonsConfi
  Notation " 'TonsConfig.process_queue' " := ( URState (U:= TonsConfig ) TonsConfig_ι_process_queue ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'TonsConfig.send_notify' " := ( URState (U:= TonsConfig ) TonsConfig_ι_send_notify ) (in custom URValue at level 0) : ursus_scope. 
 
-Notation " 'FLeX.deployer_pubkey_' " := ( URState (U:= FLeX ) FLeX_ι_deployer_pubkey_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'FLeX.tons_cfg_' " := ( URState (U:= FLeX ) FLeX_ι_tons_cfg_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'FLeX.pair_code_' " := ( URState (U:= FLeX ) FLeX_ι_pair_code_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'FLeX.xchg_pair_code_' " := ( URState (U:= FLeX ) FLeX_ι_xchg_pair_code_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'FLeX.price_code_' " := ( URState (U:= FLeX ) FLeX_ι_price_code_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'FLeX.xchg_price_code_' " := ( URState (U:= FLeX ) FLeX_ι_xchg_price_code_ ) (in custom URValue at level 0) : ursus_scope. 
-(*  Notation " 'FLeX.min_amount_' " := ( URState (U:= FLeX ) FLeX_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope.  *)
- Notation " 'FLeX.deals_limit_' " := ( URState (U:= FLeX ) FLeX_ι_deals_limit_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'FLeX.notify_addr_' " := ( URState (U:= FLeX ) FLeX_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'Flex.deployer_pubkey_' " := ( URState (U:= Flex ) Flex_ι_deployer_pubkey_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.tons_cfg_' " := ( URState (U:= Flex ) Flex_ι_tons_cfg_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.pair_code_' " := ( URState (U:= Flex ) Flex_ι_pair_code_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.xchg_pair_code_' " := ( URState (U:= Flex ) Flex_ι_xchg_pair_code_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.price_code_' " := ( URState (U:= Flex ) Flex_ι_price_code_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.xchg_price_code_' " := ( URState (U:= Flex ) Flex_ι_xchg_price_code_ ) (in custom URValue at level 0) : ursus_scope. 
+(*  Notation " 'Flex.min_amount_' " := ( URState (U:= Flex ) Flex_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope.  *)
+ Notation " 'Flex.deals_limit_' " := ( URState (U:= Flex ) Flex_ι_deals_limit_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.notify_addr_' " := ( URState (U:= Flex ) Flex_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
 
 Notation " 'TradingPair.flex_addr_' " := ( URState (U:= TradingPair ) TradingPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'TradingPair.tip3_root_' " := ( URState (U:= TradingPair ) TradingPair_ι_tip3_root_ ) (in custom URValue at level 0) : ursus_scope. 
@@ -128,26 +128,7 @@ Notation " 'VMState.msg_value' " := ( ULState (U:= VMState ) VMState_ι_msg_valu
  *)
 Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_tons) (in custom URValue at level 0) : ursus_scope. 
 
-Parameter FLeX_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XAddress -> UExpression PhantomType false . 
-Parameter FLeX_Ф_setPairCode : TvmCell -> UExpression PhantomType false . 
-Parameter FLeX_Ф_setXchgPairCode : TvmCell -> UExpression PhantomType false . 
-Parameter FLeX_Ф_setPriceCode : TvmCell -> UExpression PhantomType false . 
-Parameter FLeX_Ф_setXchgPriceCode : TvmCell -> UExpression PhantomType false . 
-Parameter FLeX_Ф_isFullyInitialized : UExpression XBool false . 
-Parameter FLeX_Ф_getTonsCfg : UExpression TonsConfig false . 
-Parameter FLeX_Ф_getTradingPairCode : UExpression TvmCell false .
-Parameter FLeX_Ф_getXchgPairCode : UExpression TvmCell false . 
-Parameter FLeX_Ф_getSellPriceCode : XAddress -> UExpression TvmCell false . 
-Parameter FLeX_Ф_getXchgPriceCode : XAddress -> XAddress -> UExpression TvmCell false . 
-Parameter FLeX_Ф_getSellTradingPair : XAddress -> UExpression XAddress false . 
-Parameter FLeX_Ф_getXchgTradingPair : XAddress -> XAddress -> UExpression XAddress false . 
-Parameter FLeX_Ф_getMinAmount : UExpression XInteger128 false . 
-Parameter FLeX_Ф_getDealsLimit : UExpression XInteger8 false . 
-Parameter FLeX_Ф_getNotifyAddr : UExpression XAddress false . 
-Parameter FLeX_Ф__fallback : TvmCell -> UExpression XInteger false . 
-
-
-Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XAddress -> UExpression PhantomType false . 
+ Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XAddress -> UExpression PhantomType false . 
  Parameter Flex_Ф_setPairCode : TvmCell -> UExpression PhantomType true . 
  Parameter Flex_Ф_setXchgPairCode : TvmCell -> UExpression PhantomType true . 
  Parameter Flex_Ф_setPriceCode : TvmCell -> UExpression PhantomType true . 
@@ -191,15 +172,15 @@ Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XIn
  Notation " 'Flex_Ф_constructor_ref_' '(' deployer_pubkey transfer_tip3 return_ownership trading_pair_deploy order_answer process_queue send_notify deals_limit notify_addr ')' " := 
  ( FuncallExpression ( Flex_Ф_constructor_call 
  deployer_pubkey transfer_tip3 return_ownership trading_pair_deploy order_answer process_queue send_notify deals_limit notify_addr )) 
- (in custom ULValue at level 0 , deployer_pubkey custom ULValue at level 0 
- , transfer_tip3 custom ULValue at level 0 
- , return_ownership custom ULValue at level 0 
- , trading_pair_deploy custom ULValue at level 0 
- , order_answer custom ULValue at level 0 
- , process_queue custom ULValue at level 0 
- , send_notify custom ULValue at level 0 
- , deals_limit custom ULValue at level 0 
- , notify_addr custom ULValue at level 0 ) : ursus_scope . 
+ (in custom ULValue at level 0 , deployer_pubkey custom URValue at level 0 
+ , transfer_tip3 custom URValue at level 0 
+ , return_ownership custom URValue at level 0 
+ , trading_pair_deploy custom URValue at level 0 
+ , order_answer custom URValue at level 0 
+ , process_queue custom URValue at level 0 
+ , send_notify custom URValue at level 0 
+ , deals_limit custom URValue at level 0 
+ , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
  Definition Flex_Ф_setPairCode_call { a1 }  ( code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_setPairCode 
@@ -208,7 +189,7 @@ Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XIn
  Notation " 'Flex_Ф_setPairCode_ref_' '(' code ')' " := 
  ( FuncallExpression ( Flex_Ф_setPairCode_call 
  code )) 
- (in custom ULValue at level 0 , code custom ULValue at level 0 ) : ursus_scope . 
+ (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
 
  Definition Flex_Ф_setXchgPairCode_call { a1 }  ( code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_setXchgPairCode 
@@ -217,7 +198,7 @@ Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XIn
  Notation " 'Flex_Ф_setXchgPairCode_ref_' '(' code ')' " := 
  ( FuncallExpression ( Flex_Ф_setXchgPairCode_call 
  code )) 
- (in custom ULValue at level 0 , code custom ULValue at level 0 ) : ursus_scope . 
+ (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
  Definition Flex_Ф_setPriceCode_call { a1 }  ( code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_setPriceCode 
@@ -226,7 +207,7 @@ Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XIn
  Notation " 'Flex_Ф_setPriceCode_ref_' '(' code ')' " := 
  ( FuncallExpression ( Flex_Ф_setPriceCode_call 
  code )) 
- (in custom ULValue at level 0 , code custom ULValue at level 0 ) : ursus_scope . 
+ (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
  Definition Flex_Ф_setXchgPriceCode_call { a1 }  ( code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_setXchgPriceCode 
@@ -235,7 +216,7 @@ Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XIn
  Notation " 'Flex_Ф_setXchgPriceCode_ref_' '(' code ')' " := 
  ( FuncallExpression ( Flex_Ф_setXchgPriceCode_call 
  code )) 
- (in custom ULValue at level 0 , code custom ULValue at level 0 ) : ursus_scope . 
+ (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
  Definition Flex_Ф_isFullyInitialized_call  : LedgerT ( ControlResult XBool false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ0 ) Flex_Ф_isFullyInitialized 
@@ -287,7 +268,7 @@ Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XIn
  ( URResult ( Flex_Ф_getXchgPriceCode_call 
  tip3_addr1 tip3_addr2 )) 
  (in custom URValue at level 0 , tip3_addr1 custom URValue at level 0 
- , tip3_addr2 custom ULValue at level 0 ) : ursus_scope . 
+ , tip3_addr2 custom URValue at level 0 ) : ursus_scope . 
  
  Definition Flex_Ф_getSellTradingPair_call { a1 }  ( tip3_root : URValue XAddress a1 ) : LedgerT ( ControlResult XAddress a1 ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_getSellTradingPair 
@@ -307,7 +288,7 @@ Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XIn
  ( URResult ( Flex_Ф_getXchgTradingPair_call 
  tip3_major_root tip3_minor_root )) 
  (in custom URValue at level 0 , tip3_major_root custom URValue at level 0 
- , tip3_minor_root custom ULValue at level 0 ) : ursus_scope . 
+ , tip3_minor_root custom URValue at level 0 ) : ursus_scope . 
  
  Definition Flex_Ф_getDealsLimit_call  : LedgerT ( ControlResult XInteger8 false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ0 ) Flex_Ф_getDealsLimit 

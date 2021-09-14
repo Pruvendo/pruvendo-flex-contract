@@ -62,8 +62,8 @@
  XInteger128 * 
  XInteger128 * 
  XInteger128 )%type .
-(* 1 *) Inductive FLeXFields := | FLeX_ι_deployer_pubkey_ | FLeX_ι_tons_cfg_ | FLeX_ι_pair_code_ | FLeX_ι_xchg_pair_code_ | FLeX_ι_price_code_ | FLeX_ι_xchg_price_code_ | FLeX_ι_deals_limit_ | FLeX_ι_notify_addr_ .
-(* 2 *) Definition FLeX := 
+(* 1 *) Inductive FlexFields := | Flex_ι_deployer_pubkey_ | Flex_ι_tons_cfg_ | Flex_ι_pair_code_ | Flex_ι_xchg_pair_code_ | Flex_ι_price_code_ | Flex_ι_xchg_price_code_ | Flex_ι_deals_limit_ | Flex_ι_notify_addr_ .
+(* 2 *) Definition Flex := 
  ( XInteger256 * 
  TonsConfig * 
  XMaybe TvmCell * 
@@ -111,7 +111,7 @@
  XHMap string nat )%type .
 (* 1 *) Inductive LedgerFieldsI := | Ledger_ι_FLeX | Ledger_ι_VMState | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
 (* 2 *) Definition Ledger := 
- ( FLeX * 
+ ( Flex * 
  VMState * 
  LocalState * 
  LocalState )%type .
@@ -202,40 +202,40 @@ match f with
   getPruvendoRecord := @TonsConfig_get ;
   setPruvendoRecord := @TonsConfig_set ;
 } .
-(* 3 *) Definition FLeX_field_type f : Type :=  
+(* 3 *) Definition Flex_field_type f : Type :=  
 match f with 
- | FLeX_ι_deployer_pubkey_ => XInteger256 | FLeX_ι_tons_cfg_ => TonsConfig | FLeX_ι_pair_code_ => XMaybe TvmCell | FLeX_ι_xchg_pair_code_ => XMaybe TvmCell | FLeX_ι_price_code_ => XMaybe TvmCell | FLeX_ι_xchg_price_code_ => XMaybe TvmCell | FLeX_ι_deals_limit_ => XInteger8 | FLeX_ι_notify_addr_ => XAddress end .
-(* 4 *) Definition FLeX_get (f: FLeXFields )(r: FLeX ) :  FLeX_field_type f := 
+ | Flex_ι_deployer_pubkey_ => XInteger256 | Flex_ι_tons_cfg_ => TonsConfig | Flex_ι_pair_code_ => XMaybe TvmCell | Flex_ι_xchg_pair_code_ => XMaybe TvmCell | Flex_ι_price_code_ => XMaybe TvmCell | Flex_ι_xchg_price_code_ => XMaybe TvmCell | Flex_ι_deals_limit_ => XInteger8 | Flex_ι_notify_addr_ => XAddress end .
+(* 4 *) Definition Flex_get (f: FlexFields )(r: Flex ) :  Flex_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 ) := r in 
  match f with 
- | FLeX_ι_deployer_pubkey_ => r1 
- | FLeX_ι_tons_cfg_ => r2 
- | FLeX_ι_pair_code_ => r3 
- | FLeX_ι_xchg_pair_code_ => r4 
- | FLeX_ι_price_code_ => r5 
- | FLeX_ι_xchg_price_code_ => r6 
- | FLeX_ι_deals_limit_ => r7 
- | FLeX_ι_notify_addr_ => r8 
+ | Flex_ι_deployer_pubkey_ => r1 
+ | Flex_ι_tons_cfg_ => r2 
+ | Flex_ι_pair_code_ => r3 
+ | Flex_ι_xchg_pair_code_ => r4 
+ | Flex_ι_price_code_ => r5 
+ | Flex_ι_xchg_price_code_ => r6 
+ | Flex_ι_deals_limit_ => r7 
+ | Flex_ι_notify_addr_ => r8 
  end .
-(* 5 *) Coercion FLeX_get : FLeXFields >-> Funclass .
-(* 6 *) Definition FLeX_set (f: FLeXFields ) 
-(v: FLeX_field_type f) (r: FLeX ): FLeX := 
+(* 5 *) Coercion Flex_get : FlexFields >-> Funclass .
+(* 6 *) Definition Flex_set (f: FlexFields ) 
+(v: Flex_field_type f) (r: Flex ): Flex := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 ) := r in 
  match f, v with 
- | FLeX_ι_deployer_pubkey_ , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 ) 
- | FLeX_ι_tons_cfg_ , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 ) 
- | FLeX_ι_pair_code_ , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 ) 
- | FLeX_ι_xchg_pair_code_ , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 ) 
- | FLeX_ι_price_code_ , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 ) 
- | FLeX_ι_xchg_price_code_ , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 ) 
- | FLeX_ι_deals_limit_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 ) 
- | FLeX_ι_notify_addr_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' ) 
- end .
-(* 7 *) Global Instance FLeX_PruvendoRecord : PruvendoRecord FLeX FLeXFields :=
+ | Flex_ι_deployer_pubkey_ , v' => ( v' , r2 , r3 , r4 , r5 , r6 , r7 , r8 ) 
+ | Flex_ι_tons_cfg_ , v' => ( r1 , v' , r3 , r4 , r5 , r6 , r7 , r8 ) 
+ | Flex_ι_pair_code_ , v' => ( r1 , r2 , v' , r4 , r5 , r6 , r7 , r8 ) 
+ | Flex_ι_xchg_pair_code_ , v' => ( r1 , r2 , r3 , v' , r5 , r6 , r7 , r8 ) 
+ | Flex_ι_price_code_ , v' => ( r1 , r2 , r3 , r4 , v' , r6 , r7 , r8 ) 
+ | Flex_ι_xchg_price_code_ , v' => ( r1 , r2 , r3 , r4 , r5 , v' , r7 , r8 ) 
+ | Flex_ι_deals_limit_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , v' , r8 ) 
+ | Flex_ι_notify_addr_ , v' => ( r1 , r2 , r3 , r4 , r5 , r6 , r7 , v' ) 
+ end . 
+(* 7 *) Global Instance Flex_PruvendoRecord : PruvendoRecord Flex FlexFields :=
 {
-  field_type := FLeX_field_type; 
-  getPruvendoRecord := @FLeX_get ;
-  setPruvendoRecord := @FLeX_set ;
+  field_type := Flex_field_type; 
+  getPruvendoRecord := @Flex_get ;
+  setPruvendoRecord := @Flex_set ;
 } .
 (* 3 *) Definition TradingPair_field_type f : Type :=  
 match f with 
@@ -358,7 +358,7 @@ match f with
 } .
 (* 3 *) Definition Ledger_field_type f : Type :=  
 match f with 
- | Ledger_ι_FLeX => FLeX | Ledger_ι_VMState => VMState | Ledger_ι_LocalState => LocalState | Ledger_ι_LocalStateCopy => LocalState end .
+ | Ledger_ι_FLeX => Flex | Ledger_ι_VMState => VMState | Ledger_ι_LocalState => LocalState | Ledger_ι_LocalStateCopy => LocalState end .
 (* 4 *) Definition Ledger_get (f: LedgerFields )(r: Ledger ) :  Ledger_field_type f := 
  let '( r1 , r2 , r3 , r4 ) := r in 
  match f with 
@@ -383,7 +383,7 @@ match f with
   getPruvendoRecord := @Ledger_get ;
   setPruvendoRecord := @Ledger_set ;
 } .
-Definition T1 := FLeX .
+Definition T1 := Flex .
 Definition T2 := VMState .
 Definition T3 := LocalState .
 Definition T4 := LocalState .
@@ -730,9 +730,9 @@ Fail Next Obligation.
 Existing Instance CountablePair_Next | 0.
 Existing Instance CountablePair0 | 100.
 
-Opaque FLeX.
+Opaque Flex.
 
-Lemma Ledger1Type_eq: forall (l: Ledger), projT1 (rth 0 l) = FLeX.
+Lemma Ledger1Type_eq: forall (l: Ledger), projT1 (rth 0 l) = Flex.
 Proof.
    intros.
    compute.
@@ -743,18 +743,18 @@ Defined.
 
 Definition Ledger1Type (l: Ledger) := projT1 (rth 0 l).
 
-Definition Ledger1TypeFLeX : forall (l:Ledger), Ledger1Type l -> FLeX.
+Definition Ledger1TypeFLeX : forall (l:Ledger), Ledger1Type l -> Flex.
 intros.
 unfold Ledger1Type in X.
 rewrite Ledger1Type_eq in X.
 exact X.
 Defined.
 
-Coercion Ledger1TypeFLeX       : Ledger1Type >-> FLeX.
+Coercion Ledger1TypeFLeX       : Ledger1Type >-> Flex.
 
-Notation "r ₁" := ((projT2 (rth 0 r) : Ledger1Type r) : FLeX) (at level 10).
+Notation "r ₁" := ((projT2 (rth 0 r) : Ledger1Type r) : Flex) (at level 10).
 
-Transparent FLeX.
+Transparent Flex.
 
 Definition LedgerPruvendoRecord := Ledger_PruvendoRecord.
 Definition LedgerLocalState := LocalState.
