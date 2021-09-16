@@ -14,7 +14,7 @@ Require Import FinProof.MonadTransformers21.
 
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.ProofEnvironment2.
-Require Import UMLang.SML_NG26.
+Require Import UMLang.SML_NG28.
 
 Require Import FLeXContractTypes.
 

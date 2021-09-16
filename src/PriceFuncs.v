@@ -32,7 +32,7 @@ Require Import ZArith.
 
 Require Import PriceFuncsNotations.
 Require Import UMLang.SolidityNotations2.
-Require Import UMLang.SML_NG26.
+Require Import UMLang.SML_NG28.
 
 Require Import UrsusStdLib.stdNotations.
 Require Import UrsusStdLib.stdUFunc.
@@ -195,8 +195,8 @@ Defined .
  	 	 	 refine {{ new 'sell_idx_cur : ( XInteger ) @ "sell_idx_cur"  := {} ; { _ } }} . 
  	 	   refine {{ new 'sell : ( OrderInfo ) @ "sell" := {} ; { _ } }} . 
 (*  	 	         [ { sell_idx_cur } , { sell } ] := *sell_opt ; { _ } }} .  *)
- 	 	 	 refine {{ buy_idx_cur : ( XInteger ) @ "buy_idx_cur" := {} ; { _ } }} . 
- 	 	   refine {{ buy : ( OrderInfo ) @ "buy" := {} ; { _ } }} . 
+ 	 	 	 refine {{ new 'buy_idx_cur : ( XInteger ) @ "buy_idx_cur" := {} ; { _ } }} . 
+ 	 	   refine {{ new 'buy : ( OrderInfo ) @ "buy" := {} ; { _ } }} . 
 (*  	 	         [ { buy_idx_cur } , { buy } ] := *buy_opt ; { _ } }} .  *)
  	 	 	 refine {{ new 'sell_out_of_tons : ( XBool ) @ "sell_out_of_tons" := FALSE ; { _ } }} . 
 	 	 	 refine {{ new 'buy_out_of_tons : ( XBool ) @ "buy_out_of_tons" := FALSE ; { _ } }} . 
@@ -346,7 +346,7 @@ std::pair<StateInit, uint256> prepare_internal_wallet_state_init_and_addr(
                then { { _: UExpression OrderRet false } } 
                else { { _: UExpression OrderRet false } } ; { _ } }} . 
  	 	 	 refine {{ { ec } := !{ ec } (* set_int_return_flag ( SEND_ALL_GAS | DELETE_ME_IF_I_AM_EMPTY ) *) }} .
- 	 refine {{ incoming_value : XInteger @ "incoming_value" := {} (* int_value ( ) . get ( ) *) ; { _ } }} . 
+ 	 refine {{ new 'incoming_value : XInteger @ "incoming_value" := {} (* int_value ( ) . get ( ) *) ; { _ } }} . 
 (*  	 refine {{ tvm_rawreserve ( tvm_balance ( ) - incoming_value , rawreserve_flag : : up_to ) ; { _ } }} .  *)
  	 refine {{ { ec } := !{ ec } (* Set_int_return_flag ( SEND_ALL_GAS ) *) }} . 
  refine {{ return_ {} (* [ ec , { } , { } ]  *) }} . 
