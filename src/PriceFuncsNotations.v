@@ -55,7 +55,7 @@ Parameter Ф_calc_cost : XInteger128 -> XInteger128 -> UExpression ( XMaybe XInt
  Parameter Price_Ф_expected_wallet_address : XInteger256 -> XInteger256 -> UExpression XInteger256 false . 
  Parameter Price_Ф_verify_tip3_addr : XAddress -> XInteger256 -> XInteger256 -> UExpression XBool false . 
  Parameter Price_Ф_on_sell_fail : XInteger -> ITONTokenWalletPtr -> UExpression OrderRet false . 
- Parameter Price_Ф_onTip3LendOwnership : XAddress -> XInteger128 -> XInteger32 -> XInteger256 -> XAddress -> TvmCell -> UExpression OrderRet false . 
+ Parameter Price_Ф_onTip3LendOwnership : XAddress -> XInteger128 -> XInteger32 -> XInteger256 -> XAddress -> XCell -> UExpression OrderRet false . 
  Parameter Price_Ф_buyTip3MinValue : XInteger128 -> UExpression XInteger128 false . 
  Parameter Price_Ф_buyTip3 : XInteger128 -> XAddress -> XInteger32 -> UExpression OrderRet true . 
  Parameter Ф_cancel_order_impl : XList OrderInfo -> addr_std_fixed -> XInteger128 -> XBool -> Grams -> Grams -> Grams -> UExpression ( XList OrderInfo ) false . 
@@ -69,7 +69,7 @@ Parameter Ф_calc_cost : XInteger128 -> XInteger128 -> UExpression ( XMaybe XInt
  Parameter Price_Ф_getTonsCfg : UExpression TonsConfig false . 
  Parameter Price_Ф_getSells : UExpression ( XHMap XInteger OrderInfo) false . 
  Parameter Price_Ф_getBuys : UExpression ( XHMap XInteger OrderInfo) false . 
- Parameter Price_Ф__fallback : TvmCell -> UExpression XInteger false . 
+ Parameter Price_Ф__fallback : XCell -> UExpression XInteger false . 
 
 
 
@@ -307,8 +307,8 @@ Parameter Ф_calc_cost : XInteger128 -> XInteger128 -> UExpression ( XMaybe XInt
  Notation " 'LocalState.TONTokenWallet' " := ( URState (U:= LocalState ) LocalState_ι_TONTokenWallet ) (in custom URValue at level 0) : ursus_scope.
  Notation " 'LocalState.tpladdressGrams' " := ( ULState (U:= LocalState ) LocalState_ι_tpladdressGrams ) (in custom ULValue at level 0) : ursus_scope.
  Notation " 'LocalState.tpladdressGrams' " := ( URState (U:= LocalState ) LocalState_ι_tpladdressGrams ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.TvmSlice' " := ( ULState (U:= LocalState ) LocalState_ι_TvmSlice ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.TvmSlice' " := ( URState (U:= LocalState ) LocalState_ι_TvmSlice ) (in custom URValue at level 0) : ursus_scope.
+ Notation " 'LocalState.XSlice' " := ( ULState (U:= LocalState ) LocalState_ι_XSlice ) (in custom ULValue at level 0) : ursus_scope.
+ Notation " 'LocalState.XSlice' " := ( URState (U:= LocalState ) LocalState_ι_XSlice ) (in custom URValue at level 0) : ursus_scope.
  Notation " 'LocalState.optOrderRet' " := ( ULState (U:= LocalState ) LocalState_ι_optOrderRet ) (in custom ULValue at level 0) : ursus_scope.
  Notation " 'LocalState.optOrderRet' " := ( URState (U:= LocalState ) LocalState_ι_optOrderRet ) (in custom URValue at level 0) : ursus_scope.
  Notation " 'LocalState.cellIndex' " := ( ULState (U:= LocalState ) LocalState_ι_cellIndex ) (in custom ULValue at level 0) : ursus_scope.
@@ -371,8 +371,8 @@ Parameter Ф_calc_cost : XInteger128 -> XInteger128 -> UExpression ( XMaybe XInt
  Notation " 'LocalState.TONTokenWalletIndex' " := ( URState (U:= LocalState ) LocalState_ι_TONTokenWalletIndex ) (in custom URValue at level 0) : ursus_scope.
  Notation " 'LocalState.tpladdressGramsIndex' " := ( ULState (U:= LocalState ) LocalState_ι_tpladdressGramsIndex ) (in custom ULValue at level 0) : ursus_scope.
  Notation " 'LocalState.tpladdressGramsIndex' " := ( URState (U:= LocalState ) LocalState_ι_tpladdressGramsIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.TvmSliceIndex' " := ( ULState (U:= LocalState ) LocalState_ι_TvmSliceIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.TvmSliceIndex' " := ( URState (U:= LocalState ) LocalState_ι_TvmSliceIndex ) (in custom URValue at level 0) : ursus_scope.
+ Notation " 'LocalState.XSliceIndex' " := ( ULState (U:= LocalState ) LocalState_ι_XSliceIndex ) (in custom ULValue at level 0) : ursus_scope.
+ Notation " 'LocalState.XSliceIndex' " := ( URState (U:= LocalState ) LocalState_ι_XSliceIndex ) (in custom URValue at level 0) : ursus_scope.
  Notation " 'LocalState.optOrderRetIndex' " := ( ULState (U:= LocalState ) LocalState_ι_optOrderRetIndex ) (in custom ULValue at level 0) : ursus_scope.
  Notation " 'LocalState.optOrderRetIndex' " := ( URState (U:= LocalState ) LocalState_ι_optOrderRetIndex ) (in custom URValue at level 0) : ursus_scope.
  Notation " 'Ledger.Price' " := ( ULState (U:= Ledger ) Ledger_ι_Price ) (in custom ULValue at level 0) : ursus_scope.
@@ -504,7 +504,7 @@ Parameter Ф_calc_cost : XInteger128 -> XInteger128 -> UExpression ( XMaybe XInt
  Definition Price_Ф_onTip3LendOwnership_call { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue XAddress a1 )
  ( balance : URValue XInteger128 a2 ) ( lend_finish_time : URValue XInteger32 a3 ) 
 ( pubkey : URValue XInteger256 a4 ) ( internal_owner : URValue XAddress a5 ) 
-( payload : URValue TvmCell a6 ) : LedgerT ( ControlResult OrderRet ( orb ( orb ( orb ( orb ( orb a6 a5 ) a4) a3) a2) a1) ) := 
+( payload : URValue XCell a6 ) : LedgerT ( ControlResult OrderRet ( orb ( orb ( orb ( orb ( orb a6 a5 ) a4) a3) a2) a1) ) := 
 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ6 ) Price_Ф_onTip3LendOwnership 
  ( SimpleLedgerableArg URValue {{ Λ "answer_addr" }} ( answer_addr ) ) 
@@ -655,7 +655,7 @@ LedgerT ( ControlResult ( XList OrderInfo )  ( orb ( orb ( orb ( orb ( orb ( orb
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
- Definition Price_Ф__fallback_call { a1 } ( xx : URValue TvmCell a1 ) : LedgerT ( ControlResult XInteger a1 ) := 
+ Definition Price_Ф__fallback_call { a1 } ( xx : URValue XCell a1 ) : LedgerT ( ControlResult XInteger a1 ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Price_Ф__fallback 
  ( SimpleLedgerableArg URValue {{ Λ "xx" }} ( xx ) ) 
  . 

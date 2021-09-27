@@ -129,21 +129,21 @@ Notation " 'VMState.msg_value' " := ( ULState (U:= VMState ) VMState_ι_msg_valu
 Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_tons) (in custom URValue at level 0) : ursus_scope. 
 
  Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XAddress -> UExpression PhantomType false . 
- Parameter Flex_Ф_setPairCode : TvmCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_setXchgPairCode : TvmCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_setPriceCode : TvmCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_setXchgPriceCode : TvmCell -> UExpression PhantomType true . 
+ Parameter Flex_Ф_setPairCode : XCell -> UExpression PhantomType true . 
+ Parameter Flex_Ф_setXchgPairCode : XCell -> UExpression PhantomType true . 
+ Parameter Flex_Ф_setPriceCode : XCell -> UExpression PhantomType true . 
+ Parameter Flex_Ф_setXchgPriceCode : XCell -> UExpression PhantomType true . 
  Parameter Flex_Ф_isFullyInitialized : UExpression XBool false . 
  Parameter Flex_Ф_getTonsCfg : UExpression TonsConfig false . 
- Parameter Flex_Ф_getTradingPairCode : UExpression TvmCell false . 
- Parameter Flex_Ф_getXchgPairCode : UExpression TvmCell false . 
- Parameter Flex_Ф_getSellPriceCode : XAddress -> UExpression TvmCell true . 
- Parameter Flex_Ф_getXchgPriceCode : XAddress -> XAddress -> UExpression TvmCell true . 
+ Parameter Flex_Ф_getTradingPairCode : UExpression XCell false . 
+ Parameter Flex_Ф_getXchgPairCode : UExpression XCell false . 
+ Parameter Flex_Ф_getSellPriceCode : XAddress -> UExpression XCell true . 
+ Parameter Flex_Ф_getXchgPriceCode : XAddress -> XAddress -> UExpression XCell true . 
  Parameter Flex_Ф_getSellTradingPair : XAddress -> UExpression XAddress false . 
  Parameter Flex_Ф_getXchgTradingPair : XAddress -> XAddress -> UExpression XAddress false . 
  Parameter Flex_Ф_getDealsLimit : UExpression XInteger8 false . 
  Parameter Flex_Ф_getNotifyAddr : UExpression XAddress false . 
- Parameter Flex_Ф__fallback : TvmCell -> UExpression XInteger false . 
+ Parameter Flex_Ф__fallback : XCell -> UExpression XInteger false . 
 
 
 
@@ -182,7 +182,7 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  , deals_limit custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition Flex_Ф_setPairCode_call { a1 }  ( code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
+ Definition Flex_Ф_setPairCode_call { a1 }  ( code : URValue XCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_setPairCode 
  ( SimpleLedgerableArg URValue {{ Λ "code" }} ( code ) ) 
  . 
@@ -191,7 +191,7 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  code )) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
 
- Definition Flex_Ф_setXchgPairCode_call { a1 }  ( code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
+ Definition Flex_Ф_setXchgPairCode_call { a1 }  ( code : URValue XCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_setXchgPairCode 
  ( SimpleLedgerableArg URValue {{ Λ "code" }} ( code ) ) 
  . 
@@ -200,7 +200,7 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  code )) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition Flex_Ф_setPriceCode_call { a1 }  ( code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
+ Definition Flex_Ф_setPriceCode_call { a1 }  ( code : URValue XCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_setPriceCode 
  ( SimpleLedgerableArg URValue {{ Λ "code" }} ( code ) ) 
  . 
@@ -209,7 +209,7 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  code )) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition Flex_Ф_setXchgPriceCode_call { a1 }  ( code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
+ Definition Flex_Ф_setXchgPriceCode_call { a1 }  ( code : URValue XCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_setXchgPriceCode 
  ( SimpleLedgerableArg URValue {{ Λ "code" }} ( code ) ) 
  . 
@@ -234,7 +234,7 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
- Definition Flex_Ф_getTradingPairCode_call  : LedgerT ( ControlResult TvmCell false ) := 
+ Definition Flex_Ф_getTradingPairCode_call  : LedgerT ( ControlResult XCell false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ0 ) Flex_Ф_getTradingPairCode 
  . 
  Notation " 'Flex_Ф_getTradingPairCode_ref_' '(' ')' " := 
@@ -242,7 +242,7 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
- Definition Flex_Ф_getXchgPairCode_call  : LedgerT ( ControlResult TvmCell false ) := 
+ Definition Flex_Ф_getXchgPairCode_call  : LedgerT ( ControlResult XCell false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ0 ) Flex_Ф_getXchgPairCode 
  . 
  Notation " 'Flex_Ф_getXchgPairCode_ref_' '(' ')' " := 
@@ -250,7 +250,7 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
- Definition Flex_Ф_getSellPriceCode_call { a1 }  ( tip3_addr : URValue XAddress a1 ) : LedgerT ( ControlResult TvmCell true ) := 
+ Definition Flex_Ф_getSellPriceCode_call { a1 }  ( tip3_addr : URValue XAddress a1 ) : LedgerT ( ControlResult XCell true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф_getSellPriceCode 
  ( SimpleLedgerableArg URValue {{ Λ "tip3_addr" }} ( tip3_addr ) ) 
  . 
@@ -259,7 +259,7 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  tip3_addr )) 
  (in custom URValue at level 0 , tip3_addr custom URValue at level 0 ) : ursus_scope . 
  
- Definition Flex_Ф_getXchgPriceCode_call { a1 a2 }  ( tip3_addr1 : URValue XAddress a1 ) ( tip3_addr2 : URValue XAddress a2 ) : LedgerT ( ControlResult TvmCell true ) := 
+ Definition Flex_Ф_getXchgPriceCode_call { a1 a2 }  ( tip3_addr1 : URValue XAddress a1 ) ( tip3_addr2 : URValue XAddress a2 ) : LedgerT ( ControlResult XCell true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ2 ) Flex_Ф_getXchgPriceCode 
  ( SimpleLedgerableArg URValue {{ Λ "tip3_addr1" }} ( tip3_addr1 ) ) 
  ( SimpleLedgerableArg URValue {{ Λ "tip3_addr2" }} ( tip3_addr2 ) ) 
@@ -306,7 +306,7 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
- Definition Flex_Ф__fallback_call ( x : URValue TvmCell false ) : LedgerT ( ControlResult XInteger false ) := 
+ Definition Flex_Ф__fallback_call ( x : URValue XCell false ) : LedgerT ( ControlResult XInteger false ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) Flex_Ф__fallback 
  ( SimpleLedgerableArg URValue {{ Λ "x" }} ( x ) ) .
 

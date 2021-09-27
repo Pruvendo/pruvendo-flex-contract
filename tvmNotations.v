@@ -56,16 +56,16 @@ Notation "'λ12'" := ( @SMLExpression_Next_Ledgerable Ledger _ LocalState FullSt
 (**************************************************************************************************)
 
 Parameter __builtin_tvm_hashcu : 
-            TvmCell ->  SMLExpression (S:=Ledger) false XInteger XInteger .
+            XCell ->  SMLExpression (S:=Ledger) false XInteger XInteger .
 
 Notation " '__builtin_tvm_hashcu_' '(' x ')' " := ( SMLRScalar (sml_call 
   (Ledgerable := λ1)
-  (* (T := TvmCell ->  SMLExpression (S:=Ledger) false XInteger XInteger)*) __builtin_tvm_hashcu x ))  
+  (* (T := XCell ->  SMLExpression (S:=Ledger) false XInteger XInteger)*) __builtin_tvm_hashcu x ))  
   (in custom SMLRValue at level 0 , x custom SMLRValue at level 0) : sml_scope.
 
 Notation " '__builtin_tvm_hashcu_' '(' x ')' " := ( ResultExpression (sml_call 
   (Ledgerable := λ1)
-  (* (T := TvmCell ->  SMLExpression (S:=Ledger) false XInteger XInteger) *) __builtin_tvm_hashcu x )) 
+  (* (T := XCell ->  SMLExpression (S:=Ledger) false XInteger XInteger) *) __builtin_tvm_hashcu x )) 
   (in custom SMLLValue at level 0 , x custom SMLRValue at level 0) : sml_scope.
 
 (**************************************************************************************************)  
@@ -111,18 +111,18 @@ Notation " 'tvm.balance' '()' " := (
 (**************************************************************************************************) 
 
 Parameter prepare_persistent_data1 : 
-          XInteger -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe TvmCell) XInteger .
+          XInteger -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger .
 
 Notation " 'prepare_persistent_data1_' '(' a ',' b ')' " := ( 
   (SMLRScalar (sml_call (Ledgerable := λ2)
-  (* (T :=  XInteger -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe TvmCell) XInteger) *) prepare_persistent_data1 a b ))) 
+  (* (T :=  XInteger -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data1 a b ))) 
   (in custom SMLRValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope. 
 
 Notation " 'prepare_persistent_data1_' '(' a ',' b ')' " := ( 
   (ResultExpression (sml_call (Ledgerable := λ2)
-  (* (T :=  XInteger -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe TvmCell) XInteger) *) prepare_persistent_data1 a b))) 
+  (* (T :=  XInteger -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data1 a b))) 
   (in custom SMLLValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope.
@@ -131,18 +131,18 @@ Notation " 'prepare_persistent_data1_' '(' a ',' b ')' " := (
 
 
 Parameter prepare_persistent_data2 : 
-   XInteger ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe TvmCell) XInteger .
+   XInteger ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger .
 
 Notation " 'prepare_persistent_data2_' '(' a ',' b ')' " := ( 
   (SMLRScalar (sml_call (Ledgerable := λ2)
-  (* (T := XInteger ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe TvmCell) XInteger) *) prepare_persistent_data2 a b ))) 
+  (* (T := XInteger ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data2 a b ))) 
   (in custom SMLRValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope. 
 
 Notation " 'prepare_persistent_data2_' '(' a ',' b ')' " := ( 
   (ResultExpression (sml_call (Ledgerable := λ2)
-  (* (T := XInteger ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe TvmCell) XInteger) *) prepare_persistent_data2 a b ))) 
+  (* (T := XInteger ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data2 a b ))) 
   (in custom SMLLValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope.
@@ -150,18 +150,18 @@ Notation " 'prepare_persistent_data2_' '(' a ',' b ')' " := (
 (**************************************************************************************************)   
 
 Parameter prepare_persistent_data3 : 
-   XInteger ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe TvmCell) XInteger .
+   XInteger ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger .
 
 Notation " 'prepare_persistent_data3_' '(' a ',' b ')' " := ( 
   (SMLRScalar (sml_call (Ledgerable := λ2)
-  (* (T := XInteger ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe TvmCell) XInteger) *) prepare_persistent_data3 a b ))) 
+  (* (T := XInteger ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data3 a b ))) 
   (in custom SMLRValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope. 
 
 Notation " 'prepare_persistent_data3_' '(' a ',' b ')' " := ( 
   (ResultExpression (sml_call (Ledgerable := λ2)
-  (* (T := XInteger ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe TvmCell) XInteger) *) prepare_persistent_data3 a b ))) 
+  (* (T := XInteger ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data3 a b ))) 
   (in custom SMLLValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope.
@@ -169,17 +169,17 @@ Notation " 'prepare_persistent_data3_' '(' a ',' b ')' " := (
 (**************************************************************************************************) 
 
 
-Parameter tvm_hash : TvmCell -> SMLExpression (S:=Ledger) false XInteger XInteger .
+Parameter tvm_hash : XCell -> SMLExpression (S:=Ledger) false XInteger XInteger .
 
 Notation " 'tvm.hash' '(' a ')' " := ( 
   (SMLRScalar (sml_call (Ledgerable := λ1)
-  (* (T := TvmCell -> SMLExpression (S:=Ledger) false XInteger XInteger) *) tvm_hash a  ))) 
+  (* (T := XCell -> SMLExpression (S:=Ledger) false XInteger XInteger) *) tvm_hash a  ))) 
   (in custom SMLRValue at level 0,
   a custom SMLRValue at level 0 ) : sml_scope. 
 
 Notation " 'tvm.hash' '(' a ')' " := ( 
   (ResultExpression (sml_call (Ledgerable := λ1)
-  (* (T := TvmCell -> SMLExpression (S:=Ledger) false XInteger XInteger) *) tvm_hash a  ))) 
+  (* (T := XCell -> SMLExpression (S:=Ledger) false XInteger XInteger) *) tvm_hash a  ))) 
   (in custom SMLLValue at level 0,
   a custom SMLRValue at level 0 ) : sml_scope. 
 
@@ -320,14 +320,14 @@ Notation " 'tvm.myaddr' '()' " := (ResultExpression (sml_call (Ledgerable := λ0
     
 (**************************************************************************************************)     
 
-Parameter toCell: StateInit -> SMLExpression (S:=Ledger) false TvmCell XInteger  .
+Parameter toCell: StateInit -> SMLExpression (S:=Ledger) false XCell XInteger  .
 
 Notation " a  '->' 'make_cell' '()' " := (SMLRScalar ( sml_call  (Ledgerable := λ1)
-   (* ( T:= StateInit -> SMLExpression (S:=Ledger) false TvmCell XInteger ) *) toCell a )) 
+   (* ( T:= StateInit -> SMLExpression (S:=Ledger) false XCell XInteger ) *) toCell a )) 
    (in custom SMLRValue at level 0) : sml_scope.
 
 Notation " a  '->' 'make_cell' '()' " := (ResultExpression ( sml_call  (Ledgerable := λ1)
-   (* ( T:= StateInit -> SMLExpression (S:=Ledger) false TvmCell XInteger ) *) toCell a )) 
+   (* ( T:= StateInit -> SMLExpression (S:=Ledger) false XCell XInteger ) *) toCell a )) 
    (in custom SMLLValue at level 0, 
    a custom SMLRValue at level 0 ) : sml_scope.
 
@@ -341,14 +341,14 @@ Check {{ s_ -> make_cell () }}. *)
 
 (**************************************************************************************************)     
 
-Parameter parse_continue : TvmSlice -> SMLExpression (S:=Ledger) false ( TvmSlice # TvmSlice ) XInteger .
+Parameter parse_continue : XSlice -> SMLExpression (S:=Ledger) false ( XSlice # XSlice ) XInteger .
 
 Notation " 'parse_continue<abiv1::internal_msg_header>' '(' a ')' " := (SMLRScalar ( sml_call  (Ledgerable := λ1)
-   (* ( T:= TvmSlice -> SMLExpression (S:=Ledger) false  ( TvmSlice # TvmSlice ) XInteger ) *) parse_continue a )) 
+   (* ( T:= XSlice -> SMLExpression (S:=Ledger) false  ( XSlice # XSlice ) XInteger ) *) parse_continue a )) 
    (in custom SMLRValue at level 0) : sml_scope.
 
 Notation " 'parse_continue<abiv1::internal_msg_header>' '(' a ')' " := (ResultExpression ( sml_call (Ledgerable := λ1) 
-   (* ( T:= TvmSlice -> SMLExpression (S:=Ledger) false  ( TvmSlice # TvmSlice ) XInteger ) *) parse_continue a )) 
+   (* ( T:= XSlice -> SMLExpression (S:=Ledger) false  ( XSlice # XSlice ) XInteger ) *) parse_continue a )) 
    (in custom SMLLValue at level 0, 
    a custom SMLRValue at level 0 ) : sml_scope.
 

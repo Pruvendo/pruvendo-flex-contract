@@ -26,7 +26,7 @@ struct Allowance{
 abstract contract ATip3Root {
     constructor(bytes name, bytes symbol, uint8 decimals, uint256 root_public_key, uint256 root_owner, uint128 total_supply) public {}
     function getName() public returns(string value0) {}
-    function setWalletCode(TvmCell wallet_code) public {}
+    function setWalletCode(XCell wallet_code) public {}
     function deployWallet(uint32 _answer_id, int8 workchain_id, uint256 pubkey, uint256 internal_owner,
         uint128 tokens, uint128 grams) public functionID(1888586564) returns(address value0) {}
     function grant(address dest, uint128 tokens, uint128 grams) public {}
@@ -38,7 +38,7 @@ abstract contract ATip3Root {
 }
 
 abstract contract TIP3Wallet {
-    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) {}
+    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) {}
 }
 
 abstract contract Utility {
@@ -83,27 +83,27 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
 
     address m_flexClient;
 
-    TvmCell m_t3rContractCode;
-    TvmCell m_t3WalletCode;
-    TvmCell m_flexClientCode;
+    XCell m_t3rContractCode;
+    XCell m_t3WalletCode;
+    XCell m_flexClientCode;
 
     address m_deployAddress;
 
     uint32 m_seedPhraseCallBack;
 
-    function setT3RCode(TvmCell code) public {
+    function setT3RCode(XCell code) public {
         require(tvm.pubkey() == msg.pubkey(), 100);
         tvm.accept();
         m_t3rContractCode = code;
     }
 
-    function setT3WalletCode(TvmCell code) public {
+    function setT3WalletCode(XCell code) public {
         require(tvm.pubkey() == msg.pubkey(), 100);
         tvm.accept();
         m_t3WalletCode = code.toSlice().loadRef();
     }
 
-    function setFlexClientCode(TvmCell code) public {
+    function setFlexClientCode(XCell code) public {
         require(msg.pubkey() == tvm.pubkey(), 101);
         tvm.accept();
         m_flexClientCode = code;
@@ -182,7 +182,7 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
 //////////////////////////////////////////////////////////////////////
 
     function DeployRootStep1() public {
-        TvmCell deployState = tvm.insertPubkey(m_t3rContractCode, m_masterPubKey);
+        XCell deployState = tvm.insertPubkey(m_t3rContractCode, m_masterPubKey);
         m_deployAddress = address.makeAddrStd(0, tvm.hash(deployState));
         Sdk.getAccountType(tvm.functionId(DeployRootStep2), m_deployAddress);
     }
@@ -240,9 +240,9 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
     function DeployRootStep10(bool value) public {
         if (value)
         {
-            TvmCell image = tvm.insertPubkey(m_t3rContractCode, m_masterPubKey);
+            XCell image = tvm.insertPubkey(m_t3rContractCode, m_masterPubKey);
             optional(uint256) none;
-            TvmCell deployMsg = tvm.buildExtMsg({
+            XCell deployMsg = tvm.buildExtMsg({
                 abiVer: 2,
                 dest: m_deployAddress,
                 callbackId: tvm.functionId(onSuccessDeployed),
@@ -271,7 +271,7 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
 
     function DeployRootStep11() public {
         optional(uint256) none;
-        TvmCell m_extMsg = tvm.buildExtMsg({
+        XCell m_extMsg = tvm.buildExtMsg({
             abiVer: 2,
             dest: m_deployAddress,
             callbackId: tvm.functionId(onT3WCSuccess),
@@ -300,8 +300,8 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
         Sdk.getAccountType(tvm.functionId(flexClientAccType), m_flexClient);
     }
 
-    function _checkFlexClient(TvmCell cliCode, uint256 pubKey) internal returns (address) {
-        TvmCell deployState = tvm.insertPubkey(cliCode, pubKey);
+    function _checkFlexClient(XCell cliCode, uint256 pubKey) internal returns (address) {
+        XCell deployState = tvm.insertPubkey(cliCode, pubKey);
         address flexClient = address.makeAddrStd(0, tvm.hash(deployState));
         return flexClient;
     }
@@ -487,7 +487,7 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
         }
     }
 
-    function printWalletBalance(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) public {
+    function printWalletBalance(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) public {
         Terminal.print(0, format("TIP3 Balance: {} tokens", tokensToStr(balance, m_decimals)));
         startGrant();
     }

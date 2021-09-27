@@ -26,12 +26,12 @@ abstract contract AMSig {
         uint128 value,
         bool bounce,
         bool allBalance,
-        TvmCell payload)
+        XCell payload)
     public returns (uint64 transId) {}
 }
 
 abstract contract AStock {
-    function getTradingPairCode() public returns(TvmCell value0) {}
+    function getTradingPairCode() public returns(XCell value0) {}
     function getNotifyAddr() public returns(address value0) {}
     function getTonsCfg() public returns(uint128 transfer_tip3, uint128 return_ownership, uint128 trading_pair_deploy,
                              uint128 order_answer, uint128 process_queue, uint128 send_notify) {}
@@ -43,7 +43,7 @@ abstract contract ATip3Root {
 }
 
 abstract contract AFlexClient {
-    constructor(uint256 pubkey, TvmCell trading_pair_code) public {}
+    constructor(uint256 pubkey, XCell trading_pair_code) public {}
     function deployTradingPair(address stock_addr, address tip3_root, uint128 deploy_min_value, uint128 deploy_value) public returns(address value0) {}
     function setStockCfg(StockTonCfg tons_cfg,address stock, address notify_addr) public {}
 }
@@ -61,12 +61,12 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
     uint256 m_masterPubKey;
     uint256 m_masterSecKey;
     address m_sender;
-    TvmCell m_flexClientCode;
+    XCell m_flexClientCode;
     uint128 m_tradingPairDeploy;
-    TvmCell m_sendMsg;
+    XCell m_sendMsg;
     address m_flexClient;
     address m_tip3root;
-    TvmCell m_tradingPairCode;
+    XCell m_tradingPairCode;
     address m_tip3wallet;
     address m_msig;
     uint128 m_dealTons;
@@ -79,7 +79,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
         m_stockAddr = addr;
     }
 
-    function setFlexClientCode(TvmCell code) public {
+    function setFlexClientCode(XCell code) public {
         require(msg.pubkey() == tvm.pubkey(), 101);
         tvm.accept();
         m_flexClientCode = code;
@@ -151,7 +151,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
     }
 
     function checkFlexClient() public {
-        TvmCell deployState = tvm.insertPubkey(m_flexClientCode, m_masterPubKey);
+        XCell deployState = tvm.insertPubkey(m_flexClientCode, m_masterPubKey);
         m_flexClient = address.makeAddrStd(0, tvm.hash(deployState));
         Sdk.getAccountType(tvm.functionId(FlexClientAccType), m_flexClient);
     }
@@ -199,7 +199,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
         }();
     }
 
-    function setTradingPairCode(TvmCell value0) public {
+    function setTradingPairCode(XCell value0) public {
         m_tradingPairCode = value0;
         getStockTonsCfg();
     }
@@ -262,9 +262,9 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
     function DeployRootStep2(bool value) public {
         if (value)
         {
-            TvmCell image = tvm.insertPubkey(m_flexClientCode, m_masterPubKey);
+            XCell image = tvm.insertPubkey(m_flexClientCode, m_masterPubKey);
             optional(uint256) none;
-            TvmCell deployMsg = tvm.buildExtMsg({
+            XCell deployMsg = tvm.buildExtMsg({
                 abiVer: 2,
                 dest: m_flexClient,
                 callbackId: tvm.functionId(onSuccessFCDeployed),
@@ -293,7 +293,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
 
     function flexClientSetStockCfg() public {
         optional(uint256) none;
-        TvmCell sendMsg = tvm.buildExtMsg({
+        XCell sendMsg = tvm.buildExtMsg({
             abiVer: 2,
             dest: m_flexClient,
             callbackId: tvm.functionId(onSuccessFCSetTonsCfg),
@@ -373,7 +373,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
     }
 
     function deployEmptyWallet() view public {
-        TvmCell payload = tvm.encodeBody(ATip3Root.deployEmptyWallet, 0, 0, 0x0, m_flexClient.value, m_dealTons);
+        XCell payload = tvm.encodeBody(ATip3Root.deployEmptyWallet, 0, 0, 0x0, m_flexClient.value, m_dealTons);
         optional(uint256) none;
         uint128 amount = m_dealTons+1000000000;
         AMSig(m_msig).submitTransaction{

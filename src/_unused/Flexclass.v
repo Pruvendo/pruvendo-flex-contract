@@ -47,9 +47,9 @@
 (* 2 *) Definition StateInit := 
  ( XMaybe XInteger * 
  XMaybe TickTock * 
- XMaybe TvmCell * 
- XMaybe TvmCell * 
- XMaybe TvmCell )%type .
+ XMaybe XCell * 
+ XMaybe XCell * 
+ XMaybe XCell )%type .
 (* 1 *) Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
 (* 2 *) Definition TonsConfig := 
  ( XInteger128 * 
@@ -62,10 +62,10 @@
 (* 2 *) Definition FLeX := 
  ( XInteger256 * 
  TonsConfig * 
- XMaybe TvmCell * 
- XMaybe TvmCell * 
- XMaybe TvmCell * 
- XMaybe TvmCell * 
+ XMaybe XCell * 
+ XMaybe XCell * 
+ XMaybe XCell * 
+ XMaybe XCell * 
  XInteger128 * 
  XInteger8 * 
  XAddress )%type .
@@ -83,13 +83,13 @@
 (* 1 *) Inductive LocalStateFields := | LocalState_ι_int | LocalState_ι_optcell | LocalState_ι_tpladdressaddress | LocalState_ι_uint256 | LocalState_ι_uint128 | LocalState_ι_uint8 | LocalState_ι_address | LocalState_ι_cell | LocalState_ι_XchgPair | LocalState_ι_bool | LocalState_ι_TradingPair | LocalState_ι_intIndex | LocalState_ι_optcellIndex | LocalState_ι_tpladdressaddressIndex | LocalState_ι_uint256Index | LocalState_ι_uint128Index | LocalState_ι_uint8Index | LocalState_ι_addressIndex | LocalState_ι_cellIndex | LocalState_ι_XchgPairIndex | LocalState_ι_boolIndex | LocalState_ι_TradingPairIndex .
 (* 2 *) Definition LocalState := 
  ( XHMap (string*nat) XInteger * 
- XHMap (string*nat) ( XMaybe TvmCell ) * 
+ XHMap (string*nat) ( XMaybe XCell ) * 
  XHMap (string*nat) ( XAddress * XAddress ) * 
  XHMap (string*nat) XInteger256 * 
  XHMap (string*nat) XInteger128 * 
  XHMap (string*nat) XInteger8 * 
  XHMap (string*nat) XAddress * 
- XHMap (string*nat) TvmCell * 
+ XHMap (string*nat) XCell * 
  XHMap (string*nat) XchgPair * 
  XHMap (string*nat) XBool * 
  XHMap (string*nat) TradingPair * 
@@ -139,7 +139,7 @@ match f with
 } .
 (* 3 *) Definition StateInit_field_type f : Type :=  
 match f with 
- | StateInit_ι_split_depth => XMaybe XInteger | StateInit_ι_special => XMaybe TickTock | StateInit_ι_code => XMaybe TvmCell | StateInit_ι_data => XMaybe TvmCell | StateInit_ι_library => XMaybe TvmCell end .
+ | StateInit_ι_split_depth => XMaybe XInteger | StateInit_ι_special => XMaybe TickTock | StateInit_ι_code => XMaybe XCell | StateInit_ι_data => XMaybe XCell | StateInit_ι_library => XMaybe XCell end .
 (* 4 *) Definition StateInit_get (f: StateInitFields )(r: StateInit ) :  StateInit_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 ) := r in 
  match f with 
@@ -199,7 +199,7 @@ match f with
 } .
 (* 3 *) Definition FLeX_field_type f : Type :=  
 match f with 
- | FLeX_ι_deployer_pubkey_ => XInteger256 | FLeX_ι_tons_cfg_ => TonsConfig | FLeX_ι_pair_code_ => XMaybe TvmCell | FLeX_ι_xchg_pair_code_ => XMaybe TvmCell | FLeX_ι_price_code_ => XMaybe TvmCell | FLeX_ι_xchg_price_code_ => XMaybe TvmCell | FLeX_ι_min_amount_ => XInteger128 | FLeX_ι_deals_limit_ => XInteger8 | FLeX_ι_notify_addr_ => XAddress end .
+ | FLeX_ι_deployer_pubkey_ => XInteger256 | FLeX_ι_tons_cfg_ => TonsConfig | FLeX_ι_pair_code_ => XMaybe XCell | FLeX_ι_xchg_pair_code_ => XMaybe XCell | FLeX_ι_price_code_ => XMaybe XCell | FLeX_ι_xchg_price_code_ => XMaybe XCell | FLeX_ι_min_amount_ => XInteger128 | FLeX_ι_deals_limit_ => XInteger8 | FLeX_ι_notify_addr_ => XAddress end .
 (* 4 *) Definition FLeX_get (f: FLeXFields )(r: FLeX ) :  FLeX_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 ) := r in 
  match f with 
@@ -288,7 +288,7 @@ match f with
 } .
 (* 3 *) Definition LocalState_field_type f : Type :=  
 match f with 
- | LocalState_ι_int => XHMap (string*nat) XInteger | LocalState_ι_optcell => XHMap (string*nat) ( XMaybe TvmCell ) | LocalState_ι_tpladdressaddress => XHMap (string*nat) ( XAddress * XAddress ) | LocalState_ι_uint256 => XHMap (string*nat) XInteger256 | LocalState_ι_uint128 => XHMap (string*nat) XInteger128 | LocalState_ι_uint8 => XHMap (string*nat) XInteger8 | LocalState_ι_address => XHMap (string*nat) XAddress | LocalState_ι_cell => XHMap (string*nat) TvmCell | LocalState_ι_XchgPair => XHMap (string*nat) XchgPair | LocalState_ι_bool => XHMap (string*nat) XBool | LocalState_ι_TradingPair => XHMap (string*nat) TradingPair | LocalState_ι_intIndex => XHMap string nat | LocalState_ι_optcellIndex => XHMap string nat | LocalState_ι_tpladdressaddressIndex => XHMap string nat | LocalState_ι_uint256Index => XHMap string nat | LocalState_ι_uint128Index => XHMap string nat | LocalState_ι_uint8Index => XHMap string nat | LocalState_ι_addressIndex => XHMap string nat | LocalState_ι_cellIndex => XHMap string nat | LocalState_ι_XchgPairIndex => XHMap string nat | LocalState_ι_boolIndex => XHMap string nat | LocalState_ι_TradingPairIndex => XHMap string nat end .
+ | LocalState_ι_int => XHMap (string*nat) XInteger | LocalState_ι_optcell => XHMap (string*nat) ( XMaybe XCell ) | LocalState_ι_tpladdressaddress => XHMap (string*nat) ( XAddress * XAddress ) | LocalState_ι_uint256 => XHMap (string*nat) XInteger256 | LocalState_ι_uint128 => XHMap (string*nat) XInteger128 | LocalState_ι_uint8 => XHMap (string*nat) XInteger8 | LocalState_ι_address => XHMap (string*nat) XAddress | LocalState_ι_cell => XHMap (string*nat) XCell | LocalState_ι_XchgPair => XHMap (string*nat) XchgPair | LocalState_ι_bool => XHMap (string*nat) XBool | LocalState_ι_TradingPair => XHMap (string*nat) TradingPair | LocalState_ι_intIndex => XHMap string nat | LocalState_ι_optcellIndex => XHMap string nat | LocalState_ι_tpladdressaddressIndex => XHMap string nat | LocalState_ι_uint256Index => XHMap string nat | LocalState_ι_uint128Index => XHMap string nat | LocalState_ι_uint8Index => XHMap string nat | LocalState_ι_addressIndex => XHMap string nat | LocalState_ι_cellIndex => XHMap string nat | LocalState_ι_XchgPairIndex => XHMap string nat | LocalState_ι_boolIndex => XHMap string nat | LocalState_ι_TradingPairIndex => XHMap string nat end .
 (* 4 *) Definition LocalState_get (f: LocalStateFields )(r: LocalState ) :  LocalState_field_type f := 
  let '( r1 , r2 , r3 , r4 , r5 , r6 , r7 , r8 , r9 , r10 , r11 , r12 , r13 , r14 , r15 , r16 , r17 , r18 , r19 , r20 , r21 , r22 ) := r in 
  match f with 
@@ -1255,7 +1255,7 @@ Global Instance LocalState_intIndex: LocalStateField XInteger :=
 
  
  
-Global Instance LocalState_optcellIndex: LocalStateField ( XMaybe TvmCell ) :=
+Global Instance LocalState_optcellIndex: LocalStateField ( XMaybe XCell ) :=
 {
   local_index_embedded := LocalState_ι_optcellIndex_Embedded;
   local_state_field := LocalState_ι_optcell; 
@@ -1309,7 +1309,7 @@ Global Instance LocalState_addressIndex: LocalStateField XAddress :=
 
  
  
-Global Instance LocalState_cellIndex: LocalStateField TvmCell :=
+Global Instance LocalState_cellIndex: LocalStateField XCell :=
 {
   local_index_embedded := LocalState_ι_cellIndex_Embedded;
   local_state_field := LocalState_ι_cell; 

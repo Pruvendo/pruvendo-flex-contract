@@ -46,14 +46,14 @@ Local Open Scope ursus_scope.
 Local Open Scope struct_scope.
 Local Open Scope Z_scope.
 
-
+(* 
 Existing Instance xbool_default.
-Instance TvmCell_default : XDefault (TvmCell) := {
+Instance XCell_default : XDefault (XCell) := {
 default := xStrNull}.
-Existing Instance TvmCell_default.
+Existing Instance XCell_default.
 Existing Instance phantom_default .
 
-
+ *)
 
 Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3 : XInteger128 ) ( return_ownership : XInteger128 ) ( trading_pair_deploy : XInteger128 ) ( order_answer : XInteger128 ) ( process_queue : XInteger128 ) ( send_notify : XInteger128 ) ( deals_limit : XInteger8 ) ( notify_addr : XAddress ) : UExpression PhantomType false . 
  	 	 refine {{ deployer_pubkey : ( XInteger256 ) @ "deployer_pubkey" ; { _ } }} . 
@@ -72,18 +72,18 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  Defined . 
  
  
- Definition Flex_Ф_setPairCode ( code : TvmCell ) : UExpression PhantomType true . 
- 	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
+ Definition Flex_Ф_setPairCode ( code : XCell ) : UExpression PhantomType true . 
+ 	 	 refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
  	 	 refine {{ require_ ( ( ~ TRUE (* Flex.pair_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
  	 	 refine {{ require_ ( (* ( code.ctos ( ) . srefs ( ) *) 1 == 1 (* 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
- 	 	 refine {{ Flex.pair_code_ := {} (* builder ( ) . stslice ( code ^^ TvmCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( )  *) }} . 
+ 	 	 refine {{ Flex.pair_code_ := {} (* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( )  *) }} . 
  Defined . 
  
  
- Definition Flex_Ф_setXchgPairCode ( code : TvmCell ) : UExpression PhantomType true . 
- 	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
+ Definition Flex_Ф_setXchgPairCode ( code : XCell ) : UExpression PhantomType true . 
+ 	 	 refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
  	 	 refine {{ require_ ( TRUE (* ~ Flex.xchg_pair_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
@@ -92,8 +92,8 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  Defined . 
  
  
- Definition Flex_Ф_setPriceCode ( code : TvmCell ) : UExpression PhantomType true . 
- 	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
+ Definition Flex_Ф_setPriceCode ( code : XCell ) : UExpression PhantomType true . 
+ 	 	 refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
  	 	 refine {{ require_ ( ( ~ TRUE (* Flex.price_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
@@ -101,8 +101,8 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  Defined . 
  
  
- Definition Flex_Ф_setXchgPriceCode ( code : TvmCell ) : UExpression PhantomType true . 
- 	 	 refine {{ code : ( TvmCell ) @ "code" ; { _ } }} . 
+ Definition Flex_Ф_setXchgPriceCode ( code : XCell ) : UExpression PhantomType true . 
+ 	 	 refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
  	 	 refine {{ require_ ( ( ~ TRUE (* Flex.xchg_price_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
@@ -122,29 +122,29 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  
  
  
- Definition Flex_Ф_getTradingPairCode : UExpression TvmCell false (* true *) . 
+ Definition Flex_Ф_getTradingPairCode : UExpression XCell false (* true *) . 
  	 	 refine {{ return_ {} (* (Flex.pair_code_ ->get) *) }} . 
  Defined . 
  
  
  
- Definition Flex_Ф_getXchgPairCode : UExpression TvmCell false . 
+ Definition Flex_Ф_getXchgPairCode : UExpression XCell false . 
  	 	 refine {{ return_ {} (* (Flex.xchg_pair_code_ ->get) *) }} . 
  Defined . 
  
  
  
- Definition Flex_Ф_getSellPriceCode ( tip3_addr : XAddress ) : UExpression TvmCell true . 
+ Definition Flex_Ф_getSellPriceCode ( tip3_addr : XAddress ) : UExpression XCell true . 
  	 	 refine {{ tip3_addr : ( XAddress ) @ "tip3_addr" ; { _ } }} . 
  	 	 refine {{ require_ ( ( (* Flex.price_code_ - > ctos ( ) . srefs ( ) == 2 *) 1 == 1 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
- 	 	 refine {{ (* new *) salt : ( TvmCell ) @"salt" ; { _ } }} . 
+ 	 	 refine {{ (* new *) salt : ( XCell ) @"salt" ; { _ } }} . 
  	 	 refine {{ { salt } := {} (* builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( tip3_addr ^^ XAddress:sl ( ) ) . endc ( ) *) ; { _ } }} . 
  	 	 refine {{ return_ {} (* builder ( ) . stslice ( price_code_ - > ctos ( ) ) . stref ( !{ salt } ) . endc ( ) *) }} . 
  Defined . 
  
  
  
- Definition Flex_Ф_getXchgPriceCode ( tip3_addr1 : XAddress ) ( tip3_addr2 : XAddress ) : UExpression TvmCell true . 
+ Definition Flex_Ф_getXchgPriceCode ( tip3_addr1 : XAddress ) ( tip3_addr2 : XAddress ) : UExpression XCell true . 
  	 	 refine {{ tip3_addr1 : ( XAddress ) @ "tip3_addr1" ; { _ } }} . 
  	 	 refine {{ tip3_addr2 : ( XAddress ) @ "tip3_addr2" ; { _ } }} . 
  	 	 refine {{ require_ ( ( (* Flex.price_code_ - > ctos ( ) . srefs ( ) == 2 *) 1 == 1 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
@@ -198,7 +198,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  
  
  
- Definition Flex_Ф__fallback ( _ : TvmCell ) : UExpression XInteger false . 
+ Definition Flex_Ф__fallback ( _ : XCell ) : UExpression XInteger false . 
  	 	 refine {{ return_ 0 }} . 
  Defined . 
  

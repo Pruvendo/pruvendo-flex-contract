@@ -25,13 +25,13 @@ abstract contract AMSig {
         uint128 value,
         bool bounce,
         bool allBalance,
-        TvmCell payload)
+        XCell payload)
     public returns (uint64 transId) {}
 }
 
 abstract contract AStock {
-    function getTradingPairCode() public returns(TvmCell value0) {}
-    function getSellPriceCode(address tip3_addr) public returns(TvmCell value0) {}
+    function getTradingPairCode() public returns(XCell value0) {}
+    function getSellPriceCode(address tip3_addr) public returns(XCell value0) {}
     function getMinAmount() public returns(uint128 value0) {}
     function getDealsLimit() public returns(uint8 value0) {}
     function getTonsCfg() public returns(uint128 transfer_tip3, uint128 return_ownership, uint128 trading_pair_deploy,
@@ -64,15 +64,15 @@ struct T3WDetails {
 }
 
 abstract contract ATip3Wallet {
-    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) {}
+    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) {}
 }
 
 abstract contract AFlexClient {
-    constructor(uint256 pubkey, TvmCell trading_pair_code) public {}
-    function deployPriceWithBuy(TvmCell args_cl) public returns(address value0) {}
-    function deployPriceWithSell(TvmCell args_cl) public returns(address value0) {}
-    function cancelBuyOrder(TvmCell args_cl) public {}
-    function cancelSellOrder(TvmCell args_cl) public {}
+    constructor(uint256 pubkey, XCell trading_pair_code) public {}
+    function deployPriceWithBuy(XCell args_cl) public returns(address value0) {}
+    function deployPriceWithSell(XCell args_cl) public returns(address value0) {}
+    function cancelBuyOrder(XCell args_cl) public {}
+    function cancelSellOrder(XCell args_cl) public {}
 }
 
 interface IFlexHelperDebot {
@@ -104,9 +104,9 @@ contract FlexDebot is Debot, Upgradable {
     Tip3MenuInfo[] m_tip3Menu;
     uint256 m_masterPubKey;
     uint256 m_masterSecKey;
-    TvmCell m_sendMsg;
-    TvmCell m_tradingPairCode;
-    TvmCell m_sellPriceCode;
+    XCell m_sendMsg;
+    XCell m_tradingPairCode;
+    XCell m_sellPriceCode;
     address m_flexClient;
     address m_tip3wallet;
     T3WDetails m_tip3walletDetails;
@@ -226,7 +226,7 @@ contract FlexDebot is Debot, Upgradable {
         }();
     }
 
-    function setTradingPairCode(TvmCell value0) public {
+    function setTradingPairCode(XCell value0) public {
         m_tradingPairCode = value0;
         IFlexHelperDebot(m_flexHelperDebot).getFCAddressAndKeys(m_stockAddr);
     }
@@ -356,7 +356,7 @@ contract FlexDebot is Debot, Upgradable {
 
     function refillAddress(address value) public {
         optional(uint256) none;
-        TvmCell empty;
+        XCell empty;
         AMSig(value).submitTransaction{
             abiVer: 2,
             extMsg: true,
@@ -420,7 +420,7 @@ contract FlexDebot is Debot, Upgradable {
         }();
     }
 
-    function setT3WDetails(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) public{
+    function setT3WDetails(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) public{
         m_tip3walletDetails.decimals = decimals;
         m_tip3walletDetails.balance = balance;
         m_tip3walletDetails.lend_ownership = lend_ownership;
@@ -446,12 +446,12 @@ contract FlexDebot is Debot, Upgradable {
         }(m_tip3root);
     }
     
-    function setPriceCode(TvmCell value0) public {
+    function setPriceCode(XCell value0) public {
         m_sellPriceCode = value0;
         getPricesDataByHash();
     }
 
-    function setUpdateT3WDetails(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) public{
+    function setUpdateT3WDetails(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) public{
         m_tip3walletDetails.decimals = decimals;
         m_tip3walletDetails.balance = balance;
         m_tip3walletDetails.lend_ownership = lend_ownership;
@@ -470,7 +470,7 @@ contract FlexDebot is Debot, Upgradable {
         m_arPrices = new uint128[](0);
         for (uint i=0; i<accounts.length;i++)
         {
-            TvmSlice sl = accounts[i].data.toSlice();
+            XSlice sl = accounts[i].data.toSlice();
             sl.decode(bool);
             (uint128 p, uint128 s, uint128 b) = sl.decode(uint128,uint128,uint128);
             m_prices[p]=PriceInfo(s,b,accounts[i].id);
@@ -520,7 +520,7 @@ contract FlexDebot is Debot, Upgradable {
         }
     }
 
-    function cancelSellOrder(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) public{
+    function cancelSellOrder(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) public{
         m_tip3walletDetails.balance = balance;
         if(m_tip3walletDetails.lend_ownership.owner != lend_ownership.owner)
         {
@@ -585,7 +585,7 @@ contract FlexDebot is Debot, Upgradable {
         getT3WDetails();
     }
 
-    function cancelBuyOrder(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) public{
+    function cancelBuyOrder(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) public{
         m_tip3walletDetails.decimals = decimals;
         m_tip3walletDetails.balance = balance;
         m_tip3walletDetails.lend_ownership = lend_ownership;
@@ -689,7 +689,7 @@ contract FlexDebot is Debot, Upgradable {
         getT3WDetails();
     }
 
-    function deployPriceWithBuy(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) public{
+    function deployPriceWithBuy(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) public{
         m_tip3walletDetails.decimals = decimals;
         m_tip3walletDetails.balance = balance;
         m_tip3walletDetails.lend_ownership = lend_ownership;
@@ -757,7 +757,7 @@ contract FlexDebot is Debot, Upgradable {
        getT3WDetails();
     }
 
-    function deployPriceWithSell(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) public{
+    function deployPriceWithSell(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) public{
         m_tip3walletDetails.decimals = decimals;
         m_tip3walletDetails.balance = balance;
         m_tip3walletDetails.lend_ownership = lend_ownership;

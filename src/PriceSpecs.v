@@ -27,7 +27,7 @@ Parameter Ф_calc_cost : XInteger128 -> XInteger128 -> UExpression ( XMaybe XInt
  Parameter Price_Ф_expected_wallet_address : XInteger256 -> XInteger256 -> UExpression XInteger256 false . 
  Parameter Price_Ф_verify_tip3_addr : XAddress -> XInteger256 -> XInteger256 -> UExpression XBool false . 
  Parameter Price_Ф_on_sell_fail : XInteger -> ITONTokenWalletPtr -> UExpression OrderRet false . 
- Parameter Price_Ф_onTip3LendOwnership : XAddress -> XInteger128 -> XInteger32 -> XInteger256 -> XAddress -> TvmCell -> UExpression OrderRet false . 
+ Parameter Price_Ф_onTip3LendOwnership : XAddress -> XInteger128 -> XInteger32 -> XInteger256 -> XAddress -> XCell -> UExpression OrderRet false . 
  Parameter Price_Ф_buyTip3MinValue : XInteger128 -> UExpression XInteger128 false . 
  Parameter Price_Ф_buyTip3 : XInteger128 -> XAddress -> XInteger32 -> UExpression OrderRet true . 
  Parameter Ф_cancel_order_impl : XList OrderInfo -> addr_std_fixed -> XInteger128 -> XBool -> Grams -> Grams -> Grams -> UExpression ( XList OrderInfo ) false . 
@@ -41,7 +41,7 @@ Parameter Ф_calc_cost : XInteger128 -> XInteger128 -> UExpression ( XMaybe XInt
  Parameter Price_Ф_getTonsCfg : UExpression TonsConfig false . 
  Parameter Price_Ф_getSells : UExpression ( XHMap XInteger OrderInfo) false . 
  Parameter Price_Ф_getBuys : UExpression ( XHMap XInteger OrderInfo) false . 
- Parameter Price_Ф__fallback : TvmCell -> UExpression XInteger false . 
+ Parameter Price_Ф__fallback : XCell -> UExpression XInteger false . 
 
 End specPriceSig.
 

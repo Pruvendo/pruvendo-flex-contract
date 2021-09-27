@@ -48,14 +48,14 @@ Local Open Scope ursus_scope.
 Local Open Scope struct_scope.
 Local Open Scope Z_scope.
 
-
+(* 
 Existing Instance xbool_default.
-Instance TvmCell_default : XDefault (TvmCell) := {
+Instance XCell_default : XDefault (XCell) := {
 default := xStrNull}.
-Existing Instance TvmCell_default.
+Existing Instance XCell_default.
 Existing Instance phantom_default .
 
-
+ *)
 
 
 
@@ -356,13 +356,13 @@ Defined .
  Definition t1 := UExpression OrderRet false .
  Definition Price_Ф_onTip3LendOwnership ( answer_addr : XAddress ) ( balance : XInteger128 )
 ( lend_finish_time : XInteger32 ) ( pubkey : XInteger256 ) ( internal_owner : XAddress )
- ( payload : TvmCell ) : UExpression OrderRet false . 
+ ( payload : XCell ) : UExpression OrderRet false . 
  	 	 refine {{ answer_addr : ( XAddress ) @ "answer_addr" ; { _ } }} . 
  	 	 refine {{ balance : ( XInteger128 ) @ "balance" ; { _ } }} . 
  	 	 refine {{ lend_finish_time : ( XInteger32 ) @ "lend_finish_time" ; { _ } }} . 
  	 	 refine {{ pubkey : ( XInteger256 ) @ "pubkey" ; { _ } }} . 
  	 	 refine {{ internal_owner : ( XAddress ) @ "internal_owner" ; { _ } }} . 
- 	 	 refine {{ payload : ( TvmCell ) @ "payload" ; { _ } }} . 
+ 	 	 refine {{ payload : ( XCell ) @ "payload" ; { _ } }} . 
  	 	 refine {{ tip3_wallet : ( XAddress ) @ "tip3_wallet" ; { _ } }} . 
  	 	 refine {{ value : ( Grams ) @ "value" ; { _ } }} . 
  	 	 refine {{ [ { tip3_wallet } , { value } ] := {} (* int_sender_and_value ( ) *) ; { _ } }} . 
