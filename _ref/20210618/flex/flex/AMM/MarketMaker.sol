@@ -11,10 +11,10 @@ struct OrderRet {
 }
 
 interface MMClient {
-    function deployPriceWithBuy(TvmCell args_cl) external returns(address value0);
-    function deployPriceWithSell(TvmCell args_cl) external returns(address value0);
-    function cancelBuyOrder(TvmCell args_cl) external;
-    function cancelSellOrder(TvmCell args_cl) external;
+    function deployPriceWithBuy(XCell args_cl) external returns(address value0);
+    function deployPriceWithSell(XCell args_cl) external returns(address value0);
+    function cancelBuyOrder(XCell args_cl) external;
+    function cancelSellOrder(XCell args_cl) external;
 }
 
 struct StockTonCfg {
@@ -23,8 +23,8 @@ struct StockTonCfg {
 }
 
 abstract contract AStock {
-    function getTradingPairCode() public returns(TvmCell value0) {}
-    function getSellPriceCode(address tip3_addr) public returns(TvmCell value0) {}
+    function getTradingPairCode() public returns(XCell value0) {}
+    function getSellPriceCode(address tip3_addr) public returns(XCell value0) {}
     function getMinAmount() public returns(uint128 value0) {}
     function getDealsLimit() public returns(uint8 value0) {}
     function getTonsCfg() public returns(uint128 transfer_tip3, uint128 return_ownership, uint128 trading_pair_deploy,
@@ -50,22 +50,22 @@ struct T3WDetails {
     uint256 wallet_public_key;
     address root_address;
     address owner_address;
-    TvmCell code;
+    XCell code;
     uint8 decimals;
     uint128 balance;
     LendOwnership lend_ownership;
 } 
 
 abstract contract ATip3Wallet {
-    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) {}
+    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) {}
 }
 
 abstract contract AFlexClient {
-    constructor(uint256 pubkey, TvmCell trading_pair_code, uint128 transfer_tip3, uint128 return_ownership, uint128 trading_pair_deploy, uint128 order_answer, uint128 process_queue, uint128 send_notify, address flex, address notify_addr) public {}
-    function deployPriceWithBuy(TvmCell args_cl) public returns(address value0) {}
-    function deployPriceWithSell(TvmCell args_cl) public returns(address value0) {}
-    function cancelBuyOrder(TvmCell args_cl) public {}
-    function cancelSellOrder(TvmCell args_cl) public {}
+    constructor(uint256 pubkey, XCell trading_pair_code, uint128 transfer_tip3, uint128 return_ownership, uint128 trading_pair_deploy, uint128 order_answer, uint128 process_queue, uint128 send_notify, address flex, address notify_addr) public {}
+    function deployPriceWithBuy(XCell args_cl) public returns(address value0) {}
+    function deployPriceWithSell(XCell args_cl) public returns(address value0) {}
+    function cancelBuyOrder(XCell args_cl) public {}
+    function cancelSellOrder(XCell args_cl) public {}
 }
 
 contract MarketMaker {
@@ -89,14 +89,14 @@ contract MarketMaker {
     address m_stockaddress;
     uint128 m_stockMinAmount;
     uint8 m_stockDealsLimit;
-    TvmCell m_sellPriceCode;
-    TvmCell m_tradingPairCode;
+    XCell m_sellPriceCode;
+    XCell m_tradingPairCode;
     uint128[] pricebuy; 
     uint128[] pricesell;
     uint128[] pricesellnum;
     uint256[] pubkey;
-    TvmCell _codeflex;
-    TvmCell _dataflex;
+    XCell _codeflex;
+    XCell _dataflex;
     address notify_;
     uint128 rapt = 0;
 
@@ -113,21 +113,21 @@ contract MarketMaker {
     }
 
 
-    function setCodeflex(TvmCell c) public alwaysAccept {
+    function setCodeflex(XCell c) public alwaysAccept {
 	    _codeflex = c;
     }
 
-    function setDataflex(TvmCell c) public alwaysAccept {
+    function setDataflex(XCell c) public alwaysAccept {
 	    _dataflex = c;
     }
 
     function DeployFlex() public alwaysAccept {
-        TvmCell _contractflex = tvm.buildStateInit(_codeflex, _dataflex);
+        XCell _contractflex = tvm.buildStateInit(_codeflex, _dataflex);
         for (uint256 i = 0; i < pubkey.length; i++){
             address a1;
-	    TvmCell s1;
+	    XCell s1;
 	    s1 = tvm.insertPubkey(_contractflex, pubkey[i]);
-            TvmCell payload = tvm.encodeBody(AFlexClient, pubkey[i], m_tradingPairCode, m_stockTonCfg.transfer_tip3, m_stockTonCfg.return_ownership, m_stockTonCfg.trading_pair_deploy, m_stockTonCfg.order_answer, m_stockTonCfg.process_queue, m_stockTonCfg.send_notify, m_stockaddress, notify_); 
+            XCell payload = tvm.encodeBody(AFlexClient, pubkey[i], m_tradingPairCode, m_stockTonCfg.transfer_tip3, m_stockTonCfg.return_ownership, m_stockTonCfg.trading_pair_deploy, m_stockTonCfg.order_answer, m_stockTonCfg.process_queue, m_stockTonCfg.send_notify, m_stockaddress, notify_); 
             a1 = tvm.deploy(s1, payload, 100000000000000, 0);
             flexClient.push(a1);
         }
@@ -153,14 +153,14 @@ contract MarketMaker {
         }
     } 
 
-    function UpdateInfo(StockTonCfg value0, uint128 value1, uint8 value2, TvmCell value3) external alwaysAccept {
+    function UpdateInfo(StockTonCfg value0, uint128 value1, uint8 value2, XCell value3) external alwaysAccept {
         m_stockTonCfg = value0;
         m_stockMinAmount = value1;
         m_stockDealsLimit = value2;
         m_tradingPairCode = value3; 
     }
 
-    function setPriceCode (TvmCell value0) external alwaysAccept {
+    function setPriceCode (XCell value0) external alwaysAccept {
         m_sellPriceCode = value0;
     }
 
@@ -272,7 +272,7 @@ contract MarketMaker {
         return (m_stockMinAmount, m_stockDealsLimit);
     }
 
-    function getInfo3() external returns (TvmCell) {
+    function getInfo3() external returns (XCell) {
         return m_sellPriceCode;
     }
 

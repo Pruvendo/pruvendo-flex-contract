@@ -329,10 +329,10 @@ Definition allowance_info := @ allowance_infoP
 XInteger256 XAddress
 .
 Definition StateInit := @ StateInitP
-XInteger8 XBool TvmCell XMaybe
+XInteger8 XBool XCell XMaybe
 .
 Definition DTONTokenWallet := @ DTONTokenWalletP
-XInteger8 XInteger128 XInteger256 XAddress TvmCell XList XMaybe
+XInteger8 XInteger128 XInteger256 XAddress XCell XList XMaybe
 .
 Definition TonsConfig := @ TonsConfigP
 XInteger128
@@ -357,25 +357,25 @@ Definition Tip3Config := @ Tip3ConfigP
 XInteger8 XInteger256 XAddress XString
 .
 Definition FLeXSellArgs := @ FLeXSellArgsP
-XInteger8 XInteger32 XInteger128 TvmCell
+XInteger8 XInteger32 XInteger128 XCell
 .
 Definition FLeXBuyArgs := @ FLeXBuyArgsP
-XInteger8 XInteger32 XInteger128 XAddress TvmCell
+XInteger8 XInteger32 XInteger128 XAddress XCell
 .
 Definition FLeXXchgArgs := @ FLeXXchgArgsP
-XInteger8 XInteger32 XInteger128 XBool TvmCell
+XInteger8 XInteger32 XInteger128 XBool XCell
 .
 Definition FLeXCancelArgs := @ FLeXCancelArgsP
-XInteger8 XInteger128 TvmCell
+XInteger8 XInteger128 XCell
 .
 Definition FLeXXchgCancelArgs := @ FLeXXchgCancelArgsP
-XInteger8 XInteger128 XBool TvmCell
+XInteger8 XInteger128 XBool XCell
 .
 Definition DFLeXClient := @ DFLeXClientP
-XInteger8 XInteger128 XInteger256 XAddress TvmCell
+XInteger8 XInteger128 XInteger256 XAddress XCell
 .
 Definition DFLeX := @ DFLeXP
-XInteger8 XInteger128 XInteger256 XAddress TvmCell XMaybe
+XInteger8 XInteger128 XInteger256 XAddress XCell XMaybe
 .
 Definition process_ret := @ process_retP
 XInteger32 XInteger128 XMaybe
@@ -388,7 +388,7 @@ XInteger128
 .
 Print DPriceP.
 Definition DPrice := @ DPriceP
-XInteger8    XInteger16    XInteger128 XInteger256 XAddress TvmCell XString
+XInteger8    XInteger16    XInteger128 XInteger256 XAddress XCell XString
 .
 Definition RationalPrice := @ RationalPriceP
 XInteger128
@@ -404,7 +404,7 @@ XInteger128
 .
 Print DPriceXchgP.
 Definition DPriceXchg := @ DPriceXchgP
-XInteger8   XInteger16    XInteger128 XInteger256 XAddress TvmCell XString
+XInteger8   XInteger16    XInteger128 XInteger256 XAddress XCell XString
 .
 Definition DTradingPair := @ DTradingPairP
 XInteger128 XAddress
@@ -418,11 +418,11 @@ XInteger    XInteger16      XInteger32 XInteger128 XAddress XMaybe
 . 
 Print LocalStateP . 
 Definition LocalState := @ LocalStateP
-XInteger XInteger8   XInteger16   XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
+XInteger XInteger8   XInteger16   XInteger32 XInteger128 XInteger256 XAddress XBool XCell XString XMaybe XHMap
 .
 Print LedgerP .
 Definition Ledger := @ LedgerP
-XInteger XInteger8   XInteger16   XInteger32 XInteger128 XInteger256 XAddress XBool TvmCell XString XMaybe XHMap
+XInteger XInteger8   XInteger16   XInteger32 XInteger128 XInteger256 XAddress XBool XCell XString XMaybe XHMap
 .
 Global Instance TickTock_default : XDefault TickTock := { 
   	 default := ( default , default ) } .
@@ -585,7 +585,7 @@ match f with | allowance_info_ι_spender => XAddress | allowance_info_ι_remaini
   setPruvendoRecord := @allowance_info_set ;
 } .
 (* 3 *) Definition StateInit_field_type f : Type :=  
-match f with | StateInit_ι_split_depth => XMaybe XInteger8 | StateInit_ι_special => XMaybe TickTock | StateInit_ι_code => TvmCell | StateInit_ι_data => TvmCell | StateInit_ι_library => TvmCell end .
+match f with | StateInit_ι_split_depth => XMaybe XInteger8 | StateInit_ι_special => XMaybe TickTock | StateInit_ι_code => XCell | StateInit_ι_data => XCell | StateInit_ι_library => XCell end .
 (* 4 *) Definition StateInit_get (f: StateInitFields )(r: StateInit ) :  StateInit_field_type f := 
  match f with | StateInit_ι_split_depth => fst4 r 
  | StateInit_ι_special => snd ( fst3 r ) 
@@ -609,7 +609,7 @@ match f with | StateInit_ι_split_depth => XMaybe XInteger8 | StateInit_ι_speci
   setPruvendoRecord := @StateInit_set ;
 } .
 (* 3 *) Definition DTONTokenWallet_field_type f : Type :=  
-match f with | DTONTokenWallet_ι_name_ => XList XInteger8 | DTONTokenWallet_ι_symbol_ => XList XInteger8 | DTONTokenWallet_ι_decimals_ => XInteger8 | DTONTokenWallet_ι_balance_ => XInteger128 | DTONTokenWallet_ι_root_public_key_ => XInteger256 | DTONTokenWallet_ι_wallet_public_key_ => XInteger256 | DTONTokenWallet_ι_root_address_ => XAddress | DTONTokenWallet_ι_owner_address_ => XMaybe XAddress | DTONTokenWallet_ι_code_ => TvmCell | DTONTokenWallet_ι_allowance_ => XMaybe allowance_info | DTONTokenWallet_ι_workchain_id_ => XInteger8 end .
+match f with | DTONTokenWallet_ι_name_ => XList XInteger8 | DTONTokenWallet_ι_symbol_ => XList XInteger8 | DTONTokenWallet_ι_decimals_ => XInteger8 | DTONTokenWallet_ι_balance_ => XInteger128 | DTONTokenWallet_ι_root_public_key_ => XInteger256 | DTONTokenWallet_ι_wallet_public_key_ => XInteger256 | DTONTokenWallet_ι_root_address_ => XAddress | DTONTokenWallet_ι_owner_address_ => XMaybe XAddress | DTONTokenWallet_ι_code_ => XCell | DTONTokenWallet_ι_allowance_ => XMaybe allowance_info | DTONTokenWallet_ι_workchain_id_ => XInteger8 end .
 (* 4 *) Definition DTONTokenWallet_get (f: DTONTokenWalletFields )(r: DTONTokenWallet ) :  DTONTokenWallet_field_type f := 
  match f with | DTONTokenWallet_ι_name_ => fst10 r 
  | DTONTokenWallet_ι_symbol_ => snd ( fst9 r ) 
@@ -816,7 +816,7 @@ match f with | Tip3Config_ι_name => XString | Tip3Config_ι_symbol => XString |
   setPruvendoRecord := @Tip3Config_set ;
 } .
 (* 3 *) Definition FLeXSellArgs_field_type f : Type :=  
-match f with | FLeXSellArgs_ι_price => XInteger128 | FLeXSellArgs_ι_amount => XInteger128 | FLeXSellArgs_ι_lend_finish_time => XInteger32 | FLeXSellArgs_ι_min_amount => XInteger128 | FLeXSellArgs_ι_deals_limit => XInteger8 | FLeXSellArgs_ι_tons_value => XInteger128 | FLeXSellArgs_ι_price_code => TvmCell | FLeXSellArgs_ι_tip3_code => TvmCell end .
+match f with | FLeXSellArgs_ι_price => XInteger128 | FLeXSellArgs_ι_amount => XInteger128 | FLeXSellArgs_ι_lend_finish_time => XInteger32 | FLeXSellArgs_ι_min_amount => XInteger128 | FLeXSellArgs_ι_deals_limit => XInteger8 | FLeXSellArgs_ι_tons_value => XInteger128 | FLeXSellArgs_ι_price_code => XCell | FLeXSellArgs_ι_tip3_code => XCell end .
 (* 4 *) Definition FLeXSellArgs_get (f: FLeXSellArgsFields )(r: FLeXSellArgs ) :  FLeXSellArgs_field_type f := 
  match f with | FLeXSellArgs_ι_price => fst7 r 
  | FLeXSellArgs_ι_amount => snd ( fst6 r ) 
@@ -846,7 +846,7 @@ match f with | FLeXSellArgs_ι_price => XInteger128 | FLeXSellArgs_ι_amount => 
   setPruvendoRecord := @FLeXSellArgs_set ;
 } .
 (* 3 *) Definition FLeXBuyArgs_field_type f : Type :=  
-match f with | FLeXBuyArgs_ι_price => XInteger128 | FLeXBuyArgs_ι_amount => XInteger128 | FLeXBuyArgs_ι_order_finish_time => XInteger32 | FLeXBuyArgs_ι_min_amount => XInteger128 | FLeXBuyArgs_ι_deals_limit => XInteger8 | FLeXBuyArgs_ι_deploy_value => XInteger128 | FLeXBuyArgs_ι_price_code => TvmCell | FLeXBuyArgs_ι_my_tip3_addr => XAddress | FLeXBuyArgs_ι_tip3_code => TvmCell end .
+match f with | FLeXBuyArgs_ι_price => XInteger128 | FLeXBuyArgs_ι_amount => XInteger128 | FLeXBuyArgs_ι_order_finish_time => XInteger32 | FLeXBuyArgs_ι_min_amount => XInteger128 | FLeXBuyArgs_ι_deals_limit => XInteger8 | FLeXBuyArgs_ι_deploy_value => XInteger128 | FLeXBuyArgs_ι_price_code => XCell | FLeXBuyArgs_ι_my_tip3_addr => XAddress | FLeXBuyArgs_ι_tip3_code => XCell end .
 (* 4 *) Definition FLeXBuyArgs_get (f: FLeXBuyArgsFields )(r: FLeXBuyArgs ) :  FLeXBuyArgs_field_type f := 
  match f with | FLeXBuyArgs_ι_price => fst8 r 
  | FLeXBuyArgs_ι_amount => snd ( fst7 r ) 
@@ -878,7 +878,7 @@ match f with | FLeXBuyArgs_ι_price => XInteger128 | FLeXBuyArgs_ι_amount => XI
   setPruvendoRecord := @FLeXBuyArgs_set ;
 } .
 (* 3 *) Definition FLeXXchgArgs_field_type f : Type :=  
-match f with | FLeXXchgArgs_ι_sell => XBool | FLeXXchgArgs_ι_price_num => XInteger128 | FLeXXchgArgs_ι_price_denum => XInteger128 | FLeXXchgArgs_ι_amount => XInteger128 | FLeXXchgArgs_ι_lend_amount => XInteger128 | FLeXXchgArgs_ι_lend_finish_time => XInteger32 | FLeXXchgArgs_ι_min_amount => XInteger128 | FLeXXchgArgs_ι_deals_limit => XInteger8 | FLeXXchgArgs_ι_tons_value => XInteger128 | FLeXXchgArgs_ι_xchg_price_code => TvmCell | FLeXXchgArgs_ι_tip3_code => TvmCell end .
+match f with | FLeXXchgArgs_ι_sell => XBool | FLeXXchgArgs_ι_price_num => XInteger128 | FLeXXchgArgs_ι_price_denum => XInteger128 | FLeXXchgArgs_ι_amount => XInteger128 | FLeXXchgArgs_ι_lend_amount => XInteger128 | FLeXXchgArgs_ι_lend_finish_time => XInteger32 | FLeXXchgArgs_ι_min_amount => XInteger128 | FLeXXchgArgs_ι_deals_limit => XInteger8 | FLeXXchgArgs_ι_tons_value => XInteger128 | FLeXXchgArgs_ι_xchg_price_code => XCell | FLeXXchgArgs_ι_tip3_code => XCell end .
 (* 4 *) Definition FLeXXchgArgs_get (f: FLeXXchgArgsFields )(r: FLeXXchgArgs ) :  FLeXXchgArgs_field_type f := 
  match f with | FLeXXchgArgs_ι_sell => fst10 r 
  | FLeXXchgArgs_ι_price_num => snd ( fst9 r ) 
@@ -914,7 +914,7 @@ match f with | FLeXXchgArgs_ι_sell => XBool | FLeXXchgArgs_ι_price_num => XInt
   setPruvendoRecord := @FLeXXchgArgs_set ;
 } .
 (* 3 *) Definition FLeXCancelArgs_field_type f : Type :=  
-match f with | FLeXCancelArgs_ι_price => XInteger128 | FLeXCancelArgs_ι_min_amount => XInteger128 | FLeXCancelArgs_ι_deals_limit => XInteger8 | FLeXCancelArgs_ι_value => XInteger128 | FLeXCancelArgs_ι_price_code => TvmCell | FLeXCancelArgs_ι_tip3_code => TvmCell end .
+match f with | FLeXCancelArgs_ι_price => XInteger128 | FLeXCancelArgs_ι_min_amount => XInteger128 | FLeXCancelArgs_ι_deals_limit => XInteger8 | FLeXCancelArgs_ι_value => XInteger128 | FLeXCancelArgs_ι_price_code => XCell | FLeXCancelArgs_ι_tip3_code => XCell end .
 (* 4 *) Definition FLeXCancelArgs_get (f: FLeXCancelArgsFields )(r: FLeXCancelArgs ) :  FLeXCancelArgs_field_type f := 
  match f with | FLeXCancelArgs_ι_price => fst5 r 
  | FLeXCancelArgs_ι_min_amount => snd ( fst4 r ) 
@@ -940,7 +940,7 @@ match f with | FLeXCancelArgs_ι_price => XInteger128 | FLeXCancelArgs_ι_min_am
   setPruvendoRecord := @FLeXCancelArgs_set ;
 } .
 (* 3 *) Definition FLeXXchgCancelArgs_field_type f : Type :=  
-match f with | FLeXXchgCancelArgs_ι_sell => XBool | FLeXXchgCancelArgs_ι_price_num => XInteger128 | FLeXXchgCancelArgs_ι_price_denum => XInteger128 | FLeXXchgCancelArgs_ι_min_amount => XInteger128 | FLeXXchgCancelArgs_ι_deals_limit => XInteger8 | FLeXXchgCancelArgs_ι_value => XInteger128 | FLeXXchgCancelArgs_ι_xchg_price_code => TvmCell | FLeXXchgCancelArgs_ι_tip3_code => TvmCell end .
+match f with | FLeXXchgCancelArgs_ι_sell => XBool | FLeXXchgCancelArgs_ι_price_num => XInteger128 | FLeXXchgCancelArgs_ι_price_denum => XInteger128 | FLeXXchgCancelArgs_ι_min_amount => XInteger128 | FLeXXchgCancelArgs_ι_deals_limit => XInteger8 | FLeXXchgCancelArgs_ι_value => XInteger128 | FLeXXchgCancelArgs_ι_xchg_price_code => XCell | FLeXXchgCancelArgs_ι_tip3_code => XCell end .
 (* 4 *) Definition FLeXXchgCancelArgs_get (f: FLeXXchgCancelArgsFields )(r: FLeXXchgCancelArgs ) :  FLeXXchgCancelArgs_field_type f := 
  match f with | FLeXXchgCancelArgs_ι_sell => fst7 r 
  | FLeXXchgCancelArgs_ι_price_num => snd ( fst6 r ) 
@@ -970,7 +970,7 @@ match f with | FLeXXchgCancelArgs_ι_sell => XBool | FLeXXchgCancelArgs_ι_price
   setPruvendoRecord := @FLeXXchgCancelArgs_set ;
 } .
 (* 3 *) Definition DFLeXClient_field_type f : Type :=  
-match f with | DFLeXClient_ι_owner_ => XInteger256 | DFLeXClient_ι_trading_pair_code_ => TvmCell | DFLeXClient_ι_xchg_pair_code_ => TvmCell | DFLeXClient_ι_workchain_id_ => XInteger8 | DFLeXClient_ι_tons_cfg_ => TonsConfig | DFLeXClient_ι_flex_ => XAddress | DFLeXClient_ι_notify_addr_ => XAddress end .
+match f with | DFLeXClient_ι_owner_ => XInteger256 | DFLeXClient_ι_trading_pair_code_ => XCell | DFLeXClient_ι_xchg_pair_code_ => XCell | DFLeXClient_ι_workchain_id_ => XInteger8 | DFLeXClient_ι_tons_cfg_ => TonsConfig | DFLeXClient_ι_flex_ => XAddress | DFLeXClient_ι_notify_addr_ => XAddress end .
 (* 4 *) Definition DFLeXClient_get (f: DFLeXClientFields )(r: DFLeXClient ) :  DFLeXClient_field_type f := 
  match f with | DFLeXClient_ι_owner_ => fst6 r 
  | DFLeXClient_ι_trading_pair_code_ => snd ( fst5 r ) 
@@ -998,7 +998,7 @@ match f with | DFLeXClient_ι_owner_ => XInteger256 | DFLeXClient_ι_trading_pai
   setPruvendoRecord := @DFLeXClient_set ;
 } .
 (* 3 *) Definition DFLeX_field_type f : Type :=  
-match f with | DFLeX_ι_deployer_pubkey_ => XInteger256 | DFLeX_ι_tons_cfg_ => TonsConfig | DFLeX_ι_pair_code_ => XMaybe TvmCell | DFLeX_ι_xchg_pair_code_ => XMaybe TvmCell | DFLeX_ι_price_code_ => XMaybe TvmCell | DFLeX_ι_xchg_price_code_ => XMaybe TvmCell | DFLeX_ι_min_amount_ => XInteger128 | DFLeX_ι_deals_limit_ => XInteger8 | DFLeX_ι_notify_addr_ => XAddress end .
+match f with | DFLeX_ι_deployer_pubkey_ => XInteger256 | DFLeX_ι_tons_cfg_ => TonsConfig | DFLeX_ι_pair_code_ => XMaybe XCell | DFLeX_ι_xchg_pair_code_ => XMaybe XCell | DFLeX_ι_price_code_ => XMaybe XCell | DFLeX_ι_xchg_price_code_ => XMaybe XCell | DFLeX_ι_min_amount_ => XInteger128 | DFLeX_ι_deals_limit_ => XInteger8 | DFLeX_ι_notify_addr_ => XAddress end .
 (* 4 *) Definition DFLeX_get (f: DFLeXFields )(r: DFLeX ) :  DFLeX_field_type f := 
  match f with | DFLeX_ι_deployer_pubkey_ => fst8 r 
  | DFLeX_ι_tons_cfg_ => snd ( fst7 r ) 
@@ -1090,7 +1090,7 @@ match f with | DetailsInfo_ι_price => XInteger128 | DetailsInfo_ι_min_amount =
   setPruvendoRecord := @DetailsInfo_set ;
 } .
 (* 3 *) Definition DPrice_field_type f : Type :=  
-match f with | DPrice_ι_price_ => XInteger128 | DPrice_ι_sells_amount_ => XInteger128 | DPrice_ι_buys_amount_ => XInteger128 | DPrice_ι_flex_ => addr_std_fixed | DPrice_ι_min_amount_ => XInteger128 | DPrice_ι_deals_limit_ => XInteger8 | DPrice_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) | DPrice_ι_workchain_id_ => XInteger8 | DPrice_ι_tons_cfg_ => TonsConfig | DPrice_ι_tip3_code_ => TvmCell | DPrice_ι_tip3cfg_ => Tip3Config end .
+match f with | DPrice_ι_price_ => XInteger128 | DPrice_ι_sells_amount_ => XInteger128 | DPrice_ι_buys_amount_ => XInteger128 | DPrice_ι_flex_ => addr_std_fixed | DPrice_ι_min_amount_ => XInteger128 | DPrice_ι_deals_limit_ => XInteger8 | DPrice_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) | DPrice_ι_workchain_id_ => XInteger8 | DPrice_ι_tons_cfg_ => TonsConfig | DPrice_ι_tip3_code_ => XCell | DPrice_ι_tip3cfg_ => Tip3Config end .
 (* 4 *) Definition DPrice_get (f: DPriceFields )(r: DPrice ) :  DPrice_field_type f := 
  match f with | DPrice_ι_price_ => fst10 r 
  | DPrice_ι_sells_amount_ => snd ( fst9 r ) 
@@ -1218,7 +1218,7 @@ match f with | DetailsInfoXchg_ι_price_num => XInteger128 | DetailsInfoXchg_ι_
   setPruvendoRecord := @DetailsInfoXchg_set ;
 } .
 (* 3 *) Definition DPriceXchg_field_type f : Type :=  
-match f with | DPriceXchg_ι_price_ => RationalPrice | DPriceXchg_ι_sells_amount_ => XInteger128 | DPriceXchg_ι_buys_amount_ => XInteger128 | DPriceXchg_ι_flex_ => addr_std_fixed | DPriceXchg_ι_min_amount_ => XInteger128 | DPriceXchg_ι_deals_limit_ => XInteger8 | DPriceXchg_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) | DPriceXchg_ι_workchain_id_ => XInteger8 | DPriceXchg_ι_tons_cfg_ => TonsConfig | DPriceXchg_ι_tip3_code_ => TvmCell | DPriceXchg_ι_major_tip3cfg_ => Tip3Config | DPriceXchg_ι_minor_tip3cfg_ => Tip3Config end .
+match f with | DPriceXchg_ι_price_ => RationalPrice | DPriceXchg_ι_sells_amount_ => XInteger128 | DPriceXchg_ι_buys_amount_ => XInteger128 | DPriceXchg_ι_flex_ => addr_std_fixed | DPriceXchg_ι_min_amount_ => XInteger128 | DPriceXchg_ι_deals_limit_ => XInteger8 | DPriceXchg_ι_notify_addr_ => XInteger16 (* IFLeXNotifyPtr *) | DPriceXchg_ι_workchain_id_ => XInteger8 | DPriceXchg_ι_tons_cfg_ => TonsConfig | DPriceXchg_ι_tip3_code_ => XCell | DPriceXchg_ι_major_tip3cfg_ => Tip3Config | DPriceXchg_ι_minor_tip3cfg_ => Tip3Config end .
 (* 4 *) Definition DPriceXchg_get (f: DPriceXchgFields )(r: DPriceXchg ) :  DPriceXchg_field_type f := 
  match f with | DPriceXchg_ι_price_ => fst11 r 
  | DPriceXchg_ι_sells_amount_ => snd ( fst10 r ) 
@@ -1315,7 +1315,7 @@ match f with | VMCommit_ι_dealer => dealer end .
 } .
 
 (* 3 *) Definition LocalState_field_type f : Type :=  
-match f with | LocalState_ι_uint256 => XHMap string XInteger256 | LocalState_ι_cell => XHMap string TvmCell | LocalState_ι_TonsConfig => XHMap string TonsConfig | LocalState_ι_address => XHMap string XAddress | LocalState_ι_uint128 => XHMap string XInteger128 | LocalState_ι_StateInit => XHMap string StateInit | LocalState_ι_DTradingPair => XHMap string DTradingPair | LocalState_ι_handle_ITradingPair_ => XHMap string XInteger16 (* handle_ITradingPair_ *) | LocalState_ι_DXchgPair => XHMap string DXchgPair | LocalState_ι_handle_IXchgPair_ => XHMap string XInteger16 (* handle_IXchgPair_ *) | LocalState_ι_parse_FLeXSellArgs_ => XHMap string XInteger16 (* parse_FLeXSellArgs_ *) | LocalState_ι_handle_IPrice_ => XHMap string XInteger16 (* handle_IPrice_ *) | LocalState_ι_SellArgs => XHMap string SellArgs | LocalState_ι_parse_FLeXBuyArgs_ => XHMap string XInteger16 (* parse_FLeXBuyArgs_ *) | LocalState_ι_price_addr => XHMap string XInteger16 | LocalState_ι_parse_FLeXCancelArgs_ => XHMap string XInteger16 (* parse_FLeXCancelArgs_ *) | LocalState_ι_parse_FLeXXchgCancelArgs_ => XHMap string XInteger16 (* parse_FLeXXchgCancelArgs_ *) | LocalState_ι_handle_IPriceXchg_ => XHMap string XInteger16 (* handle_IPriceXchg_ *) | LocalState_ι_bool_t => XHMap string XBool | LocalState_ι_parse_FLeXXchgArgs_ => XHMap string XInteger16 (* parse_FLeXXchgArgs_ *) | LocalState_ι_PayloadArgs => XHMap string PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ => XHMap string XInteger16 (* handle_ITONTokenWallet_ *) | LocalState_ι_uint8 => XHMap string XInteger8 | LocalState_ι_Tip3Config => XHMap string Tip3Config | LocalState_ι_DPrice => XHMap string DPrice | LocalState_ι_DPriceXchg => XHMap string DPriceXchg | LocalState_ι_tuple_address_address => XHMap string (XAddress*XAddress) | LocalState_ι_uint32 => XHMap string XInteger32 | LocalState_ι_unsigned => XHMap string XInteger | LocalState_ι_OrderInfo => XHMap string OrderInfo | LocalState_ι_int => XHMap string XInteger | LocalState_ι_optional_uint128_ => XHMap string (XMaybe XInteger128) | LocalState_ι_bool => XHMap string XBool | LocalState_ι_optional_OrderInfoWithIdx_ => XHMap string (XMaybe (XInteger*OrderInfo)) | LocalState_ι_queue_OrderInfo_ => XHMap string XInteger16 (* queue_OrderInfo_ *) | LocalState_ι_pair_unsigned_OrderInfo_ => XHMap string (XInteger*OrderInfo) end .
+match f with | LocalState_ι_uint256 => XHMap string XInteger256 | LocalState_ι_cell => XHMap string XCell | LocalState_ι_TonsConfig => XHMap string TonsConfig | LocalState_ι_address => XHMap string XAddress | LocalState_ι_uint128 => XHMap string XInteger128 | LocalState_ι_StateInit => XHMap string StateInit | LocalState_ι_DTradingPair => XHMap string DTradingPair | LocalState_ι_handle_ITradingPair_ => XHMap string XInteger16 (* handle_ITradingPair_ *) | LocalState_ι_DXchgPair => XHMap string DXchgPair | LocalState_ι_handle_IXchgPair_ => XHMap string XInteger16 (* handle_IXchgPair_ *) | LocalState_ι_parse_FLeXSellArgs_ => XHMap string XInteger16 (* parse_FLeXSellArgs_ *) | LocalState_ι_handle_IPrice_ => XHMap string XInteger16 (* handle_IPrice_ *) | LocalState_ι_SellArgs => XHMap string SellArgs | LocalState_ι_parse_FLeXBuyArgs_ => XHMap string XInteger16 (* parse_FLeXBuyArgs_ *) | LocalState_ι_price_addr => XHMap string XInteger16 | LocalState_ι_parse_FLeXCancelArgs_ => XHMap string XInteger16 (* parse_FLeXCancelArgs_ *) | LocalState_ι_parse_FLeXXchgCancelArgs_ => XHMap string XInteger16 (* parse_FLeXXchgCancelArgs_ *) | LocalState_ι_handle_IPriceXchg_ => XHMap string XInteger16 (* handle_IPriceXchg_ *) | LocalState_ι_bool_t => XHMap string XBool | LocalState_ι_parse_FLeXXchgArgs_ => XHMap string XInteger16 (* parse_FLeXXchgArgs_ *) | LocalState_ι_PayloadArgs => XHMap string PayloadArgs | LocalState_ι_handle_ITONTokenWallet_ => XHMap string XInteger16 (* handle_ITONTokenWallet_ *) | LocalState_ι_uint8 => XHMap string XInteger8 | LocalState_ι_Tip3Config => XHMap string Tip3Config | LocalState_ι_DPrice => XHMap string DPrice | LocalState_ι_DPriceXchg => XHMap string DPriceXchg | LocalState_ι_tuple_address_address => XHMap string (XAddress*XAddress) | LocalState_ι_uint32 => XHMap string XInteger32 | LocalState_ι_unsigned => XHMap string XInteger | LocalState_ι_OrderInfo => XHMap string OrderInfo | LocalState_ι_int => XHMap string XInteger | LocalState_ι_optional_uint128_ => XHMap string (XMaybe XInteger128) | LocalState_ι_bool => XHMap string XBool | LocalState_ι_optional_OrderInfoWithIdx_ => XHMap string (XMaybe (XInteger*OrderInfo)) | LocalState_ι_queue_OrderInfo_ => XHMap string XInteger16 (* queue_OrderInfo_ *) | LocalState_ι_pair_unsigned_OrderInfo_ => XHMap string (XInteger*OrderInfo) end .
 Compute LocalState_field_type LocalState_ι_uint256 .
 Variable r : LocalState .
 Check fst35 r.

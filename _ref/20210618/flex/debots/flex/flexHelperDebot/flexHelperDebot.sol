@@ -24,13 +24,13 @@ abstract contract AMSig {
         uint128 value,
         bool bounce,
         bool allBalance,
-        TvmCell payload)
+        XCell payload)
     public returns (uint64 transId) {}
 }
 
 abstract contract AFlex {
-    function getTradingPairCode() public returns(TvmCell value0) {}
-    function getXchgPairCode() public returns(TvmCell value0) {}    
+    function getTradingPairCode() public returns(XCell value0) {}
+    function getXchgPairCode() public returns(XCell value0) {}    
     function getNotifyAddr() public returns(address value0) {}
     function getMinAmount() public returns(uint128 value0) {}
     function getDealsLimit() public returns(uint8 value0) {}
@@ -45,7 +45,7 @@ abstract contract ATip3Root {
 }
 
 abstract contract AFlexClient {
-    constructor(uint256 pubkey, TvmCell trading_pair_code, TvmCell xchg_pair_code) public {}
+    constructor(uint256 pubkey, XCell trading_pair_code, XCell xchg_pair_code) public {}
     function deployTradingPair(address tip3_root, uint128 deploy_min_value, uint128 deploy_value) public returns(address value0) {}
     function deployXchgPair(address tip3_major_root, address tip3_minor_root, uint128 deploy_min_value, uint128 deploy_value) public returns(address value0) {}
     function setFLeXCfg(StockTonCfg tons_cfg,address stock, address notify_addr) public {}
@@ -55,7 +55,7 @@ abstract contract AFlexClient {
 
 
 interface IFlexDebot {
-    function onGetFCAddressAndKeys(address fc, uint256 pk, uint128 minAmount, uint8 dealsLimit, StockTonCfg tonCfg, TvmCell tpcode, TvmCell xchgpcode) external;
+    function onGetFCAddressAndKeys(address fc, uint256 pk, uint128 minAmount, uint8 dealsLimit, StockTonCfg tonCfg, XCell tpcode, XCell xchgpcode) external;
     function onGetTip3WalletAddress(address t3w) external;
     function updateTradingPairs() external;
 }
@@ -78,11 +78,11 @@ struct T3WDetails {
     LendOwnership lend_ownership;
     uint256 rootPubKey;
     address rootAddress;
-    TvmCell code;
+    XCell code;
 }
 
 abstract contract ATip3Wallet {
-    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) {}
+    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) {}
 }
 
 contract FlexHelperDebot is Debot, Upgradable, Transferable {
@@ -93,16 +93,16 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
     string m_t3Symbol;
     uint256 m_masterPubKey;
     address m_sender;
-    TvmCell m_flexClientCode;
+    XCell m_flexClientCode;
     uint128 m_tradingPairDeploy;
 
-    TvmCell m_sendMsg;
+    XCell m_sendMsg;
     address m_flexClient;
     address m_tip3root;
     address m_majorTip3root;
     address m_minorTip3root;    
-    TvmCell m_tradingPairCode;
-    TvmCell m_xchgPairCode;
+    XCell m_tradingPairCode;
+    XCell m_xchgPairCode;
     address m_tip3wallet;
     address m_msig;
     uint128 m_dealTons;
@@ -118,7 +118,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
         m_stockAddr = addr;
     }
 
-    function setFlexClientCode(TvmCell code) public {
+    function setFlexClientCode(XCell code) public {
         require(msg.pubkey() == tvm.pubkey(), 101);
         tvm.accept();
         m_flexClientCode = code;
@@ -163,7 +163,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
         }();
     }
 
-    function setTradingPairCode(TvmCell value0) public {
+    function setTradingPairCode(XCell value0) public {
         m_tradingPairCode = value0;
         optional(uint256) none;
         AFlex(m_stockAddr).getXchgPairCode{
@@ -178,7 +178,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
         }();
     }
 
-    function setXchgPairCode(TvmCell value0) public {
+    function setXchgPairCode(XCell value0) public {
             m_xchgPairCode = value0;    
             getStockTonsCfg();
     }
@@ -254,7 +254,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
     function setStockNotifyAddr(address value0) public {
         m_stockNotifyAddr=value0;
                 
-        TvmCell deployState = tvm.insertPubkey(m_flexClientCode, m_masterPubKey);
+        XCell deployState = tvm.insertPubkey(m_flexClientCode, m_masterPubKey);
         m_flexClient = address.makeAddrStd(0, tvm.hash(deployState));
         Sdk.getAccountType(tvm.functionId(FlexClientAccType), m_flexClient);
     }
@@ -315,9 +315,9 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
     function DeployRootStep2(bool value) public {
         if (value)
         {
-            TvmCell image = tvm.insertPubkey(m_flexClientCode, m_masterPubKey);
+            XCell image = tvm.insertPubkey(m_flexClientCode, m_masterPubKey);
             optional(uint256) none;
-            TvmCell deployMsg = tvm.buildExtMsg({
+            XCell deployMsg = tvm.buildExtMsg({
                 abiVer: 2,
                 dest: m_flexClient,
                 callbackId: tvm.functionId(onSuccessFCDeployed),
@@ -345,7 +345,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
 
     function flexClientSetStockCfg() public {
         optional(uint256) none;
-        TvmCell sendMsg = tvm.buildExtMsg({
+        XCell sendMsg = tvm.buildExtMsg({
             abiVer: 2,
             dest: m_flexClient,
             callbackId: tvm.functionId(onSuccessFCSetTonsCfg),
@@ -464,7 +464,7 @@ contract FlexHelperDebot is Debot, Upgradable, Transferable {
     }
 
     function deployEmptyWallet() view public {
-        TvmCell payload = tvm.encodeBody(ATip3Root.deployEmptyWallet, 0, 0, 0x0, m_flexClient.value, m_dealTons);
+        XCell payload = tvm.encodeBody(ATip3Root.deployEmptyWallet, 0, 0, 0x0, m_flexClient.value, m_dealTons);
         optional(uint256) none;
         uint128 amount = m_dealTons+1000000000;
         AMSig(m_msig).submitTransaction{

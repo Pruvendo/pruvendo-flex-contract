@@ -8,15 +8,15 @@ import "debots/AddressInput.sol";
 import "debots/ConfirmInput.sol";
 
 interface MarketMaker {
-    function UpdateInfo(StockTonCfg value0, uint128 value1, uint8 value2, TvmCell value3) external;
+    function UpdateInfo(StockTonCfg value0, uint128 value1, uint8 value2, XCell value3) external;
     function AddTip3Wallet (T3WDetails value1, address value2) external;
     function AddPubKey (uint256 value0) external;
-    function setPriceCode (TvmCell value0) external;
+    function setPriceCode (XCell value0) external;
     function getInfo2() external returns(uint128 m_stockMinAmount, uint128 m_stockDealsLimit);
 }
 
 abstract contract ATip3Wallet {
-    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) {}
+    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) {}
 }
 
 struct StockTonCfg {
@@ -25,8 +25,8 @@ struct StockTonCfg {
 }
 
 abstract contract AStock {
-    function getTradingPairCode() public returns(TvmCell value0) {}
-    function getSellPriceCode(address tip3_addr) public returns(TvmCell value0) {}
+    function getTradingPairCode() public returns(XCell value0) {}
+    function getSellPriceCode(address tip3_addr) public returns(XCell value0) {}
     function getMinAmount() public returns(uint128 value0) {}
     function getDealsLimit() public returns(uint8 value0) {}
     function getTonsCfg() public returns(uint128 transfer_tip3, uint128 return_ownership, uint128 trading_pair_deploy,
@@ -45,7 +45,7 @@ struct T3WDetails {
     uint256 wallet_public_key;
     address root_address;
     address owner_address;
-    TvmCell code;
+    XCell code;
     uint8 decimals;
     uint128 balance;
     LendOwnership lend_ownership;
@@ -65,12 +65,12 @@ contract HelloDebot is Debot {
     StockTonCfg m_stockTonCfg;
     uint128 m_stockMinAmount;
     uint8 m_stockDealsLimit;
-    TvmCell m_tradingPairCode;     
+    XCell m_tradingPairCode;     
     T3WDetails m_tip3walletDetails;
     uint32 m_getT3WDetailsCallback;
     bool add = true;
     address m_tip3root;
-    TvmCell m_sellPriceCode;
+    XCell m_sellPriceCode;
     uint256 m_masterPubKey;
 
     function start() public override {
@@ -134,7 +134,7 @@ contract HelloDebot is Debot {
             Terminal.input(tvm.functionId(enterPublicKey),"Wrong public key. Try again!\nPlease enter your public key",false);
     }
 
-    function setT3WDetails(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) public{
+    function setT3WDetails(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) public{
         m_tip3walletDetails.name = name;
         m_tip3walletDetails.symbol = symbol;
         m_tip3walletDetails.root_public_key = root_public_key;
@@ -164,7 +164,7 @@ contract HelloDebot is Debot {
         }(m_tip3root);
     }
     
-    function setPriceCode(TvmCell value0) public {
+    function setPriceCode(XCell value0) public {
         m_sellPriceCode = value0;
         uint256 h = tvm.hash(m_sellPriceCode);
         Terminal.print(0,format("stock address {}",m_stockAddr));
@@ -404,7 +404,7 @@ contract HelloDebot is Debot {
         }();
     }
 
-    function setTradingPairCode(TvmCell value0) public {
+    function setTradingPairCode(XCell value0) public {
         m_tradingPairCode = value0;
         uint256 h = tvm.hash(m_tradingPairCode);
         Terminal.print(0,format("price code hash {:x}",h));

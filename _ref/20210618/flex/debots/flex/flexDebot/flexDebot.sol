@@ -24,13 +24,13 @@ abstract contract AMSig {
         uint128 value,
         bool bounce,
         bool allBalance,
-        TvmCell payload)
+        XCell payload)
     public returns (uint64 transId) {}
 }
 
 abstract contract AFlex {
-    function getSellPriceCode(address tip3_addr) public returns(TvmCell value0) {}
-    function getXchgPriceCode(address tip3_addr1, address tip3_addr2) public returns(TvmCell value0) {}
+    function getSellPriceCode(address tip3_addr) public returns(XCell value0) {}
+    function getXchgPriceCode(address tip3_addr1, address tip3_addr2) public returns(XCell value0) {}
 }
 
 abstract contract ATradingPair {
@@ -49,13 +49,13 @@ abstract contract ATip3Root {
  }
 
 abstract contract AFlexClient {
-    constructor(uint256 pubkey, TvmCell trading_pair_code) public {}
-    function deployPriceWithBuy(TvmCell args_cl) public returns(address value0) {}
-    function deployPriceWithSell(TvmCell args_cl) public returns(address value0) {}
-    function cancelBuyOrder(TvmCell args_cl) public {}
-    function cancelSellOrder(TvmCell args_cl) public {}
-    function deployPriceXchg(TvmCell args_cl) public returns(address value0) {}
-    function cancelXchgOrder(TvmCell args) public {}
+    constructor(uint256 pubkey, XCell trading_pair_code) public {}
+    function deployPriceWithBuy(XCell args_cl) public returns(address value0) {}
+    function deployPriceWithSell(XCell args_cl) public returns(address value0) {}
+    function cancelBuyOrder(XCell args_cl) public {}
+    function cancelSellOrder(XCell args_cl) public {}
+    function deployPriceXchg(XCell args_cl) public returns(address value0) {}
+    function cancelXchgOrder(XCell args) public {}
 }
 
 interface IFlexHelperDebot {
@@ -113,9 +113,9 @@ contract FlexDebot is Debot, Upgradable {
     Tip3MenuInfo[] m_tip3Menu;
     uint256 m_masterPubKey;
     bool m_bTip3Tip3;
-    TvmCell m_pairCode;
-    TvmCell m_xchgPairCode;
-    TvmCell m_tradingPairCode;
+    XCell m_pairCode;
+    XCell m_xchgPairCode;
+    XCell m_tradingPairCode;
     uint128 m_stockMinAmount;
     uint8 m_stockDealsLimit;
     StockTonCfg m_stockTonCfg;
@@ -159,7 +159,7 @@ contract FlexDebot is Debot, Upgradable {
         //callback onGetFCAddressAndKeys
     }
 
-    function onGetFCAddressAndKeys(address fc, uint256 pk, uint128 minAmount, uint8 dealsLimit, StockTonCfg tonCfg, TvmCell tpcode, TvmCell xchgpcode) public{
+    function onGetFCAddressAndKeys(address fc, uint256 pk, uint128 minAmount, uint8 dealsLimit, StockTonCfg tonCfg, XCell tpcode, XCell xchgpcode) public{
         m_addr[ADDR_FLEX_CLIENT] = fc;
         m_masterPubKey = pk;
         m_stockMinAmount = minAmount;

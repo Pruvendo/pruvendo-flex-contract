@@ -33,7 +33,7 @@ abstract contract ATip3Root {
     constructor(bytes name, bytes symbol, uint8 decimals, uint256 root_public_key, uint256 root_owner, uint128 total_supply) public {}
     function getName() public returns(string value0) {}
     function getSymbol() public returns(bytes value0){}
-    function setWalletCode(TvmCell wallet_code) public {}
+    function setWalletCode(XCell wallet_code) public {}
     function deployWallet(uint32 _answer_id, int8 workchain_id, uint256 pubkey, uint256 internal_owner,
         uint128 tokens, uint128 grams) public functionID(1888586564) returns(address value0) {}
     function grant(address dest, uint128 tokens, uint128 grams) public {}
@@ -42,12 +42,12 @@ abstract contract ATip3Root {
     function getDecimals() public returns (uint8 value0) {}
     function getTotalSupply() public returns (uint128 value0) {}
     function getTotalGranted() public returns (uint128 value0) {}
-    function getWalletCode() public returns (TvmCell value0) {}
+    function getWalletCode() public returns (XCell value0) {}
     function getWalletCodeHash() public returns(uint256 value0) {}
 }
 
 abstract contract TIP3Wallet {
-    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) {}
+    function getDetails() public returns (bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) {}
 }
 
 abstract contract Utility {
@@ -92,25 +92,25 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
 
     address m_flexClient;
 
-    TvmCell m_t3rContractCode;
-    TvmCell m_t3WalletCode;
-   //TvmCell m_flexClientCode;
+    XCell m_t3rContractCode;
+    XCell m_t3WalletCode;
+   //XCell m_flexClientCode;
 
     address m_deployAddress;
-    TvmCell m_deployState;
+    XCell m_deployState;
 
     uint32 m_seedPhraseCallBack;
 
     TokenInfo[] m_tokenRoots;
     uint m_currentTokenIndex;
 
-    function setT3RCode(TvmCell code) public {
+    function setT3RCode(XCell code) public {
         require(tvm.pubkey() == msg.pubkey(), 100);
         tvm.accept();
         m_t3rContractCode = code;
     }
 
-    function setT3WalletCode(TvmCell code) public {
+    function setT3WalletCode(XCell code) public {
         require(tvm.pubkey() == msg.pubkey(), 100);
         tvm.accept();
         m_t3WalletCode = code.toSlice().loadRef();
@@ -146,7 +146,7 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
     function startSearching() public {
         m_currentTokenIndex = 0;
         m_tokenRoots = new TokenInfo[](0);
-        TvmCell t3rCode = m_t3rContractCode.toSlice().loadRef();
+        XCell t3rCode = m_t3rContractCode.toSlice().loadRef();
         Sdk.getAccountsDataByHash(
             tvm.functionId(onDataResult),
             tvm.hash(t3rCode),
@@ -181,7 +181,7 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
             }();
         }
         if (accounts.length != 0) {
-            TvmCell t3rCode = m_t3rContractCode.toSlice().loadRef();
+            XCell t3rCode = m_t3rContractCode.toSlice().loadRef();
             Sdk.getAccountsDataByHash(
                 tvm.functionId(onDataResult),
                 tvm.hash(t3rCode),
@@ -287,7 +287,7 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
     function DeployRootStep10(bool value) public {
         if (value) {
             optional(uint256) key = m_masterPubKey;
-            TvmCell deployMsg = tvm.buildExtMsg({
+            XCell deployMsg = tvm.buildExtMsg({
                 abiVer: 2,
                 dest: m_deployAddress,
                 callbackId: tvm.functionId(onSuccessDeployed),
@@ -382,7 +382,7 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
     }
 
     function checkRootCodeHash(uint256 code_hash) public {
-        TvmCell t3rCode = m_t3rContractCode.toSlice().loadRef();
+        XCell t3rCode = m_t3rContractCode.toSlice().loadRef();
         if(code_hash!=tvm.hash(t3rCode)){
             Terminal.print(tvm.functionId(Debot.start),format("Account {} is not a valid tip3 token.",m_tip3root));
             return;
@@ -544,7 +544,7 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
     }
 
     function  checkWalletCodeHash(uint256 code_hash) public {
-        TvmCell t3wCode = m_t3WalletCode.toSlice().loadRef();
+        XCell t3wCode = m_t3WalletCode.toSlice().loadRef();
         Terminal.print(0, format("debug: Account {} code_hash {:064x}",m_tip3wallet,code_hash));
         Terminal.print(0, format("debug: ethalon code_hash {:064x}",m_t3wCodeHash));
         if (code_hash == m_t3wCodeHash){
@@ -565,7 +565,7 @@ contract Tip3Debot is Debot, Upgradable, Transferable, Utility {
 
     }
 
-    function printWalletBalance(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, TvmCell code, Allowance allowance, int8 workchain_id) public {
+    function printWalletBalance(bytes name, bytes symbol, uint8 decimals, uint128 balance, uint256 root_public_key, uint256 wallet_public_key, address root_address, address owner_address, LendOwnership lend_ownership, XCell code, Allowance allowance, int8 workchain_id) public {
         Terminal.print(0, format("TIP3 Balance: {} tokens", tokensToStr(balance, m_decimals)));
         startGrant();
     }

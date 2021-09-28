@@ -33,7 +33,7 @@ function naclKeypairFromSecret(uint32 answerId, uint256 secret) external returns
 //query
 struct AccData {
     address id;
-    TvmCell data;
+    XCell data;
 }
 function getAccountsDataByHash(uint32 answerId, uint256 codeHash, address gt) external returns (AccData[] accDatas);
 }

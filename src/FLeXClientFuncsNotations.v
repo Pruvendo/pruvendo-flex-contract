@@ -46,22 +46,22 @@ Import ListNotations.
 
 
 
- Parameter FlexClient_Ф_constructor : XInteger256 -> TvmCell -> TvmCell -> UExpression PhantomType true . 
+ Parameter FlexClient_Ф_constructor : XInteger256 -> XCell -> XCell -> UExpression PhantomType true . 
  Parameter FlexClient_Ф_setFlexCfg : TonsConfig -> addr_std_compact -> addr_std_compact -> UExpression PhantomType true . 
- Parameter FlexClient_Ф_setExtWalletCode : TvmCell -> UExpression PhantomType true . 
- Parameter FlexClient_Ф_setFlexWalletCode : TvmCell -> UExpression PhantomType true . 
- Parameter FlexClient_Ф_setFlexWrapperCode : TvmCell -> UExpression PhantomType true . 
+ Parameter FlexClient_Ф_setExtWalletCode : XCell -> UExpression PhantomType true . 
+ Parameter FlexClient_Ф_setFlexWalletCode : XCell -> UExpression PhantomType true . 
+ Parameter FlexClient_Ф_setFlexWrapperCode : XCell -> UExpression PhantomType true . 
  Parameter FlexClient_Ф_deployTradingPair : addr_std_compact -> XInteger128 -> XInteger128 -> XInteger128 -> UExpression XAddress true . 
  Parameter FlexClient_Ф_deployXchgPair : addr_std_compact -> addr_std_compact -> XInteger128 -> XInteger128 -> XInteger128 -> UExpression XAddress true . 
- Parameter FlexClient_Ф_preparePrice : XInteger128 -> XInteger128 -> XInteger8 -> TvmCell -> Tip3Config -> TvmCell -> UExpression ( StateInit # XAddress # XInteger256 ) false . 
- Parameter FlexClient_Ф_deployPriceWithSell : XInteger128 -> XInteger128 -> XInteger32 -> XInteger128 -> XInteger8 -> XInteger128 -> TvmCell -> addr_std_compact -> addr_std_compact -> Tip3Config -> UExpression XAddress true . 
- Parameter FlexClient_Ф_deployPriceWithBuy : XInteger128 -> XInteger128 -> XInteger32 -> XInteger128 -> XInteger8 -> XInteger128 -> TvmCell -> addr_std_compact -> Tip3Config -> UExpression XAddress true . 
- Parameter FlexClient_Ф_cancelSellOrder : XInteger128 -> XInteger128 -> XInteger8 -> XInteger128 -> TvmCell -> Tip3Config -> UExpression PhantomType true . 
- Parameter FlexClient_Ф_cancelBuyOrder : XInteger128 -> XInteger128 -> XInteger8 -> XInteger128 -> TvmCell -> Tip3Config -> UExpression PhantomType true . 
- Parameter FlexClient_Ф_preparePriceXchg : XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> Tip3Config -> Tip3Config -> TvmCell -> UExpression ( StateInit # XAddress # XInteger256 ) false . 
- Parameter FlexClient_Ф_cancelXchgOrder : XBool -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XInteger128 -> TvmCell -> Tip3Config -> Tip3Config -> UExpression PhantomType true . 
+ Parameter FlexClient_Ф_preparePrice : XInteger128 -> XInteger128 -> XInteger8 -> XCell -> Tip3Config -> XCell -> UExpression ( StateInit # XAddress # XInteger256 ) false . 
+ Parameter FlexClient_Ф_deployPriceWithSell : XInteger128 -> XInteger128 -> XInteger32 -> XInteger128 -> XInteger8 -> XInteger128 -> XCell -> addr_std_compact -> addr_std_compact -> Tip3Config -> UExpression XAddress true . 
+ Parameter FlexClient_Ф_deployPriceWithBuy : XInteger128 -> XInteger128 -> XInteger32 -> XInteger128 -> XInteger8 -> XInteger128 -> XCell -> addr_std_compact -> Tip3Config -> UExpression XAddress true . 
+ Parameter FlexClient_Ф_cancelSellOrder : XInteger128 -> XInteger128 -> XInteger8 -> XInteger128 -> XCell -> Tip3Config -> UExpression PhantomType true . 
+ Parameter FlexClient_Ф_cancelBuyOrder : XInteger128 -> XInteger128 -> XInteger8 -> XInteger128 -> XCell -> Tip3Config -> UExpression PhantomType true . 
+ Parameter FlexClient_Ф_preparePriceXchg : XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> Tip3Config -> Tip3Config -> XCell -> UExpression ( StateInit # XAddress # XInteger256 ) false . 
+ Parameter FlexClient_Ф_cancelXchgOrder : XBool -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XInteger128 -> XCell -> Tip3Config -> Tip3Config -> UExpression PhantomType true . 
  Parameter FlexClient_Ф_transfer : addr_std_compact -> XInteger128 -> XBool -> UExpression PhantomType true . 
- Parameter FlexClient_Ф_deployPriceXchg : XBool -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger32 -> XInteger128 -> XInteger8 -> XInteger128 -> TvmCell -> addr_std_compact -> addr_std_compact -> Tip3Config -> Tip3Config -> UExpression XAddress true . 
+ Parameter FlexClient_Ф_deployPriceXchg : XBool -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger32 -> XInteger128 -> XInteger8 -> XInteger128 -> XCell -> addr_std_compact -> addr_std_compact -> Tip3Config -> Tip3Config -> UExpression XAddress true . 
  Parameter FlexClient_Ф_deployWrapperWithWallet : XInteger256 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> Tip3Config -> UExpression XAddress true . 
  Parameter FlexClient_Ф_deployEmptyFlexWallet : XInteger256 -> XInteger128 -> Tip3Config -> UExpression XAddress true . 
  Parameter FlexClient_Ф_burnWallet : XInteger128 -> XInteger256 -> addr_std_compact -> addr_std_compact -> UExpression PhantomType true . 
@@ -70,8 +70,8 @@ Import ListNotations.
  Parameter FlexClient_Ф_hasExtWalletCode : UExpression XBool false . 
  Parameter FlexClient_Ф_hasFlexWalletCode : UExpression XBool false . 
  Parameter FlexClient_Ф_hasFlexWrapperCode : UExpression XBool false . 
- Parameter FlexClient_Ф_getPayloadForDeployInternalWallet : XInteger256 -> addr_std_compact -> XInteger128 -> UExpression TvmCell false . 
- Parameter FlexClient_Ф__fallback : TvmCell -> UExpression XInteger false . 
+ Parameter FlexClient_Ф_getPayloadForDeployInternalWallet : XInteger256 -> addr_std_compact -> XInteger128 -> UExpression XCell false . 
+ Parameter FlexClient_Ф__fallback : XCell -> UExpression XInteger false . 
 Notation " 'TickTock.tick' " := ( ULState (U:= TickTock ) TickTock_ι_tick ) (in custom ULValue at level 0) : ursus_scope.
  Notation " 'TickTock.tick' " := ( URState (U:= TickTock ) TickTock_ι_tick ) (in custom URValue at level 0) : ursus_scope.
  Notation " 'TickTock.tock' " := ( ULState (U:= TickTock ) TickTock_ι_tock ) (in custom ULValue at level 0) : ursus_scope.
@@ -442,7 +442,7 @@ Notation " 'error_code::missed_flex_wrapper_code' " := (sInject error_code_ι_mi
 Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code_ι_missed_flex_wrapper_code) (in custom URValue at level 0) : ursus_scope. 
 
 
- Definition FlexClient_Ф_constructor_call { a1 a2 a3 }  ( pubkey : URValue XInteger256 a1 ) ( trading_pair_code : URValue TvmCell a2 ) ( xchg_pair_code : URValue TvmCell a3 ) : LedgerT ( ControlResult PhantomType true ) := 
+ Definition FlexClient_Ф_constructor_call { a1 a2 a3 }  ( pubkey : URValue XInteger256 a1 ) ( trading_pair_code : URValue XCell a2 ) ( xchg_pair_code : URValue XCell a3 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ3 ) FlexClient_Ф_constructor 
  ( SimpleLedgerableArg URValue {{ Λ "pubkey" }} ( pubkey ) ) 
  ( SimpleLedgerableArg URValue {{ Λ "trading_pair_code" }} ( trading_pair_code ) ) 
@@ -468,7 +468,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  , flex custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
  
- Definition FlexClient_Ф_setExtWalletCode_call { a1 }  ( ext_wallet_code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
+ Definition FlexClient_Ф_setExtWalletCode_call { a1 }  ( ext_wallet_code : URValue XCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) FlexClient_Ф_setExtWalletCode 
  ( SimpleLedgerableArg URValue {{ Λ "ext_wallet_code" }} ( ext_wallet_code ) ) 
  . 
@@ -477,7 +477,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  ext_wallet_code )) 
  (in custom ULValue at level 0 , ext_wallet_code custom URValue at level 0 ) : ursus_scope . 
  
- Definition FlexClient_Ф_setFlexWalletCode_call { a1 }  ( flex_wallet_code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
+ Definition FlexClient_Ф_setFlexWalletCode_call { a1 }  ( flex_wallet_code : URValue XCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) FlexClient_Ф_setFlexWalletCode 
  ( SimpleLedgerableArg URValue {{ Λ "flex_wallet_code" }} ( flex_wallet_code ) ) 
  . 
@@ -486,7 +486,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  flex_wallet_code )) 
  (in custom ULValue at level 0 , flex_wallet_code custom URValue at level 0 ) : ursus_scope . 
  
- Definition FlexClient_Ф_setFlexWrapperCode_call { a1 }  ( flex_wrapper_code : URValue TvmCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
+ Definition FlexClient_Ф_setFlexWrapperCode_call { a1 }  ( flex_wrapper_code : URValue XCell a1 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) FlexClient_Ф_setFlexWrapperCode 
  ( SimpleLedgerableArg URValue {{ Λ "flex_wrapper_code" }} ( flex_wrapper_code ) ) 
  . 
@@ -527,7 +527,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  , deploy_value custom URValue at level 0 
  , min_trade_amount custom URValue at level 0 ) : ursus_scope . 
  
- Definition FlexClient_Ф_preparePrice_call { a1 a2 a3 a4 a5 a6 }  ( price : URValue XInteger128 a1 ) ( min_amount : URValue XInteger128 a2 ) ( deals_limit : URValue XInteger8 a3 ) ( tip3_code : URValue TvmCell a4 ) ( tip3cfg : URValue Tip3Config a5 ) ( price_code : URValue TvmCell a6 ) : LedgerT ( ControlResult ( StateInit # XAddress # XInteger256 ) (orb (orb (orb (orb (orb a6 a5) a4) a3) a2) a1) ) := 
+ Definition FlexClient_Ф_preparePrice_call { a1 a2 a3 a4 a5 a6 }  ( price : URValue XInteger128 a1 ) ( min_amount : URValue XInteger128 a2 ) ( deals_limit : URValue XInteger8 a3 ) ( tip3_code : URValue XCell a4 ) ( tip3cfg : URValue Tip3Config a5 ) ( price_code : URValue XCell a6 ) : LedgerT ( ControlResult ( StateInit # XAddress # XInteger256 ) (orb (orb (orb (orb (orb a6 a5) a4) a3) a2) a1) ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ6 ) FlexClient_Ф_preparePrice 
  ( SimpleLedgerableArg URValue {{ Λ "price" }} ( price ) ) 
  ( SimpleLedgerableArg URValue {{ Λ "min_amount" }} ( min_amount ) ) 
@@ -546,7 +546,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  , tip3cfg custom URValue at level 0 
  , price_code custom URValue at level 0 ) : ursus_scope . 
  
- Definition FlexClient_Ф_deployPriceWithSell_call { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( price : URValue XInteger128 a1 ) ( amount : URValue XInteger128 a2 ) ( lend_finish_time : URValue XInteger32 a3 ) ( min_amount : URValue XInteger128 a4 ) ( deals_limit : URValue XInteger8 a5 ) ( tons_value : URValue XInteger128 a6 ) ( price_code : URValue TvmCell a7 ) ( my_tip3_addr : URValue addr_std_compact a8 ) ( receive_wallet : URValue addr_std_compact a9 ) ( tip3cfg : URValue Tip3Config a10 ) : LedgerT ( ControlResult XAddress true ) := 
+ Definition FlexClient_Ф_deployPriceWithSell_call { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( price : URValue XInteger128 a1 ) ( amount : URValue XInteger128 a2 ) ( lend_finish_time : URValue XInteger32 a3 ) ( min_amount : URValue XInteger128 a4 ) ( deals_limit : URValue XInteger8 a5 ) ( tons_value : URValue XInteger128 a6 ) ( price_code : URValue XCell a7 ) ( my_tip3_addr : URValue addr_std_compact a8 ) ( receive_wallet : URValue addr_std_compact a9 ) ( tip3cfg : URValue Tip3Config a10 ) : LedgerT ( ControlResult XAddress true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ10 ) FlexClient_Ф_deployPriceWithSell 
  ( SimpleLedgerableArg URValue {{ Λ "price" }} ( price ) ) 
  ( SimpleLedgerableArg URValue {{ Λ "amount" }} ( amount ) ) 
@@ -577,7 +577,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
 ( price : URValue XInteger128 a1 ) ( amount : URValue XInteger128 a2 ) 
 ( order_finish_time : URValue XInteger32 a3 ) ( min_amount : URValue XInteger128 a4 ) 
 ( deals_limit : URValue XInteger8 a5 ) ( deploy_value : URValue XInteger128 a6 ) 
-( price_code : URValue TvmCell a7 ) ( my_tip3_addr : URValue addr_std_compact a8 ) 
+( price_code : URValue XCell a7 ) ( my_tip3_addr : URValue addr_std_compact a8 ) 
 ( tip3cfg : URValue Tip3Config a9 ) : LedgerT ( ControlResult XAddress true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ9 ) FlexClient_Ф_deployPriceWithBuy 
  ( SimpleLedgerableArg URValue {{ Λ "price" }} ( price ) ) 
@@ -606,7 +606,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  Definition FlexClient_Ф_cancelSellOrder_call { a1 a2 a3 a4 a5 a6 }  
 ( price : URValue XInteger128 a1 ) ( min_amount : URValue XInteger128 a2 ) 
 ( deals_limit : URValue XInteger8 a3 ) ( value : URValue XInteger128 a4 )
- ( price_code : URValue TvmCell a5 ) ( tip3cfg : URValue Tip3Config a6 ) 
+ ( price_code : URValue XCell a5 ) ( tip3cfg : URValue Tip3Config a6 ) 
 : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ6 ) FlexClient_Ф_cancelSellOrder 
  ( SimpleLedgerableArg URValue {{ Λ "price" }} ( price ) ) 
@@ -628,7 +628,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  
  Definition FlexClient_Ф_cancelBuyOrder_call { a1 a2 a3 a4 a5 a6 }  ( price : URValue XInteger128 a1 ) 
 ( min_amount : URValue XInteger128 a2 ) ( deals_limit : URValue XInteger8 a3 ) 
-( value : URValue XInteger128 a4 ) ( price_code : URValue TvmCell a5 ) 
+( value : URValue XInteger128 a4 ) ( price_code : URValue XCell a5 ) 
 ( tip3cfg : URValue Tip3Config a6 ) : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ6 ) FlexClient_Ф_cancelBuyOrder 
  ( SimpleLedgerableArg URValue {{ Λ "price" }} ( price ) ) 
@@ -651,7 +651,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  Definition FlexClient_Ф_preparePriceXchg_call { a1 a2 a3 a4 a5 a6 a7 }  ( price_num : URValue XInteger128 a1 )
  ( price_denum : URValue XInteger128 a2 ) ( min_amount : URValue XInteger128 a3 )
  ( deals_limit : URValue XInteger8 a4 ) ( major_tip3cfg : URValue Tip3Config a5 ) 
-( minor_tip3cfg : URValue Tip3Config a6 ) ( price_code : URValue TvmCell a7 ) 
+( minor_tip3cfg : URValue Tip3Config a6 ) ( price_code : URValue XCell a7 ) 
 : LedgerT ( ControlResult ( StateInit # XAddress # XInteger256 ) (orb (orb (orb (orb (orb (orb a7 a6) a5) a4) a3) a2) a1)) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ7 ) FlexClient_Ф_preparePriceXchg 
  ( SimpleLedgerableArg URValue {{ Λ "price_num" }} ( price_num ) ) 
@@ -676,7 +676,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  Definition FlexClient_Ф_cancelXchgOrder_call { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( sell : URValue XBool a1 ) 
 ( price_num : URValue XInteger128 a2 ) ( price_denum : URValue XInteger128 a3 ) 
 ( min_amount : URValue XInteger128 a4 ) ( deals_limit : URValue XInteger8 a5 ) 
-( value : URValue XInteger128 a6 ) ( xchg_price_code : URValue TvmCell a7 ) 
+( value : URValue XInteger128 a6 ) ( xchg_price_code : URValue XCell a7 ) 
 ( major_tip3cfg : URValue Tip3Config a8 ) ( minor_tip3cfg : URValue Tip3Config a9 ) 
 : LedgerT ( ControlResult PhantomType true ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ9 ) FlexClient_Ф_cancelXchgOrder 
@@ -723,7 +723,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
 ( price_denum : URValue XInteger128 a3 ) ( amount : URValue XInteger128 a4 )
  ( lend_amount : URValue XInteger128 a5 ) ( lend_finish_time : URValue XInteger32 a6 )
  ( min_amount : URValue XInteger128 a7 ) ( deals_limit : URValue XInteger8 a8 ) 
-( tons_value : URValue XInteger128 a9 ) ( xchg_price_code : URValue TvmCell a10 ) 
+( tons_value : URValue XInteger128 a9 ) ( xchg_price_code : URValue XCell a10 ) 
 ( my_tip3_addr : URValue addr_std_compact a11 ) ( receive_wallet : URValue addr_std_compact a12 ) 
 ( major_tip3cfg : URValue Tip3Config a13 ) ( minor_tip3cfg : URValue Tip3Config a14 ) 
 : LedgerT ( ControlResult XAddress  
@@ -859,7 +859,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  
  Definition FlexClient_Ф_getPayloadForDeployInternalWallet_call { a1 a2 a3 } 
  ( owner_pubkey : URValue XInteger256 a1 ) ( owner_addr : URValue addr_std_compact a2 )
- ( tons : URValue XInteger128 a3 ) : LedgerT ( ControlResult TvmCell (orb (orb a3 a2) a1) ) := 
+ ( tons : URValue XInteger128 a3 ) : LedgerT ( ControlResult XCell (orb (orb a3 a2) a1) ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ3 ) FlexClient_Ф_getPayloadForDeployInternalWallet 
  ( SimpleLedgerableArg URValue {{ Λ "owner_pubkey" }} ( owner_pubkey ) ) 
  ( SimpleLedgerableArg URValue {{ Λ "owner_addr" }} ( owner_addr ) ) 
@@ -872,7 +872,7 @@ Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code
  , owner_addr custom URValue at level 0 
  , tons custom URValue at level 0 ) : ursus_scope . 
 
- Definition FlexClient_Ф__fallback_call { a1 }  ( x : URValue TvmCell a1 ) : LedgerT ( ControlResult XInteger a1 ) := 
+ Definition FlexClient_Ф__fallback_call { a1 }  ( x : URValue XCell a1 ) : LedgerT ( ControlResult XInteger a1 ) := 
  🏓 ursus_call_with_args ( LedgerableWithArgs := λ1 ) FlexClient_Ф__fallback 
  ( SimpleLedgerableArg URValue {{ Λ "x" }} ( x ) ) 
  . 

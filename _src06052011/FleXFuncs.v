@@ -30,7 +30,7 @@
  [ Л_buy_idx_cur1_ Л_buy1_ ] := ^ *buy_opt ; 
  if ^ ( + + Л_deals_count1_ > deals_limit_ ) then { IPricePtr ( address { tvm_myaddr ( ) } ) ( Grams ( dealer_ι_tons_cfg_ ^^ process_queue . 
  
- Definition DPrice_Ф_onTip3LendOwnership ( balance : XInteger128 ) ( lend_finish_time : XInteger32 ) ( pubkey : XInteger256 ) ( internal_owner : XInteger256 ) ( payload_cl : TvmCell ) ( answer_addr : XAddress ) 
+ Definition DPrice_Ф_onTip3LendOwnership ( balance : XInteger128 ) ( lend_finish_time : XInteger32 ) ( pubkey : XInteger256 ) ( internal_owner : XInteger256 ) ( payload_cl : XCell ) ( answer_addr : XAddress ) 
  : SMLExpression (S:=Ledger) false OrderRetP XInteger := 
  WeakBinding ( ResultExpression ( init int Л_balance2 := balance ) ) of 
  WeakBinding ( ResultExpression ( init int Л_lend_finish_time2 := lend_finish_time ) ) of 
@@ -311,7 +311,7 @@
  
  }} Parameter Л_msg15 : XString . 
  
- Definition DPrice_Ф__fallback ( msg : TvmCell ) ( msg_body : TvmSlice ) 
+ Definition DPrice_Ф__fallback ( msg : XCell ) ( msg_body : XSlice ) 
  : SMLExpression (S:=Ledger) false XInteger XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_msg15 := msg ) ) of 
  WeakBinding ( ResultExpression ( init slice Л_msg_body15 := msg_body ) ) of 
@@ -383,7 +383,7 @@
  
  }} Parameter Л_code21 : XString . 
  
- Definition DStock_Ф_setPairCode ( code : TvmCell ) 
+ Definition DStock_Ф_setPairCode ( code : XCell ) 
  : SMLExpression (S:=Ledger) false True XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_code21 := code ) ) of 
  {{ 
@@ -400,7 +400,7 @@
  
  }} Parameter Л_code22 : XString . 
  
- Definition DStock_Ф_setPriceCode ( code : TvmCell ) 
+ Definition DStock_Ф_setPriceCode ( code : XCell ) 
  : SMLExpression (S:=Ledger) false True XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_code22 := code ) ) of 
  {{ 
@@ -425,7 +425,7 @@
  ; 
  
  }} Definition DStock_Ф_getTradingPairCode 
- : SMLExpression (S:=Ledger) false TvmCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell XInteger := 
  {{ 
  ρ return ^ *pair_code_ ; 
  ; 
@@ -444,7 +444,7 @@
  ; 
  
  }} Definition DStock_Ф_getTradingPairCode 
- : SMLExpression (S:=Ledger) false TvmCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell XInteger := 
  {{ 
  ρ return ^ *pair_code_ ; 
  ; 
@@ -458,7 +458,7 @@
  ; 
  
  }} Definition DStock_Ф_getTradingPairCode 
- : SMLExpression (S:=Ledger) false TvmCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell XInteger := 
  {{ 
  ρ return ^ *pair_code_ ; 
  ; 
@@ -466,7 +466,7 @@
  }} Parameter Л_tip3_addr26 : XString . 
  
  Definition DStock_Ф_getTradingPairCode 
- : SMLExpression (S:=Ledger) false TvmCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell XInteger := 
  {{ 
  ρ return ^ *pair_code_ ; 
  ; 
@@ -474,7 +474,7 @@
  }} Parameter Л_tip3_addr26 : XString . 
  
  Definition DStock_Ф_getSellPriceCode ( tip3_addr : XAddress ) 
- : SMLExpression (S:=Ledger) false TvmCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell XInteger := 
  WeakBinding ( ResultExpression ( init addr Л_tip3_addr26 := tip3_addr ) ) of 
  {{ 
  Require ( price_code_ - > ctos ( DStock_ι_) ^^ srefs ( ) == 2 , error_code::unexpected_refs_count_in_code ) ; 
@@ -484,7 +484,7 @@
  }} Parameter Л_tip3_addr127 : XString . 
  
  Definition DStock_Ф_getXchgPriceCode ( tip3_addr1 : XAddress ) ( tip3_addr2 : XAddress ) 
- : SMLExpression (S:=Ledger) false TvmCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell XInteger := 
  WeakBinding ( ResultExpression ( init addr Л_tip3_addr127 := tip3_addr1 ) ) of 
  WeakBinding ( ResultExpression ( init addr Л_tip3_addr227 := tip3_addr2 ) ) of 
  {{ 
@@ -543,7 +543,7 @@
  
  }} Parameter Л_msg32 : XString . 
  
- Definition DStock_Ф__fallback ( msg : TvmCell ) ( msg_body : TvmSlice ) 
+ Definition DStock_Ф__fallback ( msg : XCell ) ( msg_body : XSlice ) 
  : SMLExpression (S:=Ledger) false XInteger XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_msg32 := msg ) ) of 
  WeakBinding ( ResultExpression ( init slice Л_msg_body32 := msg_body ) ) of 
@@ -619,7 +619,7 @@
  
  }} Parameter Л_msg36 : XString . 
  
- Definition DTradingPair_Ф__fallback ( msg : TvmCell ) ( msg_body : TvmSlice ) 
+ Definition DTradingPair_Ф__fallback ( msg : XCell ) ( msg_body : XSlice ) 
  : SMLExpression (S:=Ledger) false XInteger XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_msg36 := msg ) ) of 
  WeakBinding ( ResultExpression ( init slice Л_msg_body36 := msg_body ) ) of 
@@ -629,7 +629,7 @@
  
  }} Parameter Л_pubkey37 : XString . 
  
- Definition DFLeXClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_code : TvmCell ) 
+ Definition DFLeXClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_code : XCell ) 
  : SMLExpression (S:=Ledger) false True XInteger := 
  WeakBinding ( ResultExpression ( init int Л_pubkey37 := pubkey ) ) of 
  WeakBinding ( ResultExpression ( init cell Л_trading_pair_code37 := trading_pair_code ) ) of 
@@ -664,7 +664,7 @@
  tvm_accept ( ) ; 
  Л_pair_data39_ { . 
  
- Definition DFLeXClient_Ф_deployPriceWithSell ( args_cl : TvmCell ) 
+ Definition DFLeXClient_Ф_deployPriceWithSell ( args_cl : XCell ) 
  : SMLExpression (S:=Ledger) false XAddress XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_args_cl40 := args_cl ) ) of 
  {{ 
@@ -677,7 +677,7 @@
  Л_deploy_init_cl40_ := ^ build ( Л_state_init40_ DFLeXClient_ι_) ^^ endc ( ) ; 
  Л_sell_args40_ := ^ { . 
  
- Definition DFLeXClient_Ф_deployPriceWithBuy ( args_cl : TvmCell ) 
+ Definition DFLeXClient_Ф_deployPriceWithBuy ( args_cl : XCell ) 
  : SMLExpression (S:=Ledger) false XAddress XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_args_cl41 := args_cl ) ) of 
  {{ 
@@ -689,7 +689,7 @@
  IPricePtr price_addr ( Л_addr41_ ) ; 
  DFLeXClient_ι_price_addr ^^ deploy ( Л_state_init41_ , Grams ( Л_args41_ ^^ deploy_value . 
  
- Definition DFLeXClient_Ф_cancelSellOrder ( args_cl : TvmCell ) 
+ Definition DFLeXClient_Ф_cancelSellOrder ( args_cl : XCell ) 
  : SMLExpression (S:=Ledger) false True XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_args_cl42 := args_cl ) ) of 
  {{ 
@@ -701,7 +701,7 @@
  IPricePtr price_addr ( Л_addr42_ ) ; 
  price_addr ( Grams ( Л_args42_ ^^ value . 
  
- Definition DFLeXClient_Ф_cancelBuyOrder ( args_cl : TvmCell ) 
+ Definition DFLeXClient_Ф_cancelBuyOrder ( args_cl : XCell ) 
  : SMLExpression (S:=Ledger) false True XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_args_cl43 := args_cl ) ) of 
  {{ 
@@ -721,7 +721,7 @@
  
  }} Parameter Л_msg45 : XString . 
  
- Definition DFLeXClient_Ф__fallback ( msg : TvmCell ) ( msg_body : TvmSlice ) 
+ Definition DFLeXClient_Ф__fallback ( msg : XCell ) ( msg_body : XSlice ) 
  : SMLExpression (S:=Ledger) false XInteger XInteger := 
  WeakBinding ( ResultExpression ( init cell Л_msg45 := msg ) ) of 
  WeakBinding ( ResultExpression ( init slice Л_msg_body45 := msg_body ) ) of 
@@ -731,7 +731,7 @@
  
  }} Parameter Л_price46 : XString . 
  
- Definition DFLeXClient_Ф_preparePrice ( price : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( tip3cfg : Tip3ConfigP ) ( price_code : TvmCell ) 
+ Definition DFLeXClient_Ф_preparePrice ( price : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( tip3cfg : Tip3ConfigP ) ( price_code : XCell ) 
  : SMLExpression (S:=Ledger) false ( StateInitP # XAddress # XInteger256 ) XInteger := 
  WeakBinding ( ResultExpression ( init int Л_price46 := price ) ) of 
  WeakBinding ( ResultExpression ( init int Л_min_amount46 := min_amount ) ) of 
@@ -741,7 +741,7 @@
  {{ 
  Л_price_data46_ { . 
  
- Definition Ф_prepare_price_state_init_and_addr ( price_data : DPriceP ) ( price_code : TvmCell ) 
+ Definition Ф_prepare_price_state_init_and_addr ( price_data : DPriceP ) ( price_code : XCell ) 
  : SMLExpression (S:=Ledger) false ( StateInitP # XInteger256 ) XInteger := 
  WeakBinding ( ResultExpression ( init DPriceP Л_price_data100 := price_data ) ) of 
  WeakBinding ( ResultExpression ( init cell Л_price_code100 := price_code ) ) of 
@@ -752,7 +752,7 @@
  ρ return [ Л_price_init100_ , uint256 ( tvm_hash ( Л_price_init_cl100_ ) ) ] 
  }} Parameter Л_pair_data101 : XString . 
  
- Definition Ф_prepare_trading_pair_state_init_and_addr ( pair_data : DTradingPairP ) ( pair_code : TvmCell ) 
+ Definition Ф_prepare_trading_pair_state_init_and_addr ( pair_data : DTradingPairP ) ( pair_code : XCell ) 
  : SMLExpression (S:=Ledger) false ( StateInitP # XInteger256 ) XInteger := 
  WeakBinding ( ResultExpression ( init DTradingPairP Л_pair_data101 := pair_data ) ) of 
  WeakBinding ( ResultExpression ( init cell Л_pair_code101 := pair_code ) ) of 

@@ -8,9 +8,9 @@ abstract contract Upgradable {
     /// @notice Allows to upgrade contract code and data.
     /// @param state Root cell with StateInit structure of the new contract.
     /// Remark: only code is used from this structure.
-    function upgrade(TvmCell state) public virtual {
+    function upgrade(XCell state) public virtual {
         require(msg.pubkey() == tvm.pubkey(), 100);
-        TvmCell newcode = state.toSlice().loadRef();
+        XCell newcode = state.toSlice().loadRef();
         tvm.accept();
         tvm.commit();
         tvm.setcode(newcode);
