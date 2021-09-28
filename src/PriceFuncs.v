@@ -56,7 +56,7 @@ Existing Instance TvmCell_default.
 Existing Instance phantom_default .
 
 
-
+Check || Ф_is_active_time_ref_ ( {} ) || .
 
 
 

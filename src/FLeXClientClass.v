@@ -30,6 +30,12 @@
  Module Export VMStateModule := VMStateModule xt sm. 
  
  Import xt. 
+
+Check isoid.
+
+
+
+
  Existing Instance monadStateT. 
  Existing Instance monadStateStateT. 
  
@@ -1456,7 +1462,14 @@ Notation "'↑0' m " := ( liftEmbeddedState ( H :=  embeddedProduct_T1xT2xT3_T4 
 Notation "'↑↑0'" := ( liftEmbeddedState ( H :=  embeddedProduct_T1xT2xT3_T4 )) (at level 32, left associativity): solidity_scope.
 (* Notation " ↓ m " := ( callEmbeddedStateAdj m default (H0 :=  FullState_T1xT2xT3_T4 ) ) (at level 31, left associativity): solidity_scope. *)
 
-Global Instance iso_T1 : IsoTypes T1 (field_type (R:=Ledger) Ledger_ι_FlexClient) :=
+
+Global Instance iso_T1 : IsoTypes T1 (field_type (R:=Ledger) Ledger_ι_FlexClient) := isoid.
+Global Instance iso_T2 : IsoTypes T2 (field_type (R:=Ledger) Ledger_ι_VMState) := isoid.
+Global Instance iso_T3 : IsoTypes T3 (field_type (R:=Ledger) Ledger_ι_LocalState) := isoid.
+Global Instance iso_T4 : IsoTypes T4 (field_type (R:=Ledger) Ledger_ι_LocalStateCopy) := isoid.
+
+
+(* (* Global Instance iso_T1 : IsoTypes T1 (field_type (R:=Ledger) Ledger_ι_FlexClient) :=
 {
   x2y := Datatypes.id;
   y2x := Datatypes.id;
@@ -1479,7 +1492,7 @@ Global Instance iso_T3 : IsoTypes T3 (field_type (R:=Ledger) Ledger_ι_LocalStat
   x2x := eq_refl;
   y2y := eq_refl
 }.
-
+ *)
 Global Instance iso_T4 : IsoTypes T4 (field_type (R:=Ledger) Ledger_ι_LocalStateCopy) :=
 {
   x2y := Datatypes.id;
@@ -1487,7 +1500,7 @@ Global Instance iso_T4 : IsoTypes T4 (field_type (R:=Ledger) Ledger_ι_LocalStat
   x2x := eq_refl;
   y2y := eq_refl
 }.
-
+ *)
 
  (* TODO: Тут надо вручную вставлять поля леджера зависящие от полей *) 
 
@@ -1567,17 +1580,19 @@ Proof.
   decide equality.
 Defined.
 
-Lemma LocalCopySameType: field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_LocalState = 
-field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_LocalStateCopy.
+Print  LedgerFieldsDec.
+
+Lemma LocalCopySameType: field_type Ledger_LocalState = field_type  Ledger_LocalStateCopy.
 Proof.
   reflexivity.
 Defined.
+
 
 Class LocalStateField (X:Type): Type := 
 {
     local_index_embedded:> EmbeddedType LedgerLocalState (XHMap string nat) ;
     local_state_field: LedgerLocalFields;
-    local_field_type_correct: field_type (PruvendoRecord:=LedgerLocalPruvendoRecord) local_state_field = XHMap (string*nat)%type X;
+    local_field_type_correct: field_type local_state_field = XHMap (string*nat)%type X;
 }.
 
 
@@ -1902,7 +1917,13 @@ Defined.
 
 Lemma LocalState_ι_StateInitIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
 LocalState_ι_StateInitIndex_Embedded_injEmbed t1 (LocalState_ι_StateInitIndex_Embedded_injEmbed t2 s) = LocalState_ι_StateInitIndex_Embedded_injEmbed t1 s.
-Proof.
+Proof.Definition record5_ι_O_record4 : PruvendoRecord (field_type (R:=Record5) record5_ι_O) record4Fields := 
+   Record4_PruvendoRecord.
+
+Existing Instance record5_ι_O_record4.
+Existing Instance Ledger_PruvendoRecord. 
+
+
   intros.
   destruct s.
   repeat destruct p.

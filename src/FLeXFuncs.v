@@ -54,7 +54,6 @@ Existing Instance TvmCell_default.
 Existing Instance phantom_default .
 
 
-
 Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3 : XInteger128 ) ( return_ownership : XInteger128 ) ( trading_pair_deploy : XInteger128 ) ( order_answer : XInteger128 ) ( process_queue : XInteger128 ) ( send_notify : XInteger128 ) ( deals_limit : XInteger8 ) ( notify_addr : XAddress ) : UExpression PhantomType false . 
  	 	 refine {{ deployer_pubkey : ( XInteger256 ) @ "deployer_pubkey" ; { _ } }} . 
  	 	 refine {{ transfer_tip3 : ( XInteger128 ) @ "transfer_tip3" ; { _ } }} . 
@@ -113,8 +112,6 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  Definition Flex_Ф_isFullyInitialized : UExpression XBool false . 
  	 	 refine {{ return_ {} (* Flex.pair_code_ && Flex.price_code_ && Flex.xchg_pair_code_ && Flex.xchg_price_code_ *) }} . 
  Defined . 
- 
- 
  
  Definition Flex_Ф_getTonsCfg : UExpression TonsConfig false . 
  	 	 refine {{ return_ Flex.tons_cfg_ }} . 
@@ -201,6 +198,16 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
  Definition Flex_Ф__fallback ( _ : TvmCell ) : UExpression XInteger false . 
  	 	 refine {{ return_ 0 }} . 
  Defined . 
+
+
+Check Flex_Ф_isFullyInitialized .
+
+
  
  End FLeXFuncs .
  
+
+
+
+
+
