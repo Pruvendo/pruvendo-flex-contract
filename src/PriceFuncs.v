@@ -116,7 +116,9 @@ Definition dealer_Ф_extract_active_order ( cur_order : ( XMaybe (XInteger # Ord
  	 	 refine {{ sell : ( XBool ) @ "sell" ; { _ } }} . 
  	 	 refine {{ if ( TRUE (* !{ cur_order } *) ) then { { _ : UExpression ( ( XMaybe (XInteger # OrderInfo)%sol ) # (XList OrderInfo) # XInteger128 )%sol false } } ; { _ } }} . 
  	 	 	 refine {{ return_ {} (* [ !{ cur_order } , !{ orders } , !{ all_amount } ] *) }} . 
- 	 	 refine {{ while ( ~ (!{orders} ->empty) ) do { { _: UExpression ( ( XMaybe (XInteger # OrderInfo)%sol ) # (XList OrderInfo) # XInteger128 )%sol false } } ; { _ } }} . 
+ 	 	 refine {{ while ( ~ ( TRUE (* !{orders} ->empty *)) ) do 
+        { { _: UExpression ( ( XMaybe (XInteger # OrderInfo)%sol ) # (XList OrderInfo) # XInteger128 )%sol false } } 
+                 ; { _ } }} . 
  	 	 	 refine {{ { cur_order } := {} (* orders . front_with_idx_opt ( ) *) ; { _ } }} . 
 (*  	 	 	 refine {{ new 'ord : ( OrderInfo ) @ "ord" := !{ cur_order } ->second ; { _ } }} .  *)
  	 	 	 refine {{ if ( ~ Ф_is_active_time_ref_ ( {} (* ord ^^ OrderInfo:order_finish_time *) ) ) 
@@ -190,8 +192,9 @@ Defined .
            := dealer_Ф_extract_active_order_ref ( !{sell_opt} dealer.sells_ dealer.sells_amount_ , TRUE ) ; { _ } }} .  *)
  (* 	 	 	 refine {{ tie ( buy_opt , buys_ , buys_amount_ ) :
            := dealer_Ф_extract_active_order_ref ( !{buy_opt} dealer.buys_ dealer.buys_amount_ TRUE ) ; { _ } }} . *) 
- 	 	 	 refine {{ if ( ~ !{ sell_opt } \\ ~ !{ buy_opt } ) then { { _: UExpression PhantomType false  } } ; { _ } }} . 
- 	 	 	 	 refine {{ { sell_opt } := !{ sell_opt } (* break *) }} . 
+ 	 	 	 refine {{ if ( ~ !{ sell_opt } \\ ~ !{ buy_opt } ) 
+         then { { _: UExpression PhantomType false  } } ; { _: UExpression PhantomType false } }} . 
+ 	 	 	 	 refine {{ break }} . 
  	 	 	 refine {{ new 'sell_idx_cur : ( XInteger ) @ "sell_idx_cur"  := {} ; { _ } }} . 
  	 	   refine {{ new 'sell : ( OrderInfo ) @ "sell" := {} ; { _ } }} . 
 (*  	 	         [ { sell_idx_cur } , { sell } ] := *sell_opt ; { _ } }} .  *)

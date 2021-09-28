@@ -3033,6 +3033,29 @@ Global Instance LocalState_optOrderRetIndex: LocalStateField ( XMaybe OrderRet )
   local_field_type_correct := eq_refl
 }.
 
+Global Instance LocalStateField_XInteger: LocalStateField XInteger :=
+{
+  local_index_embedded := LocalState_ι_intIndex_Embedded;
+  local_state_field := LocalState_ι_int; 
+  local_field_type_correct := eq_refl
+}.
+ 
+Global Instance LocalStateField_XBool: LocalStateField XBool :=
+{
+  local_index_embedded := LocalState_ι_boolIndex_Embedded;
+  local_state_field := LocalState_ι_bool; 
+  local_field_type_correct := eq_refl
+}.
+
+Global Instance LocalStateField_XCell: LocalStateField XCell :=
+{
+  local_index_embedded := LocalState_ι_cellIndex_Embedded;
+  local_state_field := LocalState_ι_cell; 
+  local_field_type_correct := eq_refl
+}.
+
+
+
  
 
 Definition LedgerVMStateEmbedded := embeddedT2. 

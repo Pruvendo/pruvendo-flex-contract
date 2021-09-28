@@ -1917,19 +1917,15 @@ Defined.
 
 Lemma LocalState_ι_StateInitIndex_Embedded_injinj : forall (t1 t2 : XHMap string nat) (s : LedgerLocalState),
 LocalState_ι_StateInitIndex_Embedded_injEmbed t1 (LocalState_ι_StateInitIndex_Embedded_injEmbed t2 s) = LocalState_ι_StateInitIndex_Embedded_injEmbed t1 s.
-Proof.Definition record5_ι_O_record4 : PruvendoRecord (field_type (R:=Record5) record5_ι_O) record4Fields := 
-   Record4_PruvendoRecord.
-
-Existing Instance record5_ι_O_record4.
-Existing Instance Ledger_PruvendoRecord. 
-
-
+Proof.
   intros.
   destruct s.
   repeat destruct p.
   reflexivity.
-Defined.
+Defined.  
 
+
+Existing Instance Ledger_PruvendoRecord. 
 
 Global Instance LocalState_ι_StateInitIndex_Embedded : EmbeddedType LedgerLocalState (XHMap string nat) :=
 {
