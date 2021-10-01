@@ -1,17 +1,19 @@
 Require Import UMLang.SolidityNotations2. 
 
-Module trainContractTypes (xt: XTypesSig).
+Module Types (xt: XTypesSig) (sm: StateMonadSig).
+Export xt. 
 
-Import xt.
+Module Export SolidityNotationsForClassTypes := SolidityNotations xt sm.
 
-Definition XTokensType     := XInteger.
-Definition WalletGramsType256 := XInteger.
-Definition WalletGramsType128 := XInteger.
-Definition XGrams := XInteger.
-Definition XHandle := XMaybe . (*interesting*)
-Definition XBytes := XHMap XInteger XInteger .
-Definition TokenId := XInteger.
-Definition RightId := XInteger.
-Definition RightsType := XInteger .
+Definition IFlexNotifyPtr := XAddress. 
+ Definition ITONTokenWalletPtr := XAddress. 
+ Definition IPricePtr := XAddress. 
+ Definition TokensType := XInteger128. 
+ Definition WalletGramsType := XInteger128. 
+ Definition Grams := XInteger16 . 
+                            Definition auto := XInteger . 
+ Definition addr_std_compact := XAddress . 
+ Definition varuint32 := XInteger32 .
 
-End trainContractTypes.
+End Types.
+

@@ -1,15 +1,24 @@
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
+From elpi Require Import elpi.
+Require Import Setoid.
+Require Import ZArith.
 
-Require Import UMLang.ProofEnvironment2.
-Require Import Ledger.
-Require Import FuncSig.
-Require Import Project.CommonConstSig.
-Require Import FuncNotations.
-Require Import UrsusTVM.tvmNotations.
 Require Import FinProof.Common. 
 Require Import FinProof.ProgrammingWith.
-From elpi Require Import elpi.
+
+Require Import UMLang.UrsusLib.
+Require Import UMLang.ProofEnvironment2.
+
+Require Import UrsusTVM.tvmFunc.
+Require Import UrsusTVM.tvmNotations.
+
+Require Import Project.CommonConstSig.
+Require Import Contracts.Flex.Ledger.
+Require Import Contracts.Flex.Functions.FuncSig.
+Require Import Contracts.Flex.Functions.FuncNotations.
+Require Import Contracts.Flex.Interface.
+
 
 Elpi Command AddLocalState.
 
@@ -31,7 +40,7 @@ main _ :- coq.error "usage: AddLocalState <name> <term> <LocalStateField>".
 Elpi Typecheck.
 Elpi Export AddLocalState.
 
-Elpi Command TestDefinitions. 
+Elpi Command TestDefinitions.
 Elpi Accumulate lp:{{
 
 pred get_name i:string , o:term.
@@ -56,12 +65,12 @@ main [ A ] :-
 
 Elpi Typecheck.
 
-Module FlexFuncs (dc : FlexConstsTypesSig XTypesModule StateMonadModule) .
-
+Module FlexFuncs (dc : ConstsTypesSig XTypesModule StateMonadModule) .
+ 
 Module Export FlexFuncNotationsModule := FlexFuncNotations XTypesModule StateMonadModule dc. 
-Import ProjectSpecModule.tvmNotationsModule.
+Import (* SpecModuleForFuncNotations. *)tvmNotationsModule.
 
-Module FlexFuncsInternal <: ProjectContractSpecModule.ProjectSpecSig.
+Module FlexFuncsInternal (* <: ProjectContractSpecModule.ProjectSpecSig *). 
  
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -152,7 +161,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
          refine {{ return_ {} (* Flex.pair_code_ && Flex.price_code_ && Flex.xchg_pair_code_ && Flex.xchg_price_code_ *) }} . 
  Defined . 
  
- Definition Flex_Ф_getTonsCfg : UExpression TonsConfig false . 
+ Definition Flex_Ф_getTonsCfg : UExpression TonsConfigStateLRecord false . 
          refine {{ return_ Flex.tons_cfg_ }} . 
  Defined . 
  
@@ -195,11 +204,11 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
          refine {{ tip3_root : ( XAddress ) @ "tip3_root" ; { _ } }} . 
          refine {{ (* new *) myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
          refine {{ { myaddr } := (* tvm.myaddr *) tvm.address () ; { _ } }} . 
-         refine {{ (* new *) pair_data : ( TradingPair ) @ "pair_data" ; { _ } }} . 
+         refine {{ (* new *) pair_data : ( TradingPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_root_ = tip3_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
-         refine {{ (* new *) std_addr : ( StateInit * XInteger256 ) @ "std_addr" ; { _ } }} . 
+         refine {{ (* new *) std_addr : ( StateInitStateLRecord * XInteger256 ) @ "std_addr" ; { _ } }} . 
          refine {{ { std_addr } := {} (* prepare_trading_pair_state_init_and_addr ( !{ pair_data } , Flex.pair_code_ ->get ) ->second *) ; { _ } }} . 
-         refine {{ (* new *) workchain_id : ( auto ) @ "workchain_id" ; { _ } }} . 
+         refine {{ (* new *) workchain_id : ( XInteger (* auto *) ) @ "workchain_id" ; { _ } }} . 
          refine {{ { workchain_id } := {} (* Std :: get < addr_std > ( myaddr ^^ address:val ( ) ) . workchain_id *) ; { _ } }} . 
          refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
  Defined . 
@@ -211,11 +220,11 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
          refine {{ tip3_minor_root : ( XAddress ) @ "tip3_minor_root" ; { _ } }} . 
          refine {{ (* new *) myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
          refine {{ { myaddr } := (* tvm_myaddr *) tvm.address () ; { _ } }} . 
-         refine {{ (* new *) pair_data : ( XchgPair ) @ "pair_data" ; { _ } }} . 
+         refine {{ (* new *) pair_data : ( XchgPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_major_root_ = tip3_major_root , . tip3_minor_root_ = tip3_minor_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
-         refine {{ (* new *) std_addr : ( auto ) @ "std_addr" ; { _ } }} . 
+         refine {{ (* new *) std_addr : ( XInteger (* auto *) ) @ "std_addr" ; { _ } }} . 
          refine {{ { std_addr } := {} (* prepare_xchg_pair_state_init_and_addr ( !{ pair_data } , Flex.xchg_pair_code_ ->get ) ->second *) ; { _ } }} . 
-         refine {{ (* new *) workchain_id : ( auto ) @ "workchain_id" ; { _ } }} . 
+         refine {{ (* new *) workchain_id : ( XInteger (* auto *) ) @ "workchain_id" ; { _ } }} . 
          refine {{ { workchain_id } := {} (* Std :: get < addr_std > ( myaddr ^^ address:val ( ) ) . workchain_id *) ; { _ } }} . 
          refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
  Defined . 
@@ -240,13 +249,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3
 
 
 
-
-
-
-
-
-
-Elpi TestDefinitions Definition constructor' (_depth: XInteger) : public UExpression PhantomType true :=
+(* Elpi TestDefinitions Definition constructor' (_depth: XInteger) : public UExpression PhantomType true :=
 {{
     _depth: XInteger @ "_depth" ; 
     new 'xxx : XAddress @ "xxx" := {} ;
@@ -255,11 +258,11 @@ Elpi TestDefinitions Definition constructor' (_depth: XInteger) : public UExpres
     tvm.accept();
     
     m_depth := !{_depth} 
-}}.
+}}. *)
 
 
-End trainFuncsInternal.
-End trainFuncs.
+End FlexFuncsInternal.
+End FlexFuncs.
 
 
 

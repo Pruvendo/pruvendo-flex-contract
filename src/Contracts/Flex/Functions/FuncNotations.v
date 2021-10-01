@@ -1,19 +1,19 @@
+
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
 
 Require Import UMLang.SolidityNotations2.
-Require Import UMLang.SML_NG28.
+Require Import UMLang.UrsusLib.
 
 Require Import Project.CommonConstSig.
 
 Require Import Contracts.Flex.Ledger.
-Require Import FuncSig.
+Require Import Contracts.Flex.Functions.FuncSig.
 
 Module FlexFuncNotations (xt: XTypesSig) 
                           (sm: StateMonadSig) 
-                          (dc : FlexConstsTypesSig xt sm ).
+                          (dc : ConstsTypesSig xt sm ).
 Export dc. Export xt. Export sm.
-
 
 Module Export FlexSpecModule :=  FlexSpec xt sm.
 
@@ -21,59 +21,59 @@ Import UrsusNotations.
 
 Local Open Scope ursus_scope.
 
-Notation " 'TonsConfig.transfer_tip3' " := ( ULState (U:= TonsConfig ) TonsConfig_ι_transfer_tip3 ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.return_ownership' " := ( ULState (U:= TonsConfig ) TonsConfig_ι_return_ownership ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.trading_pair_deploy' " := ( ULState (U:= TonsConfig ) TonsConfig_ι_trading_pair_deploy ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.order_answer' " := ( ULState (U:= TonsConfig ) TonsConfig_ι_order_answer ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.process_queue' " := ( ULState (U:= TonsConfig ) TonsConfig_ι_process_queue ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.send_notify' " := ( ULState (U:= TonsConfig ) TonsConfig_ι_send_notify ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " 'TonsConfig.transfer_tip3' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_transfer_tip3 ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.return_ownership' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_return_ownership ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.trading_pair_deploy' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_trading_pair_deploy ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.order_answer' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_order_answer ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.process_queue' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_process_queue ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.send_notify' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_send_notify ) (in custom ULValue at level 0) : ursus_scope. 
 
 
-Notation " 'Flex.deployer_pubkey_' " := ( ULState (U:= Flex ) Flex_ι_deployer_pubkey_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Flex.tons_cfg_' " := ( ULState (U:= Flex ) Flex_ι_tons_cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Flex.pair_code_' " := ( ULState (U:= Flex ) Flex_ι_pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Flex.xchg_pair_code_' " := ( ULState (U:= Flex ) Flex_ι_xchg_pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Flex.price_code_' " := ( ULState (U:= Flex ) Flex_ι_price_code_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Flex.xchg_price_code_' " := ( ULState (U:= Flex ) Flex_ι_xchg_price_code_ ) (in custom ULValue at level 0) : ursus_scope. 
-(*  Notation " 'Flex.min_amount_' " := ( ULState (U:= Flex ) Flex_ι_min_amount_ ) (in custom ULValue at level 0) : ursus_scope.  *)
- Notation " 'Flex.deals_limit_' " := ( ULState (U:= Flex ) Flex_ι_deals_limit_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Flex.notify_addr_' " := ( ULState (U:= Flex ) Flex_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " 'Flex.deployer_pubkey_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_deployer_pubkey_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.tons_cfg_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_tons_cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.pair_code_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.xchg_pair_code_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_xchg_pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.price_code_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_price_code_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.xchg_price_code_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_xchg_price_code_ ) (in custom ULValue at level 0) : ursus_scope. 
+(*  Notation " 'Flex.min_amount_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_min_amount_ ) (in custom ULValue at level 0) : ursus_scope.  *)
+ Notation " 'Flex.deals_limit_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_deals_limit_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Flex.notify_addr_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
 
- Notation " 'TradingPair.flex_addr_' " := ( ULState (U:= TradingPair ) TradingPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TradingPair.tip3_root_' " := ( ULState (U:= TradingPair ) TradingPair_ι_tip3_root_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TradingPair.deploy_value_' " := ( ULState (U:= TradingPair ) TradingPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'TradingPair.flex_addr_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TradingPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'TradingPair.tip3_root_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TradingPair_ι_tip3_root_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'TradingPair.deploy_value_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TradingPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
 
-Notation " 'XchgPair.flex_addr_' " := ( ULState (U:= XchgPair ) XchgPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'XchgPair.tip3_major_root_' " := ( ULState (U:= XchgPair ) XchgPair_ι_tip3_major_root_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'XchgPair.tip3_minor_root_' " := ( ULState (U:= XchgPair ) XchgPair_ι_tip3_minor_root_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'XchgPair.deploy_value_' " := ( ULState (U:= XchgPair ) XchgPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " 'XchgPair.flex_addr_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) XchgPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'XchgPair.tip3_major_root_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) XchgPair_ι_tip3_major_root_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'XchgPair.tip3_minor_root_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) XchgPair_ι_tip3_minor_root_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'XchgPair.deploy_value_' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) XchgPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
 
 
-Notation " 'TonsConfig.transfer_tip3' " := ( URState (U:= TonsConfig ) TonsConfig_ι_transfer_tip3 ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.return_ownership' " := ( URState (U:= TonsConfig ) TonsConfig_ι_return_ownership ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.trading_pair_deploy' " := ( URState (U:= TonsConfig ) TonsConfig_ι_trading_pair_deploy ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.order_answer' " := ( URState (U:= TonsConfig ) TonsConfig_ι_order_answer ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.process_queue' " := ( URState (U:= TonsConfig ) TonsConfig_ι_process_queue ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.send_notify' " := ( URState (U:= TonsConfig ) TonsConfig_ι_send_notify ) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'TonsConfig.transfer_tip3' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_transfer_tip3 ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.return_ownership' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_return_ownership ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.trading_pair_deploy' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_trading_pair_deploy ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.order_answer' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_order_answer ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.process_queue' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_process_queue ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.send_notify' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TonsConfig_ι_send_notify ) (in custom URValue at level 0) : ursus_scope. 
 
-Notation " 'Flex.deployer_pubkey_' " := ( URState (U:= Flex ) Flex_ι_deployer_pubkey_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Flex.tons_cfg_' " := ( URState (U:= Flex ) Flex_ι_tons_cfg_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Flex.pair_code_' " := ( URState (U:= Flex ) Flex_ι_pair_code_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Flex.xchg_pair_code_' " := ( URState (U:= Flex ) Flex_ι_xchg_pair_code_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Flex.price_code_' " := ( URState (U:= Flex ) Flex_ι_price_code_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Flex.xchg_price_code_' " := ( URState (U:= Flex ) Flex_ι_xchg_price_code_ ) (in custom URValue at level 0) : ursus_scope. 
-(*  Notation " 'Flex.min_amount_' " := ( URState (U:= Flex ) Flex_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope.  *)
- Notation " 'Flex.deals_limit_' " := ( URState (U:= Flex ) Flex_ι_deals_limit_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Flex.notify_addr_' " := ( URState (U:= Flex ) Flex_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'Flex.deployer_pubkey_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_deployer_pubkey_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.tons_cfg_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_tons_cfg_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.pair_code_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_pair_code_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.xchg_pair_code_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_xchg_pair_code_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.price_code_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_price_code_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.xchg_price_code_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_xchg_price_code_ ) (in custom URValue at level 0) : ursus_scope. 
+(*  Notation " 'Flex.min_amount_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope.  *)
+ Notation " 'Flex.deals_limit_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_deals_limit_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Flex.notify_addr_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Flex_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
 
-Notation " 'TradingPair.flex_addr_' " := ( URState (U:= TradingPair ) TradingPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TradingPair.tip3_root_' " := ( URState (U:= TradingPair ) TradingPair_ι_tip3_root_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TradingPair.deploy_value_' " := ( URState (U:= TradingPair ) TradingPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'TradingPair.flex_addr_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TradingPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'TradingPair.tip3_root_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TradingPair_ι_tip3_root_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'TradingPair.deploy_value_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) TradingPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
 
-Notation " 'XchgPair.flex_addr_' " := ( URState (U:= XchgPair ) XchgPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'XchgPair.tip3_major_root_' " := ( URState (U:= XchgPair ) XchgPair_ι_tip3_major_root_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'XchgPair.tip3_minor_root_' " := ( URState (U:= XchgPair ) XchgPair_ι_tip3_minor_root_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'XchgPair.deploy_value_' " := ( URState (U:= XchgPair ) XchgPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'XchgPair.flex_addr_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) XchgPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'XchgPair.tip3_major_root_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) XchgPair_ι_tip3_major_root_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'XchgPair.tip3_minor_root_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) XchgPair_ι_tip3_minor_root_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'XchgPair.deploy_value_' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) XchgPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
 
 
 Notation " 'TIMESTAMP_DELAY' " := (sInject TIMESTAMP_DELAY) (in custom URValue at level 0) : ursus_scope.
@@ -96,26 +96,14 @@ Notation " 'safe_delay_period' " := (sInject safe_delay_period) (in custom URVal
 
 Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_tons) (in custom URValue at level 0) : ursus_scope. 
 
- Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XAddress -> UExpression PhantomType false . 
- Parameter Flex_Ф_setPairCode : XCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_setXchgPairCode : XCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_setPriceCode : XCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_setXchgPriceCode : XCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_isFullyInitialized : UExpression XBool false . 
- Parameter Flex_Ф_getTonsCfg : UExpression TonsConfig false . 
- Parameter Flex_Ф_getTradingPairCode : UExpression XCell false . 
- Parameter Flex_Ф_getXchgPairCode : UExpression XCell false . 
- Parameter Flex_Ф_getSellPriceCode : XAddress -> UExpression XCell true . 
- Parameter Flex_Ф_getXchgPriceCode : XAddress -> XAddress -> UExpression XCell true . 
- Parameter Flex_Ф_getSellTradingPair : XAddress -> UExpression XAddress false . 
- Parameter Flex_Ф_getXchgTradingPair : XAddress -> XAddress -> UExpression XAddress false . 
- Parameter Flex_Ф_getDealsLimit : UExpression XInteger8 false . 
- Parameter Flex_Ф_getNotifyAddr : UExpression XAddress false . 
- Parameter Flex_Ф__fallback : XCell -> UExpression XInteger false . 
+Module Calls (tc : FlexSpecSig).
+
+Export tc.
+
+Local Open Scope string_scope.
 
 
-
- Definition Flex_Ф_constructor_call { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  
+Definition Flex_Ф_constructor_call { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  
 ( deployer_pubkey : URValue XInteger256 a1 ) 
 ( transfer_tip3 : URValue XInteger128 a2 ) 
 ( return_ownership : URValue XInteger128 a3 ) 
@@ -193,10 +181,10 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
  ( URResult ( Flex_Ф_isFullyInitialized_call 
  )) 
  (in custom URValue at level 0 ) : ursus_scope . 
- 
- Definition Flex_Ф_getTonsCfg_call  : LedgerT ( ControlResult TonsConfig false ) := 
- 🏓 ursus_call_with_args ( LedgerableWithArgs := λ0 ) Flex_Ф_getTonsCfg 
- . 
+
+ Definition Flex_Ф_getTonsCfg_call  : LedgerT ( ControlResult TonsConfigStateLRecord false ) := 
+ 🏓 ursus_call_with_args ( LedgerableWithArgs := λ0 ) Flex_Ф_getTonsCfg .
+
  Notation " 'Flex_Ф_getTonsCfg_ref_' '(' ')' " := 
  ( URResult ( Flex_Ф_getTonsCfg_call 
  )) 
@@ -284,6 +272,6 @@ Notation " 'error_code::not_enough_tons' " := (sInject error_code_ι_not_enough_
 
 
 
-End FuncEx. 
+End Calls. 
 
 End FlexFuncNotations.

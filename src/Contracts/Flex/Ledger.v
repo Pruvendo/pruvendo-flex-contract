@@ -11,9 +11,10 @@ Require Import UMLang.SolidityNotations2.
 Require Import UMLang.ClassGenerator.ClassGenerator.
 Require Import UrsusTVM.tvmFunc. 
 
-Require Import Project.CommonTypes. 
-Require Import ClassTypes.
-Require Import Interface.
+Require Import Project.CommonTypes.
+
+Require Import Contracts.Flex.ClassTypes.
+Require Import Contracts.Flex.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
@@ -27,44 +28,37 @@ Local Open Scope xlist_scope.
  Module FlexClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
  Module Export SolidityNotationsClass := SolidityNotations xt sm. 
  Module Export VMStateModule := VMStateModule xt sm. 
-
+ Module Export ClassTypesModule := ClassTypes xt sm .
 Import xt. 
-
 
 (* 2 *) Definition MessagesAndEventsStateL : list Type := 
  [ ( XInteger ) : Type ; 
  ( XBool ) : Type ; 
- ( TvmCell ) : Type ; 
+ ( XCell ) : Type ; 
  ( ( XHMap XInteger XInteger ) ) : Type ] .
-Elpi GeneratePruvendoRecord MessagesAndEventsStateL MessagesAndEventsFields . 
- Opaque MessagesAndEventsStateLRecord . 
-Elpi GeneratePruvendoRecord TickTockStateL TickTockFields . 
- Opaque TickTockStateLRecord . 
-Elpi GeneratePruvendoRecord StateInitStateL StateInitFields . 
- Opaque StateInitStateLRecord . 
-Elpi GeneratePruvendoRecord TonsConfigStateL TonsConfigFields . 
- Opaque TonsConfigStateLRecord . 
+GeneratePruvendoRecord MessagesAndEventsStateL MessagesAndEventsFields . 
+  Opaque MessagesAndEventsStateLRecord . 
 
 (* 2 *) Definition FlexStateL : list Type := 
  [ ( XInteger256 ) : Type ; 
  ( TonsConfigStateLRecord ) : Type ; 
- ( XMaybe TvmCell ) : Type ; 
- ( XMaybe TvmCell ) : Type ; 
- ( XMaybe TvmCell ) : Type ; 
- ( XMaybe TvmCell ) : Type ; 
+ ( XMaybe XCell ) : Type ; 
+ ( XMaybe XCell ) : Type ; 
+ ( XMaybe XCell ) : Type ; 
+ ( XMaybe XCell ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( XAddress ) : Type ] .
-Elpi GeneratePruvendoRecord FlexStateL FlexFields . 
+GeneratePruvendoRecord FlexStateL FlexFields . 
  Opaque FlexStateLRecord . 
-Elpi GeneratePruvendoRecord TradingPairStateL TradingPairFields . 
+GeneratePruvendoRecord TradingPairStateL TradingPairFields . 
  Opaque TradingPairStateLRecord . 
-Elpi GeneratePruvendoRecord XchgPairStateL XchgPairFields . 
+GeneratePruvendoRecord XchgPairStateL XchgPairFields . 
  Opaque XchgPairStateLRecord . 
 
 (* 2 *) Definition LocalStateStateL : list Type := 
  [ ( XHMap (string*nat) XInteger ) : Type ; 
  ( XHMap string nat ) : Type ; 
- ( XHMap (string*nat) ( XMaybe TvmCell ) ) : Type ; 
+ ( XHMap (string*nat) ( XMaybe XCell ) ) : Type ; 
  ( XHMap string nat ) : Type ; 
  ( XHMap (string*nat) ( XAddress * XAddress ) ) : Type ; 
  ( XHMap string nat ) : Type ; 
@@ -76,7 +70,7 @@ Elpi GeneratePruvendoRecord XchgPairStateL XchgPairFields .
  ( XHMap string nat ) : Type ; 
  ( XHMap (string*nat) XAddress ) : Type ; 
  ( XHMap string nat ) : Type ; 
- ( XHMap (string*nat) TvmCell ) : Type ; 
+ ( XHMap (string*nat) XCell ) : Type ; 
  ( XHMap string nat ) : Type ; 
  ( XHMap (string*nat) XchgPairStateLRecord ) : Type ; 
  ( XHMap string nat ) : Type ; 
@@ -86,18 +80,20 @@ Elpi GeneratePruvendoRecord XchgPairStateL XchgPairFields .
  ( XHMap string nat ) : Type ; 
  ( XHMap (string*nat) XBool ) : Type ; 
  ( XHMap string nat ) : Type ] .
-Elpi GeneratePruvendoRecord LocalStateStateL LocalStateFieldsI . 
- Opaque LocalStateStateLRecord . 
+GeneratePruvendoRecord LocalStateStateL LocalStateFieldsI . 
+ Opaque LocalStateStateLRecord .
+
+Check VMStateLRecord.
 
 (* 2 *) Definition LedgerStateL : list Type := 
  [ ( FlexStateLRecord ) : Type ; 
  ( FlexStateLRecord ) : Type ; 
- ( VMState ) : Type ; 
+ ( VMStateLRecord ) : Type ; 
  ( MessagesAndEventsStateLRecord ) : Type ; 
  ( MessagesAndEventsStateLRecord ) : Type ; 
  ( LocalStateStateLRecord ) : Type ; 
  ( LocalStateStateLRecord ) : Type ] .
-Elpi GeneratePruvendoRecord LedgerStateL LedgerFieldsI .
+GeneratePruvendoRecord LedgerStateL LedgerFieldsI .
 (***************************************)
 Transparent MessagesAndEventsStateLRecord .
 Transparent TickTockStateLRecord .
@@ -122,6 +118,8 @@ Definition iso_local := Ledger_ι_LocalStateIso.
 Definition Ledger := LedgerStateLRecord.
 Definition LedgerFields := LedgerFieldsI.
 
+(* Definition MessagesAndEvents := Ledger_ι_MessagesAndEvents. *)
+
 
 Lemma LedgerFieldsDec: forall (m1 m2: LedgerFieldsI), {m1=m2}+{m1<>m2}.
 Proof.
@@ -143,19 +141,33 @@ Class LocalStateField (X:Type): Type :=
     local_field_type_correct: field_type local_state_field = XHMap (string*nat)%type X;
 }.
 
-
 Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType Ledger_ι_VMState . 
 Definition LedgerVMStateField := Ledger_ι_VMState .
 Definition isoVMState := Ledger_ι_VMStateIso.
 
-
+Definition LedgerMessagesEmbedded := LedgerStateLEmbeddedType Ledger_ι_MessagesAndEvents . 
+Definition LedgerMessagesField := Ledger_ι_MessagesAndEvents .
+Definition isoMessages := Ledger_ι_MessagesAndEventsIso.
+Definition MessagesAndEvents := MessagesAndEventsStateLRecord .
 
 GenerateLocalStateInstances LocalStateStateL LocalStateFieldsI Build_LocalStateField LocalStateStateLEmbeddedType.
 
-
-Definition LocalStateField_XInteger := LocalState_ι_uintLocalField .
+Definition LocalStateField_XInteger := LocalState_ι_intLocalField .
 Definition LocalStateField_XBool := LocalState_ι_boolLocalField .
-Definition LocalStateField_TvmCell := LocalState_ι_cellLocalField .
+Definition LocalStateField_XCell := LocalState_ι_cellLocalField .
+
+(* Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType Ledger_ι_VMState . 
+Definition LedgerVMStateField := Ledger_ι_VMState .
+Definition isoVMState := Ledger_ι_VMStateIso.
+
+GenerateLocalStateInstances LocalStateStateL LocalStateFieldsI Build_LocalStateField LocalStateStateLEmbeddedType.
+
+Definition LocalStateField_XInteger := LocalState_ι_intLocalField .
+Definition LocalStateField_XBool := LocalState_ι_boolLocalField .
+Definition LocalStateField_XCell := LocalState_ι_cellLocalField .
+ *)
+
+
 
 (***************************************)
 Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
@@ -242,7 +254,7 @@ Proof.
                cbv;
                first [reflexivity| contradiction]).
 Qed .
-Lemma LocalStateFields_noeq : forall (f1 f2:  LocalStateFieldsI ) 
+(* Lemma LocalStateFields_noeq : forall (f1 f2:  LocalStateFieldsI ) 
          (v2: field_type f2) (r :  LocalStateStateLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
@@ -253,7 +265,7 @@ Proof.
                apply (countable_prop_proof (T:= LocalStateStateLRecord ));
                cbv;
                first [reflexivity| contradiction]).
-Qed .
+Qed . *)
 Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
          (v2: field_type f2) (r :  LedgerStateLRecord  ) ,  
 f1 <> f2 -> 

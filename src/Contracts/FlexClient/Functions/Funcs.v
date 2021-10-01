@@ -1,15 +1,23 @@
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
+From elpi Require Import elpi.
+Require Import Setoid.
+Require Import ZArith.
 
-Require Import UMLang.ProofEnvironment2.
-Require Import Ledger.
-Require Import FuncSig.
-Require Import Project.CommonConstSig.
-Require Import FuncNotations.
-Require Import UrsusTVM.tvmNotations.
 Require Import FinProof.Common. 
 Require Import FinProof.ProgrammingWith.
-From elpi Require Import elpi.
+
+Require Import UMLang.UrsusLib.
+Require Import UMLang.ProofEnvironment2.
+
+Require Import UrsusTVM.tvmFunc.
+Require Import UrsusTVM.tvmNotations.
+
+Require Import Project.CommonConstSig.
+Require Import Contracts.FlexClient.Ledger.
+Require Import Contracts.FlexClient.Functions.FuncSig.
+Require Import Contracts.FlexClient.Functions.FuncNotations.
+Require Import Contracts.FlexClient.Interface.
 
 Elpi Command AddLocalState.
 
@@ -58,12 +66,12 @@ Elpi Typecheck.
  
 (* Module trainContractSpecModuleForFuncs := trainContractSpec XTypesModule StateMonadModule. *)
 
-Module trainFuncs (dc : trainConstsTypesSig XTypesModule StateMonadModule) .
+Module FlexClientFuncs (dc : ConstsTypesSig XTypesModule StateMonadModule) .
 
-Module Export trainFuncNotationsModule := trainFuncNotations XTypesModule StateMonadModule dc. 
-Import trainContractSpecModule(* ForFuncs *).tvmNotationsModule.
+Module Export FlexClientFuncNotationsModule := FlexClientFuncNotations XTypesModule StateMonadModule dc. 
+Import (* trainContractSpecModule(* ForFuncs *) *)tvmNotationsModule.
 
-Module trainFuncsInternal <: trainContractSpecModule(* ForFuncs *).trainContractSpecSig.
+Module FlexClientFuncsInternal (* <: trainContractSpecModule(* ForFuncs *).trainContractSpecSig *).
  
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -108,8 +116,8 @@ Definition FlexClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_cod
  Defined . 
  
  
- Definition FlexClient_Ф_setFlexCfg ( tons_cfg : TonsConfig ) ( flex : addr_std_compact ) ( notify_addr : addr_std_compact ) : UExpression PhantomType true . 
-         refine {{ tons_cfg : ( TonsConfig ) @ "tons_cfg" ; { _ } }} . 
+ Definition FlexClient_Ф_setFlexCfg ( tons_cfg : TonsConfigStateLRecord ) ( flex : addr_std_compact ) ( notify_addr : addr_std_compact ) : UExpression PhantomType true . 
+         refine {{ tons_cfg : ( TonsConfigStateLRecord ) @ "tons_cfg" ; { _ } }} . 
          refine {{ flex : ( addr_std_compact ) @ "flex" ; { _ } }} . 
          refine {{ notify_addr : ( addr_std_compact ) @ "notify_addr" ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
@@ -152,9 +160,9 @@ Definition FlexClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_cod
          refine {{ min_trade_amount : ( XInteger128 ) @ "min_trade_amount" ; { _ } }} . 
 (*  	 	 refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} .  *)
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ new 'pair_data : ( TradingPair ) @ "pair_data" := {} ; { _ } }} . 
+         refine {{ new 'pair_data : ( TradingPairStateLRecord ) @ "pair_data" := {} ; { _ } }} . 
 (*  	 	        NEW { . flex_addr_ = flex_ , . tip3_root_ = tip3_root } ; { _ } }} .  *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {} ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 (*  	 	  [ { state_init } , { std_addr } ] := prepare_trading_pair_state_init_and_addr ( pair_data , trading_pair_code_ ) ; { _ } }} .  *)
          refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} ; { _ } }} . 
@@ -174,9 +182,9 @@ Definition FlexClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_cod
          refine {{ min_trade_amount : ( XInteger128 ) @ "min_trade_amount" ; { _ } }} . 
 (*  	 	 refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} .  *)
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ new 'pair_data : ( XchgPair ) @ "pair_data" := {} ; { _ } }} . 
+         refine {{ new 'pair_data : ( XchgPairStateLRecord ) @ "pair_data" := {} ; { _ } }} . 
 (*  	 	      NEW { . flex_addr_ = flex_ , . tip3_major_root_ = tip3_major_root , . tip3_minor_root_ = tip3_minor_root } ; { _ } }} .  *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {} ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 (*  	 	        [ { state_init } , { std_addr } ] := prepare_xchg_pair_state_init_and_addr ( pair_data , xchg_pair_code_ ) ; { _ } }} .  *)
          refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {}  ; { _ } }} . 
@@ -187,17 +195,17 @@ Definition FlexClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_cod
  
  
  
- Definition FlexClient_Ф_preparePrice ( price : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( tip3_code : XCell ) ( tip3cfg : Tip3Config ) ( price_code : XCell ) 
-: UExpression ( StateInit # XAddress # XInteger256 )%sol false . 
+ Definition FlexClient_Ф_preparePrice ( price : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( tip3_code : XCell ) ( tip3cfg :Tip3ConfigStateLRecord ) ( price_code : XCell ) 
+: UExpression ( StateInitStateLRecord # XAddress # XInteger256 )%sol false . 
          refine {{ price : ( XInteger128 ) @ "price" ; { _ } }} . 
          refine {{ min_amount : ( XInteger128 ) @ "min_amount" ; { _ } }} . 
          refine {{ deals_limit : ( XInteger8 ) @ "deals_limit" ; { _ } }} . 
          refine {{ tip3_code : ( XCell ) @ "tip3_code" ; { _ } }} . 
-         refine {{ tip3cfg : ( Tip3Config ) @ "tip3cfg" ; { _ } }} . 
+         refine {{ tip3cfg : (Tip3ConfigStateLRecord ) @ "tip3cfg" ; { _ } }} . 
          refine {{ price_code : ( XCell ) @ "price_code" ; { _ } }} . 
-         refine {{ new 'price_data : ( Price ) @ "price_data" := {} ; { _ } }} . 
+         refine {{ new 'price_data : ( DPriceStateLRecord ) @ "price_data" := {} ; { _ } }} . 
 (*  	 	       { price_data } := NEW { . price_ = price , . sells_amount_ = uint128 ( 0 ) , . buys_amount_ = uint128 ( 0 ) , . flex_ = flex_ , . min_amount_ = min_amount , . deals_limit_ = deals_limit , . notify_addr_ = IFlexNotifyPtr ( notify_addr_ ) , . workchain_id_ = workchain_id_ , . tons_cfg_ = tons_cfg_ , . tip3_code_ = tip3_code , . tip3cfg_ = tip3cfg , . sells_ = { } , . buys_ = { } } ; { _ } }} .  *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {} ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 (*  	 	 [ { state_init } , { std_addr } ] := prepare_price_state_init_and_addr ( price_data , price_code ) ; { _ } }} .  *)
          refine {{ new 'addr : ( XAddress ) @ "addr" := {} ; { _ } }} . 
@@ -207,7 +215,7 @@ Definition FlexClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_cod
  
  
  
- Definition FlexClient_Ф_deployPriceWithSell ( price : XInteger128 ) ( amount : XInteger128 ) ( lend_finish_time : XInteger32 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( tons_value : XInteger128 ) ( price_code : XCell ) ( my_tip3_addr : addr_std_compact ) ( receive_wallet : addr_std_compact ) ( tip3cfg : Tip3Config ) 
+ Definition FlexClient_Ф_deployPriceWithSell ( price : XInteger128 ) ( amount : XInteger128 ) ( lend_finish_time : XInteger32 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( tons_value : XInteger128 ) ( price_code : XCell ) ( my_tip3_addr : addr_std_compact ) ( receive_wallet : addr_std_compact ) ( tip3cfg :Tip3ConfigStateLRecord ) 
 : UExpression XAddress false (* true *) . 
          refine {{ price : ( XInteger128 ) @ "price" ; { _ } }} . 
          refine {{ amount : ( XInteger128 ) @ "amount" ; { _ } }} . 
@@ -218,17 +226,17 @@ Definition FlexClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_cod
          refine {{ price_code : ( XCell ) @ "price_code" ; { _ } }} . 
          refine {{ my_tip3_addr : ( addr_std_compact ) @ "my_tip3_addr" ; { _ } }} . 
          refine {{ receive_wallet : ( addr_std_compact ) @ "receive_wallet" ; { _ } }} . 
-         refine {{ tip3cfg : ( Tip3Config ) @ "tip3cfg" ; { _ } }} . 
+         refine {{ tip3cfg : (Tip3ConfigStateLRecord ) @ "tip3cfg" ; { _ } }} . 
 (*  	 	 refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
          refine {{ require_ ( ( FlexClient.flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
          refine {{ tvm.accept () ; { _ } }} . *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {} ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {} ; { _ } }} . 
          refine {{ new 'addr : ( XAddress ) @ "addr" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 (*  	 	  [ { state_init } , { addr } , { std_addr } ] := preparePrice ( price , min_amount , deals_limit , flex_wallet_code_ . get ( ) , tip3cfg , price_code ) ; { _ } }} .  *)
          refine {{ new 'price_addr : ( XAddress ) @ "price_addr" := {} (* IPricePtr ( addr ) *) ; { _ } }} . 
          refine {{ new 'deploy_init_cl : ( XCell ) @ "deploy_init_cl" := {} (* build ( !{ state_init } ) . endc ( ) *) ; { _ } }} . 
-         refine {{ new 'sell_args : ( SellArgs ) @ "sell_args" := {} ; { _ } }} . 
+         refine {{ new 'sell_args : ( SellArgsStateLRecord ) @ "sell_args" := {} ; { _ } }} . 
 (*  	 	    { sell_args } := { . amount = !{ amount } , . receive_wallet = !{ receive_wallet } } ; { _ } }} .  *)
          refine {{ new 'payload : ( XCell ) @ "payload" := {}  (* build ( !{ sell_args } ) . endc ( ) *)  ; { _ } }} . 
 (*  	 	 refine {{ ITONTokenWalletPtr my_tip3 ( my_tip3_addr ) ; { _ } }} . 
@@ -238,7 +246,7 @@ Definition FlexClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_cod
  
  
  
- Definition FlexClient_Ф_deployPriceWithBuy ( price : XInteger128 ) ( amount : XInteger128 ) ( order_finish_time : XInteger32 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( deploy_value : XInteger128 ) ( price_code : XCell ) ( my_tip3_addr : addr_std_compact ) ( tip3cfg : Tip3Config ) 
+ Definition FlexClient_Ф_deployPriceWithBuy ( price : XInteger128 ) ( amount : XInteger128 ) ( order_finish_time : XInteger32 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( deploy_value : XInteger128 ) ( price_code : XCell ) ( my_tip3_addr : addr_std_compact ) ( tip3cfg :Tip3ConfigStateLRecord  ) 
 : UExpression XAddress false (* true *) . 
          refine {{ price : ( XInteger128 ) @ "price" ; { _ } }} . 
          refine {{ amount : ( XInteger128 ) @ "amount" ; { _ } }} . 
@@ -248,11 +256,11 @@ Definition FlexClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_cod
          refine {{ deploy_value : ( XInteger128 ) @ "deploy_value" ; { _ } }} . 
          refine {{ price_code : ( XCell ) @ "price_code" ; { _ } }} . 
          refine {{ my_tip3_addr : ( addr_std_compact ) @ "my_tip3_addr" ; { _ } }} . 
-         refine {{ tip3cfg : ( Tip3Config ) @ "tip3cfg" ; { _ } }} . 
+         refine {{ tip3cfg : (Tip3ConfigStateLRecord  ) @ "tip3cfg" ; { _ } }} . 
  (* 	 	 refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
          refine {{ require_ ( ( FlexClient.flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
          refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {} ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {} ; { _ } }} . 
          refine {{ new 'addr : ( XAddress ) @ "addr" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 refine {{ new 'price_addr : ( XAddress ) @ "price_addr" := {} (* IPricePtr ( addr ) *) ; { _ } }} . 
@@ -266,18 +274,18 @@ refine {{ new 'price_addr : ( XAddress ) @ "price_addr" := {} (* IPricePtr ( add
  
  
  
- Definition FlexClient_Ф_cancelSellOrder ( price : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( value : XInteger128 ) ( price_code : XCell ) ( tip3cfg : Tip3Config ) 
+ Definition FlexClient_Ф_cancelSellOrder ( price : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( value : XInteger128 ) ( price_code : XCell ) ( tip3cfg :Tip3ConfigStateLRecord  ) 
 : UExpression PhantomType true . 
          refine {{ price : ( XInteger128 ) @ "price" ; { _ } }} . 
          refine {{ min_amount : ( XInteger128 ) @ "min_amount" ; { _ } }} . 
          refine {{ deals_limit : ( XInteger8 ) @ "deals_limit" ; { _ } }} . 
          refine {{ value : ( XInteger128 ) @ "value" ; { _ } }} . 
          refine {{ price_code : ( XCell ) @ "price_code" ; { _ } }} . 
-         refine {{ tip3cfg : ( Tip3Config ) @ "tip3cfg" ; { _ } }} . 
+         refine {{ tip3cfg : (Tip3ConfigStateLRecord  ) @ "tip3cfg" ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
          refine {{ require_ ( ( {} (* FlexClient.flex_wallet_code_ *) ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {} ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {} ; { _ } }} . 
          refine {{ new 'addr : ( XAddress ) @ "addr" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 (*  	 	  [ { state_init } , { addr } , { std_addr } ] := preparePrice ( price , min_amount , deals_limit , flex_wallet_code_ . get ( ) , tip3cfg , price_code ) ; { _ } }} .  *)
@@ -288,17 +296,17 @@ refine {{ {min_amount} := {} }} .
 Defined . 
  
  
- Definition FlexClient_Ф_cancelBuyOrder ( price : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( value : XInteger128 ) ( price_code : XCell ) ( tip3cfg : Tip3Config ) : UExpression PhantomType true . 
+ Definition FlexClient_Ф_cancelBuyOrder ( price : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( value : XInteger128 ) ( price_code : XCell ) ( tip3cfg :Tip3ConfigStateLRecord  ) : UExpression PhantomType true . 
          refine {{ price : ( XInteger128 ) @ "price" ; { _ } }} . 
          refine {{ min_amount : ( XInteger128 ) @ "min_amount" ; { _ } }} . 
          refine {{ deals_limit : ( XInteger8 ) @ "deals_limit" ; { _ } }} . 
          refine {{ value : ( XInteger128 ) @ "value" ; { _ } }} . 
          refine {{ price_code : ( XCell ) @ "price_code" ; { _ } }} . 
-         refine {{ tip3cfg : ( Tip3Config ) @ "tip3cfg" ; { _ } }} . 
+         refine {{ tip3cfg : (Tip3ConfigStateLRecord  ) @ "tip3cfg" ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
          refine {{ require_ ( ( {} (* FlexClient.flex_wallet_code_ *) ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {}  ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {}  ; { _ } }} . 
          refine {{ new 'addr : ( XAddress ) @ "addr" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 (*  	 	  [ { state_init } , { addr } , { std_addr } ] := preparePrice ( price , min_amount , deals_limit , flex_wallet_code_ . get ( ) , tip3cfg , price_code ) ; { _ } }} .  *)
@@ -308,18 +316,18 @@ refine {{ {min_amount} := {} }} .
 Defined . 
  
  
- Definition FlexClient_Ф_preparePriceXchg ( price_num : XInteger128 ) ( price_denum : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( major_tip3cfg : Tip3Config ) ( minor_tip3cfg : Tip3Config ) ( price_code : XCell ) 
-: UExpression ( StateInit # XAddress # XInteger256 )%sol false . 
+ Definition FlexClient_Ф_preparePriceXchg ( price_num : XInteger128 ) ( price_denum : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( major_tip3cfg :Tip3ConfigStateLRecord  ) ( minor_tip3cfg :Tip3ConfigStateLRecord  ) ( price_code : XCell ) 
+: UExpression ( StateInitStateLRecord # XAddress # XInteger256 )%sol false . 
          refine {{ price_num : ( XInteger128 ) @ "price_num" ; { _ } }} . 
          refine {{ price_denum : ( XInteger128 ) @ "price_denum" ; { _ } }} . 
          refine {{ min_amount : ( XInteger128 ) @ "min_amount" ; { _ } }} . 
          refine {{ deals_limit : ( XInteger8 ) @ "deals_limit" ; { _ } }} . 
-         refine {{ major_tip3cfg : ( Tip3Config ) @ "major_tip3cfg" ; { _ } }} . 
-         refine {{ minor_tip3cfg : ( Tip3Config ) @ "minor_tip3cfg" ; { _ } }} . 
+         refine {{ major_tip3cfg : (Tip3ConfigStateLRecord  ) @ "major_tip3cfg" ; { _ } }} . 
+         refine {{ minor_tip3cfg : (Tip3ConfigStateLRecord  ) @ "minor_tip3cfg" ; { _ } }} . 
          refine {{ price_code : ( XCell ) @ "price_code" ; { _ } }} . 
-         refine {{ new 'price_data : ( PriceXchg ) @ "price_data" := {} ; { _ } }} . 
+         refine {{ new 'price_data : ( DPriceXchgStateLRecord ) @ "price_data" := {} ; { _ } }} . 
 (*  	 	     { price_data } := NEW { . price_ = { price_num , price_denum } , . sells_amount_ = uint128 ( 0 ) , . buys_amount_ = uint128 ( 0 ) , . flex_ = flex_ , . min_amount_ = min_amount , . deals_limit_ = deals_limit , . notify_addr_ = IFlexNotifyPtr ( notify_addr_ ) , . workchain_id_ = workchain_id_ , . tons_cfg_ = tons_cfg_ , . tip3_code_ = flex_wallet_code_ . get ( ) , . major_tip3cfg_ = major_tip3cfg , . minor_tip3cfg_ = minor_tip3cfg , . sells_ = { } , . buys_ = { } } ; { _ } }} .  *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {} ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 (*  	 	  [ { state_init } , { std_addr } ] := prepare_price_xchg_state_init_and_addr ( price_data , price_code ) ; { _ } }} .  *)
          refine {{ new 'addr : ( XAddress ) @ "addr" := {} ; { _ } }} . 
@@ -329,7 +337,7 @@ Defined .
  
  
  
- Definition FlexClient_Ф_cancelXchgOrder ( sell : XBool ) ( price_num : XInteger128 ) ( price_denum : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( value : XInteger128 ) ( xchg_price_code : XCell ) ( major_tip3cfg : Tip3Config ) ( minor_tip3cfg : Tip3Config ) 
+ Definition FlexClient_Ф_cancelXchgOrder ( sell : XBool ) ( price_num : XInteger128 ) ( price_denum : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( value : XInteger128 ) ( xchg_price_code : XCell ) ( major_tip3cfg :Tip3ConfigStateLRecord  ) ( minor_tip3cfg :Tip3ConfigStateLRecord  ) 
 : UExpression PhantomType true . 
          refine {{ sell : ( XBool ) @ "sell" ; { _ } }} . 
          refine {{ price_num : ( XInteger128 ) @ "price_num" ; { _ } }} . 
@@ -338,12 +346,12 @@ Defined .
          refine {{ deals_limit : ( XInteger8 ) @ "deals_limit" ; { _ } }} . 
          refine {{ value : ( XInteger128 ) @ "value" ; { _ } }} . 
          refine {{ xchg_price_code : ( XCell ) @ "xchg_price_code" ; { _ } }} . 
-         refine {{ major_tip3cfg : ( Tip3Config ) @ "major_tip3cfg" ; { _ } }} . 
-         refine {{ minor_tip3cfg : ( Tip3Config ) @ "minor_tip3cfg" ; { _ } }} . 
+         refine {{ major_tip3cfg : (Tip3ConfigStateLRecord  ) @ "major_tip3cfg" ; { _ } }} . 
+         refine {{ minor_tip3cfg : (Tip3ConfigStateLRecord  ) @ "minor_tip3cfg" ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
          refine {{ require_ ( ( {} (* FlexClient.flex_wallet_code_ *) ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {} ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {} ; { _ } }} . 
          refine {{ new 'addr : ( XAddress ) @ "addr" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 (*  	 	      [ { state_init } , { addr } , { std_addr } ] := preparePriceXchg ( price_num , price_denum , min_amount , deals_limit , major_tip3cfg , minor_tip3cfg , xchg_price_code ) ; { _ } }} .  *)
@@ -365,7 +373,7 @@ Defined .
  Defined . 
  
  
- Definition FlexClient_Ф_deployPriceXchg ( sell : XBool ) ( price_num : XInteger128 ) ( price_denum : XInteger128 ) ( amount : XInteger128 ) ( lend_amount : XInteger128 ) ( lend_finish_time : XInteger32 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( tons_value : XInteger128 ) ( xchg_price_code : XCell ) ( my_tip3_addr : addr_std_compact ) ( receive_wallet : addr_std_compact ) ( major_tip3cfg : Tip3Config ) ( minor_tip3cfg : Tip3Config ) 
+ Definition FlexClient_Ф_deployPriceXchg ( sell : XBool ) ( price_num : XInteger128 ) ( price_denum : XInteger128 ) ( amount : XInteger128 ) ( lend_amount : XInteger128 ) ( lend_finish_time : XInteger32 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( tons_value : XInteger128 ) ( xchg_price_code : XCell ) ( my_tip3_addr : addr_std_compact ) ( receive_wallet : addr_std_compact ) ( major_tip3cfg :Tip3ConfigStateLRecord  ) ( minor_tip3cfg :Tip3ConfigStateLRecord  ) 
 : UExpression XAddress false (* true *) . 
          refine {{ sell : ( XBool ) @ "sell" ; { _ } }} . 
          refine {{ price_num : ( XInteger128 ) @ "price_num" ; { _ } }} . 
@@ -379,18 +387,18 @@ Defined .
          refine {{ xchg_price_code : ( XCell ) @ "xchg_price_code" ; { _ } }} . 
          refine {{ my_tip3_addr : ( addr_std_compact ) @ "my_tip3_addr" ; { _ } }} . 
          refine {{ receive_wallet : ( addr_std_compact ) @ "receive_wallet" ; { _ } }} . 
-         refine {{ major_tip3cfg : ( Tip3Config ) @ "major_tip3cfg" ; { _ } }} . 
-         refine {{ minor_tip3cfg : ( Tip3Config ) @ "minor_tip3cfg" ; { _ } }} . 
+         refine {{ major_tip3cfg : (Tip3ConfigStateLRecord  ) @ "major_tip3cfg" ; { _ } }} . 
+         refine {{ minor_tip3cfg : (Tip3ConfigStateLRecord  ) @ "minor_tip3cfg" ; { _ } }} . 
 (*  	 	 refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} .  *)
 (*  	 	 refine {{ require_ ( ( FlexClient.flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} .  *)
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ new 'state_init : ( StateInit ) @ "state_init" := {} ; { _ } }} . 
+         refine {{ new 'state_init : ( StateInitStateLRecord ) @ "state_init" := {} ; { _ } }} . 
          refine {{ new 'addr : ( XAddress ) @ "addr" := {} ; { _ } }} . 
          refine {{ new 'std_addr : ( XAddress ) @ "std_addr" := {} ; { _ } }} . 
 (*  	 	  { state_init } , { addr } , { std_addr } ] := preparePriceXchg ( price_num , price_denum , min_amount , deals_limit , major_tip3cfg , minor_tip3cfg , xchg_price_code ) ; { _ } }} .  *)
          refine {{ new 'price_addr : ( auto ) @ "price_addr" := {} (* IPriceXchgPtr ( addr ) *) ; { _ } }} . 
          refine {{ new 'deploy_init_cl : ( XCell ) @ "deploy_init_cl" := {} (* build ( !{ state_init } ) . endc ( ) *) ; { _ } }} . 
-         refine {{ new 'payload_args : ( PayloadArgs ) @ "payload_args" := {} ; { _ } }} . 
+         refine {{ new 'payload_args : ( PayloadArgsStateLRecord ) @ "payload_args" := {} ; { _ } }} . 
 (*  	 	  { payload_args } := { . sell = !{ sell } , . amount = !{ amount } , . receive_tip3_wallet = !{ receive_wallet } , . client_addr = Address { tvm_myaddr ( ) } } ; { _ } }} .  *)
          refine {{ new 'payload : ( XCell ) @ "payload" := {} (* build ( !{ payload_args } ) . endc ( ) *) ; { _ } }} . 
 (*  	 	 refine {{ ITONTokenWalletPtr my_tip3 ( my_tip3_addr ) ; { _ } }} . 
@@ -400,14 +408,14 @@ Defined .
  
  
  
- Definition FlexClient_Ф_deployWrapperWithWallet ( wrapper_pubkey : XInteger256 ) ( wrapper_deploy_value : XInteger128 ) ( wrapper_keep_balance : XInteger128 ) ( ext_wallet_balance : XInteger128 ) ( set_internal_wallet_value : XInteger128 ) ( tip3cfg : Tip3Config ) 
+ Definition FlexClient_Ф_deployWrapperWithWallet ( wrapper_pubkey : XInteger256 ) ( wrapper_deploy_value : XInteger128 ) ( wrapper_keep_balance : XInteger128 ) ( ext_wallet_balance : XInteger128 ) ( set_internal_wallet_value : XInteger128 ) ( tip3cfg :Tip3ConfigStateLRecord  ) 
 : UExpression XAddress false (* true *) . 
          refine {{ wrapper_pubkey : ( XInteger256 ) @ "wrapper_pubkey" ; { _ } }} . 
          refine {{ wrapper_deploy_value : ( XInteger128 ) @ "wrapper_deploy_value" ; { _ } }} . 
          refine {{ wrapper_keep_balance : ( XInteger128 ) @ "wrapper_keep_balance" ; { _ } }} . 
          refine {{ ext_wallet_balance : ( XInteger128 ) @ "ext_wallet_balance" ; { _ } }} . 
          refine {{ set_internal_wallet_value : ( XInteger128 ) @ "set_internal_wallet_value" ; { _ } }} . 
-         refine {{ tip3cfg : ( Tip3Config ) @ "tip3cfg" ; { _ } }} . 
+         refine {{ tip3cfg : (Tip3ConfigStateLRecord  ) @ "tip3cfg" ; { _ } }} . 
 (*  	 	 refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
          refine {{ require_ ( ( FlexClient.ext_wallet_code_ ) , error_code::missed_ext_wallet_code ) ; { _ } }} . 
          refine {{ require_ ( ( FlexClient.flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
@@ -417,12 +425,12 @@ Defined .
                (* { . name_ = tip3cfg . name , . symbol_ = tip3cfg . symbol , . decimals_ = tip3cfg . decimals , 
               . workchain_id_ = workchain_id_ , . root_public_key_ = wrapper_pubkey , . total_granted_ = { } , . internal_wallet_code_ = { } , 
               . owner_address_ = address { tvm_myaddr ( ) } , . start_balance_ = Grams ( wrapper_keep_balance . get ( ) ) , . external_wallet_ = { } } *)  
-         refine {{ new 'wrapper_init : ( StateInit ) @ "wrapper_init" := {} ; { _ } }} . 
+         refine {{ new 'wrapper_init : ( StateInitStateLRecord ) @ "wrapper_init" := {} ; { _ } }} . 
          refine {{ new 'wrapper_hash_addr : ( XAddress ) @ "wrapper_hash_addr" := {} ; { _ } }} . 
 (*  	 	 [ { wrapper_init } , { wrapper_hash_addr } ] := prepare_wrapper_state_init_and_addr ( flex_wrapper_code_ . get ( ) , wrapper_data ) ; { _ } }} .  *)
      refine {{ new 'wrapper_addr : XAddress @ "wrapper_addr" := {} ; { _ } }} . 
 (*  	 	  IWrapperPtr wrapper_addr ( address : : make_std ( workchain_id_ , wrapper_hash_addr ) ) ; { _ } }} .  *)
-         refine {{ new 'wallet_init : ( StateInit ) @ "wallet_init" := {} ; { _ } }} . 
+         refine {{ new 'wallet_init : ( StateInitStateLRecord ) @ "wallet_init" := {} ; { _ } }} . 
          refine {{ new 'wallet_hash_addr : ( XAddress ) @ "wallet_hash_addr" := {} ; { _ } }} . 
 (*  	 	 [ { wallet_init } , { wallet_hash_addr } ] := prepare_external_wallet_state_init_and_addr ( tip3cfg . name , tip3cfg . symbol , tip3cfg . decimals , tip3cfg . root_public_key , wrapper_pubkey , tip3cfg . root_address , wrapper_addr . get ( ) , ext_wallet_code_ . get ( ) , workchain_id_ ) ; { _ } }} .  *)
 (*  	 	 refine {{ ITONTokenWalletPtr wallet_addr ( address : : make_std ( workchain_id_ , wallet_hash_addr ) ) ; { _ } }} . 
@@ -434,15 +442,15 @@ Defined .
  
  
  
- Definition FlexClient_Ф_deployEmptyFlexWallet ( pubkey : XInteger256 ) ( tons_to_wallet : XInteger128 ) ( tip3cfg : Tip3Config ) 
+ Definition FlexClient_Ф_deployEmptyFlexWallet ( pubkey : XInteger256 ) ( tons_to_wallet : XInteger128 ) ( tip3cfg :Tip3ConfigStateLRecord  ) 
 : UExpression XAddress false (* true *) . 
          refine {{ pubkey : ( XInteger256 ) @ "pubkey" ; { _ } }} . 
          refine {{ tons_to_wallet : ( XInteger128 ) @ "tons_to_wallet" ; { _ } }} . 
-         refine {{ tip3cfg : ( Tip3Config ) @ "tip3cfg" ; { _ } }} . 
+         refine {{ tip3cfg : (Tip3ConfigStateLRecord  ) @ "tip3cfg" ; { _ } }} . 
 (*  	 	 refine {{ require_ ( ( msg.pubkey () == FlexClient.owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
          refine {{ require_ ( ( FlexClient.flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . *) 
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ new 'init : ( StateInit ) @ "init" := {} ; { _ } }} . 
+         refine {{ new 'init : ( StateInitStateLRecord ) @ "init" := {} ; { _ } }} . 
          refine {{ new 'hash_addr : ( XAddress ) @ "hash_addr" := {} ; { _ } }} . 
 (*  	 	     [ { init } , { hash_addr } ] := prepare_internal_wallet_state_init_and_addr ( tip3cfg . name , tip3cfg . symbol , tip3cfg . decimals , tip3cfg . root_public_key , pubkey , tip3cfg . root_address , address { tvm_myaddr ( ) } , flex_wallet_code_ . get ( ) , workchain_id_ ) ; { _ } }} . 
 *)
@@ -515,7 +523,7 @@ Defined .
  
 
 
-Elpi TestDefinitions Definition constructor' (_depth: XInteger) : public UExpression PhantomType true :=
+(* Elpi TestDefinitions Definition constructor' (_depth: XInteger) : public UExpression PhantomType true :=
 {{
     _depth: XInteger @ "_depth" ; 
     new 'xxx : XAddress @ "xxx" := {} ;
@@ -524,11 +532,11 @@ Elpi TestDefinitions Definition constructor' (_depth: XInteger) : public UExpres
     tvm.accept();
     
     m_depth := !{_depth} 
-}}.
+}}. *)
 
 
-End trainFuncsInternal.
-End trainFuncs.
+End FlexClientFuncsInternal.
+End FlexClientFuncs.
 
 
 
