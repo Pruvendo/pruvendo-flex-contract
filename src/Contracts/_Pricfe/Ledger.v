@@ -6,12 +6,13 @@ Require Import FinProof.Common.
 Require Import FinProof.MonadTransformers21. 
 
 Require Import FinProof.ProgrammingWith.  
-Require Import UMLang.SML_NG28. 
+Require Import UMLang.UrsusLib. 
 Require Import UMLang.SolidityNotations2. 
 Require Import UMLang.ClassGenerator.ClassGenerator.
 Require Import UrsusTVM.tvmFunc. 
 
-Require Import Project.CommonTypes. 
+Require Import Project.CommonTypes.
+
 Require Import Contracts.Price.ClassTypes.
 Require Import Contracts.Price.Interface.
 
@@ -25,53 +26,19 @@ Local Open Scope xlist_scope.
 (* 1 *) Inductive LocalStateFieldsI := | LocalState_ι_uint | LocalState_ι_uintIndex | LocalState_ι_XCell | LocalState_ι_XCellIndex | LocalState_ι_address | LocalState_ι_addressIndex | LocalState_ι_int | LocalState_ι_intIndex | LocalState_ι_bool | LocalState_ι_boolIndex | LocalState_ι_cell | LocalState_ι_cellIndex .
 (* 1 *) Inductive LedgerFieldsI := | Ledger_ι_Contract | Ledger_ι_ContractCopy | Ledger_ι_VMState | Ledger_ι_MessagesAndEvents | Ledger_ι_MessagesAndEventsCopy | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
 
-Module PriceClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
-
-Module Export SolidityNotationsClass := SolidityNotations xt sm. 
-Module Export VMStateModule := VMStateModule xt sm. 
-
-Import xt. 
-
-Elpi GeneratePruvendoRecord TickTockStateL TickTockFields . 
- Opaque TickTockStateLRecord . 
-Elpi GeneratePruvendoRecord StateInitStateL StateInitFields . 
- Opaque StateInitStateLRecord . 
-Elpi GeneratePruvendoRecord addr_std_fixedStateL addr_std_fixedFields . 
- Opaque addr_std_fixedStateLRecord . 
-Elpi GeneratePruvendoRecord TonsConfigStateL TonsConfigFields . 
- Opaque TonsConfigStateLRecord . 
-Elpi GeneratePruvendoRecord OrderRetStateL OrderRetFields . 
- Opaque OrderRetStateLRecord . 
-Elpi GeneratePruvendoRecord SellArgsStateL SellArgsFields . 
- Opaque SellArgsStateLRecord . 
-Elpi GeneratePruvendoRecord OrderInfoStateL OrderInfoFields . 
- Opaque OrderInfoStateLRecord . 
-Elpi GeneratePruvendoRecord DetailsInfoStateL DetailsInfoFields . 
- Opaque DetailsInfoStateLRecord . 
-Elpi GeneratePruvendoRecord Tip3ConfigStateL Tip3ConfigFields . 
- Opaque Tip3ConfigStateLRecord . 
-Elpi GeneratePruvendoRecord PriceStateL PriceFields . 
- Opaque PriceStateLRecord . 
-Elpi GeneratePruvendoRecord dealerStateL dealerFields . 
- Opaque dealerStateLRecord . 
-Elpi GeneratePruvendoRecord process_retStateL process_retFields . 
- Opaque process_retStateLRecord . 
-Elpi GeneratePruvendoRecord lend_ownership_infoStateL lend_ownership_infoFields . 
- Opaque lend_ownership_infoStateLRecord . 
-Elpi GeneratePruvendoRecord allowance_infoStateL allowance_infoFields . 
- Opaque allowance_infoStateLRecord . 
-Elpi GeneratePruvendoRecord TONTokenWalletStateL TONTokenWalletFields . 
- Opaque TONTokenWalletStateLRecord . 
-Elpi GeneratePruvendoRecord OrderInfoXchgStateL OrderInfoXchgFields . 
- Opaque OrderInfoXchgStateLRecord . 
-
+ Module PriceClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
+ Module Export SolidityNotationsClass := SolidityNotations xt sm. 
+ Module Export VMStateModule := VMStateModule xt sm. 
+ Module Export ClassTypesModule := ClassTypes xt sm .
+Import xt.
+Opaque Tip3ConfigStateLRecord .
 (* 2 *) Definition MessagesAndEventsStateL : list Type := 
  [ ( XInteger ) : Type ; 
  ( XBool ) : Type ; 
  ( XCell ) : Type ; 
  ( ( XHMap XInteger XInteger ) ) : Type ] .
-
-GeneratePruvendoRecord MessagesAndEventsStateL MessagesAndEventsFields .
+GeneratePruvendoRecord MessagesAndEventsStateL MessagesAndEventsFields . 
+  Opaque MessagesAndEventsStateLRecord . 
 
 (* 2 *) Definition PriceStateL : list Type := 
  [ ( XInteger128 ) : Type ; 
@@ -83,34 +50,87 @@ GeneratePruvendoRecord MessagesAndEventsStateL MessagesAndEventsFields .
  ( XAddress ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( TonsConfigStateLRecord ) : Type ; 
- ( TvmCell ) : Type ; 
+ ( XCell ) : Type ; 
  ( Tip3ConfigStateLRecord ) : Type ] .
-Elpi GeneratePruvendoRecord PriceStateL PriceFields . 
- Opaque PriceStateLRecord . 
- 
+GeneratePruvendoRecord PriceStateL PriceFields . 
+ Opaque PriceStateLRecord .
+
 (* 2 *) Definition LocalStateStateL : list Type := 
- [ ( XHMap (string*nat) XInteger ) : Type ; 
+ [ ( XHMap (string*nat) XCell ) : Type ; 
  ( XHMap string nat ) : Type ; 
- ( XHMap (string*nat) XCell ) : Type ; 
+ ( XHMap (string*nat) StateInitStateLRecord ) : Type ; 
  ( XHMap string nat ) : Type ; 
- ( XHMap (string*nat) XAddress ) : Type ; 
- ( XHMap string nat ) : Type ; 
- ( XHMap (string*nat) XInteger ) : Type ; 
+ ( XHMap (string*nat) ( StateInitStateLRecord * XInteger256 ) ) : Type ; 
  ( XHMap string nat ) : Type ; 
  ( XHMap (string*nat) XBool ) : Type ; 
  ( XHMap string nat ) : Type ; 
- ( XHMap (string*nat) XCell ) : Type ; 
+ ( XHMap (string*nat) XInteger32 ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) PriceStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) ( XMaybe XInteger128 ) ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) XInteger128 ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) ( XBool * XBool * XInteger128 ) ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) OrderInfoStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) XInteger ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) ( XMaybe (XInteger * OrderInfoStateLRecord) * (XHMap XInteger OrderInfoStateLRecord) * XInteger128 ) ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) ( XMaybe (XInteger * OrderInfoStateLRecord) ) ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) OrderRetStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) XInteger ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) dealerStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) process_retStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) XInteger8 ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) TonsConfigStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) ( (XHMap XInteger OrderInfoStateLRecord) * XInteger128 ) ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) addr_std_fixedStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) XInteger256 (* Grams *) ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) SellArgsStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) XAddress ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) DetailsInfoStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) ( XHMap XInteger OrderInfoStateLRecord ) ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) ( XMaybe XAddress ) ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) TONTokenWalletStateLRecord ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) ( XAddress * XInteger256 (* Grams *) ) ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) XSlice ) : Type ; 
+ ( XHMap string nat ) : Type ; 
+ ( XHMap (string*nat) ( XMaybe OrderRetStateLRecord ) ) : Type ; 
  ( XHMap string nat ) : Type ] .
-Elpi GeneratePruvendoRecord LocalStateStateL LocalStateFieldsI .
+Elpi GeneratePruvendoRecord LocalStateStateL LocalStateFieldsI . 
+ Opaque LocalStateStateLRecord . 
 
 (* 2 *) Definition LedgerStateL : list Type := 
- [ ( PriceStateLRecord ) : Type ; 
- ( PriceStateLRecord ) : Type ; 
- ( VMStateLRecord ) : Type ; 
+ [ ( FlexClientStateLRecord ) : Type ; 
+ ( FlexClientStateLRecord ) : Type ; 
+ ( VMState ) : Type ; 
  ( MessagesAndEventsStateLRecord ) : Type ; 
  ( MessagesAndEventsStateLRecord ) : Type ; 
  ( LocalStateStateLRecord ) : Type ; 
  ( LocalStateStateLRecord ) : Type ] .
+Elpi GeneratePruvendoRecord LedgerStateL LedgerFieldsI .
+
 
 Opaque VMStateLRecord.
 Opaque MessagesAndEventsStateLRecord.

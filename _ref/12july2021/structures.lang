@@ -1,0 +1,332 @@
+
+ 
+
+struct FLeXSellArgsAddrs {
+  address my_tip3_addr 
+  address receive_wallet 
+}
+
+struct FLeXSellArgs {
+  uint128 price 
+  uint128 amount 
+  uint32 lend_finish_time 
+  uint128 min_amount 
+  uint8 deals_limit 
+  uint128 tons_value 
+  cell price_code 
+  ref<FLeXSellArgsAddrs> addrs 
+  cell tip3_code 
+  ref<Tip3Config> tip3cfg 
+ }
+
+struct FLeXBuyArgs {
+  uint128 price 
+  uint128 amount 
+  uint32 order_finish_time 
+  uint128 min_amount 
+  uint8 deals_limit 
+  uint128 deploy_value 
+  cell price_code 
+  address my_tip3_addr 
+  cell tip3_code 
+  ref<Tip3Config> tip3cfg 
+ } 
+
+struct FLeXXchgCfgs {
+  ref<Tip3Config> major_tip3cfg 
+  ref<Tip3Config> minor_tip3cfg 
+ } 
+
+struct FLeXXchgArgs {
+  bool_t  sell 
+  uint128 price_num 
+  uint128 price_denum 
+  uint128 amount 
+  uint128 lend_amount 
+  uint32  lend_finish_time 
+  uint128 min_amount 
+  uint8   deals_limit 
+  uint128 tons_value 
+  cell    xchg_price_code 
+  ref<FLeXSellArgsAddrs> addrs 
+  cell    tip3_code 
+  ref<FLeXXchgCfgs> tip3cfgs 
+ } 
+
+struct FLeXCancelArgs {
+  uint128 price 
+  uint128 min_amount 
+  uint8   deals_limit 
+  uint128 value 
+  cell    price_code 
+  cell    tip3_code 
+  ref<Tip3Config> tip3cfg 
+ } 
+
+struct FLeXXchgCancelArgs {
+  bool_t  sell 
+  uint128 price_num 
+  uint128 price_denum 
+  uint128 min_amount 
+  uint8   deals_limit 
+  uint128 value 
+  cell    xchg_price_code 
+  cell    tip3_code 
+  ref<FLeXXchgCfgs> tip3cfgs 
+ } 
+ 
+
+ 
+
+struct DFLeXClient {
+  uint256 owner_ 
+  cell trading_pair_code_ 
+  cell xchg_pair_code_ 
+  int8 workchain_id_ 
+  TonsConfig tons_cfg_ 
+  address flex_ 
+  address notify_addr_ 
+ } 
+ 
+
+ 
+
+struct FLeX {
+ 
+
+ 
+
+struct TonsConfig {
+  uint128 transfer_tip3 
+  uint128 return_ownership 
+  uint128 trading_pair_deploy 
+  uint128 order_answer 
+  uint128 process_queue 
+  uint128 send_notify 
+} 
+ 
+
+ 
+
+struct DFLeX {
+  uint256 deployer_pubkey_ 
+  TonsConfig tons_cfg_ 
+  std::optional<cell> pair_code_ 
+  std::optional<cell> xchg_pair_code_ 
+  std::optional<cell> price_code_ 
+  std::optional<cell> xchg_price_code_ 
+  uint128 min_amount_  
+  uint8 deals_limit_  
+  address notify_addr_ 
+} 
+ 
+
+ 
+
+struct Tip3Config {
+  string name 
+  string symbol 
+  uint8 decimals 
+  uint256 root_public_key 
+  address root_address 
+} 
+
+struct OrderRet {
+  uint32 err_code 
+  uint128 processed 
+  uint128 enqueued 
+} 
+ 
+}
+ 
+
+struct dealer {
+ 
+
+ 
+
+  address tip3root_ 
+  IFLeXNotifyPtr notify_addr_ 
+  uint128 price_ 
+  unsigned deals_limit_ 
+  TonsConfig tons_cfg_ 
+  uint128 sells_amount_ 
+  queue<OrderInfo> sells_ 
+  uint128 buys_amount_ 
+  queue<OrderInfo> buys_ 
+  std::optional<OrderRet> ret_ 
+} 
+
+
+struct process_ret {
+  uint128 sells_amount 
+  queue<OrderInfo> sells_ 
+  uint128 buys_amount 
+  queue<OrderInfo> buys_ 
+  std::optional<OrderRet> ret_ 
+} 
+ 
+
+
+ 
+
+struct SellArgs {
+  uint128 amount 
+  addr_std_fixed receive_wallet 
+} 
+ 
+
+ 
+
+struct OrderInfo {
+  uint128 original_amount 
+  uint128 amount 
+  uint128 account  
+  addr_std_fixed tip3_wallet 
+  addr_std_fixed client_addr 
+  uint32 order_finish_time 
+} 
+ 
+
+ 
+
+struct DetailsInfo {
+  uint128 price 
+  uint128 min_amount 
+  uint128 sell_amount 
+  uint128 buy_amount 
+} 
+ 
+
+ 
+
+struct DPrice {
+  uint128 price_ 
+  uint128 sells_amount_ 
+  uint128 buys_amount_ 
+  addr_std_fixed flex_ 
+  uint128 min_amount_ 
+  uint8 deals_limit_  
+
+  IFLeXNotifyPtr notify_addr_ 
+
+  int8 workchain_id_ 
+
+  TonsConfig tons_cfg_ 
+  cell tip3_code_ 
+  Tip3Config tip3cfg_ 
+
+  queue<OrderInfo> sells_ 
+  queue<OrderInfo> buys_ 
+} 
+ 
+
+struct dealer {
+ 
+
+address tip3root_sell_ 
+  address tip3root_buy_ 
+  IFLeXNotifyPtr notify_addr_ 
+  price_t price_ 
+  unsigned deals_limit_ 
+  TonsConfig tons_cfg_ 
+  uint128 sells_amount_ 
+  big_queue<OrderInfoXchg> sells_ 
+  uint128 buys_amount_ 
+  big_queue<OrderInfoXchg> buys_ 
+  std::optional<OrderRet> ret_ 
+ }
+
+ 
+
+struct process_ret {
+  uint128 sells_amount 
+  big_queue<OrderInfoXchg> sells_ 
+  uint128 buys_amount 
+  big_queue<OrderInfoXchg> buys_ 
+  std::optional<OrderRet> ret_ 
+} 
+ 
+struct RationalPrice {
+  uint128 num 
+  uint128 denum 
+} 
+ 
+
+ 
+
+struct PayloadArgs {
+  bool_t sell 
+  uint128 amount 
+  addr_std_fixed receive_tip3_wallet 
+  addr_std_fixed client_addr 
+}
+ 
+
+ 
+
+struct OrderInfoXchg {
+  uint128 original_amount 
+  uint128 amount 
+  uint128 account  
+  addr_std_fixed tip3_wallet_provide 
+  addr_std_fixed tip3_wallet_receive 
+  addr_std_fixed client_addr 
+  uint32 order_finish_time 
+} 
+ 
+
+ 
+
+struct DetailsInfoXchg {
+  uint128 price_num 
+  uint128 price_denum 
+  uint128 min_amount 
+  uint128 sell_amount 
+  uint128 buy_amount 
+} 
+
+ 
+
+ 
+
+struct DPriceXchg {
+  price_t price_ 
+  uint128 sells_amount_ 
+  uint128 buys_amount_ 
+  addr_std_fixed flex_ 
+  uint128 min_amount_ 
+  uint8 deals_limit_  
+
+  IFLeXNotifyPtr notify_addr_ 
+
+  int8 workchain_id_ 
+
+  TonsConfig tons_cfg_ 
+  cell tip3_code_ 
+  Tip3Config major_tip3cfg_ 
+  Tip3Config minor_tip3cfg_ 
+
+  big_queue<OrderInfoXchg> sells_ 
+  big_queue<OrderInfoXchg> buys_ 
+} 
+ 
+
+ 
+
+struct DTradingPair {
+  address flex_addr_ 
+  address tip3_root_ 
+  uint128 deploy_value_  
+} 
+ 
+
+
+struct DXchgPair {
+  address flex_addr_ 
+  address tip3_major_root_ 
+  address tip3_minor_root_ 
+  uint128 deploy_value_  
+} 
+ 
+
