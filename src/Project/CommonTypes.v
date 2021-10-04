@@ -3,7 +3,7 @@ Require Import UMLang.SolidityNotations2.
 Module Types (xt: XTypesSig) (sm: StateMonadSig).
 Export xt. 
 
-Module Export SolidityNotationsForClassTypes := SolidityNotations xt sm.
+Module Export SolidityNotationsForCommonTypes := SolidityNotations xt sm.
 
 Definition IFlexNotifyPtr := XAddress. 
  Definition ITONTokenWalletPtr := XAddress. 
