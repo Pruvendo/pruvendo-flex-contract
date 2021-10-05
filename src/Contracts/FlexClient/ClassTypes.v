@@ -17,6 +17,9 @@ Module Import CommonTypes := Types xt sm.
 Export xt.
 Local Open Scope xlist_scope.
 
+Check addr_std_compact.
+
+
 (* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock | TickTock_ι_a .
 (* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
 (* 1 *) Inductive anycast_infoFields := | anycast_info_ι_rewrite_pfx | anycast_info_ι_a | anycast_info_ι_b .

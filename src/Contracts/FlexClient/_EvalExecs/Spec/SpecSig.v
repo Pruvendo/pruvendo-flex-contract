@@ -11,19 +11,19 @@ Require Import UMLang.SML_NG28.
 Require Import UrsusTVM.tvmNotations.
 
 Require Import Project.CommonConstSig.
-Require Import Contracts.FlexClient.Ledger.
-Require Import Contracts.FlexClient.Functions.FuncSig.
-Require Import Contracts.FlexClient.Functions.FuncNotations.
+Require Import Contracts.Flex.Ledger.
+Require Import Contracts.Flex.Functions.FuncSig.
+Require Import Contracts.Flex.Functions.FuncNotations.
 
-Module FlexClientSpecModuleForSpec := FlexClientSpec XTypesModule StateMonadModule.
+Module FlexSpecModuleForSpec := FlexSpec XTypesModule StateMonadModule.
 
-Module FlexClientEvalExec (dc : ConstsTypesSig XTypesModule StateMonadModule).
+Module FlexEvalExec (dc : ConstsTypesSig XTypesModule StateMonadModule).
 
-Module Export FlexClientFuncNotationsModule := FlexClientFuncNotations XTypesModule StateMonadModule dc. 
+Module Export FlexFuncNotationsModule := FlexFuncNotations XTypesModule StateMonadModule dc. 
 
-Module Type FlexClientEvalExecSig (tc: trainContractSpecSig) .
+Module Type FlexEvalExecSig (tc: FlexSpecSig) .
  
-Module Import FuncExForSpec := FuncEx tc.
+Module Import FuncExForSpec := Calls tc.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -46,8 +46,8 @@ Axiom deploy_exec: forall (l: Ledger) (value: XInteger) ,
       exec_state (Uinterpreter {{ deploy_ ( #{value} ) }} ) l = l.
 
 Axiom deploy_eval: forall (l: Ledger) (value: XInteger) , 
-      eval_state (sRReader || deploy_ ( #{value} ) || ) l = ControlValue false default. *)
+      eval_state (sRReader || deploy_ ( #{value} ) || ) l = ControlValue false default.
+ *)
+End FlexEvalExecSig.
 
-End FlexClientEvalExecSig.
-
-End FlexClientEvalExec.
+End FlexEvalExec.

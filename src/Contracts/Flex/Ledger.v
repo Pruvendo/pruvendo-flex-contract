@@ -29,7 +29,12 @@ Local Open Scope xlist_scope.
                                     | xchg_price_code_ 
                                     | deals_limit_ 
                                     | notify_addr_ .
-(* 1 *) Inductive LocalStateFieldsI := | _int | _intIndex | _optcell | _optcellIndex | _tpladdressaddress | _tpladdressaddressIndex | _uint256 | _uint256Index | _uint128 | _uint128Index | _uint8 | _uint8Index | _address | _addressIndex | _cell | _cellIndex | _XchgPair | _XchgPairIndex | _TradingPair | _TradingPairIndex |(*  _tplStateInituint256 | _tplStateInituint256Index | *) _bool | _boolIndex .
+(* 1 *) Inductive LocalStateFieldsI := 
+| _int | _intIndex | _optcell | _optcellIndex | _tpladdressaddress 
+| _tpladdressaddressIndex | _uint256 | _uint256Index | _uint128 
+| _uint128Index | _uint8 | _uint8Index | _address | _addressIndex 
+| _cell | _cellIndex | _XchgPair | _XchgPairIndex | _TradingPair 
+| _TradingPairIndex | _tplStateInituint256 | _tplStateInituint256Index | _bool | _boolIndex .
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
  Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
@@ -82,10 +87,10 @@ GeneratePruvendoRecord XchgPairStateL XchgPairFields .
  ( XHMap string nat ) : Type ; 
  ( XHMap (string*nat) TradingPairStateLRecord ) : Type ; 
  ( XHMap string nat ) : Type ; 
-(*  ( XHMap (string*nat) ( StateInitStateLRecord * XInteger256 ) ) : Type ; 
- ( XHMap string nat ) : Type ;  *)
- ( XHMap (string*nat) XBool ) : Type ; 
+  ( XHMap (string*nat) ( StateInitStateLRecord * XInteger256 ) ) : Type ; 
+ ( XHMap string nat ) : Type ;  ( XHMap (string*nat) XBool ) : Type ; 
  ( XHMap string nat ) : Type ] .
+Opaque XchgPairStateLRecord TradingPairStateLRecord StateInitStateLRecord .
 GeneratePruvendoRecord LocalStateL LocalStateFieldsI .
  Opaque LocalStateLRecord . 
 
@@ -112,10 +117,10 @@ Definition LedgerLocalFields := LocalStateFieldsI.
 Definition LedgerLocalPruvendoRecord := LocalStateLPruvendoRecord .
 Definition LocalEmbedded := LedgerLEmbeddedType _LocalState .
 Definition LocalCopyEmbedded := LedgerLEmbeddedType _LocalStateCopy.
-Definition LocalDefault : XDefault LocalStateLRecord := prod_default.
+(* Definition LocalDefault : XDefault LocalStateLRecord := prod_default. *)
 Definition Ledger_LocalState := _LocalState.
 Definition Ledger_LocalStateCopy := _LocalStateCopy.
-Definition iso_local := _LocalStateIso.
+Definition iso_local : LedgerLocalState = field_type Ledger_LocalState := eq_refl.
 Definition Ledger := LedgerLRecord.
 Definition LedgerFields := LedgerFieldsI.
 
@@ -135,32 +140,50 @@ Proof.
 Defined.
 
 
-Class LocalStateField (X:Type): Type := 
+Class LocalStateField  (X:Type): Type := 
 {
-    local_index_embedded:> EmbeddedType LocalStateLRecord (XHMap string nat) ;
-    local_state_field: LedgerLocalFields;
-    local_field_type_correct: field_type local_state_field = XHMap (string*nat)%type X;
-}.
+    local_index_embedded:> EmbeddedType LedgerLocalState (XHMap string nat) ;
+    local_embedded:> EmbeddedType LedgerLocalState (XHMap (string*nat)%type X) ;
+    (* local_state_field: LedgerLocalFields; *)
+    (* local_field_type_correct: field_type (PruvendoRecord:=LedgerLocalPruvendoRecord) local_state_field = XHMap (string*nat)%type X; *)
+}. 
 
 Definition LedgerVMStateEmbedded := LedgerLEmbeddedType _VMState . 
 Definition LedgerVMStateField := _VMState .
-Definition isoVMState := _VMStateIso.
+Definition isoVMState: VMStateLRecord =
+ field_type LedgerVMStateField := eq_refl.
 
 Definition LedgerMessagesEmbedded := LedgerLEmbeddedType _MessagesAndEvents . 
 Definition LedgerMessagesField := _MessagesAndEvents .
-Definition isoMessages := _MessagesAndEventsIso.
+Definition isoMessages : MessagesAndEventsStateLRecord =
+ field_type LedgerMessagesField:= eq_refl.
 Definition MessagesAndEvents := MessagesAndEventsStateLRecord .
 
 GenerateLocalStateInstances LocalStateL LocalStateFieldsI Build_LocalStateField LocalStateLEmbeddedType.
-#[global]
- Declare Instance foo : LocalStateField (StateInitStateLRecord * XInteger256).
+
+(* #[global]
+ Declare Instance foo : LocalStateField (StateInitStateLRecord * XInteger256). *)
 
 Definition LocalStateField_XInteger := _intLocalField .
 Definition LocalStateField_XBool := _boolLocalField .
 Definition LocalStateField_XCell := _cellLocalField .
 
-(*
-Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType _VMState . 
+Check ContractLEmbeddedType.
+
+Definition LedgerEmbedded := LedgerLEmbeddedType.
+Definition LocalDefault (_: LedgerLocalState): LedgerLocalState  := default.
+
+
+Lemma LedgerFieldsDec_eqrefl : forall m, LedgerFieldsDec m m = left eq_refl.
+Proof.
+intros.
+destruct m; simpl; reflexivity.
+Qed.
+
+
+
+
+(* Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType _VMState . 
 Definition LedgerVMStateField := _VMState .
 Definition isoVMState := _VMStateIso.
 
