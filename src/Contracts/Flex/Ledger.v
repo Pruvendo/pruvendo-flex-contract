@@ -159,7 +159,8 @@ Definition LocalStateField_XInteger := _intLocalField .
 Definition LocalStateField_XBool := _boolLocalField .
 Definition LocalStateField_XCell := _cellLocalField .
 
-(* Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType _VMState . 
+(*
+Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType _VMState . 
 Definition LedgerVMStateField := _VMState .
 Definition isoVMState := _VMStateIso.
 
@@ -168,12 +169,12 @@ GenerateLocalStateInstances LocalStateStateL LocalStateFieldsI Build_LocalStateF
 Definition LocalStateField_XInteger := _intLocalField .
 Definition LocalStateField_XBool := _boolLocalField .
 Definition LocalStateField_XCell := _cellLocalField .
- *)
+
 
 
 
 (***************************************)
-(* Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
+Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
          (v2: field_type f2) (r :  MessagesAndEventsStateLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
@@ -268,8 +269,8 @@ Proof.
                apply (countable_prop_proof (T:= LocalStateStateLRecord ));
                cbv;
                first [reflexivity| contradiction]).
-Qed . *)
-(* Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
+Qed .
+Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
          (v2: field_type f2) (r :  LedgerStateLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.

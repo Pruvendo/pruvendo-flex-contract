@@ -85,7 +85,7 @@ GeneratePruvendoRecord addr_std_fixedStateL addr_std_fixedFields .
  ( addr_std_fixedStateLRecord ) : Type ; 
  ( XInteger ) : Type ] .
 GeneratePruvendoRecord SellArgsStateL SellArgsFields . 
- 
+
 (* 2 *) Definition FlexBurnWalletArgsStateL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger256 ) : Type ; 

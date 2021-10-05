@@ -13,8 +13,8 @@ Require Import UrsusTVM.tvmFunc.
 
 Require Import Project.CommonTypes.
 
-Require Import Contracts.Flex.ClassTypes.
-Require Import Contracts.Flex.Interface.
+Require Import Contracts.FlexClient.ClassTypes.
+Require Import Contracts.FlexClient.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
@@ -30,7 +30,6 @@ Local Open Scope xlist_scope.
  Module Export VMStateModule := VMStateModule xt sm. 
  Module Export TypesModuleForLedger := ClassTypes xt sm .
 
-
 (* 2 *) Definition MessagesAndEventsStateL : list Type := 
  [ ( XInteger ) : Type ; 
  ( XBool ) : Type ; 
@@ -38,8 +37,6 @@ Local Open Scope xlist_scope.
  ( ( XHMap XInteger XInteger ) ) : Type ] .
 
 GeneratePruvendoRecord MessagesAndEventsStateL MessagesAndEventsFields .
-
-Check addr_std_compact.
 
 (* 2 *) Definition ContractL : list Type := 
  [ ( XInteger256 ) : Type ; 
@@ -54,6 +51,8 @@ Check addr_std_compact.
  ( XMaybe XCell ) : Type ] .
 Elpi GeneratePruvendoRecord ContractL ContractFields . 
  Opaque ContractLRecord . 
+ 
+Locate SellArgsStateL.
 
 (* 2 *) Definition LocalStateL : list Type := 
  [ ( XHMap (string*nat) XInteger256 ) : Type ; 
