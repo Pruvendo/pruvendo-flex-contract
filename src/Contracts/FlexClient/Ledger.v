@@ -1,4 +1,4 @@
- Require Import Coq.Program.Basics. 
+Require Import Coq.Program.Basics. 
 
 Require Import String. 
 Require Import FinProof.Types.IsoTypes. 
@@ -11,25 +11,24 @@ Require Import UMLang.SolidityNotations2.
 Require Import UMLang.ClassGenerator.ClassGenerator.
 Require Import UrsusTVM.tvmFunc. 
 
-Require Import Project.CommonTypes. 
-Require Import Contracts.FlexClient.ClassTypes.
-Require Import Contracts.FlexClient.Interface.
+Require Import Project.CommonTypes.
+
+Require Import Contracts.Flex.ClassTypes.
+Require Import Contracts.Flex.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope xlist_scope.
 
-
 (* 1 *) Inductive MessagesAndEventsFields := | MessagesAndEvents_ι_field_1 | MessagesAndEvents_ι_field_2 | MessagesAndEvents_ι_field_3 | MessagesAndEvents_ι_field_4 .
-(* 1 *) Inductive FlexClientFields := | FlexClient_ι_owner_ | FlexClient_ι_trading_pair_code_ | FlexClient_ι_xchg_pair_code_ | FlexClient_ι_workchain_id_ | FlexClient_ι_tons_cfg_ | FlexClient_ι_flex_ | FlexClient_ι_notify_addr_ | FlexClient_ι_ext_wallet_code_ | FlexClient_ι_flex_wallet_code_ | FlexClient_ι_flex_wrapper_code_ .
-(* 1 *) Inductive LocalStateFieldsI := | LocalState_ι_uint256 | LocalState_ι_uint256Index | LocalState_ι_cell | LocalState_ι_cellIndex | LocalState_ι_TonsConfig | LocalState_ι_TonsConfigIndex | LocalState_ι_address | LocalState_ι_addressIndex | LocalState_ι_uint128 | LocalState_ι_uint128Index | LocalState_ι_TradingPair | LocalState_ι_TradingPairIndex | LocalState_ι_tplStateInituint256 | LocalState_ι_tplStateInituint256Index | LocalState_ι_StateInit | LocalState_ι_StateInitIndex | LocalState_ι_XchgPair | LocalState_ι_XchgPairIndex | LocalState_ι_tplStateInitaddress | LocalState_ι_tplStateInitaddressIndex | LocalState_ι_SellArgs | LocalState_ι_SellArgsIndex | LocalState_ι_ITONTokenWalletPtr | LocalState_ι_ITONTokenWalletPtrIndex | LocalState_ι_IPricePtr | LocalState_ι_IPricePtrIndex | LocalState_ι_int | LocalState_ι_intIndex | LocalState_ι_Price | LocalState_ι_PriceIndex | LocalState_ι_uint8 | LocalState_ι_uint8Index | LocalState_ι_uint32 | LocalState_ι_uint32Index | LocalState_ι_Tip3Config | LocalState_ι_Tip3ConfigIndex | LocalState_ι_PriceXchg | LocalState_ι_PriceXchgIndex | LocalState_ι_PayloadArgs | LocalState_ι_PayloadArgsIndex | LocalState_ι_optcell | LocalState_ι_optcellIndex | LocalState_ι_bool | LocalState_ι_boolIndex .
-(* 1 *) Inductive LedgerFieldsI := | Ledger_ι_Contract | Ledger_ι_ContractCopy | Ledger_ι_VMState | Ledger_ι_MessagesAndEvents | Ledger_ι_MessagesAndEventsCopy | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
+(* 1 *) Inductive ContractFields := | owner_ | trading_pair_code_ | xchg_pair_code_ | workchain_id_ | tons_cfg_ | flex_ | notify_addr_ | ext_wallet_code_ | flex_wallet_code_ | flex_wrapper_code_ .
+(* 1 *) Inductive LocalStateFieldsI := | _uint256 | _uint256Index | _cell | _cellIndex | _TonsConfig | _TonsConfigIndex | _address | _addressIndex | _uint128 | _uint128Index | _TradingPair | _TradingPairIndex | _tplStateInituint256 | _tplStateInituint256Index | _StateInit | _StateInitIndex | _XchgPair | _XchgPairIndex | _tplStateInitaddress | _tplStateInitaddressIndex | _SellArgs | _SellArgsIndex | _ITONTokenWalletPtr | _ITONTokenWalletPtrIndex | _IPricePtr | _IPricePtrIndex | _int | _intIndex | _Price | _PriceIndex | _uint8 | _uint8Index | _uint32 | _uint32Index | _Tip3Config | _Tip3ConfigIndex | _PriceXchg | _PriceXchgIndex | _PayloadArgs | _PayloadArgsIndex | _optcell | _optcellIndex | _bool | _boolIndex .
+(* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
- Module FlexClientClass (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
-(*  Module Export SolidityNotationsClass := SolidityNotations xt sm.  *)
+ Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
+ Module Import SolidityNotationsForLedger := SolidityNotations xt sm.  
  Module Export VMStateModule := VMStateModule xt sm. 
- Module Export ClassTypesModule := ClassTypes xt sm .
-(* Module Export CommonTypes := Types xt sm. *)
+ Module Export TypesModuleForLedger := ClassTypes xt sm .
 
 
 (* 2 *) Definition MessagesAndEventsStateL : list Type := 
@@ -42,7 +41,7 @@ GeneratePruvendoRecord MessagesAndEventsStateL MessagesAndEventsFields .
 
 Check addr_std_compact.
 
-(* 2 *) Definition FlexClientStateL : list Type := 
+(* 2 *) Definition ContractL : list Type := 
  [ ( XInteger256 ) : Type ; 
  ( XCell ) : Type ; 
  ( XCell ) : Type ; 
@@ -53,10 +52,10 @@ Check addr_std_compact.
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ] .
-Elpi GeneratePruvendoRecord FlexClientStateL FlexClientFields . 
- Opaque FlexClientStateLRecord . 
+Elpi GeneratePruvendoRecord ContractL ContractFields . 
+ Opaque ContractLRecord . 
 
-(* 2 *) Definition LocalStateStateL : list Type := 
+(* 2 *) Definition LocalStateL : list Type := 
  [ ( XHMap (string*nat) XInteger256 ) : Type ; 
  ( XHMap string nat ) : Type ; 
  ( XHMap (string*nat) XCell ) : Type ; 
@@ -101,8 +100,8 @@ Elpi GeneratePruvendoRecord FlexClientStateL FlexClientFields .
  ( XHMap string nat ) : Type ; 
  ( XHMap (string*nat) XBool ) : Type ; 
  ( XHMap string nat ) : Type ] .
-Elpi GeneratePruvendoRecord LocalStateStateL LocalStateFieldsI . 
- Opaque LocalStateStateLRecord . 
+Elpi GeneratePruvendoRecord LocalStateL LocalStateFieldsI . 
+ Opaque LocalStateLRecord . 
 
 (* 2 *) Definition LedgerStateL : list Type := 
  [ ( FlexClientStateLRecord ) : Type ; 
@@ -113,10 +112,6 @@ Elpi GeneratePruvendoRecord LocalStateStateL LocalStateFieldsI .
  ( LocalStateStateLRecord ) : Type ; 
  ( LocalStateStateLRecord ) : Type ] .
 
-Opaque FlexClientStateLRecord.
-Opaque VMStateLRecord.
-Opaque MessagesAndEventsStateLRecord.
-Opaque LocalStateStateLRecord.
 Elpi GeneratePruvendoRecord LedgerStateL LedgerFieldsI .
 Transparent VMStateLRecord.
 Transparent MessagesAndEventsStateLRecord.
@@ -131,7 +126,7 @@ Transparent addr_std_fixedStateLRecord .
 Transparent SellArgsStateLRecord .
 Transparent FlexBurnWalletArgsStateLRecord .
 Transparent TonsConfigStateLRecord .
-Transparent FlexClientStateLRecord .
+Transparent ContractLRecord .
 Transparent XchgPairStateLRecord .
 Transparent OrderInfoStateLRecord .
 Transparent Tip3ConfigStateLRecord . 
@@ -146,15 +141,15 @@ Transparent LedgerStateLRecord .
 (***************************************)
 
 Definition LedgerPruvendoRecord := LedgerStateLPruvendoRecord .
-Definition LedgerLocalState := LocalStateStateLRecord .
+Definition LedgerLocalState := LocalStateLRecord .
 Definition LedgerLocalFields := LocalStateFieldsI.
-Definition LedgerLocalPruvendoRecord := LocalStateStateLPruvendoRecord .
-Definition LocalEmbedded := LedgerStateLEmbeddedType Ledger_ι_LocalState .
-Definition LocalCopyEmbedded := LedgerStateLEmbeddedType Ledger_ι_LocalStateCopy.
+Definition LedgerLocalPruvendoRecord := LocalStateLPruvendoRecord .
+Definition LocalEmbedded := LedgerStateLEmbeddedType _LocalState .
+Definition LocalCopyEmbedded := LedgerStateLEmbeddedType _LocalStateCopy.
 Definition LocalDefault : XDefault LocalStateStateLRecord := prod_default.
-Definition Ledger_LocalState := Ledger_ι_LocalState.
-Definition Ledger_LocalStateCopy := Ledger_ι_LocalStateCopy.
-Definition iso_local := Ledger_ι_LocalStateIso.
+Definition Ledger_LocalState := _LocalState.
+Definition Ledger_LocalStateCopy := _LocalStateCopy.
+Definition iso_local := _LocalStateIso.
 Definition Ledger := LedgerStateLRecord.
 Definition LedgerFields := LedgerFieldsI.
 
@@ -178,26 +173,35 @@ Class LocalStateField (X:Type): Type :=
 }.
 
 
-Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType Ledger_ι_VMState . 
-Definition LedgerVMStateField := Ledger_ι_VMState .
-Definition isoVMState := Ledger_ι_VMStateIso.
+Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType _VMState . 
+Definition LedgerVMStateField := _VMState .
+Definition isoVMState := _VMStateIso.
 
-Definition LedgerMessagesEmbedded := LedgerStateLEmbeddedType Ledger_ι_MessagesAndEvents . 
-Definition LedgerMessagesField := Ledger_ι_MessagesAndEvents .
-Definition isoMessages := Ledger_ι_MessagesAndEventsIso.
+Definition LedgerMessagesEmbedded := LedgerStateLEmbeddedType _MessagesAndEvents . 
+Definition LedgerMessagesField := _MessagesAndEvents .
+Definition isoMessages := _MessagesAndEventsIso.
 Definition MessagesAndEvents := MessagesAndEventsStateLRecord .
 
 GenerateLocalStateInstances LocalStateStateL LocalStateFieldsI Build_LocalStateField LocalStateStateLEmbeddedType.
+#[global]
+ Declare Instance foo : LocalStateField (StateInitStateLRecord * XInteger256).
 
-Check LocalState_ι_intLocalField.
-Check LocalState_ι_boolLocalField.
+Definition LocalStateField_XInteger := _intLocalField .
+Definition LocalStateField_XBool := _boolLocalField .
+Definition LocalStateField_XCell := _cellLocalField .
 
-Definition LocalStateField_XInteger := LocalState_ι_intLocalField .
-Definition LocalStateField_XBool := LocalState_ι_boolLocalField .
-Definition LocalStateField_XCell := LocalState_ι_cellLocalField .
+(* Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType _VMState . 
+Definition LedgerVMStateField := _VMState .
+Definition isoVMState := _VMStateIso.
 
+GenerateLocalStateInstances LocalStateStateL LocalStateFieldsI Build_LocalStateField LocalStateStateLEmbeddedType.
 
-(***************************************)
+Definition LocalStateField_XInteger := _intLocalField .
+Definition LocalStateField_XBool := _boolLocalField .
+Definition LocalStateField_XCell := _cellLocalField .
+ *)
+
+(*
 Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
          (v2: field_type f2) (r :  MessagesAndEventsStateLRecord  ) ,  
 f1 <> f2 -> 
@@ -248,6 +252,6 @@ Proof.
                apply (countable_prop_proof (T:= LedgerStateLRecord ));
                cbv;
                first [reflexivity| contradiction]).
-Qed .
+Qed . *)
 
-End FlexClientClass .
+End Ledger .

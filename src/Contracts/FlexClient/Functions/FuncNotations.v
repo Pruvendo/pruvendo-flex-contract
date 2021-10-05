@@ -9,15 +9,14 @@ Require Import Project.CommonConstSig.
 Require Import Contracts.FlexClient.Ledger.
 Require Import Contracts.FlexClient.Functions.FuncSig.
 
-Module FlexClientFuncNotations (xt: XTypesSig) 
+Module FuncNotations (xt: XTypesSig) 
                           (sm: StateMonadSig) 
                           (dc : ConstsTypesSig xt sm ).
 Export dc. Export xt. Export sm.
 
+Module Export SpecModuleForFuncNotations :=  Spec xt sm.
 
-Module Export FlexClientSpecModule :=  FlexClientSpec xt sm.
-
-Import URSUS.UrsusNotations.
+Import UrsusNotations.
 
 Local Open Scope ursus_scope.
 
@@ -295,94 +294,6 @@ Notation " 'TickTock.tick' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_�
  Notation " 'PayloadArgs.receive_tip3_wallet' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) PayloadArgs_ι_receive_tip3_wallet ) (in custom URValue at level 0) : ursus_scope.
  Notation " 'PayloadArgs.client_addr' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) PayloadArgs_ι_client_addr ) (in custom ULValue at level 0) : ursus_scope.
  Notation " 'PayloadArgs.client_addr' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) PayloadArgs_ι_client_addr ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint256' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint256 ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint256' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint256 ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.cell' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_cell ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.cell' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_cell ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.TonsConfig' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_TonsConfig ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.TonsConfig' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_TonsConfig ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.address' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_address ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.address' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_address ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint128' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint128 ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint128' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint128 ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.TradingPair' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_TradingPair ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.TradingPair' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_TradingPair ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.tplStateInituint256' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_tplStateInituint256 ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.tplStateInituint256' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_tplStateInituint256 ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.StateInit' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_StateInit ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.StateInit' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_StateInit ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.XchgPair' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_XchgPair ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.XchgPair' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_XchgPair ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.tplStateInitaddress' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_tplStateInitaddress ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.tplStateInitaddress' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_tplStateInitaddress ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.SellArgs' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_SellArgs ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.SellArgs' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_SellArgs ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.ITONTokenWalletPtr' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_ITONTokenWalletPtr ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.ITONTokenWalletPtr' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_ITONTokenWalletPtr ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.IPricePtr' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_IPricePtr ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.IPricePtr' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_IPricePtr ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.int' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_int ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.int' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_int ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.Price' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_Price ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.Price' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_Price ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint8' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint8 ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint8' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint8 ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint32' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint32 ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint32' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint32 ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.Tip3Config' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_Tip3Config ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.Tip3Config' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_Tip3Config ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.DPriceXchg' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PriceXchg ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.DPriceXchg' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PriceXchg ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.PayloadArgs' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PayloadArgs ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.PayloadArgs' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PayloadArgs ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint256Index' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint256Index ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint256Index' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint256Index ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.cellIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_cellIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.cellIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_cellIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.TonsConfigIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_TonsConfigIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.TonsConfigIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_TonsConfigIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.addressIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_addressIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.addressIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_addressIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint128Index' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint128Index ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint128Index' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint128Index ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.TradingPairIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_TradingPairIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.TradingPairIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_TradingPairIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.tplStateInituint256Index' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_tplStateInituint256Index ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.tplStateInituint256Index' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_tplStateInituint256Index ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.StateInitIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_StateInitIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.StateInitIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_StateInitIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.XchgPairIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_XchgPairIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.XchgPairIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_XchgPairIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.tplStateInitaddressIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_tplStateInitaddressIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.tplStateInitaddressIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_tplStateInitaddressIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.SellArgsIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_SellArgsIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.SellArgsIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_SellArgsIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.ITONTokenWalletPtrIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_ITONTokenWalletPtrIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.ITONTokenWalletPtrIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_ITONTokenWalletPtrIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.IPricePtrIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_IPricePtrIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.IPricePtrIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_IPricePtrIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.intIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_intIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.intIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_intIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.PriceIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PriceIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.PriceIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PriceIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint8Index' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint8Index ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint8Index' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint8Index ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint32Index' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint32Index ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.uint32Index' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_uint32Index ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.Tip3ConfigIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_Tip3ConfigIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.Tip3ConfigIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_Tip3ConfigIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.DPriceXchgIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PriceXchgIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.DPriceXchgIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PriceXchgIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'LocalState.PayloadArgsIndex' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PayloadArgsIndex ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'LocalState.PayloadArgsIndex' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) LocalState_ι_PayloadArgsIndex ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'Ledger.FLeXClient' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Ledger_ι_Contract ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'Ledger.FLeXClient' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Ledger_ι_Contract ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'Ledger.VMState' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Ledger_ι_VMState ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'Ledger.VMState' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Ledger_ι_VMState ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'Ledger.LocalState' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Ledger_ι_LocalState ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'Ledger.LocalState' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Ledger_ι_LocalState ) (in custom URValue at level 0) : ursus_scope.
- Notation " 'Ledger.LocalStateCopy' " := ( ULState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Ledger_ι_LocalStateCopy ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'Ledger.LocalStateCopy' " := ( URState (H0:=LedgerStateLEmbeddedType Ledger_ι_Contract) Ledger_ι_LocalStateCopy ) (in custom URValue at level 0) : ursus_scope.
 
 Notation " 'error_code::zero_owner_pubkey' " := (sInject error_code_ι_zero_owner_pubkey) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::missed_flex_wallet_code' " := (sInject error_code_ι_missed_flex_wallet_code) (in custom URValue at level 0) : ursus_scope. 
@@ -861,4 +772,4 @@ Local Open Scope string_scope.
 
 End Calls. 
 
-End FlexClientFuncNotations.
+End FuncNotations.

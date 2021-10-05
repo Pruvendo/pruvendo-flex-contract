@@ -1,10 +1,3 @@
-Require Import Coq.Program.Basics. 
-Require Import String. 
-Require Import FinProof.Types.IsoTypes. 
-Require Import FinProof.Common. 
-Require Import FinProof.MonadTransformers21. 
-
-
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.UrsusLib.
 
@@ -17,9 +10,10 @@ Require Import UrsusTVM.tvmNotations.
 Require Import FinProof.ProgrammingWith.  
 Require Import UMLang.ClassGenerator.ClassGenerator.
 
-Require Export Project.CommonTypes.
+Require Import Project.CommonTypes.
+
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
-Module Export CommonTypes := Types xt sm.
+Module Import CommonTypes := Types xt sm.
 Export xt.
 Local Open Scope xlist_scope.
 

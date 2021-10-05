@@ -1,17 +1,18 @@
 Require Import UMLang.SolidityNotations2.
-Require Import UMLang.SML_NG28.
+Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.tvmNotations.
 
 Require Import Contracts.FlexClient.ClassTypes.
 Require Import Contracts.FlexClient.Ledger .
 
-Module FlexClientSpec (xt: XTypesSig) (sm: StateMonadSig).
-Module Export ClassTypesModule := ClassTypes xt sm . 
-Module Export LedgerModule := FlexClientClass xt sm .
-Module Export tvmNotationsModule := tvmNotations xt sm LedgerModule.
+Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
+Module Export ClassTypesForFuncSig := ClassTypes xt sm .
+Module LedgerModuleForFuncSig := Ledger xt sm .
+Module Export tvmNotationsModule := tvmNotations xt sm LedgerModuleForFuncSig.
+(*ничего не импортируем после этой строчки*)
 
-Module Type FlexClientSpecSig.
+Module Type SpecSig.
 
  Parameter FlexClient_Ф_constructor : XInteger256 -> XCell -> XCell -> UExpression PhantomType true . 
  Parameter FlexClient_Ф_setFlexCfg : TonsConfigStateLRecord -> addr_std_compact -> addr_std_compact -> UExpression PhantomType true . 
@@ -41,7 +42,7 @@ Module Type FlexClientSpecSig.
  Parameter FlexClient_Ф__fallback : XCell -> UExpression XInteger false . 
 
 
-End FlexClientSpecSig.
+End SpecSig.
 
 
-End FlexClientSpec.  
+End Spec.  
