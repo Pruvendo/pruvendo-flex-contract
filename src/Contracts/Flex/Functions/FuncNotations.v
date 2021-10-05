@@ -20,17 +20,14 @@ Module Export SpecModuleForFuncNotations :=  Spec xt sm.
 Import UrsusNotations.
 
 Local Open Scope ursus_scope.
+About ULState.
 
-Notation " 'TonsConfig.transfer_tip3' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract) TonsConfig_ι_transfer_tip3 ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.return_ownership' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract) TonsConfig_ι_return_ownership ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.trading_pair_deploy' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract) TonsConfig_ι_trading_pair_deploy ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.order_answer' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract) TonsConfig_ι_order_answer ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.process_queue' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract) TonsConfig_ι_process_queue ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.send_notify' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract) TonsConfig_ι_send_notify ) (in custom ULValue at level 0) : ursus_scope. 
+Check ULState (f:=_Contract) (H:=ContractLEmbeddedType deployer_pubkey_).
 
-
-Notation " 'Flex.deployer_pubkey_' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract)  deployer_pubkey_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Flex.tons_cfg_' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract)  tons_cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " 'Flex.deployer_pubkey_' " := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType  deployer_pubkey_) ) (in custom ULValue at level 0) : ursus_scope. 
+ (*дал так же*)
+ 
+(*  Notation " 'Flex.tons_cfg_' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract)  tons_cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'Flex.pair_code_' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract)  pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'Flex.xchg_pair_code_' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract)  xchg_pair_code_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'Flex.price_code_' " := ( ULState (H0:=LedgerLEmbeddedType  _Contract)  price_code_ ) (in custom ULValue at level 0) : ursus_scope. 
@@ -74,7 +71,7 @@ Notation " 'XchgPair.flex_addr_' " := ( URState (H0:=LedgerLEmbeddedType  _Contr
  Notation " 'XchgPair.tip3_major_root_' " := ( URState (H0:=LedgerLEmbeddedType  _Contract) XchgPair_ι_tip3_major_root_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'XchgPair.tip3_minor_root_' " := ( URState (H0:=LedgerLEmbeddedType  _Contract) XchgPair_ι_tip3_minor_root_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'XchgPair.deploy_value_' " := ( URState (H0:=LedgerLEmbeddedType  _Contract) XchgPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
-
+ *)
 
 Notation " 'TIMESTAMP_DELAY' " := (sInject TIMESTAMP_DELAY) (in custom URValue at level 0) : ursus_scope.
 Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code_ι_message_sender_is_not_my_owner) (in custom URValue at level 0) : ursus_scope. 
