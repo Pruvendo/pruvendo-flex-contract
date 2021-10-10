@@ -11,17 +11,15 @@ Require Import UMLang.SolidityNotations2.
 Require Import UMLang.ClassGenerator.ClassGenerator.
 Require Import UrsusTVM.tvmFunc. 
 
-Require Import Project.CommonTypes.
+Require Import Project.CommonTypes. 
+Require Import Flex.ClassTypes.
+Require Import Flex.Interface.
 
-Require Import Contracts.Flex.ClassTypes.
-Require Import Contracts.Flex.Interface.
-
-Local Open Scope xlist_scope.
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-(* 1 *) Inductive MessagesAndEventsFields := | MessagesAndEvents_ι_field_1 | MessagesAndEvents_ι_field_2 | MessagesAndEvents_ι_field_3 | MessagesAndEvents_ι_field_4 .
+(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_SelfDeployer | _EmittedEvents | _MessagesLog.
 (* 1 *) Inductive ContractFields := | deployer_pubkey_ 
                                     | tons_cfg_ 
                                     | pair_code_ 
@@ -39,19 +37,24 @@ Local Open Scope glist_scope.
  *)
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
- Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
- Module Import SolidityNotationsForLedger := SolidityNotations xt sm.  
- Module Export VMStateModule := VMStateModule xt sm. 
- Module Export TypesModuleForLedger := ClassTypes xt sm .
+Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
-(* 2 *) Definition MessagesAndEventsStateL : list Type := 
- [ ( XInteger ) : Type ; 
- ( XBool ) : Type ; 
- ( XCell ) : Type ; 
- ( ( XHMap XInteger XInteger ) ) : Type ] .
-GeneratePruvendoRecord MessagesAndEventsStateL MessagesAndEventsFields . 
-  Opaque MessagesAndEventsStateLRecord . 
+Module SelfDeployerPublicInterfaceModule := PublicInterface xt sm.
 
+Module Import SolidityNotationsClass := SolidityNotations xt sm.
+Module Export VMStateModule := VMStateModule xt sm. 
+Module Import TypesModuleForLedger := ClassTypes xt sm .
+Import xt. 
+
+
+(* 2 *) Definition MessagesAndEventsL : ClassGenerator.list Type := 
+ [ ( XQueue SelfDeployerPublicInterfaceModule.OutgoingMessage ) : Type ; 
+ ( XList TVMEvent ) : Type ; 
+ ( XString ) : Type ] .
+
+GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
+  Opaque MessagesAndEventsLRecord .
+ 
 (* 2 *) Definition ContractL : list Type := 
  [ ( XInteger256 ) : Type ; 
  ( TonsConfigStateLRecord ) : Type ; 
@@ -222,37 +225,37 @@ Opaque XchgPairStateLRecord TradingPairStateLRecord StateInitStateLRecord .
 GeneratePruvendoRecord LocalStateL LocalStateFieldsI . *)
  Opaque LocalStateLRecord . 
 
-Check VMStateLRecord.
+Check VMStateLRecord. 
 
 (* 2 *) Definition LedgerL : list Type := 
  [ ( ContractLRecord ) : Type ; 
  ( ContractLRecord ) : Type ; 
  ( VMStateLRecord ) : Type ; 
- ( MessagesAndEventsStateLRecord ) : Type ; 
- ( MessagesAndEventsStateLRecord ) : Type ; 
+ ( MessagesAndEventsLRecord ) : Type ; 
+ ( MessagesAndEventsLRecord ) : Type ; 
  ( LocalStateLRecord ) : Type ; 
  ( LocalStateLRecord ) : Type ] .
 GeneratePruvendoRecord LedgerL LedgerFieldsI .
 (***************************************)
-Transparent MessagesAndEventsStateLRecord .
+Transparent MessagesAndEventsLRecord .
 Transparent ContractLRecord .
 Transparent LocalStateLRecord .
 Transparent LedgerLRecord .
 
-Definition LedgerPruvendoRecord := LedgerLPruvendoRecord .
+(***************************************)
+Definition LedgerEmbedded := LedgerLEmbeddedType.
 Definition LedgerLocalState := LocalStateLRecord .
+Definition LocalDefault : LedgerLocalState -> LedgerLocalState := fun _ => default.
+Definition LedgerPruvendoRecord := LedgerLPruvendoRecord .
 Definition LedgerLocalFields := LocalStateFieldsI.
-Definition LedgerLocalPruvendoRecord := LocalStateLPruvendoRecord .
-Definition LocalEmbedded := LedgerLEmbeddedType _LocalState .
-Definition LocalCopyEmbedded := LedgerLEmbeddedType _LocalStateCopy.
-(* Definition LocalDefault : XDefault LocalStateLRecord := prod_default. *)
 Definition Ledger_LocalState := _LocalState.
 Definition Ledger_LocalStateCopy := _LocalStateCopy.
-Definition iso_local : LedgerLocalState = field_type Ledger_LocalState := eq_refl.
+Definition iso_local : LedgerLocalState = (field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_LocalState)
+           := eq_refl.
 Definition Ledger := LedgerLRecord.
 Definition LedgerFields := LedgerFieldsI.
-
-(* Definition MessagesAndEvents := _MessagesAndEvents. *)
+Definition LocalEmbedded := LedgerLEmbeddedType Ledger_LocalState .
+Definition LocalCopyEmbedded := LedgerLEmbeddedType Ledger_LocalStateCopy.
 
 
 Lemma LedgerFieldsDec: forall (m1 m2: LedgerFieldsI), {m1=m2}+{m1<>m2}.
@@ -261,14 +264,19 @@ Proof.
   decide equality.
 Defined.
 
-Lemma LocalCopySameType: field_type  Ledger_LocalState = 
-field_type Ledger_LocalStateCopy.
+Lemma LocalCopySameType: field_type  Ledger_LocalState = field_type Ledger_LocalStateCopy.
 Proof.
   reflexivity.
 Defined.
 
+Lemma LedgerFieldsDec_eqrefl: forall m, LedgerFieldsDec m m = left eq_refl.
+Proof.
+intros.
+destruct m; reflexivity.
+Defined.
 
-Class LocalStateField  (X:Type): Type := 
+
+Class LocalStateField (X:Type): Type := 
 {
     local_index_embedded:> EmbeddedType LedgerLocalState (XHMap string nat) ;
     local_embedded:> EmbeddedType LedgerLocalState (XHMap (string*nat)%type X) ;
@@ -276,162 +284,160 @@ Class LocalStateField  (X:Type): Type :=
     (* local_field_type_correct: field_type (PruvendoRecord:=LedgerLocalPruvendoRecord) local_state_field = XHMap (string*nat)%type X; *)
 }. 
 
+
 Definition LedgerVMStateEmbedded := LedgerLEmbeddedType _VMState . 
 Definition LedgerVMStateField := _VMState .
-Definition isoVMState: VMStateLRecord =
- field_type LedgerVMStateField := eq_refl.
+Definition isoVMState : VMStateLRecord = (field_type (PruvendoRecord:=LedgerPruvendoRecord) LedgerVMStateField)
+           := eq_refl.
 
 Definition LedgerMessagesEmbedded := LedgerLEmbeddedType _MessagesAndEvents . 
 Definition LedgerMessagesField := _MessagesAndEvents .
-Definition isoMessages : MessagesAndEventsStateLRecord =
- field_type LedgerMessagesField:= eq_refl.
-Definition MessagesAndEvents := MessagesAndEventsStateLRecord .
+Definition MessagesAndEvents := MessagesAndEventsLRecord .
+Definition isoMessages : MessagesAndEvents = (field_type (PruvendoRecord:=LedgerPruvendoRecord) LedgerMessagesField)
+           := eq_refl.
+
+         
+Obligation Tactic := idtac.
  
-GenerateLocalStateInstances LocalStateL LocalStateFieldsI Build_LocalStateField LocalStateLEmbeddedType.
-Check LocalStateLEmbeddedType _int.
-(* #[global]
- Declare Instance foo : LocalStateField (StateInitStateLRecord * XInteger256). *)
-Locate _intLocalField.
-Definition LocalStateField_XInteger := _intLocalField .
-Definition LocalStateField_XBool := _boolLocalField .
-Definition LocalStateField_XCell := _cellLocalField .
+#[global, program] Instance LocalStateField000 : LocalStateField XInteger.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι00).
+eapply TransEmbedded. eapply (_ ι000).
+eapply (LocalState000LEmbeddedType ι0001).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι00).
+eapply TransEmbedded. eapply (_ ι000).
+eapply (LocalState000LEmbeddedType ι0000).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField000 : typeclass_instances.
 
-Check ContractLEmbeddedType.
+#[global, program] Instance LocalStateField001 : LocalStateField XCell.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι00).
+eapply TransEmbedded. eapply (_ ι001).
+eapply (LocalState001LEmbeddedType ι0011).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι00).
+eapply TransEmbedded. eapply (_ ι001).
+eapply (LocalState001LEmbeddedType ι0010).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField001 : typeclass_instances.
 
-Definition LedgerEmbedded := LedgerLEmbeddedType.
-Definition LocalDefault (_: LedgerLocalState): LedgerLocalState  := default.
+#[global, program] Instance LocalStateField01 : LocalStateField XBool.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι01).
+eapply (LocalState01LEmbeddedType ι011).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι01).
+eapply (LocalState01LEmbeddedType ι010).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField01 : typeclass_instances.
 
+#[global, program] Instance LocalStateField10 : LocalStateField (XQueue SelfDeployerPublicInterfaceModule.OutgoingMessage).
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι10).
+eapply (LocalState10LEmbeddedType ι101).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι10).
+eapply (LocalState10LEmbeddedType ι100).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField10 : typeclass_instances.
 
-Lemma LedgerFieldsDec_eqrefl : forall m, LedgerFieldsDec m m = left eq_refl.
-Proof.
-intros.
-destruct m; simpl; reflexivity.
-Qed.
+#[global, program] Instance LocalStateField11 : LocalStateField  SelfDeployerPublicInterfaceModule.OutgoingMessage.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι11).
+eapply (LocalState11LEmbeddedType ι111).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι11).
+eapply (LocalState11LEmbeddedType ι110).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField11 : typeclass_instances.
 
-
-
-
-(* Definition LedgerVMStateEmbedded := LedgerStateLEmbeddedType _VMState . 
-Definition LedgerVMStateField := _VMState .
-Definition isoVMState := _VMStateIso.
-
-GenerateLocalStateInstances LocalStateStateL LocalStateFieldsI Build_LocalStateField LocalStateStateLEmbeddedType.
-
-Definition LocalStateField_XInteger := _intLocalField .
-Definition LocalStateField_XBool := _boolLocalField .
-Definition LocalStateField_XCell := _cellLocalField .
-
-
+Definition LocalStateField_XInteger := LocalStateField000 .
+Definition LocalStateField_XBool := LocalStateField01 .
+Definition LocalStateField_XCell := LocalStateField001 .
 
 
 (***************************************)
 Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
-         (v2: field_type f2) (r :  MessagesAndEventsStateLRecord  ) ,  
+         (v2: field_type f2) (r :  MessagesAndEventsLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
 Proof.
   intros.
   destruct f1; destruct f2; 
   (revert r;     
-               apply (countable_prop_proof (T:= MessagesAndEventsStateLRecord ));
+               apply (countable_prop_proof (T:= MessagesAndEventsLRecord ));
                cbv;
                first [reflexivity| contradiction]).
 Qed .
-Lemma TickTockFields_noeq : forall (f1 f2:  TickTockFields ) 
-         (v2: field_type f2) (r :  TickTockStateLRecord  ) ,  
+
+Lemma SelfDeployerFields_noeq : forall (f1 f2:  ContractFields ) 
+         (v2: field_type f2) (r :  ContractLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
 Proof.
   intros.
   destruct f1; destruct f2; 
   (revert r;     
-               apply (countable_prop_proof (T:= TickTockStateLRecord ));
+               apply (countable_prop_proof (T:= ContractLRecord ));
                cbv;
                first [reflexivity| contradiction]).
 Qed .
-Lemma StateInitFields_noeq : forall (f1 f2:  StateInitFields ) 
-         (v2: field_type f2) (r :  StateInitStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= StateInitStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
-Lemma TonsConfigFields_noeq : forall (f1 f2:  TonsConfigFields ) 
-         (v2: field_type f2) (r :  TonsConfigStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= TonsConfigStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
-Lemma FlexFields_noeq : forall (f1 f2:  FlexFields ) 
-         (v2: field_type f2) (r :  FlexStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= FlexStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
-Lemma TradingPairFields_noeq : forall (f1 f2:  TradingPairFields ) 
-         (v2: field_type f2) (r :  TradingPairStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= TradingPairStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
-Lemma XchgPairFields_noeq : forall (f1 f2:  XchgPairFields ) 
-         (v2: field_type f2) (r :  XchgPairStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= XchgPairStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed . *)
+
 (* Lemma LocalStateFields_noeq : forall (f1 f2:  LocalStateFieldsI ) 
-         (v2: field_type f2) (r :  LocalStateStateLRecord  ) ,  
+         (v2: field_type f2) (r :  LocalStateLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
 Proof.
   intros.
   destruct f1; destruct f2; 
   (revert r;     
-               apply (countable_prop_proof (T:= LocalStateStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
-Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
-         (v2: field_type f2) (r :  LedgerStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= LedgerStateLRecord ));
+               apply (countable_prop_proof (T:= LocalStateLRecord ));
                cbv;
                first [reflexivity| contradiction]).
 Qed . *)
 
+Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
+         (v2: field_type f2) (r :  LedgerLRecord  ) ,  
+f1 <> f2 -> 
+f1 {$$ r with f2 := v2 $$} = f1 r.
+Proof.
+  intros.
+  destruct f1; destruct f2; 
+  (revert r;     
+               apply (countable_prop_proof (T:= LedgerLRecord ));
+               cbv;
+               first [reflexivity| contradiction]).
+Qed .
+
 End Ledger .
+
+
+
+
