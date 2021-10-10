@@ -1,5 +1,5 @@
 Require Import UMLang.SolidityNotations2.
-Require Import UMLang.SML_NG28.
+Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.tvmNotations.
 
 Require Import Contracts.Flex.ClassTypes.

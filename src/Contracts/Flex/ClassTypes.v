@@ -1,4 +1,3 @@
-
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.UrsusLib.
 
@@ -15,9 +14,12 @@ Require Import Project.CommonTypes.
 
 
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
-Module Import CommonTypes := Types xt sm.
+Module Export CommonTypes := Types xt sm.
 
 Local Open Scope xlist_scope.
+Local Open Scope record. 
+Local Open Scope program_scope.
+Local Open Scope glist_scope.
 
 
 (* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock | TickTock_ι_1 .
@@ -27,11 +29,11 @@ Local Open Scope xlist_scope.
 (* 1 *) Inductive XchgPairFields := | XchgPair_ι_flex_addr_ | XchgPair_ι_tip3_major_root_ | XchgPair_ι_tip3_minor_root_ | XchgPair_ι_deploy_value_ .
  
 Check XBool.
-
+ 
 (* 2 *) Definition TickTockStateL : list Type := 
  [ XBool : Type ; 
    XBool : Type ;
-   XBool : Type ]%xlist .
+   XBool : Type ] .
 GeneratePruvendoRecord TickTockStateL TickTockFields . 
 
 (* 2 *) Definition StateInitStateL : list Type := 
