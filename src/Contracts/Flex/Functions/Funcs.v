@@ -3,6 +3,7 @@ Require Import Coq.Strings.String.
 From elpi Require Import elpi.
 Require Import Setoid.
 Require Import ZArith.
+Require Import Coq.Program.Equality.
 
 Require Import FinProof.Common. 
 Require Import FinProof.ProgrammingWith.
@@ -40,7 +41,7 @@ main _ :- coq.error "usage: AddLocalState <name> <term> <LocalStateField>".
 Elpi Typecheck.
 Elpi Export AddLocalState.
 
-Module Funcs (dc : ConstsTypesSig XTypesModule StateMonadModule) .
+Module Funcs (dc : ConstsTypesSig XTypesModule StateMonadModule) . 
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.tvmNotationsModule.
@@ -93,9 +94,14 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 )
  
  Definition Flex_Ф_setPairCode ( code : XCell ) : UExpression PhantomType true . 
          refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
-         refine {{ require_ ( ( ~ TRUE (* Flex.pair_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
+(*          refine {{ require_ (  ~ 1 (* Flex.pair_code_  *), error_code::cant_override_code ) ; { _ } }} . *)
+
+(*         refine {{ if ( Flex.deployer_pubkey_ (* Flex.pair_code_ *) ) then { {_: UExpression PhantomType true} } else { {_: UExpression PhantomType true} } ;{_} }} . *)
+
+
+ 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
-(*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
+    	 	 refine {{ tvm.accept () ; { _ } }} .  
          refine {{ require_ ( (* ( code.ctos ( ) . srefs ( ) *) 1 == 1 (* 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
          refine {{ Flex.pair_code_ := {} (* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( )  *) }} . 
  Defined . 
@@ -105,7 +111,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 )
          refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
          refine {{ require_ ( TRUE (* ~ Flex.xchg_pair_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
-(*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
+    	 	 refine {{ tvm.accept () ; { _ } }} .  
          refine {{ require_ ( (* ( code.ctos ( ) . srefs ( ) == 2 )  *) 1 == 1 , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
          refine {{ Flex.xchg_pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *)  }} . 
  Defined . 
@@ -115,8 +121,8 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 )
          refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
          refine {{ require_ ( ( ~ TRUE (* Flex.price_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
-(*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ Flex.price_code_ ->set !{ code }  }} . 
+ 	 	     refine {{ tvm.accept () ; { _ } }} . 
+         refine {{ Flex.price_code_ ->set ( !{ code } ) }} . 
  Defined . 
  
  
@@ -125,7 +131,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 )
          refine {{ require_ ( ( ~ TRUE (* Flex.xchg_price_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
-         refine {{ Flex.xchg_price_code_ ->set !{ code } }} . 
+         refine {{ Flex.xchg_price_code_ ->set (!{ code }) }} . 
  Defined . 
  
  
@@ -177,9 +183,9 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 )
          refine {{ { myaddr } := (* tvm.myaddr *) tvm.address () ; { _ } }} . 
          refine {{ (* new *) pair_data : ( TradingPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_root_ = tip3_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
-         refine {{ (* new *) std_addr : ( StateInitStateLRecord * XInteger256 ) @ "std_addr" ; { _ } }} . 
+ (*         refine {{ (* new *) std_addr : ( StateInitStateLRecord * XInteger256 ) @ "std_addr" ; { _ } }} . 
          refine {{ { std_addr } := {} (* prepare_trading_pair_state_init_and_addr ( !{ pair_data } , Flex.pair_code_ ->get ) ->second *) ; { _ } }} . 
-         refine {{ (* new *) workchain_id : ( XInteger (* auto *) ) @ "workchain_id" ; { _ } }} . 
+ *)         refine {{ (* new *) workchain_id : ( XInteger (* auto *) ) @ "workchain_id" ; { _ } }} . 
          refine {{ { workchain_id } := {} (* Std :: get < addr_std > ( myaddr ^^ address:val ( ) ) . workchain_id *) ; { _ } }} . 
          refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
  Defined . 
