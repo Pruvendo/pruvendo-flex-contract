@@ -179,7 +179,7 @@ Inductive LocalStateFields0000I := | ι00000 | ι00001 .
  Opaque LocalState0LRecord . 
   
      Inductive LocalStateFieldsI := | ι0 | ι1 . 
-     Definition LocalStateL := [ LocalState10LRecord ; LocalState0LRecord ] . 
+     Definition LocalStateL := [ LocalState0LRecord ; LocalState10LRecord ] . 
      GeneratePruvendoRecord LocalStateL LocalStateFieldsI  . 
      Opaque LocalStateLRecord . 
  
@@ -299,88 +299,218 @@ Definition isoMessages : MessagesAndEvents = (field_type (PruvendoRecord:=Ledger
          
 Obligation Tactic := idtac.
  
-#[global, program] Instance LocalStateField000 : LocalStateField XInteger.
+#[global, program] Instance LocalStateField0000: LocalStateField XInteger.
+Next Obligation. 
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι00).
+eapply TransEmbedded. eapply (_ ι000).
+eapply TransEmbedded. eapply (_ ι0000).
+
+eapply (LocalState0000LEmbeddedType ι00001).
+Defined.
 Next Obligation.
 eapply TransEmbedded. eapply (_ ι0).
 eapply TransEmbedded. eapply (_ ι00).
 eapply TransEmbedded. eapply (_ ι000).
-eapply (LocalState000LEmbeddedType ι0001).
+eapply TransEmbedded. eapply (_ ι0000).
+eapply (LocalState0000LEmbeddedType ι00000).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField0000 : typeclass_instances.
+
+#[global, program] Instance LocalStateField0001 : LocalStateField (XMaybe XCell).
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι00).
+eapply TransEmbedded. eapply (_ ι000).
+eapply TransEmbedded. eapply (_ ι0001).
+eapply (LocalState0001LEmbeddedType ι00011).
 Defined.
 Next Obligation.
 eapply TransEmbedded. eapply (_ ι0).
 eapply TransEmbedded. eapply (_ ι00).
 eapply TransEmbedded. eapply (_ ι000).
-eapply (LocalState000LEmbeddedType ι0000).
+eapply TransEmbedded. eapply (_ ι0001).
+eapply (LocalState0001LEmbeddedType ι00010).
 Defined.
 Fail Next Obligation.
 #[local]
-Remove Hints LocalStateField000 : typeclass_instances.
+Remove Hints LocalStateField0001 : typeclass_instances.
 
-#[global, program] Instance LocalStateField001 : LocalStateField XCell.
+#[global, program] Instance LocalStateField0010 : LocalStateField (XAddress * XAddress).
 Next Obligation.
 eapply TransEmbedded. eapply (_ ι0).
 eapply TransEmbedded. eapply (_ ι00).
 eapply TransEmbedded. eapply (_ ι001).
-eapply (LocalState001LEmbeddedType ι0011).
+eapply TransEmbedded. eapply (_ ι0010).
+eapply (LocalState0010LEmbeddedType ι00101).
 Defined.
 Next Obligation.
 eapply TransEmbedded. eapply (_ ι0).
 eapply TransEmbedded. eapply (_ ι00).
 eapply TransEmbedded. eapply (_ ι001).
-eapply (LocalState001LEmbeddedType ι0010).
+eapply TransEmbedded. eapply (_ ι0010).
+eapply (LocalState0010LEmbeddedType ι00100).
 Defined.
 Fail Next Obligation.
 #[local]
-Remove Hints LocalStateField001 : typeclass_instances.
+Remove Hints LocalStateField0010 : typeclass_instances.
 
-#[global, program] Instance LocalStateField01 : LocalStateField XBool.
+#[global, program] Instance LocalStateField0011 : LocalStateField (XInteger256).
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι00).
+eapply TransEmbedded. eapply (_ ι001).
+eapply TransEmbedded. eapply (_ ι0011).
+eapply (LocalState0011LEmbeddedType ι00111).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι00).
+eapply TransEmbedded. eapply (_ ι001).
+eapply TransEmbedded. eapply (_ ι0011).
+eapply (LocalState0011LEmbeddedType ι00110).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField0011 : typeclass_instances.
+
+
+#[global, program] Instance LocalStateField0100 : LocalStateField (XInteger128).
 Next Obligation.
 eapply TransEmbedded. eapply (_ ι0).
 eapply TransEmbedded. eapply (_ ι01).
-eapply (LocalState01LEmbeddedType ι011).
+eapply TransEmbedded. eapply (_ ι010).
+eapply TransEmbedded. eapply (_ ι0100).
+eapply (LocalState0100LEmbeddedType ι01001).
 Defined.
 Next Obligation.
 eapply TransEmbedded. eapply (_ ι0).
 eapply TransEmbedded. eapply (_ ι01).
-eapply (LocalState01LEmbeddedType ι010).
+eapply TransEmbedded. eapply (_ ι010).
+eapply TransEmbedded. eapply (_ ι0100).
+eapply (LocalState0100LEmbeddedType ι01000).
 Defined.
 Fail Next Obligation.
 #[local]
-Remove Hints LocalStateField01 : typeclass_instances.
+Remove Hints LocalStateField0100 : typeclass_instances.
 
-#[global, program] Instance LocalStateField10 : LocalStateField (XQueue SelfDeployerPublicInterfaceModule.OutgoingMessage).
+#[global, program] Instance LocalStateField0101 : LocalStateField (XInteger8).
 Next Obligation.
-eapply TransEmbedded. eapply (_ ι1).
-eapply TransEmbedded. eapply (_ ι10).
-eapply (LocalState10LEmbeddedType ι101).
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι01).
+eapply TransEmbedded. eapply (_ ι010).
+eapply TransEmbedded. eapply (_ ι0101).
+eapply (LocalState0101LEmbeddedType ι01011).
 Defined.
 Next Obligation.
-eapply TransEmbedded. eapply (_ ι1).
-eapply TransEmbedded. eapply (_ ι10).
-eapply (LocalState10LEmbeddedType ι100).
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι01).
+eapply TransEmbedded. eapply (_ ι010).
+eapply TransEmbedded. eapply (_ ι0101).
+eapply (LocalState0101LEmbeddedType ι01010).
 Defined.
 Fail Next Obligation.
 #[local]
-Remove Hints LocalStateField10 : typeclass_instances.
+Remove Hints LocalStateField0101 : typeclass_instances.
 
-#[global, program] Instance LocalStateField11 : LocalStateField  SelfDeployerPublicInterfaceModule.OutgoingMessage.
+#[global, program] Instance LocalStateField0110 : LocalStateField (XAddress).
 Next Obligation.
-eapply TransEmbedded. eapply (_ ι1).
-eapply TransEmbedded. eapply (_ ι11).
-eapply (LocalState11LEmbeddedType ι111).
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι01).
+eapply TransEmbedded. eapply (_ ι011).
+eapply TransEmbedded. eapply (_ ι0110).
+eapply (LocalState0110LEmbeddedType ι01101).
 Defined.
 Next Obligation.
-eapply TransEmbedded. eapply (_ ι1).
-eapply TransEmbedded. eapply (_ ι11).
-eapply (LocalState11LEmbeddedType ι110).
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι01).
+eapply TransEmbedded. eapply (_ ι011).
+eapply TransEmbedded. eapply (_ ι0110).
+eapply (LocalState0110LEmbeddedType ι01100).
 Defined.
 Fail Next Obligation.
 #[local]
-Remove Hints LocalStateField11 : typeclass_instances.
+Remove Hints LocalStateField0110 : typeclass_instances.
 
-Definition LocalStateField_XInteger := LocalStateField000 .
-Definition LocalStateField_XBool := LocalStateField01 .
-Definition LocalStateField_XCell := LocalStateField001 .
+
+#[global, program] Instance LocalStateField0111 : LocalStateField (XCell).
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι01).
+eapply TransEmbedded. eapply (_ ι011).
+eapply TransEmbedded. eapply (_ ι0111). 
+eapply (LocalState0111LEmbeddedType ι01111).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι0).
+eapply TransEmbedded. eapply (_ ι01).
+eapply TransEmbedded. eapply (_ ι011).
+eapply TransEmbedded. eapply (_ ι0111).
+eapply (LocalState0111LEmbeddedType ι01110).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField0111 : typeclass_instances.
+
+
+#[global, program] Instance LocalStateField1000 : LocalStateField (XchgPairStateLRecord).
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι101).
+eapply TransEmbedded. eapply (_ ι1000).
+eapply (LocalState1000LEmbeddedType ι10001).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι101).
+eapply TransEmbedded. eapply (_ ι1000).
+eapply (LocalState1000LEmbeddedType ι10000).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField1000 : typeclass_instances.
+
+#[global, program] Instance LocalStateField1001 : LocalStateField (TradingPairStateLRecord).
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι101).
+eapply TransEmbedded. eapply (_ ι1001).
+eapply (LocalState1001LEmbeddedType ι10011).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι101).
+eapply TransEmbedded. eapply (_ ι1001).
+eapply (LocalState1001LEmbeddedType ι10010).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField1001 : typeclass_instances.
+
+#[global, program] Instance LocalStateField1010 : LocalStateField (XBool).
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι100).
+
+eapply (LocalState1010LEmbeddedType ι10101).
+Defined.
+Next Obligation.
+eapply TransEmbedded. eapply (_ ι1).
+eapply TransEmbedded. eapply (_ ι100).
+
+eapply (LocalState1010LEmbeddedType ι10100).
+Defined.
+Fail Next Obligation.
+#[local]
+Remove Hints LocalStateField1010 : typeclass_instances.
+
+
+
+Definition LocalStateField_XInteger := LocalStateField0000 .
+Definition LocalStateField_XBool := LocalStateField1010 .
+Definition LocalStateField_XCell := LocalStateField0111 .
 
 
 (***************************************)
