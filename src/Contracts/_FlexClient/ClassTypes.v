@@ -12,12 +12,15 @@ Require Import UMLang.ClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
+
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
 Module Export CommonTypes := Types xt sm.
-Export xt.
-Local Open Scope xlist_scope.
 
-Check addr_std_compact.
+Local Open Scope xlist_scope.
+Local Open Scope record. 
+Local Open Scope program_scope.
+Local Open Scope glist_scope.
+
 
 
 (* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock | TickTock_ι_a .

@@ -3,6 +3,7 @@ Require Import Coq.Strings.String.
 From elpi Require Import elpi.
 Require Import Setoid.
 Require Import ZArith.
+Require Import Coq.Program.Equality.
 
 Require Import FinProof.Common. 
 Require Import FinProof.ProgrammingWith.
@@ -14,10 +15,10 @@ Require Import UrsusTVM.tvmFunc.
 Require Import UrsusTVM.tvmNotations.
 
 Require Import Project.CommonConstSig.
-Require Import Contracts.Flex.Ledger.
-Require Import Contracts.Flex.Functions.FuncSig.
-Require Import Contracts.Flex.Functions.FuncNotations.
-Require Import Contracts.Flex.Interface.
+Require Import Contracts.FlexClient.Ledger.
+Require Import Contracts.FlexClient.Functions.FuncSig.
+Require Import Contracts.FlexClient.Functions.FuncNotations.
+Require Import Contracts.FlexClient.Interface.
 
 
 Elpi Command AddLocalState.
@@ -40,7 +41,7 @@ main _ :- coq.error "usage: AddLocalState <name> <term> <LocalStateField>".
 Elpi Typecheck.
 Elpi Export AddLocalState.
 
-Module Funcs (dc : ConstsTypesSig XTypesModule StateMonadModule) .
+Module Funcs (dc : ConstsTypesSig XTypesModule StateMonadModule) . 
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.tvmNotationsModule.
