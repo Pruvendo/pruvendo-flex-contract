@@ -5,7 +5,7 @@ Export xt.
 
 Module Export SolidityNotationsForCommonTypes := SolidityNotations xt sm.
 
-Definition IFlexNotifyPtr := XAddress. 
+ Definition IFlexNotifyPtr := XAddress. 
  Definition ITONTokenWalletPtr := XAddress. 
  Definition IPricePtr := XAddress. 
  Definition TokensType := XInteger128. 
@@ -14,6 +14,7 @@ Definition IFlexNotifyPtr := XAddress.
                             Definition auto := XInteger . 
  Definition addr_std_compact := XAddress . 
  Definition varuint32 := XInteger32 .
+ Definition address_t := XAddress.
 
 End Types.
 

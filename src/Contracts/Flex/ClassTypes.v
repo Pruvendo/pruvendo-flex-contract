@@ -14,7 +14,7 @@ Require Import Project.CommonTypes.
 
 
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
-Module Export CommonTypes := Types xt sm.
+Module Import CommonTypes := Types xt sm.
 
 Local Open Scope xlist_scope.
 Local Open Scope record. 

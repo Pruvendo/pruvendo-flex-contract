@@ -3,35 +3,39 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.tvmNotations.
 
 Require Import Contracts.Flex.ClassTypes.
-Require Import Contracts.Flex.Ledger .
+Require Import Contracts.Flex.Ledger.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
-Module Export ClassTypesForFuncSig := ClassTypes xt sm .
-Module LedgerModuleForFuncSig := Ledger xt sm .
-Module Export tvmNotationsModule := tvmNotations xt sm LedgerModuleForFuncSig.
-(*ничего не импортируем после этой строчки*)
+Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm.
+Module  LedgerModuleForFuncSig := Ledger xt sm .
+Module Export tvmNotationsModule := tvmNotations xt sm LedgerModuleForFuncSig. 
 
 Module Type SpecSig.
 
- Parameter Flex_Ф_constructor : XInteger256 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger128 -> XInteger8 -> XAddress -> UExpression PhantomType false . 
- Parameter Flex_Ф_setPairCode : XCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_setXchgPairCode : XCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_setPriceCode : XCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_setXchgPriceCode : XCell -> UExpression PhantomType true . 
- Parameter Flex_Ф_isFullyInitialized : UExpression XBool false . 
- Parameter Flex_Ф_getTonsCfg : UExpression TonsConfigStateLRecord false . 
- Parameter Flex_Ф_getTradingPairCode : UExpression XCell false . 
- Parameter Flex_Ф_getXchgPairCode : UExpression XCell false . 
- Parameter Flex_Ф_getSellPriceCode : XAddress -> UExpression XCell true . 
- Parameter Flex_Ф_getXchgPriceCode : XAddress -> XAddress -> UExpression XCell true . 
- Parameter Flex_Ф_getSellTradingPair : XAddress -> UExpression XAddress false . 
- Parameter Flex_Ф_getXchgTradingPair : XAddress -> XAddress -> UExpression XAddress false . 
- Parameter Flex_Ф_getDealsLimit : UExpression XInteger8 false . 
- Parameter Flex_Ф_getNotifyAddr : UExpression XAddress false . 
- Parameter Flex_Ф__fallback : XCell -> UExpression XInteger false . 
+Parameter constructor1 : URValue XInteger256 false -> URValue XString false -> URValue ( XMaybe XAddress) false -> URValue XInteger128 false -> URValue XInteger128 false -> URValue XInteger128 false -> URValue XInteger128 false -> URValue XInteger128 false -> URValue XInteger128 false -> URValue XInteger8 false -> UExpression PhantomType false . 
+ Parameter setPairCode : URValue XCell false -> UExpression PhantomType true . 
+ Parameter setXchgPairCode : URValue XCell false -> UExpression PhantomType true . 
+ Parameter setPriceCode : URValue XCell false -> UExpression PhantomType true . 
+ Parameter setXchgPriceCode : URValue XCell false -> UExpression PhantomType true . 
+ Parameter transfer : URValue XAddress false -> URValue XInteger128 false -> UExpression PhantomType true . 
+ Parameter isFullyInitialized : UExpression XBool false . 
+ Parameter getTonsCfg : UExpression TonsConfigLRecord false . 
+ Parameter getTradingPairCode : UExpression XCell false . 
+ Parameter getXchgPairCode : UExpression XCell false . 
+ Parameter getSellPriceCode : URValue XAddress false -> UExpression XCell true . 
+ Parameter getXchgPriceCode : URValue XAddress false -> URValue XAddress false -> UExpression XCell true . 
+ Parameter getSellTradingPair : URValue XAddress false -> UExpression XAddress false . 
+ Parameter getXchgTradingPair : URValue XAddress false -> URValue XAddress false -> UExpression XAddress false . 
+ Parameter getDealsLimit : UExpression XInteger8 false . 
+ Parameter getOwnershipInfo : UExpression FlexOwnershipInfoLRecord false . 
+ Parameter _fallback : URValue XCell false -> URValue XSlice false -> UExpression XInteger false . 
+ Parameter prepare_flex_state_init_and_addr : URValue ContractLRecord false -> URValue XCell false -> UExpression ( StateInitLRecord # XInteger256 )%sol false . 
 
+Locate constructor1.
 End SpecSig.
-
-
+Locate constructor1.
 End Spec.  
+
+
+

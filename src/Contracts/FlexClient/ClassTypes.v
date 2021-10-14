@@ -53,68 +53,68 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive PayloadArgsFields := | PayloadArgs_ι_sell | PayloadArgs_ι_amount | PayloadArgs_ι_receive_tip3_wallet | PayloadArgs_ι_client_addr .
 
 
-(* 2 *) Definition TickTockStateL : list Type := 
+(* 2 *) Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
  ( XBool ) : Type ; 
  ( XInteger ) : Type ] .
-GeneratePruvendoRecord TickTockStateL TickTockFields . 
+GeneratePruvendoRecord TickTockL TickTockFields . 
  
-(* 2 *) Definition StateInitStateL : list Type := 
+(* 2 *) Definition StateInitL : list Type := 
  [ ( XMaybe XInteger ) : Type ; 
- ( XMaybe TickTockStateLRecord ) : Type ; 
+ ( XMaybe TickTockLRecord ) : Type ; 
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ] .
-GeneratePruvendoRecord StateInitStateL StateInitFields . 
+GeneratePruvendoRecord StateInitL StateInitFields . 
 
-(* 2 *) Definition anycast_infoStateL : list Type := 
+(* 2 *) Definition anycast_infoL : list Type := 
  [ ( varuint32 ) : Type ; 
  ( XInteger ) : Type ; 
  ( XInteger ) : Type ] .
-GeneratePruvendoRecord anycast_infoStateL anycast_infoFields . 
+GeneratePruvendoRecord anycast_infoL anycast_infoFields . 
 
-(* 2 *) Definition addr_stdStateL : list Type := 
+(* 2 *) Definition addr_stdL : list Type := 
  [ ( XInteger ) : Type ; 
- ( XMaybe anycast_infoStateLRecord ) : Type ; 
+ ( XMaybe anycast_infoLRecord ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( XInteger256 ) : Type ] .
-GeneratePruvendoRecord addr_stdStateL addr_stdFields . 
+GeneratePruvendoRecord addr_stdL addr_stdFields . 
  
-(* 2 *) Definition addr_std_fixedStateL : list Type := 
+(* 2 *) Definition addr_std_fixedL : list Type := 
  [ ( XInteger8 ) : Type ; 
  ( XInteger256 ) : Type ; 
  ( XInteger ) : Type ] .
-GeneratePruvendoRecord addr_std_fixedStateL addr_std_fixedFields . 
+GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
  
-(* 2 *) Definition SellArgsStateL : list Type := 
+(* 2 *) Definition SellArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
  ( XInteger ) : Type ] .
-GeneratePruvendoRecord SellArgsStateL SellArgsFields . 
+GeneratePruvendoRecord SellArgsL SellArgsFields . 
 
-(* 2 *) Definition FlexBurnWalletArgsStateL : list Type := 
+(* 2 *) Definition FlexBurnWalletArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger256 ) : Type ; 
  ( XAddress ) : Type ; 
  ( XAddress ) : Type ] .
-GeneratePruvendoRecord FlexBurnWalletArgsStateL FlexBurnWalletArgsFields . 
+GeneratePruvendoRecord FlexBurnWalletArgsL FlexBurnWalletArgsFields . 
  
-(* 2 *) Definition TonsConfigStateL : list Type := 
+(* 2 *) Definition TonsConfigL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ] .
-GeneratePruvendoRecord TonsConfigStateL TonsConfigFields . 
+GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
  
-(* 2 *) Definition FlexSellArgsAddrsStateL : list Type := 
+(* 2 *) Definition FlexSellArgsAddrsL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XInteger ) : Type ;
 (XBool) : Type ] .
-GeneratePruvendoRecord FlexSellArgsAddrsStateL FlexSellArgsAddrsFields . 
+GeneratePruvendoRecord FlexSellArgsAddrsL FlexSellArgsAddrsFields . 
  
-(* 2 *) Definition FlexSellArgsStateL : list Type := 
+(* 2 *) Definition FlexSellArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger32 ) : Type ; 
@@ -125,9 +125,9 @@ GeneratePruvendoRecord FlexSellArgsAddrsStateL FlexSellArgsAddrsFields .
  ( XAddress ) : Type ; 
  ( XCell ) : Type ; 
  ( XAddress ) : Type ] .
-GeneratePruvendoRecord FlexSellArgsStateL FlexSellArgsFields . 
+GeneratePruvendoRecord FlexSellArgsL FlexSellArgsFields . 
  
-(* 2 *) Definition FlexBuyArgsStateL : list Type := 
+(* 2 *) Definition FlexBuyArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger32 ) : Type ; 
@@ -138,15 +138,15 @@ GeneratePruvendoRecord FlexSellArgsStateL FlexSellArgsFields .
  ( XAddress ) : Type ; 
  ( XCell ) : Type ; 
  ( XAddress ) : Type ] .
-GeneratePruvendoRecord FlexBuyArgsStateL FlexBuyArgsFields . 
+GeneratePruvendoRecord FlexBuyArgsL FlexBuyArgsFields . 
  
-(* 2 *) Definition FlexXchgCfgsStateL : list Type := 
+(* 2 *) Definition FlexXchgCfgsL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XInteger ) : Type ] .
-GeneratePruvendoRecord FlexXchgCfgsStateL FlexXchgCfgsFields . 
+GeneratePruvendoRecord FlexXchgCfgsL FlexXchgCfgsFields . 
  
-(* 2 *) Definition FlexXchgArgsStateL : list Type := 
+(* 2 *) Definition FlexXchgArgsL : list Type := 
  [ ( XBool ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
@@ -160,9 +160,9 @@ GeneratePruvendoRecord FlexXchgCfgsStateL FlexXchgCfgsFields .
  ( XAddress ) : Type ; 
  ( XCell ) : Type ; 
  ( XAddress ) : Type ] .
-GeneratePruvendoRecord FlexXchgArgsStateL FlexXchgArgsFields . 
+GeneratePruvendoRecord FlexXchgArgsL FlexXchgArgsFields . 
  
-(* 2 *) Definition FlexCancelArgsStateL : list Type := 
+(* 2 *) Definition FlexCancelArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger8 ) : Type ; 
@@ -170,9 +170,9 @@ GeneratePruvendoRecord FlexXchgArgsStateL FlexXchgArgsFields .
  ( XCell ) : Type ; 
  ( XCell ) : Type ; 
  ( XAddress ) : Type ] .
-GeneratePruvendoRecord FlexCancelArgsStateL FlexCancelArgsFields . 
+GeneratePruvendoRecord FlexCancelArgsL FlexCancelArgsFields . 
  
-(* 2 *) Definition FlexXchgCancelArgsStateL : list Type := 
+(* 2 *) Definition FlexXchgCancelArgsL : list Type := 
  [ ( XBool ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
@@ -182,80 +182,80 @@ GeneratePruvendoRecord FlexCancelArgsStateL FlexCancelArgsFields .
  ( XCell ) : Type ; 
  ( XCell ) : Type ; 
  ( XAddress ) : Type ] .
-GeneratePruvendoRecord FlexXchgCancelArgsStateL FlexXchgCancelArgsFields . 
+GeneratePruvendoRecord FlexXchgCancelArgsL FlexXchgCancelArgsFields . 
 
-(* 2 *) Definition XchgPairStateL : list Type := 
+(* 2 *) Definition XchgPairL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XInteger128 ) : Type ] .
-GeneratePruvendoRecord XchgPairStateL XchgPairFields . 
+GeneratePruvendoRecord XchgPairL XchgPairFields . 
 
-(* 2 *) Definition OrderInfoStateL : list Type := 
+(* 2 *) Definition OrderInfoL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
  ( XInteger32 ) : Type ] .
-GeneratePruvendoRecord OrderInfoStateL OrderInfoFields . 
+GeneratePruvendoRecord OrderInfoL OrderInfoFields . 
  
-(* 2 *) Definition Tip3ConfigStateL : list Type := 
+(* 2 *) Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( XInteger256 ) : Type ; 
  ( XAddress ) : Type ] .
-GeneratePruvendoRecord Tip3ConfigStateL Tip3ConfigFields .
+GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields .
 
-(* 2 *) Definition DPriceStateL : list Type := 
+(* 2 *) Definition DPriceL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( IFlexNotifyPtr ) : Type ; 
  ( XInteger8 ) : Type ; 
- ( TonsConfigStateLRecord ) : Type ; 
+ ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 
- ( Tip3ConfigStateLRecord ) : Type ] .
-Opaque Tip3ConfigStateLRecord.
-GeneratePruvendoRecord DPriceStateL DPriceFields . 
+ ( Tip3ConfigLRecord ) : Type ] .
+Opaque Tip3ConfigLRecord.
+GeneratePruvendoRecord DPriceL DPriceFields . 
  
-(* 2 *) Definition RationalPriceStateL : list Type := 
+(* 2 *) Definition RationalPriceL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger ) : Type ] .
-GeneratePruvendoRecord RationalPriceStateL RationalPriceFields . 
+GeneratePruvendoRecord RationalPriceL RationalPriceFields . 
  
-(* 2 *) Definition DPriceXchgStateL : list Type := 
- [ ( RationalPriceStateLRecord ) : Type ; 
+(* 2 *) Definition DPriceXchgL : list Type := 
+ [ ( RationalPriceLRecord ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( IFlexNotifyPtr ) : Type ; 
  ( XInteger8 ) : Type ; 
- ( TonsConfigStateLRecord ) : Type ; 
+ ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 
- ( Tip3ConfigStateLRecord ) : Type ; 
- ( Tip3ConfigStateLRecord ) : Type ] .
-GeneratePruvendoRecord DPriceXchgStateL DPriceXchgFields . 
+ ( Tip3ConfigLRecord ) : Type ; 
+ ( Tip3ConfigLRecord ) : Type ] .
+GeneratePruvendoRecord DPriceXchgL DPriceXchgFields . 
  
-(* 2 *) Definition TradingPairStateL : list Type := 
+(* 2 *) Definition TradingPairL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XInteger128 ) : Type ] .
-GeneratePruvendoRecord TradingPairStateL TradingPairFields . 
+GeneratePruvendoRecord TradingPairL TradingPairFields . 
  
-(* 2 *) Definition PayloadArgsStateL : list Type := 
+(* 2 *) Definition PayloadArgsL : list Type := 
  [ ( XBool ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XAddress ) : Type ; 
  ( XAddress ) : Type ] .
-GeneratePruvendoRecord PayloadArgsStateL PayloadArgsFields . 
+GeneratePruvendoRecord PayloadArgsL PayloadArgsFields . 
 
 
 End ClassTypes .

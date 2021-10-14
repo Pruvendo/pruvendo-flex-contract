@@ -1,4 +1,3 @@
-
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.UrsusLib.
 
@@ -18,13 +17,16 @@ Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
 Module Import CommonTypes := Types xt sm.
 
 Local Open Scope xlist_scope.
+Local Open Scope record. 
+Local Open Scope program_scope.
+Local Open Scope glist_scope.
 
-(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock | TickTok_ι_1 .
+(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
 (* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
-(* 1 *) Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address | addr_std_fixed_ι_1 .
+(* 1 *) Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .
 (* 1 *) Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
 (* 1 *) Inductive OrderRetFields := | OrderRet_ι_err_code | OrderRet_ι_processed | OrderRet_ι_enqueued .
-(* 1 *) Inductive SellArgsFields := | SellArgs_ι_amount | SellArgs_ι_receive_wallet | SellArgs_ι_1 .
+(* 1 *) Inductive SellArgsFields := | SellArgs_ι_amount | SellArgs_ι_receive_wallet .
 (* 1 *) Inductive OrderInfoFields := | OrderInfo_ι_original_amount | OrderInfo_ι_amount | OrderInfo_ι_account | OrderInfo_ι_tip3_wallet | OrderInfo_ι_client_addr | OrderInfo_ι_order_finish_time .
 (* 1 *) Inductive DetailsInfoFields := | DetailsInfo_ι_price | DetailsInfo_ι_min_amount | DetailsInfo_ι_sell_amount | DetailsInfo_ι_buy_amount .
 (* 1 *) Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address .
@@ -34,116 +36,112 @@ Local Open Scope xlist_scope.
 (* 1 *) Inductive allowance_infoFields := | allowance_info_ι_spender | allowance_info_ι_remainingTokens | allowance_info_ι_1 .
 (* 1 *) Inductive TONTokenWalletFields := | TONTokenWallet_ι_name_ | TONTokenWallet_ι_symbol_ | TONTokenWallet_ι_decimals_ | TONTokenWallet_ι_balance_ | TONTokenWallet_ι_root_public_key_ | TONTokenWallet_ι_wallet_public_key_ | TONTokenWallet_ι_root_address_ | TONTokenWallet_ι_owner_address_ | TONTokenWallet_ι_lend_ownership_ | TONTokenWallet_ι_code_ | TONTokenWallet_ι_allowance_ | TONTokenWallet_ι_workchain_id_ .
 (* 1 *) Inductive OrderInfoXchgFields := | OrderInfoXchg_ι_original_amount | OrderInfoXchg_ι_amount | OrderInfoXchg_ι_account | OrderInfoXchg_ι_tip3_wallet_provide | OrderInfoXchg_ι_tip3_wallet_receive | OrderInfoXchg_ι_client_addr | OrderInfoXchg_ι_order_finish_time .
-
-
-(* 2 *) Definition TickTockStateL : list Type := 
+Check XBool.
+(* 2 *) Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
- ( XBool ) : Type ;
-(XBool):Type ] .
-Elpi GeneratePruvendoRecord TickTockStateL TickTockFields . 
- Opaque TickTockStateLRecord . 
+ ( XBool ) : Type ] .
+Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
+ Opaque TickTockLRecord . 
 
-(* 2 *) Definition StateInitStateL : list Type := 
+(* 2 *) Definition StateInitL : list Type := 
  [ ( XMaybe XInteger ) : Type ; 
- ( XMaybe TickTockStateLRecord ) : Type ; 
+ ( XMaybe TickTockLRecord ) : Type ; 
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ] .
-Elpi GeneratePruvendoRecord StateInitStateL StateInitFields . 
- Opaque StateInitStateLRecord . 
+Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
+ Opaque StateInitLRecord . 
 
-(* 2 *) Definition addr_std_fixedStateL : list Type := 
+(* 2 *) Definition addr_std_fixedL : list Type := 
  [ ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ;
-(XBool):Type ] . 
-Elpi GeneratePruvendoRecord addr_std_fixedStateL addr_std_fixedFields . 
- Opaque addr_std_fixedStateLRecord . 
+ ( XInteger256 ) : Type ] . 
+Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
+ Opaque addr_std_fixedLRecord . 
 
-(* 2 *) Definition TonsConfigStateL : list Type := 
+(* 2 *) Definition TonsConfigL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ] .
-Elpi GeneratePruvendoRecord TonsConfigStateL TonsConfigFields . 
- Opaque TonsConfigStateLRecord . 
+Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
+ Opaque TonsConfigLRecord . 
 
-(* 2 *) Definition OrderRetStateL : list Type := 
+(* 2 *) Definition OrderRetL : list Type := 
  [ ( XInteger32 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ] .
-Elpi GeneratePruvendoRecord OrderRetStateL OrderRetFields . 
- Opaque OrderRetStateLRecord . 
+Elpi GeneratePruvendoRecord OrderRetL OrderRetFields . 
+ Opaque OrderRetLRecord . 
 
-(* 2 *) Definition SellArgsStateL : list Type := 
+(* 2 *) Definition SellArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
- ( XAddress ) : Type ;
-(XBool):Type] .
-Elpi GeneratePruvendoRecord SellArgsStateL SellArgsFields . 
- Opaque SellArgsStateLRecord . 
+ ( XAddress ) : Type ] .
+Elpi GeneratePruvendoRecord SellArgsL SellArgsFields . 
+ Opaque SellArgsLRecord . 
 
-(* 2 *) Definition OrderInfoStateL : list Type := 
+(* 2 *) Definition OrderInfoL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
  ( XInteger32 ) : Type ] .
-Elpi GeneratePruvendoRecord OrderInfoStateL OrderInfoFields . 
- Opaque OrderInfoStateLRecord . 
+Elpi GeneratePruvendoRecord OrderInfoL OrderInfoFields . 
+ Opaque OrderInfoLRecord . 
 
-(* 2 *) Definition DetailsInfoStateL : list Type := 
+(* 2 *) Definition DetailsInfoL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ] .
-Elpi GeneratePruvendoRecord DetailsInfoStateL DetailsInfoFields . 
- Opaque DetailsInfoStateLRecord . 
+Elpi GeneratePruvendoRecord DetailsInfoL DetailsInfoFields . 
+ Opaque DetailsInfoLRecord . 
 
-(* 2 *) Definition Tip3ConfigStateL : list Type := 
+(* 2 *) Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( XInteger256 ) : Type ; 
  ( XAddress ) : Type ] .
-Elpi GeneratePruvendoRecord Tip3ConfigStateL Tip3ConfigFields . 
- Opaque Tip3ConfigStateLRecord . 
+Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
+ Opaque Tip3ConfigLRecord . 
 
-(* 2 *) Definition dealerStateL : list Type := 
+(* 2 *) Definition dealerL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger ) : Type ; 
- ( TonsConfigStateLRecord ) : Type ; 
+ ( TonsConfigLRecord ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( XMaybe OrderRetStateLRecord ) : Type ] .
-Elpi GeneratePruvendoRecord dealerStateL dealerFields . 
- Opaque dealerStateLRecord . 
+ ( XMaybe OrderRetLRecord ) : Type ] .
+Elpi GeneratePruvendoRecord dealerL dealerFields . 
+ Opaque dealerLRecord . 
 
-(* 2 *) Definition process_retStateL : list Type := 
+(* 2 *) Definition process_retL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( XMaybe OrderRetStateLRecord ) : Type ] .
-Elpi GeneratePruvendoRecord process_retStateL process_retFields . 
- Opaque process_retStateLRecord . 
+ ( XMaybe OrderRetLRecord ) : Type ] .
+Elpi GeneratePruvendoRecord process_retL process_retFields . 
+ Opaque process_retLRecord . 
 
-(* 2 *) Definition lend_ownership_infoStateL : list Type := 
+(* 2 *) Definition lend_ownership_infoL : list Type := 
  [ ( XAddress ) : Type ; 
  ( TokensType ) : Type ; 
  ( XInteger32 ) : Type ] .
-Elpi GeneratePruvendoRecord lend_ownership_infoStateL lend_ownership_infoFields . 
- Opaque lend_ownership_infoStateLRecord . 
+Elpi GeneratePruvendoRecord lend_ownership_infoL lend_ownership_infoFields . 
+ Opaque lend_ownership_infoLRecord . 
 
-(* 2 *) Definition allowance_infoStateL : list Type := 
+(* 2 *) Definition allowance_infoL : list Type := 
  [ ( XAddress ) : Type ; 
  ( TokensType ) : Type ;
 (XBool):Type] .
-Elpi GeneratePruvendoRecord allowance_infoStateL allowance_infoFields . 
- Opaque allowance_infoStateLRecord . 
+Elpi GeneratePruvendoRecord allowance_infoL allowance_infoFields . 
+ Opaque allowance_infoLRecord . 
 
-(* 2 *) Definition TONTokenWalletStateL : list Type := 
+(* 2 *) Definition TONTokenWalletL : list Type := 
  [ ( XList XInteger8 ) : Type ; 
  ( XList XInteger8 ) : Type ; 
  ( XInteger8 ) : Type ; 
@@ -152,23 +150,23 @@ Elpi GeneratePruvendoRecord allowance_infoStateL allowance_infoFields .
  ( XInteger256 ) : Type ; 
  ( XAddress ) : Type ; 
  ( XMaybe XAddress ) : Type ; 
- ( XMaybe lend_ownership_infoStateLRecord ) : Type ; 
+ ( XMaybe lend_ownership_infoLRecord ) : Type ; 
  ( XCell ) : Type ; 
- ( XMaybe allowance_infoStateLRecord ) : Type ; 
+ ( XMaybe allowance_infoLRecord ) : Type ; 
  ( XInteger8 ) : Type ] .
-Elpi GeneratePruvendoRecord TONTokenWalletStateL TONTokenWalletFields . 
- Opaque TONTokenWalletStateLRecord . 
+Elpi GeneratePruvendoRecord TONTokenWalletL TONTokenWalletFields . 
+ Opaque TONTokenWalletLRecord . 
 
-(* 2 *) Definition OrderInfoXchgStateL : list Type := 
+(* 2 *) Definition OrderInfoXchgL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
- ( addr_std_fixedStateLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
  ( XInteger32 ) : Type ] .
-Elpi GeneratePruvendoRecord OrderInfoXchgStateL OrderInfoXchgFields . 
- Opaque OrderInfoXchgStateLRecord . 
+Elpi GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
+ Opaque OrderInfoXchgLRecord . 
 
 
 

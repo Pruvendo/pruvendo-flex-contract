@@ -29,7 +29,7 @@ Module SelfDeployerPublicInterfaceModule := PublicInterface xt sm.
 
 Module Import SolidityNotationsClass := SolidityNotations xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Import TypesModuleForLedger := ClassTypes xt sm .
+Module Export TypesModuleForLedger := ClassTypes xt sm .
 Import xt. 
 
 

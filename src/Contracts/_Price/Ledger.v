@@ -22,7 +22,7 @@ Local Open Scope xlist_scope.
 
 
 (* 1 *) Inductive MessagesAndEventsFields := | MessagesAndEvents_ι_field_1 | MessagesAndEvents_ι_field_2 | MessagesAndEvents_ι_field_3 | MessagesAndEvents_ι_field_4 .
-(* 1 *) Inductive PriceFields := | Price_ι_price_ | Price_ι_sells_amount_ | Price_ι_buys_amount_ | Price_ι_flex_ | Price_ι_min_amount_ | Price_ι_deals_limit_ | Price_ι_notify_addr_ | Price_ι_workchain_id_ | Price_ι_tons_cfg_ | Price_ι_tip3_code_ | Price_ι_tip3cfg_ .
+(* 1 *) Inductive ContractFields := | price_ | sells_amount_ | buys_amount_ | flex_ | min_amount_ | deals_limit_ | workchain_id_ | tons_cfg_ | tip3_code_ | tip3cfg_ .
 (* 1 *) Inductive LocalStateFieldsI := 
 | LocalState_ι_cell 
 | LocalState_ι_cellIndex 

@@ -91,8 +91,6 @@ Notation " 'TickTock.tick' " := ( ULState  TickTock_ι_tick ) (in custom ULValue
  Notation " 'FlexClient.tons_cfg_' " := ( URState (f:=_Contract) (H:=ContractLEmbeddedType  tons_cfg_ )) (in custom URValue at level 0) : ursus_scope.
  Notation " 'FlexClient.flex_' " := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType  flex_ )) (in custom ULValue at level 0) : ursus_scope.
  Notation " 'FlexClient.flex_' " := ( URState (f:=_Contract) (H:=ContractLEmbeddedType  flex_ )) (in custom URValue at level 0) : ursus_scope.
- Notation " 'FlexClient.notify_addr_' " := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType  notify_addr_) ) (in custom ULValue at level 0) : ursus_scope.
- Notation " 'FlexClient.notify_addr_' " := ( URState (f:=_Contract) (H:=ContractLEmbeddedType  notify_addr_ )) (in custom URValue at level 0) : ursus_scope.
  Notation " 'FlexClient.ext_wallet_code_' " := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType  ext_wallet_code_ )) (in custom ULValue at level 0) : ursus_scope.
  Notation " 'FlexClient.ext_wallet_code_' " := ( URState (f:=_Contract) (H:=ContractLEmbeddedType  ext_wallet_code_ )) (in custom URValue at level 0) : ursus_scope.
  Notation " 'FlexClient.flex_wallet_code_' " := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType  flex_wallet_code_ )) (in custom ULValue at level 0) : ursus_scope.
