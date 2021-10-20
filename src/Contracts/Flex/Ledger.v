@@ -253,7 +253,7 @@ Transparent LedgerLRecord .
 Definition LedgerEmbedded := LedgerLEmbeddedType.
 Definition LedgerLocalState := LocalStateLRecord .
 Definition LocalDefault : LedgerLocalState -> LedgerLocalState := fun _ => default.
-Definition LedgerPruvendoRecord := LedgerLPruvendoRecord .
+Definition LedgerPruvendoRecord := LedgerLPruvendoRecord . 
 Definition LedgerLocalFields := LocalFieldsI.
 Definition Ledger_LocalState := _LocalState.
 Definition Ledger_LocalStateCopy := _LocalStateCopy.
@@ -263,7 +263,6 @@ Definition Ledger := LedgerLRecord.
 Definition LedgerFields := LedgerFieldsI.
 Definition LocalEmbedded := LedgerLEmbeddedType Ledger_LocalState .
 Definition LocalCopyEmbedded := LedgerLEmbeddedType Ledger_LocalStateCopy.
-
 
 Lemma LedgerFieldsDec: forall (m1 m2: LedgerFieldsI), {m1=m2}+{m1<>m2}.
 Proof.
@@ -282,7 +281,6 @@ intros.
 destruct m; reflexivity.
 Defined.
 
-
 Class LocalStateField (X:Type): Type := 
 {
     local_index_embedded:> EmbeddedType LedgerLocalState (XHMap string nat) ;
@@ -290,22 +288,27 @@ Class LocalStateField (X:Type): Type :=
     (* local_state_field: LedgerLocalFields; *)
     (* local_field_type_correct: field_type (PruvendoRecord:=LedgerLocalPruvendoRecord) local_state_field = XHMap (string*nat)%type X; *)
 }. 
-
-
 Definition LedgerVMStateEmbedded := LedgerLEmbeddedType _VMState . 
-Definition LedgerVMStateField := _VMState .
-Definition isoVMState : VMStateLRecord = (field_type (PruvendoRecord:=LedgerPruvendoRecord) LedgerVMStateField)
+Definition Ledger_VMState := _VMState .
+Definition isoVMState : VMStateLRecord = (field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_VMState)
            := eq_refl.
 
 Definition LedgerMessagesEmbedded := LedgerLEmbeddedType _MessagesAndEvents . 
-Definition LedgerMessagesField := _MessagesAndEvents .
+Definition Ledger_MessagesState := _MessagesAndEvents .
+Definition Ledger_MessagesStateCopy := _MessagesAndEventsCopy.
 Definition MessagesAndEvents := MessagesAndEventsLRecord .
-Definition isoMessages : MessagesAndEvents = (field_type (PruvendoRecord:=LedgerPruvendoRecord) LedgerMessagesField)
+Definition isoMessages : MessagesAndEvents = (field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_MessagesState)
            := eq_refl.
 
-         
-Obligation Tactic := idtac.
+Definition Ledger_MainState := _Contract .
+Definition Ledger_MainStateCopy := _ContractCopy.
 
+Definition  VMState_IsCommittedEmbedded := VMStateLEmbeddedType VMState_ι_IsCommitted.
+Definition MainCopySameType : field_type  Ledger_MainState = field_type Ledger_MainStateCopy := eq_refl.
+Definition MessagesCopySameType : field_type  Ledger_MessagesState = field_type Ledger_MessagesStateCopy := eq_refl.
+
+#[local]
+Obligation Tactic := idtac.
 
 
 #[global, program] Instance LocalStateField00000 : LocalStateField XInteger256.

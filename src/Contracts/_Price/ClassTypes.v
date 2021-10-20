@@ -33,15 +33,15 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive dealerFields := | dealer_ι_tip3root_ | dealer_ι_notify_addr_ | dealer_ι_price_ | dealer_ι_deals_limit_ | dealer_ι_tons_cfg_ | dealer_ι_sells_amount_ | dealer_ι_buys_amount_ | dealer_ι_ret_ .
 (* 1 *) Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_buys_amount | process_ret_ι_ret_ .
 (* 1 *) Inductive lend_ownership_infoFields := | lend_ownership_info_ι_owner | lend_ownership_info_ι_lend_balance | lend_ownership_info_ι_lend_finish_time .
-(* 1 *) Inductive allowance_infoFields := | allowance_info_ι_spender | allowance_info_ι_remainingTokens | allowance_info_ι_1 .
+(* 1 *) Inductive allowance_infoFields := | allowance_info_ι_spender | allowance_info_ι_remainingTokens .
 (* 1 *) Inductive TONTokenWalletFields := | TONTokenWallet_ι_name_ | TONTokenWallet_ι_symbol_ | TONTokenWallet_ι_decimals_ | TONTokenWallet_ι_balance_ | TONTokenWallet_ι_root_public_key_ | TONTokenWallet_ι_wallet_public_key_ | TONTokenWallet_ι_root_address_ | TONTokenWallet_ι_owner_address_ | TONTokenWallet_ι_lend_ownership_ | TONTokenWallet_ι_code_ | TONTokenWallet_ι_allowance_ | TONTokenWallet_ι_workchain_id_ .
 (* 1 *) Inductive OrderInfoXchgFields := | OrderInfoXchg_ι_original_amount | OrderInfoXchg_ι_amount | OrderInfoXchg_ι_account | OrderInfoXchg_ι_tip3_wallet_provide | OrderInfoXchg_ι_tip3_wallet_receive | OrderInfoXchg_ι_client_addr | OrderInfoXchg_ι_order_finish_time .
-Check XBool.
+
 (* 2 *) Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
  ( XBool ) : Type ] .
 Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
- Opaque TickTockLRecord . 
+ Opaque TickTockLRecord .
 
 (* 2 *) Definition StateInitL : list Type := 
  [ ( XMaybe XInteger ) : Type ; 
@@ -54,7 +54,7 @@ Elpi GeneratePruvendoRecord StateInitL StateInitFields .
 
 (* 2 *) Definition addr_std_fixedL : list Type := 
  [ ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ] . 
+ ( XInteger256 ) : Type ] .
 Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
  Opaque addr_std_fixedLRecord . 
 
@@ -74,6 +74,13 @@ Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields .
  ( XInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderRetL OrderRetFields . 
  Opaque OrderRetLRecord . 
+
+(* 2 *) Definition process_retL : list Type := 
+ [ ( XInteger128 ) : Type ; 
+ ( XInteger128 ) : Type ; 
+ ( XMaybe OrderRetLRecord ) : Type ] .
+Elpi GeneratePruvendoRecord process_retL process_retFields . 
+ Opaque process_retLRecord . 
 
 (* 2 *) Definition SellArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
@@ -119,56 +126,6 @@ Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields .
  ( XMaybe OrderRetLRecord ) : Type ] .
 Elpi GeneratePruvendoRecord dealerL dealerFields . 
  Opaque dealerLRecord . 
-
-(* 2 *) Definition process_retL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XMaybe OrderRetLRecord ) : Type ] .
-Elpi GeneratePruvendoRecord process_retL process_retFields . 
- Opaque process_retLRecord . 
-
-(* 2 *) Definition lend_ownership_infoL : list Type := 
- [ ( XAddress ) : Type ; 
- ( TokensType ) : Type ; 
- ( XInteger32 ) : Type ] .
-Elpi GeneratePruvendoRecord lend_ownership_infoL lend_ownership_infoFields . 
- Opaque lend_ownership_infoLRecord . 
-
-(* 2 *) Definition allowance_infoL : list Type := 
- [ ( XAddress ) : Type ; 
- ( TokensType ) : Type ;
-(XBool):Type] .
-Elpi GeneratePruvendoRecord allowance_infoL allowance_infoFields . 
- Opaque allowance_infoLRecord . 
-
-(* 2 *) Definition TONTokenWalletL : list Type := 
- [ ( XList XInteger8 ) : Type ; 
- ( XList XInteger8 ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( TokensType ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XAddress ) : Type ; 
- ( XMaybe XAddress ) : Type ; 
- ( XMaybe lend_ownership_infoLRecord ) : Type ; 
- ( XCell ) : Type ; 
- ( XMaybe allowance_infoLRecord ) : Type ; 
- ( XInteger8 ) : Type ] .
-Elpi GeneratePruvendoRecord TONTokenWalletL TONTokenWalletFields . 
- Opaque TONTokenWalletLRecord . 
-
-(* 2 *) Definition OrderInfoXchgL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
- ( XInteger32 ) : Type ] .
-Elpi GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
- Opaque OrderInfoXchgLRecord . 
-
-
 
 
 End ClassTypes .

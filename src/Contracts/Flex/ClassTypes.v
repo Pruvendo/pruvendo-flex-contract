@@ -22,7 +22,7 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 (* 1 *) Inductive anycast_infoFields := | anycast_info_ι_rewrite_pfx | anycast_info_ι_1 .
-(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
+(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock  .
 (* 1 *) Inductive addr_stdFields := | addr_std_ι_kind | addr_std_ι_Anycast | addr_std_ι_workchain_id | addr_std_ι_address .
 (* 1 *) Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
 (* 1 *) Inductive FlexOwnershipInfoFields := | FlexOwnershipInfo_ι_deployer_pubkey | FlexOwnershipInfo_ι_ownership_description | FlexOwnershipInfo_ι_owner_contract .

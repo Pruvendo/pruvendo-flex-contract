@@ -1,47 +1,48 @@
+Require Import FinProof.Common. 
+
 Require Import UMLang.SolidityNotations2.
-Require Import UMLang.SML_NG28.
+Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.tvmNotations.
 
 Require Import Contracts.Price.ClassTypes.
-Require Import Contracts.Price.Ledger .
+Require Import Contracts.Price.Ledger.
 
-Module PriceSpec (xt: XTypesSig) (sm: StateMonadSig).
-Module Export ClassTypesModule := ClassTypes xt sm . 
-Module Export LedgerModule := PriceClass xt sm .
-(* Module Export tvmNotationsModule := tvmNotations xt sm LedgerModule.  *)
+Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
+Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm.
+Module  LedgerModuleForFuncSig := Ledger xt sm .
+Module Export tvmNotationsModule := tvmNotations xt sm LedgerModuleForFuncSig. 
 
-Module Type PriceSpecSig.
+Module Type SpecSig.
 
-Parameter Ф_calc_cost : XInteger128 -> XInteger128 -> UExpression ( XMaybe XInteger128 ) false . 
- Parameter dealer_Ф_make_deal : OrderInfo -> OrderInfo -> UExpression ( XBool # XBool # XInteger128 )%sol false . 
- Parameter Ф_is_active_time : XInteger32 -> UExpression XBool false . 
- Parameter dealer_Ф_extract_active_order : ( XMaybe (XInteger # OrderInfo)%sol ) -> XList OrderInfo -> XInteger128 -> XBool -> UExpression ( ( XMaybe (XInteger # OrderInfo)%sol ) # (XList OrderInfo) # XInteger128 )%sol false . 
- Parameter Price_Ф_processQueue : UExpression PhantomType false . 
- Parameter dealer_Ф_process_queue : XInteger -> XInteger -> UExpression PhantomType false . 
- Parameter Price_Ф_onTip3LendOwnershipMinValue : UExpression XInteger128 false . 
- Parameter Price_Ф_expected_wallet_address : XInteger256 -> XInteger256 -> UExpression XInteger256 false . 
- Parameter Price_Ф_verify_tip3_addr : XAddress -> XInteger256 -> XInteger256 -> UExpression XBool false . 
- Parameter Price_Ф_on_sell_fail : XInteger -> ITONTokenWalletPtr -> UExpression OrderRet false . 
- Parameter Price_Ф_onTip3LendOwnership : XAddress -> XInteger128 -> XInteger32 -> XInteger256 -> XAddress -> XCell -> UExpression OrderRet false . 
- Parameter Price_Ф_buyTip3MinValue : XInteger128 -> UExpression XInteger128 false . 
- Parameter Price_Ф_buyTip3 : XInteger128 -> XAddress -> XInteger32 -> UExpression OrderRet true . 
- Parameter Ф_cancel_order_impl : XList OrderInfo -> addr_std_fixed -> XInteger128 -> XBool -> Grams -> Grams -> Grams -> UExpression ( XList OrderInfo ) false . 
- Parameter Price_Ф_cancelSell : UExpression PhantomType false . 
- Parameter Price_Ф_cancelBuy : UExpression PhantomType false . 
- Parameter Price_Ф_getPrice : UExpression XInteger128 false . 
- Parameter Price_Ф_getMinimumAmount : UExpression XInteger128 false . 
- Parameter Price_Ф_getSellAmount : UExpression XInteger128 false . 
- Parameter Price_Ф_getBuyAmount : UExpression XInteger128 false . 
- Parameter Price_Ф_getDetails : UExpression DetailsInfo false . 
- Parameter Price_Ф_getTonsCfg : UExpression TonsConfig false . 
- Parameter Price_Ф_getSells : UExpression ( XHMap XInteger OrderInfo) false . 
- Parameter Price_Ф_getBuys : UExpression ( XHMap XInteger OrderInfo) false . 
- Parameter Price_Ф__fallback : XCell -> UExpression XInteger false . 
+Parameter calc_cost : URValue XInteger128 false -> URValue XInteger128 false -> UExpression ( XMaybe XInteger128 ) false . 
+ Parameter make_deal : URValue OrderInfoLRecord false -> URValue OrderInfoLRecord false -> UExpression ( XBool # XBool # XInteger128 )%sol false . 
+ Parameter is_active_time : URValue XInteger32 false -> UExpression XBool false . 
+ Parameter extract_active_order : URValue ( XMaybe ( XInteger # OrderInfoLRecord)%sol ) false -> URValue ( XQueue OrderInfoLRecord) false -> URValue XInteger128 false -> URValue XBool false -> UExpression ( XList OrderInfoLRecord ) false . 
+ Parameter process_queue : URValue XInteger false -> URValue XInteger false -> UExpression PhantomType false . 
+ Parameter process_queue_impl : URValue XAddress false -> URValue XAddress (* IFlexNotifyPtr *) false -> URValue XInteger128 false -> URValue XInteger8 false -> URValue TonsConfigLRecord false -> URValue XInteger false -> URValue XInteger false -> URValue XInteger128 false -> URValue ( XQueue OrderInfoLRecord) false -> URValue XInteger128 false -> URValue ( XQueue OrderInfoLRecord) false -> UExpression process_retLRecord false . 
+ Parameter processQueue : UExpression PhantomType false . 
+ Parameter onTip3LendOwnershipMinValue : UExpression XInteger128 false . 
+ Parameter expected_wallet_address : URValue XInteger256 false -> URValue XInteger256 false -> UExpression XInteger256 false . 
+ Parameter verify_tip3_addr : URValue XAddress false -> URValue XInteger256 false -> URValue XInteger256 false -> UExpression XBool false . 
+ Parameter on_sell_fail : URValue XInteger false -> URValue XAddress (* ITONTokenWalletPtr *) false -> URValue XInteger128 false -> UExpression OrderRetLRecord false . 
+ Parameter onTip3LendOwnership : URValue XAddress false -> URValue XInteger128 false -> URValue XInteger32 false -> URValue XInteger256 false -> URValue XAddress false -> URValue XCell false -> UExpression OrderRetLRecord false . 
+ Parameter buyTip3MinValue : URValue XInteger128 false -> UExpression XInteger128 false . 
+ Parameter buyTip3 : URValue XInteger128 false -> URValue XAddress false -> URValue XInteger32 false -> UExpression OrderRetLRecord true . 
+ Parameter cancel_order_impl : URValue ( XQueue OrderInfoLRecord) false -> URValue addr_std_fixedLRecord false -> URValue XInteger128 false -> URValue XBool false -> URValue XInteger (* Grams *) false -> URValue XInteger (* Grams *) false -> URValue XInteger (* Grams *) false -> UExpression ( XQueue OrderInfoLRecord ) false . 
+ Parameter cancelSell : UExpression PhantomType false . 
+ Parameter cancelBuy : UExpression PhantomType false . 
+ Parameter getPrice : UExpression XInteger128 false . 
+ Parameter getMinimumAmount : UExpression XInteger128 false . 
+ Parameter getSellAmount : UExpression XInteger128 false . 
+ Parameter getBuyAmount : UExpression XInteger128 false . 
+ Parameter getDetails : UExpression DetailsInfoLRecord false . 
+ Parameter getTonsCfg : UExpression TonsConfigLRecord false . 
+ Parameter getSells : UExpression ( XHMap XInteger OrderInfoLRecord ) false . 
+ Parameter getBuys : UExpression ( XHMap XInteger OrderInfoLRecord ) false . 
+ Parameter _fallback : URValue XCell false -> URValue XSlice false -> UExpression XInteger false . 
+ Parameter prepare_price_state_init_and_addr : URValue ContractLRecord false -> URValue XCell false -> UExpression ( StateInitLRecord # XInteger256 )%sol false . 
+ 
+End SpecSig.
 
-
-
-End PriceSpecSig.
-
-
-End PriceSpec.  
+End Spec.  
