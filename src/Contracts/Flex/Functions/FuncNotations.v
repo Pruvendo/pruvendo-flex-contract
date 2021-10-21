@@ -141,11 +141,32 @@ Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom ULValue at level
  Notation " 'DXchgPair.deploy_value_' " := ( DXchgPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DXchgPair.deploy_value_' " := ( DXchgPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
  
+(* error_code::cant_override_code 
+error_code::sender_is_not_deployer
+error_code::unexpected_refs_count_in_code
+error_code::cant_override_code 
+error_code::sender_is_not_deployer 
+error_code::unexpected_refs_count_in_code
+error_code::cant_override_code
+error_code::sender_is_not_deployer
+error_code::cant_override_code
+error_code::sender_is_not_deployer
+error_code::sender_is_not_my_owner
+error_code::sender_is_not_my_owner
+error_code::unexpected_refs_count_in_code
+error_code::unexpected_refs_count_in_code
+*)
+
+
+
+
 Module Calls (tc : SpecSig).
 
 Export tc.
 
 Local Open Scope string_scope.
+
+
 
 
 Definition constructor_left {R b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 }

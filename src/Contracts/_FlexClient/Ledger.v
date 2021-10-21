@@ -5,6 +5,13 @@ Require Import FinProof.Types.IsoTypes.
 Require Import FinProof.Common. 
 Require Import FinProof.MonadTransformers21. 
 
+ Require Import Coq.Program.Basics. 
+
+Require Import String. 
+Require Import FinProof.Types.IsoTypes. 
+Require Import FinProof.Common. 
+Require Import FinProof.MonadTransformers21. 
+
 Require Import FinProof.ProgrammingWith.  
 Require Import UMLang.UrsusLib. 
 Require Import UMLang.SolidityNotations2. 
@@ -20,7 +27,7 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-(* 1 *) Inductive MessagesAndEventsFields := | MessagesAndEvents_ι_field_1 | MessagesAndEvents_ι_field_2 | MessagesAndEvents_ι_field_3 | MessagesAndEvents_ι_field_4 .
+(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_SelfDeployer | _EmittedEvents | _MessagesLog.
 (* 1 *) Inductive ContractFields := 
 | owner_ 
 | trading_pair_code_ 
@@ -35,21 +42,21 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive LedgerFieldsI  := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
- 
-Module FlexClientPublicInterfaceModule := PublicInterface xt sm.
+
+Module SelfDeployerPublicInterfaceModule := PublicInterface xt sm.
 
 Module Import SolidityNotationsClass := SolidityNotations xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Import TypesModuleForLedger := ClassTypes xt sm .
+Module Export TypesModuleForLedger := ClassTypes xt sm .
 Import xt. 
 
-(* 2 *) Definition MessagesAndEventsL : list Type := 
- [ ( XInteger ) : Type ; 
- ( XBool ) : Type ; 
- ( XCell ) : Type ; 
- ( ( XHMap XInteger XInteger ) ) : Type ] .
 
+(* 2 *) Definition MessagesAndEventsL : ClassGenerator.list Type := 
+ [ ( XQueue SelfDeployerPublicInterfaceModule.OutgoingMessage ) : Type ; 
+ ( XList TVMEvent ) : Type ; 
+ ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
+  Opaque MessagesAndEventsLRecord .
  
 (* 2 *) Definition ContractL : list Type := 
  [ ( XInteger256 ) : Type ; 
@@ -317,7 +324,7 @@ Transparent LedgerLRecord .
 Definition LedgerEmbedded := LedgerLEmbeddedType.
 Definition LedgerLocalState := LocalStateLRecord .
 Definition LocalDefault : LedgerLocalState -> LedgerLocalState := fun _ => default.
-Definition LedgerPruvendoRecord := LedgerLPruvendoRecord .
+Definition LedgerPruvendoRecord := LedgerLPruvendoRecord . 
 Definition LedgerLocalFields := LocalStateFieldsI.
 Definition Ledger_LocalState := _LocalState.
 Definition Ledger_LocalStateCopy := _LocalStateCopy.
@@ -346,7 +353,6 @@ intros.
 destruct m; reflexivity.
 Defined.
 
-
 Class LocalStateField (X:Type): Type := 
 {
     local_index_embedded:> EmbeddedType LedgerLocalState (XHMap string nat) ;
@@ -354,23 +360,27 @@ Class LocalStateField (X:Type): Type :=
     (* local_state_field: LedgerLocalFields; *)
     (* local_field_type_correct: field_type (PruvendoRecord:=LedgerLocalPruvendoRecord) local_state_field = XHMap (string*nat)%type X; *)
 }. 
-
-
 Definition LedgerVMStateEmbedded := LedgerLEmbeddedType _VMState . 
-Definition LedgerVMStateField := _VMState .
-Definition isoVMState : VMStateLRecord = (field_type (PruvendoRecord:=LedgerPruvendoRecord) LedgerVMStateField)
+Definition Ledger_VMState := _VMState .
+Definition isoVMState : VMStateLRecord = (field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_VMState)
            := eq_refl.
 
 Definition LedgerMessagesEmbedded := LedgerLEmbeddedType _MessagesAndEvents . 
-Definition LedgerMessagesField := _MessagesAndEvents .
+Definition Ledger_MessagesState := _MessagesAndEvents .
+Definition Ledger_MessagesStateCopy := _MessagesAndEventsCopy.
 Definition MessagesAndEvents := MessagesAndEventsLRecord .
-Definition isoMessages : MessagesAndEvents = (field_type (PruvendoRecord:=LedgerPruvendoRecord) LedgerMessagesField)
+Definition isoMessages : MessagesAndEvents = (field_type (PruvendoRecord:=LedgerPruvendoRecord) Ledger_MessagesState)
            := eq_refl.
 
-         
+Definition Ledger_MainState := _Contract .
+Definition Ledger_MainStateCopy := _ContractCopy.
+
+Definition  VMState_IsCommittedEmbedded := VMStateLEmbeddedType VMState_ι_IsCommitted.
+Definition MainCopySameType : field_type  Ledger_MainState = field_type Ledger_MainStateCopy := eq_refl.
+Definition MessagesCopySameType : field_type  Ledger_MessagesState = field_type Ledger_MessagesStateCopy := eq_refl.
+
+#[local]
 Obligation Tactic := idtac.
-
-
 
 #[global, program] Instance LocalStateField00000 : LocalStateField XInteger.
 Next Obligation. 

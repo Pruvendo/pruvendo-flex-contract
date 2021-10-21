@@ -23,7 +23,8 @@ Local Open Scope glist_scope.
 
 
 
-(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock | TickTock_ι_a .
+(* 1 *) Inductive DWrapperFields := | DWrapper_ι_name_ | DWrapper_ι_symbol_ | DWrapper_ι_decimals_ | DWrapper_ι_workchain_id_ | DWrapper_ι_root_public_key_ | DWrapper_ι_total_granted_ | DWrapper_ι_internal_wallet_code_ | DWrapper_ι_owner_address_ | DWrapper_ι_start_balance_ | DWrapper_ι_external_wallet_ .
+(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
 (* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
 (* 1 *) Inductive anycast_infoFields := | anycast_info_ι_rewrite_pfx | anycast_info_ι_a | anycast_info_ι_b .
 (* 1 *) Inductive addr_stdFields := | addr_std_ι_kind | addr_std_ι_Anycast | addr_std_ι_workchain_id | addr_std_ι_address .
@@ -53,10 +54,23 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive PayloadArgsFields := | PayloadArgs_ι_sell | PayloadArgs_ι_amount | PayloadArgs_ι_receive_tip3_wallet | PayloadArgs_ι_client_addr .
 
 
+(* 2 *) Definition DWrapperL : list Type := 
+ [ ( XString ) : Type ; 
+ ( XString ) : Type ; 
+ ( XInteger8 ) : Type ; 
+ ( XInteger8 ) : Type ; 
+ ( XInteger256 ) : Type ; 
+ ( XInteger128 ) : Type ; 
+ ( XMaybe XCell ) : Type ; 
+ ( XMaybe XAddress ) : Type ; 
+ ( XInteger (* Grams *) ) : Type ; 
+ ( XMaybe XAddress (* ITONTokenWalletPtr *) ) : Type ] .
+Elpi GeneratePruvendoRecord DWrapperL DWrapperFields . 
+ Opaque DWrapperLRecord . 
+
 (* 2 *) Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
- ( XBool ) : Type ; 
- ( XInteger ) : Type ] .
+ ( XBool ) : Type ] .
 GeneratePruvendoRecord TickTockL TickTockFields . 
  
 (* 2 *) Definition StateInitL : list Type := 

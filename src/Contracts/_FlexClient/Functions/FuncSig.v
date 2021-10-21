@@ -1,20 +1,19 @@
+Require Import FinProof.Common. 
+
 Require Import UMLang.SolidityNotations2.
 Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.tvmNotations.
 
 Require Import Contracts.FlexClient.ClassTypes.
-Require Import Contracts.FlexClient.Ledger .
+Require Import Contracts.FlexClient.Ledger.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
-Module Export ClassTypesForFuncSig := ClassTypes xt sm .
-Module LedgerModuleForFuncSig := Ledger xt sm .
-Module Export tvmNotationsModule := tvmNotations xt sm LedgerModuleForFuncSig.
-(*ничего не импортируем после этой строчки*)
+Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm.
+Module  LedgerModuleForFuncSig := Ledger xt sm .
+Module Export tvmNotationsModule := tvmNotations xt sm LedgerModuleForFuncSig. 
 
 Module Type SpecSig.
-
-Check TonsConfigLRecord .
 
 Parameter constructor : URValue XInteger256 false -> URValue XCell false -> URValue XCell false -> UExpression PhantomType true . 
  Parameter setFlexCfg : URValue TonsConfigLRecord false -> URValue address_t false -> UExpression PhantomType true . 
