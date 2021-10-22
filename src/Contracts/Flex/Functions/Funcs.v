@@ -117,31 +117,31 @@ Definition constructor
  Defined . 
 
  Definition setPairCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-(*  	 	 refine {{ require_ ( ( ! _pair_code_ ) , {} (* error_code::cant_override_code *) ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , {} (* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+(*  	 	 refine {{ require_ ( ( ! _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} .  *)
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( {} (* ( code . ctos ( ) . srefs ( ) == 2 ) *) , {} (*  error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( {} (* ( code . ctos ( ) . srefs ( ) == 2 ) *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
 
  Definition setXchgPairCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-(*  	 	 refine {{ require_ ( ( ! _xchg_pair_code_ ) , {} (* error_code::cant_override_code *) ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , {} (* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+(*  	 	 refine {{ require_ ( ( ! _xchg_pair_code_ ) , error_code::cant_override_code ) ; { _ } }} .  *)
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( {} (* code . ctos ( ) . srefs ( ) *) == #{2} ) , {} (* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( {} (* code . ctos ( ) . srefs ( ) *) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ _xchg_pair_code_ := {} (* builder ( ) . stslice ( code . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
 
  Definition setPriceCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-(*  	 	 refine {{ require_ ( ( ! _price_code_ ) , {} (* error_code::cant_override_code *) ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , {} (* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+(*  	 	 refine {{ require_ ( ( ! _price_code_ ) , error_code::cant_override_code ) ; { _ } }} .  *)
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _price_code_ ->set ( { code } ) }} . 
  Defined .
 
  Definition setXchgPriceCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-(*  	 	 refine {{ require_ ( ( ! _xchg_price_code_ ) , {} (* error_code::cant_override_code *) ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , {} (* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+(*  	 	 refine {{ require_ ( ( ! _xchg_price_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} .  *)
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _xchg_price_code_ ->set ( { code } ) }} . 
  Defined . 
@@ -149,7 +149,7 @@ Definition constructor
  Definition transfer_INTERNAL ( tto : URValue XAddress false ) ( tons : URValue XInteger128 false ) : UExpression PhantomType true . 
  	 	 refine {{ new 'internal_ownership : ( XBool ) @ "internal_ownership" := {} ; { _ } }} . 
  	 	 refine {{ { internal_ownership } := {} (* !! _owner_address_ *)  ; { _ } }} . 
- 	 	 refine {{ require_ ( ( !{ internal_ownership } && ( {} (* int.sender () *) ==  _owner_address_ -> get_default () ) ) , {} (* error_code::sender_is_not_my_owner *) ) ;{ _ } }} . 
+ 	 	 refine {{ require_ ( ( !{ internal_ownership } && ( {} (* int.sender () *) ==  _owner_address_ -> get_default () ) ) , error_code::message_sender_is_not_my_owner ) ;{ _ } }} . 
  	 	 refine {{ tvm.accept () (* ; { _ } }} . 
  	 	 refine {{ tvm.transfer ( !{tto} , !{tons} , TRUE ) *) }} . 
  Defined . 
@@ -157,7 +157,7 @@ Definition constructor
  Definition transfer_EXTERNAL ( tto : URValue XAddress false ) ( tons : URValue XInteger128 false ) : UExpression PhantomType true . 
  	 	 refine {{ new 'internal_ownership : ( XBool ) @ "internal_ownership" := {} ; { _ } }} . 
  	 	 refine {{ { internal_ownership } := {} (* !! _owner_address_ *)  ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ( ~ !{ internal_ownership } ) && (msg.pubkey () == _deployer_pubkey_ ) ) , {} (* error_code::sender_is_not_my_owner *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ( ~ !{ internal_ownership } ) && (msg.pubkey () == _deployer_pubkey_ ) ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () (* ; { _ } }} . 
  	 	 refine {{ tvm.transfer ( to , tons . get ( ) , true )  *) }} . 
  Defined . 
@@ -179,14 +179,14 @@ Definition constructor
  Defined . 
 
  Definition getSellPriceCode ( tip3_addr : URValue XAddress false ) : UExpression XCell true . 
- 	 	 refine {{ require_ ( ( {} (* _price_code_ - > ctos ( ) . srefs ( ) *) == #{2} ) , {} (* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( {} (* _price_code_ - > ctos ( ) . srefs ( ) *) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ new 'salt : ( XCell ) @ "salt" := {} ; { _ } }} . 
  	 	 refine {{ { salt } := {} (* builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( tip3_addr . sl ( ) ) . endc ( ) *) ; { _ } }} . 
  	 	 refine {{ return_ {} (* builder ( ) . stslice ( price_code_ - > ctos ( ) ) . stref ( !{ salt } ) . endc ( ) *) }} . 
  Defined . 
  
  Definition getXchgPriceCode ( tip3_addr1 : URValue XAddress false ) ( tip3_addr2 : URValue XAddress false ) : UExpression XCell true . 
- 	 	 refine {{ require_ ( ( {} (* price_code_ - > ctos ( ) . srefs ( ) *) == #{2} ) , {} (* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( {} (* price_code_ - > ctos ( ) . srefs ( ) *) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ new 'keys : ( XAddress # XAddress )%sol @ "keys" := {} ; { _ } }} . 
  	 	 refine {{ { keys } := [ { tip3_addr1 } , { tip3_addr2 } ] ; { _ } }} . 
  	 	 refine {{ return_ {} (* builder ( ) . stslice ( xchg_price_code_ - > ctos ( ) ) . stref ( build ( !{ keys } ) . endc ( ) ) . endc ( ) *) }} . 

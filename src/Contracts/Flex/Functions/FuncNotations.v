@@ -141,24 +141,17 @@ Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom ULValue at level
  Notation " 'DXchgPair.deploy_value_' " := ( DXchgPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DXchgPair.deploy_value_' " := ( DXchgPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
  
-(* error_code::cant_override_code 
-error_code::sender_is_not_deployer
-error_code::unexpected_refs_count_in_code
-error_code::cant_override_code 
-error_code::sender_is_not_deployer 
-error_code::unexpected_refs_count_in_code
-error_code::cant_override_code
-error_code::sender_is_not_deployer
-error_code::cant_override_code
-error_code::sender_is_not_deployer
-error_code::sender_is_not_my_owner
-error_code::sender_is_not_my_owner
-error_code::unexpected_refs_count_in_code
-error_code::unexpected_refs_count_in_code
-*)
-
-
-
+Notation " 'error_code::cant_override_code' " := (sInject error_code_ι_cant_override_code) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::sender_is_not_deployer' " := (sInject error_code_ι_sender_is_not_deployer) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::unexpected_refs_count_in_code' " := (sInject error_code_ι_unexpected_refs_count_in_code) (in custom URValue at level 0) : ursus_scope.
+Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code_ι_message_sender_is_not_my_owner) (in custom URValue at level 0) : ursus_scope.
+(* 
+Notation " 'error_code::const3' " := (sInject const3) (in custom URValue at level 0) : ursus_scope.
+Notation " 'error_code::const3' " := (sInject const3) (in custom URValue at level 0) : ursus_scope.
+Notation " 'error_code::const3' " := (sInject const3) (in custom URValue at level 0) : ursus_scope.
+Notation " 'error_code::const3' " := (sInject const3) (in custom URValue at level 0) : ursus_scope.
+Notation " 'error_code::const3' " := (sInject const3) (in custom URValue at level 0) : ursus_scope.
+ *)
 
 Module Calls (tc : SpecSig).
 
