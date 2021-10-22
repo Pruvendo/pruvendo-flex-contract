@@ -85,19 +85,6 @@ Check {{  if m_value then { {_: UEf} } else { {_: UEf} } }}.
 
 About IfElseExpression. *)
 
-Definition onlyOwner {X}: UExpression X true .
-  (* refine {{ if m_value then { {_: UEf} } else { {_: UEf} } ; {_ : UEt} }}. *)
-  refine {{ require_ ( (tvm.pubkey() != 0) && (tvm.pubkey() == msg.pubkey()), 1 ) ; { _ } }} .
-  refine {{ tvm.accept () }}.
-Defined .
- 
-
-
-(* Definition onlyOwner {X b}`{XDefault X} (e:UExpression X b) : UExpression X true .
-   refine {{ require_ ( (tvm.pubkey() != 0) && (tvm.pubkey() == msg.pubkey()), 1 ) ; { _ } }} .
-   refine {{ tvm.accept(); {e} }}.
-Defined . *)
-Transparent TonsConfigLRecord.
 Definition constructor 
 ( deployer_pubkey : URValue XInteger256 false) 
 ( ownership_description : URValue XString false ) 
@@ -113,34 +100,42 @@ Definition constructor
  	 	 refine {{ _ownership_description_ := { ownership_description } ; { _ } }} . 
  	 	 refine {{ _owner_address_ := { owner_address } ; { _ } }} . 
  	 	 refine {{ _deals_limit_ := { deals_limit } ; { _ } }} . 
- 	 	 refine {{ _tons_cfg_ := {} (* [ !{ transfer_tip3 } , !{ return_ownership } , !{ trading_pair_deploy } , !{ order_answer } , !{ process_queue } , !{ send_notify } ] *) }} . 
+ 	 	 refine {{ _tons_cfg_ := [$ 
+                 { transfer_tip3 } ⇒ {TonsConfig_ι_transfer_tip3} ; 
+              { return_ownership } ⇒ {TonsConfig_ι_return_ownership} ;  
+           { trading_pair_deploy } ⇒ {TonsConfig_ι_trading_pair_deploy} ;  
+                  { order_answer } ⇒ {TonsConfig_ι_order_answer} ; 
+                 { process_queue } ⇒ {TonsConfig_ι_process_queue} ;  
+                   { send_notify } ⇒ {TonsConfig_ι_send_notify} 
+                             $] 
+      }} . 
  Defined . 
 
  Definition setPairCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-(*  	 	 refine {{ require_ ( ( ! _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} .  *)
+  	 refine {{ require_ ( ( ~ _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} .
  	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( {} (* ( code . ctos ( ) . srefs ( ) == 2 ) *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( {code} -> to_slice () ) -> refs () == #{2} , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
 
  Definition setXchgPairCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-(*  	 	 refine {{ require_ ( ( ! _xchg_pair_code_ ) , error_code::cant_override_code ) ; { _ } }} .  *)
+ 	 	 refine {{ require_ ( ( ~ _xchg_pair_code_ ) , error_code::cant_override_code ) ; { _ } }} .
  	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( {} (* code . ctos ( ) . srefs ( ) *) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ( {code} -> to_slice () ) -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ _xchg_pair_code_ := {} (* builder ( ) . stslice ( code . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
 
  Definition setPriceCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-(*  	 	 refine {{ require_ ( ( ! _price_code_ ) , error_code::cant_override_code ) ; { _ } }} .  *)
+ 	 	 refine {{ require_ ( ( ~ _price_code_ ) , error_code::cant_override_code ) ; { _ } }} .
  	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _price_code_ ->set ( { code } ) }} . 
  Defined .
 
  Definition setXchgPriceCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-(*  	 	 refine {{ require_ ( ( ! _xchg_price_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} .  *)
+	 	 refine {{ require_ ( ( ~ _xchg_price_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} .
  	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _xchg_price_code_ ->set ( { code } ) }} . 
@@ -179,14 +174,14 @@ Definition constructor
  Defined . 
 
  Definition getSellPriceCode ( tip3_addr : URValue XAddress false ) : UExpression XCell true . 
- 	 	 refine {{ require_ ( ( {} (* _price_code_ - > ctos ( ) . srefs ( ) *) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ( ( ( _price_code_ -> get_default () )  -> to_slice () ) -> refs () ) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ new 'salt : ( XCell ) @ "salt" := {} ; { _ } }} . 
  	 	 refine {{ { salt } := {} (* builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( tip3_addr . sl ( ) ) . endc ( ) *) ; { _ } }} . 
  	 	 refine {{ return_ {} (* builder ( ) . stslice ( price_code_ - > ctos ( ) ) . stref ( !{ salt } ) . endc ( ) *) }} . 
  Defined . 
  
  Definition getXchgPriceCode ( tip3_addr1 : URValue XAddress false ) ( tip3_addr2 : URValue XAddress false ) : UExpression XCell true . 
- 	 	 refine {{ require_ ( ( {} (* price_code_ - > ctos ( ) . srefs ( ) *) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ( ( ( _price_code_ -> get_default () )  -> to_slice () ) -> refs () ) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ new 'keys : ( XAddress # XAddress )%sol @ "keys" := {} ; { _ } }} . 
  	 	 refine {{ { keys } := [ { tip3_addr1 } , { tip3_addr2 } ] ; { _ } }} . 
  	 	 refine {{ return_ {} (* builder ( ) . stslice ( xchg_price_code_ - > ctos ( ) ) . stref ( build ( !{ keys } ) . endc ( ) ) . endc ( ) *) }} . 
@@ -196,11 +191,12 @@ Definition constructor
  	 	 refine {{ new 'myaddr : ( XAddress ) @ "myaddr" := {} ; { _ } }} . 
  	 	 refine {{ { myaddr } := {} (* tvm.myaddr ()  *) ; { _ } }} . 
  	 	 refine {{ new 'pair_data : ( DTradingPairLRecord ) @ "pair_data" := {} ; { _ } }} . 
- 	 	(*  refine {{ [$ !{ myaddr } ⇒ { DTradingPair_ι_flex_addr_ } ; 
-                  !{ tip3_root } ⇒ { DTradingPair_ι_tip3_root_ } ; 
-                  !{ uint128 ( 0 ) } ⇒ { DTradingPair_ι_min_amount_ } ; 
-                  !{ address : : make_std ( int8 ( 0 ) } ⇒ { DTradingPair_ι_notify_addr_ } ; 
-                $] ; { _ } }} .  *)
+ 	 	refine {{ { pair_data } :=
+                      [$ !{ myaddr } ⇒ { DTradingPair_ι_flex_addr_ } ; 
+                       { tip3_root } ⇒ { DTradingPair_ι_tip3_root_ } ; 
+                                   0 ⇒ { DTradingPair_ι_min_amount_ } ; 
+                                  0  ⇒ { DTradingPair_ι_notify_addr_ } 
+                $] ; { _ } }} .
  	 	 refine {{ new 'std_addr : ( StateInitLRecord ) @ "std_addr" := {} ; { _ } }} . 
  	 	 refine {{ { std_addr } := {} (* prepare_trading_pair_state_init_and_addr ( !{ pair_data } , *pair_code_ ) . second *) ; { _ } }} . 
  	 	 refine {{ new 'workchain_id : ( addr_stdLRecord ) @ "workchain_id" := {} ; { _ } }} . 
@@ -210,14 +206,15 @@ Definition constructor
  
  Definition getXchgTradingPair ( tip3_major_root : URValue XAddress false ) ( tip3_minor_root : URValue XAddress false ) : UExpression XAddress false . 
  	 	 refine {{ new 'myaddr : ( XAddress ) @ "myaddr" := {} ; { _ } }} . 
- 	 	 refine {{ { myaddr } := {} (* tvm.myaddr () *) ; { _ } }} . 
- 	 	 refine {{ new 'pair_data : ( DXchgPairLRecord ) @ "pair_data" := {} ; { _ } }} . 
-(*  	 	 refine {{ [$ !{ myaddr } ⇒ { DXchgPair_ι_flex_addr_ } ; 
-                  !{ tip3_major_root } ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
-                  !{ tip3_minor_root } ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
-                  !{ uint128 ( 0 ) } ⇒ { DXchgPair_ι_min_amount_ } ; 
-                  !{ address : : make_std ( int8 ( 0 ) } ⇒ { DXchgPair_ι_notify_addr_ } ; 
-               $] ; { _ } }} . *) 
+ 	 	 refine {{ { myaddr } := tvm.address () ; { _ } }} . 
+ 	 	 refine {{ new 'pair_data : ( DXchgPairLRecord ) @ "pair_data" := {} ; { _ } }} .
+     refine {{ {pair_data} := 
+                       [$  !{ myaddr } ⇒ { DXchgPair_ι_flex_addr_ } ;
+                   { tip3_major_root } ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
+                   { tip3_minor_root } ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
+                                     0 ⇒ { DXchgPair_ι_min_amount_ } ; 
+                                     0 ⇒ { DXchgPair_ι_notify_addr_ }  
+               $] ; { _ } }} . 
  	 	 refine {{ new 'std_addr : ( StateInitLRecord ) @ "std_addr" := {} ; { _ } }} . 
  	 	 refine {{ { std_addr } := {} (* prepare_xchg_pair_state_init_and_addr ( !{ pair_data } , *xchg_pair_code_ ) . second *) ; { _ } }} . 
  	 	 refine {{ new 'workchain_id : ( addr_stdLRecord ) @ "workchain_id" := {} ; { _ } }} . 
@@ -230,7 +227,9 @@ Definition constructor
  Defined .
 
  Definition getOwnershipInfo : UExpression FlexOwnershipInfoLRecord false . 
- 	 	 refine {{ return_ {} (* [ _deployer_pubkey_ , _ownership_description_ , _owner_address_ ] *) }} . 
+ 	 	 refine {{ return_ [$ _deployer_pubkey_  ⇒ {FlexOwnershipInfo_ι_deployer_pubkey} ; 
+                          _ownership_description_  ⇒ {FlexOwnershipInfo_ι_ownership_description} ; 
+                          _owner_address_  ⇒ {FlexOwnershipInfo_ι_owner_contract} $] }} . 
  Defined . 
  
  Definition _fallback ( msg : URValue XCell false ) ( msg_body : URValue XSlice false ) : UExpression XInteger false . 
@@ -245,7 +244,11 @@ Definition constructor
  	 	 refine {{ new 'flex_data_cl : ( XCell ) @ "flex_data_cl" := {} ; { _ } }} . 
  	 	 refine {{ { flex_data_cl } := {} (* prepare_persistent_data ( flex_replay_protection_t : : init ( ) , flex_data ) *) ; { _ } }} . 
  	 	 refine {{ new 'flex_init : ( StateInitLRecord ) @ "flex_init" := {} ; { _ } }} . 
-(*  	 	 refine {{ { flex_init } := NEW { { } , { } , flex_code , flex_data_cl , { } } ; { _ } }} . *) 	 	 
+ 	 	 refine {{ { flex_init } := [$ {} ⇒ {StateInit_ι_split_depth} ; 
+                                   {} ⇒ {StateInit_ι_special} ;
+                            (!{flex_code}) -> set ()  ⇒ {StateInit_ι_code} ; 
+                         ( !{flex_data_cl}) -> set () ⇒ {StateInit_ι_data} ;
+                                   {} ⇒ {StateInit_ι_library} $] ; { _ } }} . 	 	 
      refine {{ new 'flex_init_cl : ( XCell ) @ "flex_init_cl" := {} ; { _ } }} . 
  	 	 refine {{ { flex_init_cl } := {} (* build ( !{ flex_init } ) . make_cell ( ) *) ; { _ } }} . 
  	 	 refine {{ return_ [ !{ flex_init } , {} (* tvm.hash ( !{ flex_init_cl } ) *) ] }} . 

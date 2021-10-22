@@ -8,7 +8,7 @@ Require Import UrsusStdLib.stdFuncNotations.
 Require Import UrsusTVM.tvmFunc.
 Require Import UrsusTVM.tvmNotations.
 Require Import FinProof.ProgrammingWith.  
-Require Import UMLang.ClassGenerator.ClassGenerator.
+Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
@@ -27,8 +27,8 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
 (* 1 *) Inductive FlexOwnershipInfoFields := | FlexOwnershipInfo_ι_deployer_pubkey | FlexOwnershipInfo_ι_ownership_description | FlexOwnershipInfo_ι_owner_contract .
 (* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
-(* 1 *) Inductive DTradingPairFields := | DTradingPair_ι_flex_addr_ | DTradingPair_ι_tip3_root_ | DTradingPair_ι_deploy_value_ .
-(* 1 *) Inductive DXchgPairFields := | DXchgPair_ι_flex_addr_ | DXchgPair_ι_tip3_major_root_ | DXchgPair_ι_tip3_minor_root_ | DXchgPair_ι_deploy_value_ .
+(* 1 *) Inductive DTradingPairFields := | DTradingPair_ι_flex_addr_ | DTradingPair_ι_tip3_root_ | DTradingPair_ι_min_amount_ | DTradingPair_ι_notify_addr_ .
+(* 1 *) Inductive DXchgPairFields := | DXchgPair_ι_flex_addr_ | DXchgPair_ι_tip3_major_root_ | DXchgPair_ι_tip3_minor_root_ | DXchgPair_ι_min_amount_ | DXchgPair_ι_notify_addr_  .
  
 (* 2 *) Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
@@ -80,7 +80,8 @@ Elpi GeneratePruvendoRecord StateInitL StateInitFields .
 (* 2 *) Definition DTradingPairL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
- ( XInteger128 ) : Type ] .
+ ( XInteger128 ) : Type ;
+ ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord DTradingPairL DTradingPairFields . 
  Opaque DTradingPairLRecord . 
 
@@ -88,7 +89,8 @@ Elpi GeneratePruvendoRecord DTradingPairL DTradingPairFields .
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
- ( XInteger128 ) : Type ] .
+ ( XInteger128 ) : Type ;
+ ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord DXchgPairL DXchgPairFields . 
  Opaque DXchgPairLRecord . 
 

@@ -8,12 +8,12 @@ Require Import FinProof.MonadTransformers21.
 Require Import FinProof.ProgrammingWith.  
 Require Import UMLang.UrsusLib. 
 Require Import UMLang.SolidityNotations2. 
-Require Import UMLang.ClassGenerator.ClassGenerator.
 Require Import UrsusTVM.tvmFunc. 
 
 Require Import Project.CommonTypes. 
 Require Import Flex.ClassTypes.
 Require Import Flex.Interface.
+Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
@@ -33,7 +33,7 @@ Module Export TypesModuleForLedger := ClassTypes xt sm .
 Import xt. 
 
 
-(* 2 *) Definition MessagesAndEventsL : ClassGenerator.list Type := 
+(* 2 *) Definition MessagesAndEventsL : list Type := 
  [ ( XQueue SelfDeployerPublicInterfaceModule.OutgoingMessage ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .

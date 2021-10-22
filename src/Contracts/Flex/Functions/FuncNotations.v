@@ -130,16 +130,21 @@ Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom ULValue at level
  Notation " 'DTradingPair.flex_addr_' " := ( DTradingPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'DTradingPair.tip3_root_' " := ( DTradingPair_ι_tip3_root_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DTradingPair.tip3_root_' " := ( DTradingPair_ι_tip3_root_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DTradingPair.deploy_value_' " := ( DTradingPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DTradingPair.deploy_value_' " := ( DTradingPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'DTradingPair.min_amount_' " := ( DTradingPair_ι_min_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'DTradingPair.min_amount_' " := ( DTradingPair_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'DTradingPair.notify_addr_' " := ( DXchgPair_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'DTradingPair.notify_addr_' " := ( DXchgPair_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
+
  Notation " 'DXchgPair.flex_addr_' " := ( DXchgPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DXchgPair.flex_addr_' " := ( DXchgPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'DXchgPair.tip3_major_root_' " := ( DXchgPair_ι_tip3_major_root_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DXchgPair.tip3_major_root_' " := ( DXchgPair_ι_tip3_major_root_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'DXchgPair.tip3_minor_root_' " := ( DXchgPair_ι_tip3_minor_root_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DXchgPair.tip3_minor_root_' " := ( DXchgPair_ι_tip3_minor_root_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.deploy_value_' " := ( DXchgPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.deploy_value_' " := ( DXchgPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'DXchgPair.min_amount_' " := ( DXchgPair_ι_min_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'DXchgPair.min_amount_' " := ( DXchgPair_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'DXchgPair.notify_addr_' " := ( DXchgPair_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'DXchgPair.notify_addr_' " := ( DXchgPair_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
  
 Notation " 'error_code::cant_override_code' " := (sInject error_code_ι_cant_override_code) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::sender_is_not_deployer' " := (sInject error_code_ι_sender_is_not_deployer) (in custom URValue at level 0) : ursus_scope. 
