@@ -1,0 +1,83 @@
+{
+  "ABI version": 2,
+  "version": "2.2.0",
+  "header": [
+    "pubkey",
+    "time",
+    "expire"
+  ],
+  "functions": [
+  {
+    "name": "constructor",
+    "inputs": [
+    { "name":"owner_key", "type":"uint256" },
+    { "name":"token_root", "type":"address" },
+    { "name":"votes_price", "type":"uint128" },
+    { "name":"grams", "type":"uint128" },
+    { "name":"gramsToWallet", "type":"uint128" }
+    ],
+    "outputs": [
+    ]
+  },
+  {
+    "name": "buyVotes",
+    "inputs": [
+    { "name":"grams", "type":"uint128" }
+    ],
+    "outputs": [
+    ]
+  },
+  {
+    "name": "getOwnerKey",
+    "inputs": [
+    ],
+    "outputs": [
+    { "name":"value0", "type":"uint256" }
+    ]
+  },
+  {
+    "name": "getTokenRoot",
+    "inputs": [
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ]
+  },
+  {
+    "name": "getMyWallet",
+    "inputs": [
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ]
+  },
+  {
+    "name": "getVotesPrice",
+    "inputs": [
+    ],
+    "outputs": [
+    { "name":"value0", "type":"uint128" }
+    ]
+  },
+  {
+    "name": "getVotes",
+    "inputs": [
+    ],
+    "outputs": [
+    { "name":"value0", "type":"uint128" }
+    ]
+  }
+  ],
+  "fields": [
+    { "name":"__uninitialized", "type":"bool" },
+    { "name":"__await_next_id", "type":"uint32" },
+    { "name":"__await_dict", "type":"optional(cell)" },
+    { "name":"votes_price_", "type":"uint128" },
+    { "name":"votes_", "type":"uint128" },
+    { "name":"owner_key_", "type":"uint256" },
+    { "name":"token_root_", "type":"address" },
+    { "name":"my_wallet_", "type":"optional(address)" }
+  ],
+  "events": [
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "ABI version": 2,
+  "version": "2.2.0",
+  "header": [
+    "time",
+    "expire"
+  ],
+  "functions": [
+  {
+    "name": "constructor",
+    "inputs": [
+    ],
+    "outputs": [
+    ],
+    "id": "0x1"
+  },
+  {
+    "name": "start",
+    "inputs": [
+    ],
+    "outputs": [
+    ],
+    "id": "0x2"
+  }
+  ],
+  "fields": [
+    { "name":"__uninitialized", "type":"bool" },
+    { "name":"__await_next_id", "type":"uint32" },
+    { "name":"__await_dict", "type":"optional(cell)" },
+    { "name":"client1_addr_", "type":"optional(address)" },
+    { "components":[
+      { "name":"dict_", "type":"cell" }
+    ], "name":"flex_wallet_code_", "type":"tuple" },
+    { "components":[
+      { "name":"dict_", "type":"cell" }
+    ], "name":"flex_wrapper_code_", "type":"tuple" },
+    { "components":[
+      { "name":"dict_", "type":"cell" }
+    ], "name":"ext_wallet_code_", "type":"tuple" },
+    { "components":[
+      { "name":"dict_", "type":"cell" }
+    ], "name":"ext_troot_code_", "type":"tuple" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"nuka_root_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"funtics_root_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"nuka_flex_wrapper_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"funtics_flex_wrapper_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"nuka_wrapper_ext_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"funtics_wrapper_ext_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"nuka1_ext_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"nuka2_ext_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"funtics1_ext_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"funtics2_ext_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"flex_nuka1_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"flex_nuka2_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"flex_funtics1_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"flex_funtics2_wallet_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"flex_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"nuka_fun_pair_", "type":"optional(tuple)" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"price_ptr_", "type":"optional(tuple)" }
+  ],
+  "events": [
+  ]
+}
