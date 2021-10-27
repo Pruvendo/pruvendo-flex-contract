@@ -147,7 +147,7 @@ Definition constructor ( pubkey : URValue ( XInteger256 ) false ) ( trading_pair
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} .
  	 	 refine {{ new 'pair_data : ( XchgPairLRecord ) @ "pair_data" :=  
-               	 	 [$ (* _flex_  ⇒ { XchgPair_ι_flex_addr_ } ; *) 
+               	 	 [$  _flex_  ⇒ { XchgPair_ι_flex_addr_ } ; 
                       { tip3_major_root } ⇒ { XchgPair_ι_tip3_major_root_ } ; 
                       { tip3_minor_root } ⇒ { XchgPair_ι_tip3_minor_root_ } ; 
                       0 ⇒ { XchgPair_ι_notify_addr_ }
@@ -190,8 +190,8 @@ Definition constructor ( pubkey : URValue ( XInteger256 ) false ) ( trading_pair
  	 	 refine {{ new 'deploy_init_cl : ( XCell ) @ "deploy_init_cl" := {} ; { _ } }} . 
  	 	 refine {{ { deploy_init_cl } := {} (* build ( { state_init } ) . endc ( ) *) ; { _ } }} . 
  	 	 refine {{ new 'sell_args : ( SellArgsLRecord ) @ "sell_args" :=
-                   [$ {amount} ⇒ {SellArgs_ι_amount} 
-           (*  {receive_wallet} ⇒ { SellArgs_ι_receive_wallet } *) 
+                   [$ {amount} ⇒ {SellArgs_ι_amount} ;
+             {receive_wallet} ⇒ { SellArgs_ι_receive_wallet }  
                     $] ; { _ } }} .
  	 	 refine {{ new 'payload : ( XCell ) @ "payload" := {} ; { _ } }} . 
  	 	 refine {{ { payload } := {} (* build ( { sell_args } ) . endc ( ) *) ; { _ } }} . 
@@ -432,7 +432,7 @@ Definition preparePrice ( price : URValue ( XInteger128 ) false ) ( min_amount :
                	 	 [$ { price } ⇒ { DPrice_ι_price_ } ; 
                0 ⇒ { DPrice_ι_sells_amount_ } ; 
                0 ⇒ { DPrice_ι_buys_amount_ } ; 
-(*  _flex_  ⇒ { DPrice_ι_flex_ } ; *)
+  _flex_  ⇒ { DPrice_ι_flex_ } ; 
                { min_amount } ⇒ { DPrice_ι_min_amount_ } ; 
                { deals_limit } ⇒ { DPrice_ι_deals_limit_ } ; 
                { notify_addr } ⇒ { DPrice_ι_notify_addr_ } ; 
@@ -469,7 +469,7 @@ Definition preparePrice ( price : URValue ( XInteger128 ) false ) ( min_amount :
                                      ⇒ { DPriceXchg_ι_price_ } ;
                0 ⇒ { DPriceXchg_ι_sells_amount_ } ;
                0 ⇒ { DPriceXchg_ι_buys_amount_ }  ;
-(*  _flex_ ⇒ { DPriceXchg_ι_flex_ } ; *)
+  _flex_ ⇒ { DPriceXchg_ι_flex_ } ;
                { min_amount } ⇒ { DPriceXchg_ι_min_amount_ } ;
                { deals_limit } ⇒ { DPriceXchg_ι_deals_limit_ } ; 
                { notify_addr } ⇒ { DPriceXchg_ι_notify_addr_ } ; 

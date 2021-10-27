@@ -127,7 +127,7 @@ GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields .
 
 (* 2 *) Definition SellArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
+ ( XAddress (* addr_std_fixedLRecord *) ) : Type ; 
  ( XInteger ) : Type ] .
 GeneratePruvendoRecord SellArgsL SellArgsFields . 
 
@@ -251,7 +251,7 @@ GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields .
  [ ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
+ ( XAddress (* addr_std_fixedLRecord *) ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( IFlexNotifyPtr ) : Type ; 
@@ -274,7 +274,7 @@ GeneratePruvendoRecord RationalPriceL RationalPriceFields .
  [ ( RationalPriceLRecord ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
+ ( XAddress (* addr_std_fixedLRecord *) ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( IFlexNotifyPtr ) : Type ; 
