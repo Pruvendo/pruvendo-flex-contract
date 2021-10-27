@@ -8,7 +8,7 @@ Require Import UrsusStdLib.stdFuncNotations.
 Require Import UrsusTVM.tvmFunc.
 Require Import UrsusTVM.tvmNotations.
 Require Import FinProof.ProgrammingWith.  
-Require Import UMLang.ClassGenerator.ClassGenerator.
+Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
@@ -21,7 +21,7 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-
+Locate XBool.
 
 (* 1 *) Inductive DWrapperFields := | DWrapper_ι_name_ | DWrapper_ι_symbol_ | DWrapper_ι_decimals_ | DWrapper_ι_workchain_id_ | DWrapper_ι_root_public_key_ | DWrapper_ι_total_granted_ | DWrapper_ι_internal_wallet_code_ | DWrapper_ι_owner_address_ | DWrapper_ι_start_balance_ | DWrapper_ι_external_wallet_ .
 (* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
@@ -39,20 +39,35 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive FlexXchgArgsFields := | FlexXchgArgs_ι_sell | FlexXchgArgs_ι_price_num | FlexXchgArgs_ι_price_denum | FlexXchgArgs_ι_amount | FlexXchgArgs_ι_lend_amount | FlexXchgArgs_ι_lend_finish_time | FlexXchgArgs_ι_min_amount | FlexXchgArgs_ι_deals_limit | FlexXchgArgs_ι_tons_value | FlexXchgArgs_ι_xchg_price_code | FlexXchgArgs_ι_addrs | FlexXchgArgs_ι_tip3_code | FlexXchgArgs_ι_tip3cfgs .
 (* 1 *) Inductive FlexCancelArgsFields := | FlexCancelArgs_ι_price | FlexCancelArgs_ι_min_amount | FlexCancelArgs_ι_deals_limit | FlexCancelArgs_ι_value | FlexCancelArgs_ι_price_code | FlexCancelArgs_ι_tip3_code | FlexCancelArgs_ι_tip3cfg .
 (* 1 *) Inductive FlexXchgCancelArgsFields := | FlexXchgCancelArgs_ι_sell | FlexXchgCancelArgs_ι_price_num | FlexXchgCancelArgs_ι_price_denum | FlexXchgCancelArgs_ι_min_amount | FlexXchgCancelArgs_ι_deals_limit | FlexXchgCancelArgs_ι_value | FlexXchgCancelArgs_ι_xchg_price_code | FlexXchgCancelArgs_ι_tip3_code | FlexXchgCancelArgs_ι_tip3cfgs .
-(* 1 *) Inductive XchgPairFields := | XchgPair_ι_flex_addr_ | XchgPair_ι_tip3_major_root_ | XchgPair_ι_tip3_minor_root_ | XchgPair_ι_deploy_value_ .
+(* 1 *) Inductive XchgPairFields := | XchgPair_ι_flex_addr_ 
+                                    | XchgPair_ι_tip3_major_root_ 
+                                    | XchgPair_ι_tip3_minor_root_ 
+                                    | XchgPair_ι_notify_addr_ .
 (* 1 *) Inductive OrderInfoFields := | OrderInfo_ι_original_amount | OrderInfo_ι_amount | OrderInfo_ι_account | OrderInfo_ι_tip3_wallet | OrderInfo_ι_client_addr | OrderInfo_ι_order_finish_time .
 (* 1 *) Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address .
+
 (* 1 *) Inductive DPriceFields := | DPrice_ι_price_ | DPrice_ι_sells_amount_ | DPrice_ι_buys_amount_ | DPrice_ι_flex_ 
                                   | DPrice_ι_min_amount_ | DPrice_ι_deals_limit_ | DPrice_ι_notify_addr_ 
-                                  | DPrice_ι_workchain_id_ | DPrice_ι_tons_cfg_ | DPrice_ι_tip3_code_ | DPrice_ι_tip3cfg_ .
+                                  | DPrice_ι_workchain_id_ | DPrice_ι_tons_cfg_ | DPrice_ι_tip3_code_ | DPrice_ι_tip3cfg_ 
+                                  | DPrice_ι_sells_ | DPrice_ι_buys_ .
+
 (* 1 *) Inductive RationalPriceFields := | RationalPrice_ι_num | RationalPrice_ι_denum | RationalPrice_ι_a .
 (* 1 *) Inductive DPriceXchgFields := | DPriceXchg_ι_price_ | DPriceXchg_ι_sells_amount_ | DPriceXchg_ι_buys_amount_ 
                                       | DPriceXchg_ι_flex_ | DPriceXchg_ι_min_amount_ | DPriceXchg_ι_deals_limit_ 
                                       | DPriceXchg_ι_notify_addr_ | DPriceXchg_ι_workchain_id_ | DPriceXchg_ι_tons_cfg_ 
-                                      | DPriceXchg_ι_tip3_code_ | DPriceXchg_ι_major_tip3cfg_ | DPriceXchg_ι_minor_tip3cfg_ .
-(* 1 *) Inductive TradingPairFields := | TradingPair_ι_flex_addr_ | TradingPair_ι_tip3_root_ | TradingPair_ι_deploy_value_ .
+                                      | DPriceXchg_ι_tip3_code_ | DPriceXchg_ι_major_tip3cfg_ | DPriceXchg_ι_minor_tip3cfg_ 
+                                      | DPriceXchg_ι_sells_ | DPriceXchg_ι_buys_ .
+(* 1 *) Inductive TradingPairFields := | TradingPair_ι_flex_addr_ | TradingPair_ι_tip3_root_ | TradingPair_ι_deploy_value_ 
+                                       | TradingPair_ι_min_trade_amount_ | TradingPair_ι_notify_addr_ .
 (* 1 *) Inductive PayloadArgsFields := | PayloadArgs_ι_sell | PayloadArgs_ι_amount | PayloadArgs_ι_receive_tip3_wallet | PayloadArgs_ι_client_addr .
 
+(* 1 *) Inductive OrderInfoXchgFields := | OrderInfoXchg_ι_original_amount 
+                                         | OrderInfoXchg_ι_amount 
+                                         | OrderInfoXchg_ι_account 
+                                         | OrderInfoXchg_ι_tip3_wallet_provide 
+                                         | OrderInfoXchg_ι_tip3_wallet_receive 
+                                         | OrderInfoXchg_ι_client_addr
+                                         | OrderInfoXchg_ι_order_finish_time .
 
 (* 2 *) Definition DWrapperL : list Type := 
  [ ( XString ) : Type ; 
@@ -100,6 +115,16 @@ GeneratePruvendoRecord addr_stdL addr_stdFields .
  ( XInteger ) : Type ] .
 GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
  
+(* 2 *) Definition OrderInfoXchgL : list Type := 
+ [ ( XInteger128 ) : Type ; 
+ ( XInteger128 ) : Type ; 
+ ( XInteger128 ) : Type ;
+ ( addr_std_fixedLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ;
+ ( XInteger32 ) : Type ] .
+GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
+
 (* 2 *) Definition SellArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
@@ -233,7 +258,9 @@ GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields .
  ( XInteger8 ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 
- ( Tip3ConfigLRecord ) : Type ] .
+ ( Tip3ConfigLRecord ) : Type ;
+ ( XMaybe OrderInfoLRecord ) : Type ; 
+ ( XMaybe OrderInfoLRecord ) : Type ] .
 Opaque Tip3ConfigLRecord.
 GeneratePruvendoRecord DPriceL DPriceFields . 
  
@@ -255,13 +282,17 @@ GeneratePruvendoRecord RationalPriceL RationalPriceFields .
  ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 
- ( Tip3ConfigLRecord ) : Type ] .
+ ( Tip3ConfigLRecord ) : Type ;
+ ( XQueue OrderInfoXchgLRecord ) : Type ; 
+ ( XQueue OrderInfoXchgLRecord ) : Type ] .
 GeneratePruvendoRecord DPriceXchgL DPriceXchgFields . 
  
 (* 2 *) Definition TradingPairL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
- ( XInteger128 ) : Type ] .
+ ( XInteger128 ) : Type ;
+ ( XAddress ) : Type ;
+ ( XAddress ) : Type ] .
 GeneratePruvendoRecord TradingPairL TradingPairFields . 
  
 (* 2 *) Definition PayloadArgsL : list Type := 

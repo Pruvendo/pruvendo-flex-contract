@@ -189,7 +189,7 @@ Definition constructor
  
  Definition getSellTradingPair ( tip3_root : URValue XAddress false ) : UExpression XAddress false . 
  	 	 refine {{ new 'myaddr : ( XAddress ) @ "myaddr" := {} ; { _ } }} . 
- 	 	 refine {{ { myaddr } := {} (* tvm.myaddr ()  *) ; { _ } }} . 
+ 	 	 refine {{ { myaddr } := tvm.address () ; { _ } }} . 
  	 	 refine {{ new 'pair_data : ( DTradingPairLRecord ) @ "pair_data" := {} ; { _ } }} . 
  	 	refine {{ { pair_data } :=
                       [$ !{ myaddr } ⇒ { DTradingPair_ι_flex_addr_ } ; 
