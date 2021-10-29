@@ -471,6 +471,7 @@ Local Open Scope string_scope.
  , receive_wallet custom URValue at level 0 
  , tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
+
  Definition deployPriceWithBuy_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( price : URValue ( XInteger128 ) a1 ) ( amount : URValue ( XInteger128 ) a2 ) ( order_finish_time : URValue ( XInteger32 ) a3 ) ( min_amount : URValue ( XInteger128 ) a4 ) ( deals_limit : URValue ( XInteger8 ) a5 ) ( deploy_value : URValue ( XInteger128 ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( my_tip3_addr : URValue ( address_t ) a8 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address_t ) a10 ) : URValue XAddress true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ10 ) deployPriceWithBuy 
  price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr ) . 
@@ -663,7 +664,7 @@ Local Open Scope string_scope.
  msg msg_body ) 
  (in custom URValue at level 0 , msg custom URValue at level 0 
  , msg_body custom URValue at level 0 ) : ursus_scope . 
- Definition preparePrice_right { a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( XInteger128 ) a1 ) ( min_amount : URValue ( XInteger128 ) a2 ) ( deals_limit : URValue ( XInteger8 ) a3 ) ( tip3_code : URValue ( XCell ) a4 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( price_code : URValue ( XCell ) a6 ) ( notify_addr : URValue ( address_t ) a7 ) : URValue ( StateInitLRecord # XAddress # XInteger256 )%sol ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition preparePrice_right { a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( XInteger128 ) a1 ) ( min_amount : URValue ( XInteger128 ) a2 ) ( deals_limit : URValue ( XInteger8 ) a3 ) ( tip3_code : URValue ( XCell ) a4 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( price_code : URValue ( XCell ) a6 ) ( notify_addr : URValue ( address_t ) a7 ) : URValue ( StateInitLRecord # XAddress # XInteger256 )%sol ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ):= 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) preparePrice 
  price min_amount deals_limit tip3_code tip3cfg price_code notify_addr ) . 
  
