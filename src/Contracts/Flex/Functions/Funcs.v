@@ -76,445 +76,223 @@ Notation " |{ e }| " := e (in custom URValue at level 0,
                            e custom ULValue ,  only parsing ) : ursus_scope.
 
 
-(* Set Typeclasses Debug.
-Check || 1 ||.
-About IfElseExpression.
-Arguments IfElseExpression {_} {_} {_} {_} {_} {_} {_} {_} {R} (* & {_} *) {B} {bb} {xb} {yb} & {_} {_} _ _ _ .
-Set Typeclasses Iterative Deepening.
-Check {{  if m_value then { {_: UEf} } else { {_: UEf} } }}. 
-
-About IfElseExpression. *)
-
-Definition constructor 
-( deployer_pubkey : URValue XInteger256 false) 
-( ownership_description : URValue XString false ) 
-( owner_address : URValue ( XMaybe XAddress ) false ) 
-( transfer_tip3 : URValue ( XInteger128) false  ) 
-( return_ownership : URValue ( XInteger128) false  ) 
-( trading_pair_deploy : URValue ( XInteger128) false  ) 
-( order_answer : URValue ( XInteger128) false  ) 
-( process_queue : URValue ( XInteger128) false  ) 
-( send_notify : URValue ( XInteger128) false  ) 
-( deals_limit : URValue ( XInteger8) false  ) : UExpression PhantomType false . 
+Definition constructor ( deployer_pubkey : URValue ( XInteger256 ) false ) ( ownership_description : URValue ( XString ) false ) ( owner_address : URValue ( XMaybe XAddress ) false ) ( tons_cfg : URValue ( TonsConfigLRecord ) false ) ( deals_limit : URValue ( XInteger8 ) false ) ( listing_cfg : URValue ( ListingConfigLRecord ) false ) : UExpression PhantomType true . 
  	 	 refine {{ _deployer_pubkey_ := { deployer_pubkey } ; { _ } }} . 
  	 	 refine {{ _ownership_description_ := { ownership_description } ; { _ } }} . 
  	 	 refine {{ _owner_address_ := { owner_address } ; { _ } }} . 
  	 	 refine {{ _deals_limit_ := { deals_limit } ; { _ } }} . 
- 	 	 refine {{ _tons_cfg_ := [$ 
-                 { transfer_tip3 } ⇒ {TonsConfig_ι_transfer_tip3} ; 
-              { return_ownership } ⇒ {TonsConfig_ι_return_ownership} ;  
-           { trading_pair_deploy } ⇒ {TonsConfig_ι_trading_pair_deploy} ;  
-                  { order_answer } ⇒ {TonsConfig_ι_order_answer} ; 
-                 { process_queue } ⇒ {TonsConfig_ι_process_queue} ;  
-                   { send_notify } ⇒ {TonsConfig_ι_send_notify} 
-                             $] 
-      }} . 
+ 	 	 refine {{ _tons_cfg_ := { tons_cfg } ; { _ } }} . 
+ 	 	 refine {{ _listing_cfg_ := { listing_cfg } ; { _ } }} . 
+ 	 	 refine {{ _workchain_id_ := {} (* get ( address { tvm_myaddr ( ) } . val ( ) ) . workchain_id *) ; { _ } }} . 
+ 	 	 refine {{ require_ ( (({listing_cfg} ^^ ListingConfig.register_pair_cost) >= 
+                          ( {listing_cfg} ^^ ListingConfig.reject_pair_cost )
+                          + ( {listing_cfg} ^^ ListingConfig.register_return_value ) ) , 1(* error_code::costs_inconsistency *) ) ; { _ } }} . 
+refine {{ return_ {} }} .
  Defined . 
 
-Definition constructor_left {R b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 }
-( deployer_pubkey : URValue XInteger256 b0) 
-( ownership_description : URValue XString b1) 
-( owner_address : URValue (XMaybe XAddress) b2)
-( transfer_tip3 : URValue XInteger128 b3) 
-( return_ownership : URValue XInteger128 b4) 
-( trading_pair_deploy : URValue XInteger128 b5) 
-( order_answer : URValue XInteger128 b6)
-( process_queue : URValue XInteger8 b7) 
-( send_notify : URValue XAddress b8)
-( deals_limit : URValue XAddress b9) :  UExpression R 
-((orb(orb(orb(orb(orb(orb(orb(orb(orb b9 b8)b7)b6)b5)b4)b3)b2)b1)b0)) :=
+ Definition constructor_left { R a1 a2 a3 a4 a5 a6 }  ( deployer_pubkey : URValue ( XInteger256 ) a1 ) ( ownership_description : URValue ( XString ) a2 ) ( owner_address : URValue ( XMaybe XAddress ) a3 ) ( tons_cfg : URValue ( TonsConfigLRecord ) a4 ) ( deals_limit : URValue ( XInteger8 ) a5 ) ( listing_cfg : URValue ( ListingConfigLRecord ) a6 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) constructor 
+ deployer_pubkey ownership_description owner_address tons_cfg deals_limit listing_cfg ) . 
+ 
+ Notation " 'constructor_' '(' deployer_pubkey ownership_description owner_address tons_cfg deals_limit listing_cfg ')' " := 
+ ( constructor_left 
+ deployer_pubkey ownership_description owner_address tons_cfg deals_limit listing_cfg ) 
+ (in custom ULValue at level 0 , deployer_pubkey custom URValue at level 0 
+ , ownership_description custom URValue at level 0 
+ , owner_address custom URValue at level 0 
+ , tons_cfg custom URValue at level 0 
+ , deals_limit custom URValue at level 0 
+ , listing_cfg custom URValue at level 0 ) : ursus_scope . 
+ 
+(*   void setSpecificCode(uint8 type, cell code) {
+    switch (static_cast<code_type>(type.get())) {
+    case code_type::trade_pair_code: setPairCode(code); return;
+    case code_type::xchg_pair_code: setXchgPairCode(code); return;
+    case code_type::wrapper_code: setWrapperCode(code); return;
+    case code_type::ext_wallet_code: setExtWalletCode(code); return;
+    case code_type::flex_wallet_code: setFlexWalletCode(code); return;
+    case code_type::price_code: setPriceCode(code); return;
+    case code_type::xchg_price_code: setXchgPriceCode(code); return;
+    }
+  }
+ *)
 
-wrapULExpression (ursus_call_with_args (LedgerableWithArgs:=λ10) 
-constructor 
-deployer_pubkey
-ownership_description
-owner_address
-transfer_tip3 
-return_ownership 
-trading_pair_deploy 
-order_answer
-process_queue 
-send_notify
-deals_limit ).
-
-Notation " 'constructor_' '(' x0 ',' x1 ',' x2 ',' x3 ',' x4 ',' x5 ',' x6 ',' x7 ',' x8 ',' x9 ')' " :=
-( constructor_left x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 )
-(in custom ULValue at level 0 , 
-x0 custom URValue at level 0,
-x1 custom URValue at level 0,
-x2 custom URValue at level 0,
-x3 custom URValue at level 0,
-x4 custom URValue at level 0,
-x5 custom URValue at level 0,
-x6 custom URValue at level 0,
-x7 custom URValue at level 0,
-x8 custom URValue at level 0,
-x9 custom URValue at level 0) : ursus_scope.
-
- Definition setPairCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-  	 refine {{ require_ ( ( ~ _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} .
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,error_code::sender_is_not_deployer ) ; { _ } }} . 
+ Definition setPairCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
+ 	 	 refine {{ require_ ( ( ~ _pair_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( {code} -> to_slice () ) -> refs () == #{2} , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
- 	 	 refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
+ 	 	 refine {{ require_ ( ( {code} -> to_slice () -> refs () == #{2} ) , 1(* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
+ Defined . 
+ 
+ 
+ 
+ 
+ Definition setXchgPairCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
+ 	 	 refine {{ require_ ( ( ~ _xchg_pair_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( {code} -> to_slice () -> refs () == #{2} ) , 1(* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ _xchg_pair_code_ := {}(* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
+ Defined . 
+ 
+ Definition setWrapperCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
+ 	 	 refine {{ require_ ( ( ! _wrapper_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( {code} -> to_slice () -> refs () == #{2} ) , 1(* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ _wrapper_code_ := {} (* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
 
-Definition setPairCode_left {R b1} (x: URValue XCell b1 ) : UExpression R true :=
-   wrapULExpression (ursus_call_with_args (LedgerableWithArgs:=λ1) setPairCode x).    
 
-Notation " 'setPairCode_' '(' x ')' " := (setPairCode_left x)  
-   (in custom ULValue at level 0 , x custom URValue at level 0) : ursus_scope.
-
-
-
- Definition setXchgPairCode ( code : URValue XCell false ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ~ _xchg_pair_code_ ) , error_code::cant_override_code ) ; { _ } }} .
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
+ Definition setPriceCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
+ 	 	 refine {{ require_ ( ( ~ _price_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ( {code} -> to_slice () ) -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
- 	 	 refine {{ _xchg_pair_code_ := {} (* builder ( ) . stslice ( code . ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
+ 	 	 refine {{ _price_code_ -> set ( { code } ) }} . 
  Defined . 
-
-Definition setXchgPairCode_left {R b1} (x: URValue XCell b1 ) : UExpression R true :=
-   wrapULExpression (ursus_call_with_args (LedgerableWithArgs:=λ1) setXchgPairCode x).    
-
-Notation " 'setXchgPairCode_' '(' x ')' " := (setXchgPairCode x)  
-   (in custom ULValue at level 0 , x custom URValue at level 0) : ursus_scope.
-
- Definition setPriceCode ( code : URValue XCell false ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ~ _price_code_ ) , error_code::cant_override_code ) ; { _ } }} .
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
+ 
+ Definition setXchgPriceCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
+ 	 	 refine {{ require_ ( ( ~ _xchg_price_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ _price_code_ ->set ( { code } ) }} . 
- Defined .
-
-Definition setPriceCode_left {R b1} (x: URValue XCell b1 ) : UExpression R true :=
-   wrapULExpression (ursus_call_with_args (LedgerableWithArgs:=λ1) setPriceCode x).    
-
-Notation " 'setPriceCode_' '(' x ')' " := (setPriceCode_left x)  
-   (in custom ULValue at level 0 , x custom URValue at level 0) : ursus_scope.
-
-
- Definition setXchgPriceCode ( code : URValue XCell false ) : UExpression PhantomType true . 
-	 	 refine {{ require_ ( ( ~ _xchg_price_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} .
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
+ 	 	 refine {{ _xchg_price_code_ -> set ({ code }) }} . 
+ Defined .  
+ 
+ Definition setExtWalletCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
+ 	 	 refine {{ require_ ( ( ~ _ext_wallet_code_ ) , 1 (*  error_code::cant_override_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1 (* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ _xchg_price_code_ ->set ( { code } ) }} . 
+ 	 	 refine {{ _ext_wallet_code_ -> set ( { code } ) }} . 
  Defined . 
-
-Definition setXchgPriceCode_left {R b1} (x: URValue XCell b1 ) : UExpression R true :=
-   wrapULExpression (ursus_call_with_args (LedgerableWithArgs:=λ1) setXchgPriceCode x).    
-
-Notation " 'setXchgPriceCode_' '(' x ')' " := (setXchgPriceCode_left x)  
-   (in custom ULValue at level 0 , x custom URValue at level 0) : ursus_scope.
-
- Definition transfer_INTERNAL ( tto : URValue XAddress false ) ( tons : URValue XInteger128 false ) : UExpression PhantomType true . 
- 	 	 refine {{ new 'internal_ownership : ( XBool ) @ "internal_ownership" := {} ; { _ } }} . 
- 	 	 refine {{ { internal_ownership } := {} (* !! _owner_address_ *)  ; { _ } }} . 
- 	 	 refine {{ require_ ( ( !{ internal_ownership } && ( {} (* int.sender () *) ==  _owner_address_ -> get_default () ) ) , error_code::message_sender_is_not_my_owner ) ;{ _ } }} . 
+ 
+ Definition setFlexWalletCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
+ 	 	 refine {{ require_ ( ( ~ _flex_wallet_code_ ) , 1 (* error_code::cant_override_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1 (*  error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ _flex_wallet_code_ -> set ( { code } ) }} . 
+ Defined . 
+ 
+ 
+ Definition transfer ( tto : URValue ( XAddress ) false ) ( tons : URValue ( XInteger128 ) false ) : UExpression PhantomType false . 
+(*  	 	 refine {{ check.owner () ; { _ } }} .  *)
  	 	 refine {{ tvm.accept () (* ; { _ } }} . 
- 	 	 refine {{ tvm.transfer ( !{tto} , !{tons} , TRUE ) *) }} . 
+ 	 	 refine {{ tvm_transfer ( tto , tons . get ( ) , true ) *) }} . 
  Defined . 
 
-Definition transfer_INTERNAL_left {R b1 b2} 
-(x0: URValue XAddress b1 ) 
-(x1: URValue XInteger128 b2 )
-: UExpression R true :=
-   wrapULExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) transfer_INTERNAL x0 x1 ).    
+ Definition prepare_trading_pair_state_init_and_addr ( pair_data : URValue ( DTradingPairLRecord ) false ) ( pair_code : URValue ( XCell ) false ) : UExpression ( StateInitLRecord # XInteger256 )%sol false . 
+ 	 	 refine {{ new 'pair_data_cl : ( XCell ) @ "pair_data_cl" := {} ; { _ } }} . 
+ 	 	 refine {{ { pair_data_cl } := {} (* prepare_persistent_data ( { } , pair_data ) *) ; { _ } }} . 
+ 	 	 refine {{ new 'pair_init : ( StateInitLRecord ) @ "pair_init" := 
+                 [$ {}  ⇒ {StateInit_ι_split_depth} ;
+                    {}  ⇒ {StateInit_ι_special} ; 
+           ( ({pair_code}) -> set () ) ⇒ {StateInit_ι_code} ; 
+           ( (!{pair_data_cl}) -> set () ) ⇒ {StateInit_ι_data} ; 
+            {}  ⇒ {StateInit_ι_library} $] ; { _ } }} .
 
-Notation " 'transfer_INTERNAL_' '(' x0 ',' x1 ')' " := (transfer_INTERNAL_left x0 x1 )  
-   (in custom ULValue at level 0 , 
-x0 custom URValue at level 0 ,
-x1 custom URValue at level 0) : ursus_scope.
-
- Definition transfer_EXTERNAL ( tto : URValue XAddress false ) ( tons : URValue XInteger128 false ) : UExpression PhantomType true . 
- 	 	 refine {{ new 'internal_ownership : ( XBool ) @ "internal_ownership" := {} ; { _ } }} . 
- 	 	 refine {{ { internal_ownership } := {} (*  ~~ _owner_address_ *) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ( ~ !{ internal_ownership } ) && (msg.pubkey () == _deployer_pubkey_ ) ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () (* ; { _ } }} . 
- 	 	 refine {{ tvm.transfer ( to , tons . get ( ) , true )  *) }} . 
+ 	 	 refine {{ new 'pair_init_cl : ( XCell ) @ "pair_init_cl" := {} ; { _ } }} . 
+ 	 	 refine {{ { pair_init_cl } := {} (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
+ 	 	 refine {{ return_ [ !{ pair_init } , {} (* tvm_hash ( pair_init_cl ) *) ] }} . 
  Defined . 
 
-Definition transfer_EXTERNAL_left {R b1 b2} 
-(x0: URValue XAddress b1 ) 
-(x1: URValue XInteger128 b2 )
-: UExpression R true :=
-   wrapULExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) transfer_EXTERNAL x0 x1 ).    
+ Definition prepare_trading_pair_state_init_and_addr_right { a1 a2 }  ( pair_data : URValue ( DTradingPairLRecord ) a1 ) ( pair_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord # XInteger256 )%sol ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_trading_pair_state_init_and_addr 
+ pair_data pair_code ) . 
+ 
+ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' pair_data ',' pair_code ')' " := 
+ ( prepare_trading_pair_state_init_and_addr_right 
+ pair_data pair_code ) 
+ (in custom URValue at level 0 , pair_data custom URValue at level 0 
+ , pair_code custom URValue at level 0 ) : ursus_scope . 
 
-Notation " 'transfer_EXTERNAL_' '(' x0 ',' x1 ')' " := (transfer_EXTERNAL_left x0 x1 )  
-   (in custom ULValue at level 0 , 
-x0 custom URValue at level 0 ,
-x1 custom URValue at level 0) : ursus_scope.
-
-
- Definition isFullyInitialized : UExpression XBool false . 
- 	 	 refine {{ return_ {} (*  _pair_code_ && _price_code_ && _xchg_pair_code_ && _xchg_price_code_ *) }} . 
- Defined . 
-
-Definition isFullyInitialized_right : URValue XBool false :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ0) isFullyInitialized ).    
-
-Notation " 'isFullyInitialized_' '(' ')' " := (isFullyInitialized_right )  
-   (in custom URValue at level 0 ) : ursus_scope.
-
- Definition getTonsCfg : UExpression TonsConfigLRecord false . 
- 	 	 refine {{ return_ _tons_cfg_ }} . 
- Defined . 
-
-Definition getTonsCfg_right : URValue TonsConfigLRecord false :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ0) getTonsCfg ).    
-
-Notation " 'getTonsCfg_' '(' ')' " := ( getTonsCfg_right )  
-   (in custom URValue at level 0 ) : ursus_scope.
-
-
- Definition getTradingPairCode : UExpression XCell false . 
- 	 	 refine {{ return_ _pair_code_ ->get_default () }} . 
+ Definition prepare_trading_pair ( flex : URValue ( XAddress ) false ) ( tip3_root : URValue ( XAddress ) false ) ( pair_code : URValue ( XCell ) false ) : UExpression ( StateInitLRecord # XInteger256 )%sol false . 
+ 	 	 refine {{ new 'pair_data : ( DTradingPairLRecord ) @ "pair_data" :=  
+               	 	 [$ ( tvm.address () ) ⇒ { DTradingPair_ι_flex_addr_ } ; 
+                     { tip3_root } ⇒ { DTradingPair_ι_tip3_root_ } ; 
+                     0 ⇒ { DTradingPair_ι_min_amount_ } ; 
+                     0 ⇒ { DTradingPair_ι_notify_addr_ }  
+                    $] ; { _ } }} . 
+ 	 	 refine {{ return_ ( prepare_trading_pair_state_init_and_addr_ ( !{ pair_data } , { pair_code } ) ) }} . 
  Defined .
-
-Definition getTradingPairCode_right : URValue XCell false := (*TODO: maybe true*)
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ0) getTradingPairCode ).    
-
-Notation " 'getTradingPairCode_' '(' ')' " := ( getTradingPairCode_right )  
-   (in custom URValue at level 0 ) : ursus_scope.
-
-
- Definition getXchgPairCode : UExpression XCell false . 
- 	 	 refine {{ return_ _xchg_pair_code_ ->get_default () }} . 
- Defined . 
-
-Definition getXchgPairCode_right : URValue XCell false := (*TODO: maybe true*)
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ0) getXchgPairCode ).    
-
-Notation " 'getXchgPairCode_' '(' ')' " := ( getXchgPairCode_right )  
-   (in custom URValue at level 0 ) : ursus_scope.
-
-
-
- Definition getSellPriceCode ( tip3_addr : URValue XAddress false ) : UExpression XCell true . 
- 	 	 refine {{ require_ ( ( ( ( ( _price_code_ -> get_default () )  -> to_slice () ) -> refs () ) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
- 	 	 refine {{ new 'salt : ( XCell ) @ "salt" := {} ; { _ } }} . 
- 	 	 refine {{ { salt } := {} (* builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( tip3_addr . sl ( ) ) . endc ( ) *) ; { _ } }} . 
- 	 	 refine {{ return_ {} (* builder ( ) . stslice ( price_code_ - > ctos ( ) ) . stref ( !{ salt } ) . endc ( ) *) }} . 
- Defined . 
  
-Definition getSellPriceCode_right {b1} (x: URValue XAddress b1 ) : URValue XCell true :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ1) getSellPriceCode x).    
-
-Notation " 'getSellPriceCode_' '(' x ')' " := (getSellPriceCode_right x)  
-   (in custom URValue at level 0 , x custom URValue at level 0) : ursus_scope.
-
-
- Definition getXchgPriceCode ( tip3_addr1 : URValue XAddress false ) ( tip3_addr2 : URValue XAddress false ) : UExpression XCell true . 
- 	 	 refine {{ require_ ( ( ( ( ( _price_code_ -> get_default () )  -> to_slice () ) -> refs () ) == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
- 	 	 refine {{ new 'keys : ( XAddress # XAddress )%sol @ "keys" := {} ; { _ } }} . 
- 	 	 refine {{ { keys } := [ { tip3_addr1 } , { tip3_addr2 } ] ; { _ } }} . 
- 	 	 refine {{ return_ {} (* builder ( ) . stslice ( xchg_price_code_ - > ctos ( ) ) . stref ( build ( !{ keys } ) . endc ( ) ) . endc ( ) *) }} . 
- Defined . 
+ Definition prepare_trading_pair_right { a1 a2 a3 }  ( flex : URValue ( XAddress ) a1 ) ( tip3_root : URValue ( XAddress ) a2 ) ( pair_code : URValue ( XCell ) a3 ) : URValue ( StateInitLRecord # XInteger256 )%sol ( orb ( orb a3 a2 ) a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) prepare_trading_pair 
+ flex tip3_root pair_code ) . 
  
-Definition getXchgPriceCode_right {b1 b2} 
-(x0: URValue XAddress b1 ) 
-(x1: URValue XAddress b2 ) 
-: URValue XCell true :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) getXchgPriceCode x0 x1).    
+ Notation " 'prepare_trading_pair_' '(' flex ',' tip3_root ',' pair_code ')' " := 
+ ( prepare_trading_pair_right 
+ flex tip3_root pair_code ) 
+ (in custom URValue at level 0 , flex custom URValue at level 0 
+ , tip3_root custom URValue at level 0 
+ , pair_code custom URValue at level 0 ) : ursus_scope . 
 
-Notation " 'getXchgPriceCode_' '(' x0 ',' x1 ')' " := (getXchgPriceCode_right x0 x1)  
-   (in custom URValue at level 0 , 
-    x0 custom URValue at level 0,
-    x1 custom URValue at level 0) : ursus_scope.
-
-
-(* std::pair<StateInit, uint256> prepare_trading_pair_state_init_and_addr(DTradingPair pair_data, cell pair_code) {
-  cell pair_data_cl = prepare_persistent_data<ITradingPair, void, DTradingPair>({}, pair_data);
-  StateInit pair_init {
-    /*split_depth*/{}, /*special*/{},
-    pair_code, pair_data_cl, /*library*/{}
-  };
-  cell pair_init_cl = build(pair_init).make_cell();
-  return { pair_init, uint256(tvm_hash(pair_init_cl)) };
-} *)
-
-Definition prepare_trading_pair_state_init_and_addr ( pair_data : URValue DTradingPairLRecord false) 
-                                                    ( pair_code : URValue XCell false ) 
-                           : UExpression (StateInitLRecord # XInteger256)%sol false .
- 	 	 refine {{ new 'pair_data_cl : XCell @ "pair_data_cl" := {} 
-                       (* prepare_persistent_data<ITradingPair, void, DTradingPair>({}, pair_data) *) ; { _ } }} .
- 	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" :=
-                   [$
-                         {} ⇒ { StateInit_ι_split_depth } ;
-                         {} ⇒ { StateInit_ι_special } ;
-                         ( {pair_code} ) -> set () ⇒ {StateInit_ι_code} ;
-                         ( !{pair_data_cl} ) -> set () ⇒ {StateInit_ι_data} ;
-                         {} ⇒ {StateInit_ι_library}
-                    $] ; { _ } }}.
- 	 	 refine {{ new 'pair_init_cl : XCell @ "pair_init_cl" := {} (* build(pair_init).make_cell() *) ; { _ } }} .
- 	 	 refine {{ return_ [ !{pair_init} , {} (* tvm_hash(pair_init_cl) *) ] }} .
-Defined.
-
-Definition prepare_trading_pair_state_init_and_addr_right {b1 b2} 
-(x0: URValue DTradingPairLRecord b1 ) 
-(x1: URValue XCell b2 ) 
-: URValue (StateInitLRecord # XInteger256)%sol ( orb false (orb b2 b1) ) :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_trading_pair_state_init_and_addr x0 x1).    
-
-Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (prepare_trading_pair_state_init_and_addr_right x0 x1)  
-   (in custom URValue at level 0 , 
-    x0 custom URValue at level 0,
-    x1 custom URValue at level 0) : ursus_scope.
-
-
- Definition getSellTradingPair ( tip3_root : URValue XAddress false ) : UExpression XAddress false . 
- 	 	 refine {{ new 'myaddr : ( XAddress ) @ "myaddr" := {} ; { _ } }} . 
- 	 	 refine {{ { myaddr } := tvm.address () ; { _ } }} . 
- 	 	 refine {{ new 'pair_data : ( DTradingPairLRecord ) @ "pair_data" := 
-                      [$ !{ myaddr } ⇒ { DTradingPair_ι_flex_addr_ } ; 
-                       { tip3_root } ⇒ { DTradingPair_ι_tip3_root_ } ; 
-                                   0 ⇒ { DTradingPair_ι_min_amount_ } ; 
-                                  0  ⇒ { DTradingPair_ι_notify_addr_ } 
-                $] ; { _ } }} .
+ Definition registerTradingPair ( pubkey : URValue ( XInteger256 ) false ) ( tip3_root : URValue ( XAddress ) false ) ( min_amount : URValue ( XInteger128 ) false ) ( notify_addr : URValue ( XAddress ) false ) : UExpression XAddress true . 
+ 	 	 refine {{ require_ ( ( {}  (* int.value () *) > ( _listing_cfg_ ^^ ListingConfig.register_pair_cost) ) , 1 (* error_code::not_enough_funds *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ {} (* _trading_pair_listing_requests_ .contains ( pubkey.get ( ) ) *) ) , 1(* error_code::trading_pair_with_such_pubkey_already_requested *) ) ; { _ } }} . 
+(*  	 	 refine {{ trading_pair_listing_requests_.set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3_root , min_amount , notify_addr } ) ; { _ } }} .  *)
+(*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
+ 	 	 refine {{ new 'state_init : ( StateInitLRecord ) @ "state_init" := {} ; { _ } }} . 
  	 	 refine {{ new 'std_addr : ( XInteger256 ) @ "std_addr" := {} ; { _ } }} . 
- 	 	 refine {{ { std_addr } := 
-        second ( prepare_trading_pair_state_init_and_addr_ ( !{ pair_data } , ( _pair_code_ -> get_default () ) ) ) ; { _ } }} . 
- 	 	 refine {{ new 'workchain_id : ( addr_stdLRecord ) @ "workchain_id" := {} ; { _ } }} . 
- 	 	 refine {{ { workchain_id } := {} (* std :: get < addr_std > ( myaddr . val ( ) ) . workchain_id *) ; { _ } }} . 
- 	 	 refine {{ return_ {} (* address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
- Defined . 
- 
-Definition getSellTradingPair_right {b1} (x: URValue XAddress b1 ) : URValue XAddress b1 :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ1) getSellTradingPair x).    
-
-Notation " 'getSellTradingPair_' '(' x ')' " := (getSellTradingPair_right x)  
-   (in custom URValue at level 0 , x custom URValue at level 0) : ursus_scope.
-
-Definition prepare_xchg_pair_state_init_and_addr ( pair_data : URValue DXchgPairLRecord false) 
-                                                    ( pair_code : URValue XCell false ) 
-                           : UExpression (StateInitLRecord # XInteger256)%sol false .
- 	 	 refine {{ new 'pair_data_cl : XCell @ "pair_data_cl" := {} 
-                       (* prepare_persistent_data<IXchgPair, void, DXchgPair>({}, pair_data) *) ; { _ } }} .
- 	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" :=
-                   [$
-                         {} ⇒ { StateInit_ι_split_depth } ;
-                         {} ⇒ { StateInit_ι_special } ;
-                         ( {pair_code} ) -> set () ⇒ {StateInit_ι_code} ;
-                         ( !{pair_data_cl} ) -> set () ⇒ {StateInit_ι_data} ;
-                         {} ⇒ {StateInit_ι_library}
-                    $] ; { _ } }}.
- 	 	 refine {{ new 'pair_init_cl : XCell @ "pair_init_cl" := {} (* build(pair_init).make_cell() *) ; { _ } }} .
- 	 	 refine {{ return_ [ !{pair_init} , {} (* tvm_hash(pair_init_cl) *) ] }} .
-Defined.
-
-Definition prepare_xchg_pair_state_init_and_addr_right {b1 b2} 
-(x0: URValue DXchgPairLRecord b1 ) 
-(x1: URValue XCell b2 ) 
-: URValue (StateInitLRecord # XInteger256)%sol ( orb false (orb b2 b1) ) :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_xchg_pair_state_init_and_addr x0 x1).    
-
-Notation " 'prepare_xchg_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (prepare_xchg_pair_state_init_and_addr_right x0 x1)  
-   (in custom URValue at level 0 , 
-    x0 custom URValue at level 0,
-    x1 custom URValue at level 0) : ursus_scope.
-
-
- Definition getXchgTradingPair ( tip3_major_root : URValue XAddress false ) ( tip3_minor_root : URValue XAddress false ) : UExpression XAddress false . 
- 	 	 refine {{ new 'myaddr : ( XAddress ) @ "myaddr" := {} ; { _ } }} . 
- 	 	 refine {{ { myaddr } := tvm.address () ; { _ } }} . 
- 	 	 refine {{ new 'pair_data : ( DXchgPairLRecord ) @ "pair_data" := 
-                       [$  !{ myaddr } ⇒ { DXchgPair_ι_flex_addr_ } ;
-                   { tip3_major_root } ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
-                   { tip3_minor_root } ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
-                                     0 ⇒ { DXchgPair_ι_min_amount_ } ; 
-                                     0 ⇒ { DXchgPair_ι_notify_addr_ }  
-               $] ; { _ } }} . 
- 	 	 refine {{ new 'std_addr : ( XInteger256 ) @ "std_addr" := {} ; { _ } }} . 
- 	 	 refine {{ { std_addr } := 
-                      second ( prepare_xchg_pair_state_init_and_addr_ ( !{ pair_data } , 
-                                ( _xchg_pair_code_ -> get_default () ) ) ) ; { _ } }} . 
-
- 	 	 refine {{ new 'workchain_id : ( addr_stdLRecord ) @ "workchain_id" := {} ; { _ } }} . 
- 	 	 refine {{ { workchain_id } := {} (* std :: get < addr_std > ( myaddr . val ( ) ) . workchain_id *) ; { _ } }} . 
- 	 	 refine {{ return_ {} (* address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
- Defined . 
-
-Definition getXchgTradingPair_right {b1 b2} 
-(x0: URValue XAddress b1 ) 
-(x1: URValue XAddress b2 ) 
-: URValue XAddress (orb b2 b1) :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) getXchgTradingPair x0 x1).    
-
-Notation " 'getXchgTradingPair_' '(' x0 ',' x1 ')' " := (getXchgTradingPair_right x0 x1)  
-   (in custom URValue at level 0 , 
-    x0 custom URValue at level 0,
-    x1 custom URValue at level 0) : ursus_scope.
-
-
- Definition getDealsLimit : UExpression XInteger8 false . 
- 	 	 refine {{ return_ _deals_limit_ }} . 
+ 	 	 refine {{ [ { state_init } , { std_addr } ] := prepare_trading_pair_ ( tvm.address () , {tip3_root} , _pair_code_ -> get_default () ) ; { _ } }} . 
+ 	 	 refine {{ return_ {} (* Address :: make_std ( workchain_id_ , std_addr ) *) }} . 
  Defined .
-
-Definition getDealsLimit_right : URValue XInteger8 false := 
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ0) getDealsLimit ).    
-
-Notation " 'getDealsLimit_' '(' ')' " := ( getDealsLimit_right )  
-   (in custom URValue at level 0 ) : ursus_scope.
-
-
- Definition getOwnershipInfo : UExpression FlexOwnershipInfoLRecord false . 
- 	 	 refine {{ return_ [$ _deployer_pubkey_  ⇒ {FlexOwnershipInfo_ι_deployer_pubkey} ; 
-                          _ownership_description_  ⇒ {FlexOwnershipInfo_ι_ownership_description} ; 
-                          _owner_address_  ⇒ {FlexOwnershipInfo_ι_owner_contract} $] }} . 
+ 
+(*  Definition approveTradingPairImpl ( pubkey : URValue ( XInteger256 ) false ) 
+( trading_pair_listing_requests : URValue ( XHMap XInteger256 TradingPairListingRequestLRecord ) false ) ( pair_code : URValue ( XCell ) false ) ( workchain_id : URValue ( XInteger8 ) false ) ( listing_cfg : URValue ( ListingConfigLRecord ) false ) : UExpression ( XHMap XInteger TradingPairListingRequestLRecord ) true . 
+ 	 	 refine {{ new 'opt_req_info : ( XMaybe TradingPairListingRequestLRecord ) @ "opt_req_info" := {} ; { _ } }} . 
+ 	 	                     (* trading_pair_listing_requests.extract ( pubkey.get ( ) ) *)  
+ 	 	 refine {{ require_ ( { opt_req_info }  , 1 (* error_code::trading_pair_not_requested *) ) ; { _ } }} . 
+ 	 	 refine {{ new 'req_info : ( auto ) @ "req_info" := {} ; { _ } }} . 
+ 	 	 refine {{ { req_info } := *opt_req_info ; { _ } }} . 
+ 	 	 refine {{ state_init : ( auto ) @ "state_init" ; { _ } }} . 
+ 	 	 refine {{ std_addr : ( auto ) @ "std_addr" ; { _ } }} . 
+ 	 	 refine {{ [ { state_init } , { std_addr } ] := prepare_trading_pair ( address { tvm_myaddr ( ) } , req_info . tip3_root , pair_code ) ; { _ } }} . 
+ 	 	 refine {{ new 'trade_pair : ( auto ) @ "trade_pair" := {} ; { _ } }} . 
+ 	 	 refine {{ { trade_pair } := ITradingPairPtr ( Address :: make_std ( !{ workchain_id } , std_addr ) ) ; { _ } }} . 
+ 	 	 refine {{ trade_pair ^^ auto:deploy ( state_init , Grams ( listing_cfg . pair_deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . onDeploy ( req_info . min_amount , listing_cfg . pair_keep_balance , req_info . notify_addr ) ; { _ } }} . 
+ 	 	 refine {{ new 'remaining_funds : ( auto ) @ "remaining_funds" := {} ; { _ } }} . 
+ 	 	 refine {{ { remaining_funds } := req_info ^^ auto:client_funds - listing_cfg ^^ ListingConfigLRecord:register_pair_cost ; { _ } }} . 
+ 	 	 refine {{ address ( * IListingAnswerPtr * ) ( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onTradingPairApproved ( pubkey , trade_pair . get ( ) ) ; { _ } }} . 
+ 	 	 refine {{ return_ [ trade_pair ^^ auto:get ( ) , !{ trading_pair_listing_requests } ] ; { _ } }} . 
  Defined . 
  
-Definition getOwnershipInfo_right : URValue FlexOwnershipInfoLRecord false := 
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ0) getOwnershipInfo ).    
-
-Notation " 'getOwnershipInfo_' '(' ')' " := ( getOwnershipInfo_right )  
-   (in custom URValue at level 0 ) : ursus_scope.
 
 
- Definition _fallback ( msg : URValue XCell false ) ( msg_body : URValue XSlice false ) : UExpression XInteger false . 
- 	 	 refine {{ return_ 0 }} . 
- Defined . 
+
+
+ Definition approveTradingPair ( pubkey : URValue ( XInteger256 ) false ) : UExpression XAddress false . 
+(*  	 	 refine {{ check_owner ( ) ; { _ } }} .  *)
+ 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ trade_pair : ( auto ) @ "trade_pair" ; { _ } }} . 
+ 	 	 refine {{ new_trading_pair_listing_requests : ( auto ) @ "new_trading_pair_listing_requests" ; { _ } }} . 
+ 	 	 refine {{ [ { trade_pair } , { new_trading_pair_listing_requests } ] := approveTradingPairImpl ( pubkey , trading_pair_listing_requests_ , pair_code_ . get ( ) , workchain_id_ , listing_cfg_ ) ; { _ } }} . 
+ 	 	 refine {{ trading_pair_listing_requests_ := new_trading_pair_listing_requests ; { _ } }} . 
+ 	 	 refine {{ if ( Internal ) then { { _ } } else { { _ } } ; { _ } }} . 
+ 	 	 	 refine {{ { auto value_gr = int_value ( ) ; { _ } }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance ( ) - value_gr ( ) , rawreserve_flag : : up_to ) ; { _ } }} . 
+ 	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} . 
+ 	 refine {{ return_ !{ trade_pair } ; { _ } }} . 
  
-Definition _fallback_right {b1 b2} 
-(x0: URValue XCell b1 ) 
-(x1: URValue XSlice b2 ) 
-: URValue XInteger (orb b2 b1) :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) _fallback x0 x1).    
-
-Notation " '_fallback_' '(' x0 ',' x1 ')' " := (_fallback_right x0 x1)  
-   (in custom URValue at level 0 , 
-    x0 custom URValue at level 0,
-    x1 custom URValue at level 0) : ursus_scope.
-
-
- Definition prepare_flex_state_init_and_addr ( flex_data : URValue ContractLRecord false ) 
-                                             ( flex_code : URValue XCell false ) 
-: UExpression ( StateInitLRecord # XInteger256 )%sol false . 
- 	 	 refine {{ flex_data : ( ContractLRecord ) @ "flex_data" ; { _ } }} . 
- 	 	 refine {{ flex_code : ( XCell ) @ "flex_code" ; { _ } }} . 
- 	 	 refine {{ new 'flex_data_cl : ( XCell ) @ "flex_data_cl" := {} ; { _ } }} . 
- 	 	 refine {{ { flex_data_cl } := {} (* prepare_persistent_data ( flex_replay_protection_t : : init ( ) , flex_data ) *) ; { _ } }} . 
- 	 	 refine {{ new 'flex_init : ( StateInitLRecord ) @ "flex_init" := {} ; { _ } }} . 
- 	 	 refine {{ { flex_init } := [$ {} ⇒ {StateInit_ι_split_depth} ; 
-                                   {} ⇒ {StateInit_ι_special} ;
-                            (!{flex_code}) -> set ()  ⇒ {StateInit_ι_code} ; 
-                         ( !{flex_data_cl}) -> set () ⇒ {StateInit_ι_data} ;
-                                   {} ⇒ {StateInit_ι_library} $] ; { _ } }} . 	 	 
-     refine {{ new 'flex_init_cl : ( XCell ) @ "flex_init_cl" := {} ; { _ } }} . 
- 	 	 refine {{ { flex_init_cl } := {} (* build ( !{ flex_init } ) . make_cell ( ) *) ; { _ } }} . 
- 	 	 refine {{ return_ [ !{ flex_init } , {} (* tvm.hash ( !{ flex_init_cl } ) *) ] }} . 
  Defined . 
+ *)
 
-Definition prepare_flex_state_init_and_addr_right {b1 b2} 
-(x0: URValue ContractLRecord b1 ) 
-(x1: URValue XCell b2 ) 
-: URValue ( StateInitLRecord # XInteger256 )%sol (orb b2 b1) :=
-   wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_flex_state_init_and_addr x0 x1).    
 
-Notation " 'prepare_flex_state_init_and_addr_' '(' x0 ',' x1 ')' " := (prepare_flex_state_init_and_addr_right x0 x1)  
-   (in custom URValue at level 0 , 
-    x0 custom URValue at level 0,
-    x1 custom URValue at level 0) : ursus_scope.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
