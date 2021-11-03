@@ -464,6 +464,7 @@ Local Open Scope string_scope.
  , tip3_root custom URValue at level 0 
  , min_amount custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
+
  Definition approveTradingPair_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress a1 := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveTradingPair 
  pubkey ) . 
@@ -472,6 +473,7 @@ Local Open Scope string_scope.
  ( approveTradingPair_right 
  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
+
  Definition rejectTradingPair_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool a1 := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectTradingPair 
  pubkey ) . 
@@ -742,6 +744,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , flex custom URValue at level 0 
  , tip3_root custom URValue at level 0 
  , pair_code custom URValue at level 0 ) : ursus_scope . 
+
  Definition prepare_xchg_pair_state_init_and_addr_right { a1 a2 }  ( pair_data : URValue ( DXchgPairLRecord ) a1 ) ( pair_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord # XInteger256 )%sol ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_xchg_pair_state_init_and_addr 
  pair_data pair_code ) . 
@@ -761,9 +764,9 @@ Local Open Scope string_scope.
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveTradingPairImpl 
  pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) . 
  
- Notation " 'approveTradingPairImpl_' '(' pubkey uint256 trading_pair_listing_requests pair_code workchain_id listing_cfg ')' " := 
+ Notation " 'approveTradingPairImpl_' '(' pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ')' " := 
  ( approveTradingPairImpl_right 
- pubkey uint256 trading_pair_listing_requests pair_code workchain_id listing_cfg ) 
+ pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , trading_pair_listing_requests custom URValue at level 0 
  , pair_code custom URValue at level 0 

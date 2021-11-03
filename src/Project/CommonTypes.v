@@ -15,6 +15,7 @@ Module Export SolidityNotationsForCommonTypes := SolidityNotations xt sm.
  Definition addr_std_compact := XAddress . 
  Definition varuint32 := XInteger32 .
  Definition address_t := XAddress.
+ Definition IWrapperPtr := XAddress .
 
 End Types.
 
