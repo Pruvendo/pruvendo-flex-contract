@@ -26,14 +26,20 @@ Parameter constructor : URValue ( XInteger256 ) false -> URValue ( XString ) fal
  Parameter setFlexWalletCode : URValue ( XCell ) false -> UExpression PhantomType true . 
  Parameter transfer : URValue ( XAddress ) false -> URValue ( XInteger128 ) false -> UExpression PhantomType false . 
  Parameter registerTradingPair : URValue ( XInteger256 ) false -> URValue ( XAddress ) false -> URValue ( XInteger128 ) false -> URValue ( XAddress ) false -> UExpression XAddress true . 
- Parameter approveTradingPair : URValue ( XInteger256 ) false -> UExpression XAddress false . 
- Parameter rejectTradingPair : URValue ( XInteger256 ) false -> UExpression XBool false . 
+ Parameter approveTradingPair_INTERNAL : URValue ( XInteger256 ) false -> UExpression XAddress true . 
+ Parameter approveTradingPair_EXTERNAL : URValue ( XInteger256 ) false -> UExpression XAddress true . 
+ Parameter rejectTradingPair_INTERNAL : URValue ( XInteger256 ) false -> UExpression XBool true . 
+ Parameter rejectTradingPair_EXTERNAL : URValue ( XInteger256 ) false -> UExpression XBool true . 
  Parameter registerXchgPair : URValue ( XInteger256 ) false -> URValue ( XAddress ) false -> URValue ( XAddress ) false -> URValue ( XInteger128 ) false -> URValue ( XAddress ) false -> UExpression XAddress true . 
- Parameter approveXchgPair : URValue ( XInteger256 ) false -> UExpression XAddress false . 
- Parameter rejectXchgPair : URValue ( XInteger256 ) false -> UExpression XBool false . 
+ Parameter approveXchgPair_INTERNAL : URValue ( XInteger256 ) false -> UExpression XAddress true . 
+ Parameter approveXchgPair_EXTERNAL : URValue ( XInteger256 ) false -> UExpression XAddress true . 
+ Parameter rejectXchgPair_INTERNAL : URValue ( XInteger256 ) false -> UExpression XBool true . 
+ Parameter rejectXchgPair_EXTERNAL : URValue ( XInteger256 ) false -> UExpression XBool true . 
  Parameter registerWrapper : URValue ( XInteger256 ) false -> URValue ( Tip3ConfigLRecord ) false -> UExpression XAddress true . 
- Parameter approveWrapper : URValue ( XInteger256 ) false -> UExpression XAddress false . 
- Parameter rejectWrapper : URValue ( XInteger256 ) false -> UExpression XBool false . 
+ Parameter approveWrapper_INTERNAL : URValue ( XInteger256 ) false -> UExpression XAddress true . 
+ Parameter approveWrapper_EXTERNAL : URValue ( XInteger256 ) false -> UExpression XAddress true . 
+ Parameter rejectWrapper_INTERNAL : URValue ( XInteger256 ) false -> UExpression XBool true . 
+ Parameter rejectWrapper_EXTERNAL : URValue ( XInteger256 ) false -> UExpression XBool true . 
  Parameter isFullyInitialized : UExpression XBool false . 
  Parameter getDetails : UExpression FlexDetailsLRecord false . 
  Parameter getTonsCfg : UExpression TonsConfigLRecord false . 
@@ -49,21 +55,21 @@ Parameter constructor : URValue ( XInteger256 ) false -> URValue ( XString ) fal
  Parameter getWrapperListingRequests : UExpression ( XHMap XInteger WrapperListingRequestWithPubkeyLRecord) false .
  Parameter getTradingPairListingRequests : UExpression ( XHMap XInteger TradingPairListingRequestWithPubkeyLRecord) false . 
  Parameter getXchgPairListingRequests : UExpression ( XHMap XInteger XchgPairListingRequestWithPubkeyLRecord) false . 
- Parameter check_owner : UExpression PhantomType true . 
+      Parameter check_owner : UExpression PhantomType true . 
  Parameter _fallback : URValue ( XCell ) false -> URValue ( XSlice ) false -> UExpression XInteger false . 
- Parameter prepare_wrapper_state_init_and_addr : URValue ( XCell ) false -> URValue ( DWrapperLRecord ) false -> UExpression ( StateInitLRecord # XInteger256 )%sol false . 
- Parameter prepare_flex_state_init_and_addr : URValue ( ContractLRecord ) false -> URValue ( XCell ) false -> UExpression ( StateInitLRecord # XInteger256 )%sol false . 
- Parameter prepare_external_wallet_state_init_and_addr : URValue ( XString ) false -> URValue ( XString ) false -> URValue ( XInteger8 ) false -> URValue ( XInteger256 ) false -> URValue ( XInteger256 ) false -> URValue ( XAddress ) false -> URValue ( XMaybe XAddress ) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> UExpression ( StateInitLRecord # XInteger256 )%sol false . 
- Parameter prepare_internal_wallet_state_init_and_addr : URValue ( XString ) false -> URValue ( XString ) false -> URValue ( XInteger8 ) false -> URValue ( XInteger256 ) false -> URValue ( XInteger256 ) false -> URValue ( XAddress ) false -> URValue ( XMaybe XAddress ) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> UExpression ( StateInitLRecord # XInteger256 )%sol false . 
- Parameter prepare_trading_pair_state_init_and_addr : URValue ( DTradingPairLRecord ) false -> URValue ( XCell ) false -> UExpression ( StateInitLRecord # XInteger256 )%sol false . 
- Parameter prepare_trading_pair : URValue ( XAddress ) false -> URValue ( XAddress ) false -> URValue ( XCell ) false -> UExpression ( StateInitLRecord # XInteger256 )%sol false . 
- Parameter prepare_xchg_pair_state_init_and_addr : URValue ( DXchgPairLRecord ) false -> URValue ( XCell ) false -> UExpression ( StateInitLRecord # XInteger256 )%sol false . 
- Parameter approveTradingPairImpl : URValue ( XInteger256 ) false -> URValue ( XHMap XInteger256 TradingPairListingRequestLRecord ) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XHMap XInteger256 TradingPairListingRequestLRecord ) true . 
- Parameter rejectTradingPairImpl : URValue ( XInteger256 ) false -> URValue ( XHMap XInteger256 TradingPairListingRequestLRecord ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XHMap XInteger TradingPairListingRequestLRecord) true . 
- Parameter approveXchgPairImpl : URValue ( XInteger256 ) false -> URValue ( XHMap XInteger256  XchgPairListingRequestLRecord ) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XHMap XInteger XchgPairListingRequestLRecord ) true . 
- Parameter rejectXchgPairImpl : URValue ( XInteger256 ) false -> URValue ( XHMap XInteger256  XchgPairListingRequestLRecord ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XHMap XInteger XchgPairListingRequestLRecord ) true . 
- Parameter approveWrapperImpl : URValue ( XInteger256 ) false -> URValue ( XHMap XInteger256 WrapperListingRequestLRecord ) false -> URValue ( XCell ) false -> URValue ( XCell ) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XHMap XInteger WrapperListingRequestLRecord ) true . 
- Parameter rejectWrapperImpl : URValue ( XInteger256 ) false -> URValue (  XHMap XInteger256 WrapperListingRequestLRecord ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XHMap XInteger WrapperListingRequestLRecord) true . 
+ Parameter prepare_wrapper_state_init_and_addr : URValue ( XCell ) false -> URValue ( DWrapperLRecord ) false -> UExpression ( StateInitLRecord * XInteger256 ) false . 
+ Parameter prepare_flex_state_init_and_addr : URValue ( ContractLRecord ) false -> URValue ( XCell ) false -> UExpression ( StateInitLRecord * XInteger256 ) false . 
+ Parameter prepare_external_wallet_state_init_and_addr : URValue ( XString ) false -> URValue ( XString ) false -> URValue ( XInteger8 ) false -> URValue ( XInteger256 ) false -> URValue ( XInteger256 ) false -> URValue ( XAddress ) false -> URValue ( XMaybe XAddress ) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> UExpression ( StateInitLRecord * XInteger256 ) false . 
+ Parameter prepare_internal_wallet_state_init_and_addr : URValue ( XString ) false -> URValue ( XString ) false -> URValue ( XInteger8 ) false -> URValue ( XInteger256 ) false -> URValue ( XInteger256 ) false -> URValue ( XAddress ) false -> URValue ( XMaybe XAddress ) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> UExpression ( StateInitLRecord * XInteger256 ) false . 
+ Parameter prepare_trading_pair_state_init_and_addr : URValue ( DTradingPairLRecord ) false -> URValue ( XCell ) false -> UExpression ( StateInitLRecord * XInteger256 ) false . 
+ Parameter prepare_trading_pair : URValue ( XAddress ) false -> URValue ( XAddress ) false -> URValue ( XCell ) false -> UExpression ( StateInitLRecord * XInteger256 ) false . 
+ Parameter prepare_xchg_pair_state_init_and_addr : URValue ( DXchgPairLRecord ) false -> URValue ( XCell ) false -> UExpression ( StateInitLRecord * XInteger256 ) false . 
+ Parameter approveTradingPairImpl : URValue ( XInteger256 ) false -> URValue (XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord)) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XAddress * (XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord) ) ) true .
+ Parameter rejectTradingPairImpl : URValue ( XInteger256 ) false -> URValue (XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord) ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord) ) true . 
+ Parameter approveXchgPairImpl : URValue ( XInteger256 ) false -> URValue ( XHMap XInteger256 (XInteger256 * XchgPairListingRequestLRecord) ) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XAddress * (XHMap XInteger256 (XInteger256 * XchgPairListingRequestLRecord) ) ) true . 
+ Parameter rejectXchgPairImpl : URValue ( XInteger256 ) false -> URValue ( XHMap XInteger256 (XInteger256 * XchgPairListingRequestLRecord) ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XHMap XInteger256 (XInteger256 * XchgPairListingRequestLRecord) ) true . 
+ Parameter approveWrapperImpl : URValue ( XInteger256 ) false -> URValue ( XHMap XInteger256 (XInteger256 * WrapperListingRequestLRecord) ) false -> URValue ( XCell ) false -> URValue ( XCell ) false -> URValue ( XCell ) false -> URValue ( XInteger8 ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XAddress * (XHMap XInteger256 (XInteger256 * WrapperListingRequestLRecord) ) ) true . 
+ Parameter rejectWrapperImpl : URValue ( XInteger256 ) false -> URValue ( XHMap XInteger256 (XInteger256 * WrapperListingRequestLRecord) ) false -> URValue ( ListingConfigLRecord ) false -> UExpression ( XHMap XInteger256 (XInteger256 * WrapperListingRequestLRecord) ) true . 
 
 
 End SpecSig.

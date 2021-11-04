@@ -72,10 +72,11 @@ GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
- ( XInteger8 ) : Type ;
- ( ( XHMap XInteger256 WrapperListingRequestLRecord ) ) : Type ; 
- ( ( XHMap XInteger256 TradingPairListingRequestLRecord) ) : Type ; 
- ( ( XHMap XInteger256 XchgPairListingRequestLRecord) ) : Type ] .
+  ( XInteger8 ) : Type ;
+ ( (XHMap XInteger256 (XInteger256 * WrapperListingRequestLRecord)) ) : Type ; 
+ ( (XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord)) ) : Type ; 
+ ( (XHMap XInteger256 (XInteger256 * XchgPairListingRequestLRecord)) ) : Type ] .
+
 Elpi GeneratePruvendoRecord ContractL ContractFields . 
  Opaque ContractLRecord . 
 
@@ -226,7 +227,7 @@ Elpi GeneratePruvendoRecord ContractL ContractFields .
  Opaque LocalState011100LRecord . 
  
  Inductive LocalStateFields011101I := | ι0111010 | ι0111011 . 
- Definition LocalState011101L := [ ( XHMap (string*nat) XAddress (* IWrapperPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState011101L := [ ( XHMap (string*nat) ( XAddress * XAddress (* IWrapperPtrLRecord *) ) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState011101L LocalStateFields011101I . 
  Opaque LocalState011101LRecord . 
  
@@ -1231,7 +1232,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField011100 : typeclass_instances. 
- #[global, program] Instance LocalStateField011101 : LocalStateField XAddress (* IWrapperPtrLRecord *).
+ #[global, program] Instance LocalStateField011101 : LocalStateField ( XAddress * XAddress ) (* IWrapperPtrLRecord *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
