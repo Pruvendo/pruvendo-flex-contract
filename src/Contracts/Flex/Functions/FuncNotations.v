@@ -342,6 +342,19 @@ Notation " 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance ) (in c
  Notation " '_xchg_pair_listing_requests_' " := ( xchg_pair_listing_requests__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_xchg_pair_listing_requests_' " := ( xchg_pair_listing_requests__right ) (in custom URValue at level 0) : ursus_scope. 
  
+Notation " 'FLEX_TIMESTAMP_DELAY_' " := (sInject FLEX_TIMESTAMP_DELAY) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::sender_is_not_deployer' " := (sInject sender_is_not_deployer) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::unexpected_refs_count_in_code' " := (sInject unexpected_refs_count_in_code) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::cant_override_code' " := (sInject cant_override_code) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::sender_is_not_my_owner' " := (sInject sender_is_not_my_owner) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::not_enough_funds' " := (sInject not_enough_funds) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrapper_not_requested' " := (sInject wrapper_not_requested) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::trading_pair_not_requested' " := (sInject trading_pair_not_requested) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::xchg_pair_not_requested' " := (sInject xchg_pair_not_requested) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::costs_inconsistency' " := (sInject costs_inconsistency) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrapper_with_such_pubkey_already_requested' " := (sInject wrapper_with_such_pubkey_already_requested) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::trading_pair_with_such_pubkey_already_requested' " := (sInject trading_pair_with_such_pubkey_already_requested) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::xchg_pair_with_such_pubkey_already_requested' " := (sInject xchg_pair_with_such_pubkey_already_requested) (in custom URValue at level 0) : ursus_scope. 
 
 Module Calls (tc : SpecSig).
 
@@ -467,7 +480,7 @@ Local Open Scope string_scope.
 
  Definition approveTradingPair_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveTradingPair 
- pubkey ) . 
+ pubkey ) .  
  
  Notation " 'approveTradingPair_' '(' pubkey ')' " := 
  ( approveTradingPair_right 

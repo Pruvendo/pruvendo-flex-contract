@@ -94,7 +94,7 @@ Definition constructor ( deployer_pubkey : URValue ( XInteger256 ) false ) ( own
  	 	 refine {{ _workchain_id_ := {} (* get ( address { tvm_myaddr ( ) } . val ( ) ) . workchain_id *) ; { _ } }} . 
  	 	 refine {{ require_ ( (({listing_cfg} ^^ ListingConfig.register_pair_cost) >= 
                           ( {listing_cfg} ^^ ListingConfig.reject_pair_cost )
-                          + ( {listing_cfg} ^^ ListingConfig.register_return_value ) ) , 1(* error_code::costs_inconsistency *) ) ; { _ } }} . 
+                          + ( {listing_cfg} ^^ ListingConfig.register_return_value ) ) , error_code::costs_inconsistency ) ; { _ } }} . 
 refine {{ return_ {} }} .
  Defined . 
 
@@ -153,29 +153,30 @@ Defined.
     return build(chain_tup).make_cell();
   }
 } *)
-Definition prepare_persistent_data : UExpression XCell false .
+Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
+                                           (base : Y): UExpression XCell false .
  refine {{ return_ {} }} .  
 Defined .
 
-Definition prepare_persistent_data_right (* { a1 a2 }  
-                                    ( persistent_data_header : URValue ( ? ) a1 ) 
-                                    ( base : URValue ( DBase ) a2 )  *)
-               : URValue ( XCell ) false (* orb a2 a1 *) := 
- wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ0 ) prepare_persistent_data 
- (* persistent_data_header base *) ) . 
+Definition prepare_persistent_data_right { X Y a1 a2 }  
+                                    ( persistent_data_header : URValue ( X ) a1 ) 
+                                    ( base : URValue ( Y ) a2 ) 
+               : URValue ( XCell ) ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data 
+persistent_data_header base ) . 
  
- Notation " 'prepare_persistent_data_' '(' ')' " := 
+ Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := 
  ( prepare_persistent_data_right 
- (* a b *) ) 
- (in custom URValue at level 0 (* , 
+ a b ) 
+ (in custom URValue at level 0 , 
    a custom URValue at level 0 
- , b custom URValue at level 0 *) ) : ursus_scope . 
+ , b custom URValue at level 0 ) : ursus_scope . 
 
  Definition setPairCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ~ _pair_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( {code} -> to_slice () -> refs () == #{2} ) , 1(* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( {code} -> to_slice () -> refs () == #{2} ) ,  error_code::unexpected_refs_count_in_code  ) ; { _ } }} . 
  	 	 refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
  
@@ -183,46 +184,46 @@ Definition prepare_persistent_data_right (* { a1 a2 }
  
  
  Definition setXchgPairCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ~ _xchg_pair_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ _xchg_pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( {code} -> to_slice () -> refs () == #{2} ) , 1(* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( {code} -> to_slice () -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ _xchg_pair_code_ := {}(* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
  
  Definition setWrapperCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ! _wrapper_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ! _wrapper_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( {code} -> to_slice () -> refs () == #{2} ) , 1(* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( {code} -> to_slice () -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
  	 	 refine {{ _wrapper_code_ := {} (* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
  Defined . 
 
 
  Definition setPriceCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ~ _price_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ _price_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _price_code_ -> set ( { code } ) }} . 
  Defined . 
  
  Definition setXchgPriceCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ~ _xchg_price_code_ ) , 1(* error_code::cant_override_code *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1(* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ _xchg_price_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _xchg_price_code_ -> set ({ code }) }} . 
  Defined .  
  
  Definition setExtWalletCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ~ _ext_wallet_code_ ) , 1 (*  error_code::cant_override_code *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1 (* error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ _ext_wallet_code_ ) ,   error_code::cant_override_code  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _ext_wallet_code_ -> set ( { code } ) }} . 
  Defined . 
  
  Definition setFlexWalletCode ( code : URValue ( XCell ) false ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ~ _flex_wallet_code_ ) , 1 (* error_code::cant_override_code *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) , 1 (*  error_code::sender_is_not_deployer *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ _flex_wallet_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg.pubkey () == _deployer_pubkey_ ) ,   error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _flex_wallet_code_ -> set ( { code } ) }} . 
  Defined . 
@@ -230,9 +231,9 @@ Definition prepare_persistent_data_right (* { a1 a2 }
 Definition check_owner : UExpression PhantomType true . 
  	 	 refine {{ new 'internal_ownership : ( XBool ) @ "internal_ownership" :=  ~~ ? _owner_address_ ; { _ } }} . 
   	 refine {{ if ( #{Internal} ) then { { _: UExpression PhantomType true } } else { { _: UExpression PhantomType true } } ; { _ } }} . 
- 	 	   refine {{ require_ ( !{ internal_ownership } && ( (* int_sender () *) {} == ( _owner_address_ ->get_default () ) ) , 1 (* error_code::sender_is_not_my_owner *) )  }} . 
+ 	 	   refine {{ require_ ( !{ internal_ownership } && ( (* int_sender () *) {} == ( _owner_address_ ->get_default () ) ) ,  error_code::sender_is_not_my_owner )  }} . 
 
- 	 	   refine {{ require_ ( ( ~ !{ internal_ownership } && ( msg.pubkey () == _deployer_pubkey_ ) ) , 1 (* error_code::sender_is_not_my_owner *) )  }} . 
+ 	 	   refine {{ require_ ( ( ~ !{ internal_ownership } && ( msg.pubkey () == _deployer_pubkey_ ) ) ,  error_code::sender_is_not_my_owner )  }} . 
      refine {{ return_ {} }} .
  Defined . 
 
@@ -248,12 +249,16 @@ Definition check_owner : UExpression PhantomType true .
  Definition transfer ( tto : URValue ( XAddress ) false ) ( tons : URValue ( XInteger128 ) false ) : UExpression PhantomType true . 
   	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm.accept () (* ; { _ } }} . 
+
+     refine {{ ⤳ Flex._transfer @ {_} with [$ {_} ⇒ {Messsage_ι_value} ;
+                 {_} ⇒ {Messsage_ι_bounce} ;
+                 {_} ⇒ {Messsage_ι_flags} $] }} .
  	 	 refine {{ tvm_transfer ( tto , tons . get ( ) , true ) *) }} . 
  Defined . 
 
  Definition prepare_trading_pair_state_init_and_addr ( pair_data : URValue ( DTradingPairLRecord ) false ) ( pair_code : URValue ( XCell ) false ) : UExpression ( StateInitLRecord * XInteger256 )  false . 
  	 	 refine {{ new 'pair_data_cl : ( XCell ) @ "pair_data_cl" := {} ; { _ } }} . 
- 	 	 refine {{ { pair_data_cl } := prepare_persistent_data_ ( ) (* { } , pair_data ) *) ; { _ } }} . 
+ 	 	 refine {{ { pair_data_cl } := prepare_persistent_data_ ( {} , {pair_data} ) ; { _ } }} . 
  	 	 refine {{ new 'pair_init : ( StateInitLRecord ) @ "pair_init" := 
                  [$ {}  ⇒ {StateInit_ι_split_depth} ;
                     {}  ⇒ {StateInit_ι_special} ; 
@@ -299,8 +304,8 @@ Definition check_owner : UExpression PhantomType true .
  , pair_code custom URValue at level 0 ) : ursus_scope . 
 
  Definition registerTradingPair ( pubkey : URValue ( XInteger256 ) false ) ( tip3_root : URValue ( XAddress ) false ) ( min_amount : URValue ( XInteger128 ) false ) ( notify_addr : URValue ( XAddress ) false ) : UExpression XAddress true . 
- 	 	 refine {{ require_ ( ( int_value () > ( _listing_cfg_ ^^ ListingConfig.register_pair_cost) ) , 1 (* error_code::not_enough_funds *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ~ {} (* _trading_pair_listing_requests_ .contains ( pubkey.get ( ) ) *) ) , 1(* error_code::trading_pair_with_such_pubkey_already_requested *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( int_value () > ( _listing_cfg_ ^^ ListingConfig.register_pair_cost) ) ,  error_code::not_enough_funds  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ {} (* _trading_pair_listing_requests_ .contains ( pubkey.get ( ) ) *) ) ,  error_code::trading_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
 (*  	 	 refine {{ trading_pair_listing_requests_.set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3_root , min_amount , notify_addr } ) ; { _ } }} .  *)
 (*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
  	 	 refine {{ new 'state_init : ( StateInitLRecord ) @ "state_init" := {} ; { _ } }} . 
@@ -317,7 +322,7 @@ Definition approveTradingPairImpl ( pubkey : URValue ( XInteger256 ) false )
 
  	 	 refine {{ new 'opt_req_info : ( XMaybe TradingPairListingRequestLRecord ) @ "opt_req_info" := {} ; { _ } }} . 
  	 	                     (* trading_pair_listing_requests.extract ( pubkey.get ( ) ) *)  
- 	 	 refine {{ require_ ( !{opt_req_info}  , 1 (* error_code::trading_pair_not_requested *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( !{opt_req_info}  ,  error_code::trading_pair_not_requested  ) ; { _ } }} . 
  	 	 refine {{ new 'req_info : ( TradingPairListingRequestLRecord ) @ "req_info" := {} ; { _ } }} . 
  	 	 refine {{ { req_info } := (!{opt_req_info}) -> get_default () ; { _ } }} . 
  	 	 refine {{ new 'state_init : ( StateInitLRecord ) @ "state_init" := {} ; { _ } }} . 
@@ -386,7 +391,7 @@ UExpression (XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord) 
 
  	 	 refine {{ new 'opt_req_info : ( XMaybe TradingPairListingRequestLRecord ) @ "opt_req_info" := {} ; { _ } }} . 
 (*  	 	 refine {{ { opt_req_info } := trading_pair_listing_requests.extract ( pubkey ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( !{ opt_req_info }  , 1 (* error_code::trading_pair_not_requested *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( !{ opt_req_info }  ,  error_code::trading_pair_not_requested  ) ; { _ } }} . 
  	 	 refine {{ new 'req_info : ( TradingPairListingRequestLRecord ) @ "req_info" := 
                     (!{opt_req_info}) -> get_default ()  ; { _ } }} . 
  	 	 refine {{ new 'remaining_funds : ( XInteger128 ) @ "remaining_funds" := 
@@ -437,7 +442,7 @@ Definition prepare_xchg_pair_state_init_and_addr
 ( pair_code : URValue ( XCell ) false ) 
 : UExpression ( StateInitLRecord * XInteger256 )  false . 
  	 	 refine {{ new 'pair_data_cl : ( XCell ) @ "pair_data_cl" := 
-                  prepare_persistent_data_ ( ) (*{ } , pair_data ) *) ; { _ } }} . 
+                  prepare_persistent_data_ ( {} , {pair_data} )  ; { _ } }} . 
  	 	 refine {{ new 'pair_init : ( StateInitLRecord ) @ "pair_init" := 
                 [$ {} ⇒ { StateInit_ι_split_depth } ; 
                    {} ⇒ { StateInit_ι_special } ; 
@@ -468,7 +473,7 @@ Definition approveXchgPairImpl ( pubkey : URValue ( XInteger256 ) false )
 
  	 	 refine {{ new 'opt_req_info : ( XMaybe XchgPairListingRequestLRecord ) @ "opt_req_info" := {}(* 
               xchg_pair_listing_requests.extract ( pubkey ) *) ; { _ } }} . 
- 	 	 refine {{ require_ ( !{ opt_req_info }  , 1 (* error_code::xchg_pair_not_requested *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( !{ opt_req_info }  ,  error_code::xchg_pair_not_requested  ) ; { _ } }} . 
  	 	 refine {{ new 'req_info : ( XchgPairListingRequestLRecord ) @ "req_info" := 
                           (!{opt_req_info}) -> get_default () ; { _ } }} . 
  	 	 refine {{ new 'pair_data : ( DXchgPairLRecord ) @ "pair_data" :=  
@@ -516,7 +521,7 @@ Definition approveXchgPairImpl ( pubkey : URValue ( XInteger256 ) false )
 UExpression (XHMap XInteger256 (XInteger256 * XchgPairListingRequestLRecord) ) true . 
  	 	 refine {{ new 'opt_req_info : ( XMaybe XchgPairListingRequestLRecord ) @ "opt_req_info" := {} 
            (* xchg_pair_listing_requests.extract (pubkey) *) ; { _ } }} . 
- 	 	 refine {{ require_ ( !{ opt_req_info } , 1 (* error_code::xchg_pair_not_requested *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( !{ opt_req_info } ,  error_code::xchg_pair_not_requested  ) ; { _ } }} . 
  	 	 refine {{ new 'req_info : ( XchgPairListingRequestLRecord ) @ "req_info" := 
                   (!{opt_req_info}) -> get_default () ; { _ } }} . 
  	 	 refine {{ new 'remaining_funds : ( XInteger128 ) @ "remaining_funds" := 
@@ -546,7 +551,7 @@ UExpression (XHMap XInteger256 (XInteger256 * XchgPairListingRequestLRecord) ) t
 ( wrapper_data : URValue ( DWrapperLRecord ) false ) 
 : UExpression ( StateInitLRecord * XInteger256 )  false . 
  	 	 refine {{ new 'wrapper_data_cl : ( XCell ) @ "wrapper_data_cl" :=  
-             prepare_persistent_data_ ( ) (*  wrapper_replay_protection_t : : init ( ) , wrapper_data ) *) ; { _ } }} . 
+             prepare_persistent_data_ ( {} (* wrapper_replay_protection_t::init () *) , {wrapper_data} )  ; { _ } }} . 
  	 	 refine {{ new 'wrapper_init : ( StateInitLRecord ) @ "wrapper_init" := 
 
                [$ {} ⇒ { StateInit_ι_split_depth } ; 
@@ -599,7 +604,7 @@ refine {{ new 'wallet_data : ( DTONTokenWalletExternalLRecord ) @ "wallet_data" 
                                $] ; { _ } }} . 
 
  refine {{ new 'wallet_data_cl : ( XCell ) @ "wallet_data_cl" :=  
-             prepare_persistent_data_ ( ) (*external_wallet_replay_protection_t : : init ( ) , wallet_data ) *) ; { _ } }} . 
+             prepare_persistent_data_ ( {} (* external_wallet_replay_protection_t::init () *) , !{wallet_data} ) ; { _ } }} . 
  refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 
                [$ {} ⇒ { StateInit_ι_split_depth } ; 
                   {} ⇒ { StateInit_ι_special } ;
@@ -642,7 +647,7 @@ refine {{ new 'wallet_data : ( DTONTokenWalletExternalLRecord ) @ "wallet_data" 
 
  refine {{ new 'opt_req_info : ( XMaybe WrapperListingRequestLRecord ) @ "opt_req_info" := {}
        (* wrapper_listing_requests.extract ( pubkey ^^ XInteger256:get ( ) ) *) ; { _ } }} . 
- refine {{ require_ ( !{ opt_req_info }  , 1 (* error_code::wrapper_not_requested *) ) ; { _ } }} . 
+ refine {{ require_ ( !{ opt_req_info }  ,  error_code::wrapper_not_requested  ) ; { _ } }} . 
  refine {{ new 'req_info : ( WrapperListingRequestLRecord ) @ "req_info" := 
                (!{opt_req_info}) -> get_default () ; { _ } }} . 
  refine {{ new 'tip3cfg : ( Tip3ConfigLRecord ) @ "tip3cfg" := 
@@ -717,7 +722,7 @@ Definition rejectWrapperImpl
 
  	 	 refine {{ new 'opt_req_info : ( XMaybe WrapperListingRequestLRecord ) @ "opt_req_info" := {} 
         (* wrapper_listing_requests.extract ( pubkey ) *) ; { _ } }} . 
- 	 	 refine {{ require_ ( !{ opt_req_info } , 1 (* error_code::wrapper_not_requested *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( !{ opt_req_info } ,  error_code::wrapper_not_requested  ) ; { _ } }} . 
  	 	 refine {{ new 'req_info : ( WrapperListingRequestLRecord ) @ "req_info" := 
                              (!{opt_req_info}) -> get_default () ; { _ } }} . 
  	 	 refine {{ new 'remaining_funds : ( XInteger128 ) @ "remaining_funds" := 
@@ -743,8 +748,8 @@ Definition rejectWrapperImpl
  , listing_cfg custom URValue at level 0 ) : ursus_scope . 
 
  Definition registerXchgPair ( pubkey : URValue ( XInteger256 ) false ) ( tip3_major_root : URValue ( XAddress ) false ) ( tip3_minor_root : URValue ( XAddress ) false ) ( min_amount : URValue ( XInteger128 ) false ) ( notify_addr : URValue ( XAddress ) false ) : UExpression XAddress true . 
- refine {{ require_ ( (* int_value().get() *) {} > (_listing_cfg_ ^^ ListingConfig.register_pair_cost) , 1 (* error_code::not_enough_funds *) ) ; { _ } }} . 
- refine {{ require_ ( ~ ( {} (* _xchg_pair_listing_requests_.contains({pubkey}) *) ) , 1 (* error_code::xchg_pair_with_such_pubkey_already_requested *) ) ; { _ } }} . 
+ refine {{ require_ ( (* int_value().get() *) {} > (_listing_cfg_ ^^ ListingConfig.register_pair_cost) ,  error_code::not_enough_funds  ) ; { _ } }} . 
+ refine {{ require_ ( ~ ( {} (* _xchg_pair_listing_requests_.contains({pubkey}) *) ) ,  error_code::xchg_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
 (*  refine {{ xchg_pair_listing_requests_.set_at ( {pubkey} , { int_sender ( ) , int_value () - listing_cfg_ . register_return_value , tip3_major_root , tip3_minor_root , min_amount , notify_addr } ) ; { _ } }} . *)
  	 	 refine {{ new 'pair_data : ( DXchgPairLRecord ) @ "pair_data" :=  
                	 	 [$  ( tvm.address () ) ⇒ { DXchgPair_ι_flex_addr_ } ; 
@@ -794,8 +799,8 @@ Definition rejectXchgPair ( pubkey : URValue ( XInteger256 ) false ) : UExpressi
 
 Definition registerWrapper ( pubkey : URValue ( XInteger256 ) false ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) false ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( int_value () 
-           > ( _listing_cfg_ ^^ ListingConfig.register_wrapper_cost ) , 1 (* error_code::not_enough_funds *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ~ {} (* wrapper_listing_requests_.contains ( {pubkey} ) *) ) , 1 (* error_code::wrapper_with_such_pubkey_already_requested *) ) ; { _ } }} . 
+           > ( _listing_cfg_ ^^ ListingConfig.register_wrapper_cost ) ,  error_code::not_enough_funds  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ {} (* wrapper_listing_requests_.contains ( {pubkey} ) *) ) ,  error_code::wrapper_with_such_pubkey_already_requested  ) ; { _ } }} . 
 (*  	 	 refine {{ wrapper_listing_requests_ ^^ set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3cfg } ) ; { _ } }} .  *)
  	 	 refine {{ new 'wrapper_data : ( DWrapperLRecord ) @ "wrapper_data" := 
  	 	 [$ ({tip3cfg} ^^ Tip3Config.name) ⇒ { DWrapper_ι_name_ } ; 
@@ -1012,7 +1017,7 @@ Defined .
  Definition getSellPriceCode ( tip3_addr : URValue ( XAddress ) false ) : UExpression XCell true . 
  	 	 refine {{ new 'price_code_sl : ( XSlice ) @ "price_code_sl" := 
                           _price_code_ -> get_default () -> to_slice () ; { _ } }} . 
- 	 	 refine {{ require_ ( (!{price_code_sl}) -> refs () == #{2} , 1 (* error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( (!{price_code_sl}) -> refs () == #{2} ,  error_code::unexpected_refs_count_in_code  ) ; { _ } }} . 
  	 	 refine {{ new 'salt : ( XCell ) @ "salt" := {} 
             (*  builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( tip3_addr.sl ( ) ) . endc ( ) *) ; { _ } }} . 
  	 	 refine {{ return_ {} (* builder ( ) . stslice ( !{ price_code_sl } ) . stref ( !{ salt } ) . endc ( ) *) }} . 
@@ -1022,7 +1027,7 @@ Defined .
         ( tip3_addr2 : URValue ( XAddress ) false ) : UExpression XCell true . 
  	 	 refine {{ new 'price_code_sl : ( XSlice ) @ "price_code_sl" := 
                _xchg_price_code_ -> get_default () -> to_slice () ; { _ } }} . 
- 	 	 refine {{ require_ ( (!{price_code_sl}) -> refs () == #{2} , 1 (*  error_code::unexpected_refs_count_in_code *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( (!{price_code_sl}) -> refs () == #{2} ,   error_code::unexpected_refs_count_in_code  ) ; { _ } }} . 
  	 	 refine {{ new 'keys : ( XAddress * XAddress )  @ "keys" := 
                    [ { tip3_addr1 } , { tip3_addr2 } ] ; { _ } }} . 
  	 	 refine {{ return_ {} (* builder ( ) . stslice ( !{ price_code_sl } ) . stref ( build ( !{ keys } ) . endc ( ) ) . endc ( ) *) }} . 
@@ -1059,7 +1064,7 @@ Defined .
                                              ( flex_code : URValue ( XCell ) false ) 
                     : UExpression ( StateInitLRecord * XInteger256 ) false . 
  	 	 refine {{ new 'flex_data_cl : ( XCell ) @ "flex_data_cl" :=
-              prepare_persistent_data_ ( ) (* flex_replay_protection_t : : init ( ) , flex_data ) *) ; { _ } }} . 
+              prepare_persistent_data_ ( {} (* flex_replay_protection_t::init ()*) , {flex_data} ) ; { _ } }} . 
  	 	 refine {{ new 'flex_init : ( StateInitLRecord ) @ "flex_init" := 
              [ {} , {} , {flex_code} -> set () , (!{flex_data_cl}) -> set () , {} ] ; { _ } }} . 
  	 	 refine {{ new 'flex_init_cl : ( XCell ) @ "flex_init_cl" := {} 
@@ -1084,7 +1089,7 @@ Defined .
                    {wallet_public_key} , {root_address} , {owner_address} , 
                    {} , {code} , {workchain_id} ] ; { _ } }} . 
  	 	 refine {{ new 'wallet_data_cl : ( XCell ) @ "wallet_data_cl" := 
-               prepare_persistent_data_ ( ) (* { } , wallet_data ) *) ; { _ } }} . 
+               prepare_persistent_data_ ( {} , !{wallet_data} ) ; { _ } }} . 
  	 	 refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 
               [ {} , {} , {code} -> set () , (!{wallet_data_cl}) -> set () , {} ] ; { _ } }} . 
  	 	 refine {{ new 'wallet_init_cl : ( XCell ) @ "wallet_init_cl" := {}  
