@@ -116,7 +116,18 @@ refine {{ return_ {} }} .
     }
   }
  *)
- Definition setSpecificCode ( type : URValue ( XInteger8 ) false ) ( code : URValue ( XCell ) false ) : UExpression PhantomType false .
+ Definition setSpecificCode 
+( type : URValue ( XInteger8 ) false ) 
+( code : URValue ( XCell ) false ) 
+: UExpression PhantomType false .
+(*   refine {{ switch_ ( {} ) with { { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } } ) }}.
+  refine {{ case_ trade_pair_code => setPairCode(code) ; return_ {} }}.
+  refine {{ case_ xchg_pair_code => setPairCode(code) ; return_ {} }}.
+  refine {{ case_ wrapper_code => setPairCode(code) ; return_ {} }}.
+  refine {{ case_ ext_wallet_code => setPairCode(code) ; return_ {} }}.
+  refine {{ case_ flex_wallet_code => setPairCode(code) ; return_ {} }}.
+  refine {{ case_ price_code => setPairCode(code) ; return_ {} }}.
+  refine {{ case_ xchg_price_code => setPairCode(code) ; return_ {} }}. *)
  	 	 refine {{ return_ {} }} .
 Defined.
 
@@ -234,7 +245,7 @@ Defined.
  Definition registerTradingPair ( pubkey : URValue ( XInteger256 ) false ) ( tip3_root : URValue ( XAddress ) false ) ( min_amount : URValue ( XInteger128 ) false ) ( notify_addr : URValue ( XAddress ) false ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( {}  (* int.value () *) > ( _listing_cfg_ ^^ ListingConfig.register_pair_cost) ) , 1 (* error_code::not_enough_funds *) ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( ~ {} (* _trading_pair_listing_requests_ .contains ( pubkey.get ( ) ) *) ) , 1(* error_code::trading_pair_with_such_pubkey_already_requested *) ) ; { _ } }} . 
-(*  	 	 refine {{ trading_pair_listing_requests_.set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3_root , min_amount , notify_addr } ) ; { _ } }} .  *)
+(*  	 	 refine {{ trading_pair_listing_requests_.set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( msg.value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3_root , min_amount , notify_addr } ) ; { _ } }} .  *)
 (*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
  	 	 refine {{ new 'state_init : ( StateInitLRecord ) @ "state_init" := {} ; { _ } }} . 
  	 	 refine {{ new 'std_addr : ( XInteger256 ) @ "std_addr" := {} ; { _ } }} . 
@@ -308,8 +319,8 @@ Definition check_owner : UExpression PhantomType true .
  	 	 refine {{ [ { trade_pair } , { new_trading_pair_listing_requests } ] := 
             approveTradingPairImpl_ ( {pubkey} , _trading_pair_listing_requests_ , _pair_code_ -> get_default () , _workchain_id_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _trading_pair_listing_requests_ := !{new_trading_pair_listing_requests} ; { _ } }} . 
- 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := {} (* int_value ( ) *) ; { _ } }} . 
-(*  	 	 refine {{ tvm_rawreserve ( tvm_balance ( ) - value_gr ( ) , rawreserve_flag : : up_to ) ; { _ } }} .  *)
+ 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := msg.value ()  ; { _ } }} . 
+  	 	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} ) (* {} (* rawreserve_flag::up_to *) ) *) ; { _ } }} .
 (*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ !{ trade_pair } }} . 
  Defined .
@@ -380,9 +391,9 @@ UExpression (XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord) 
 (*  	 	 refine {{ check_owner ( ) ; { _ } }} .  *)
  	 	 refine {{ _trading_pair_listing_requests_ := 
               rejectTradingPairImpl_ ( { pubkey } , _trading_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
- 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := {} (* int_value ( ) *) ; { _ } }} . 
-(*  	 	 	 refine {{ tvm_rawreserve ( tvm_balance ( ) - value_gr ( ) , rawreserve_flag : : up_to ) ; { _ } }} .  *)
- 	 refine {{ new 'value_gr : XInteger @ "value_gr" := {} (* int_value ( ) *) ; { _ } }} .  	 	 	 
+ 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := msg.value () ; { _ } }} . 
+  	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) ; { _ } }} .
+ 	 refine {{ {value_gr} := msg.value () ; { _ } }} .  	 	 	 
 (*    refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
  Defined . 
@@ -725,7 +736,7 @@ Definition rejectWrapperImpl
  Definition registerXchgPair ( pubkey : URValue ( XInteger256 ) false ) ( tip3_major_root : URValue ( XAddress ) false ) ( tip3_minor_root : URValue ( XAddress ) false ) ( min_amount : URValue ( XInteger128 ) false ) ( notify_addr : URValue ( XAddress ) false ) : UExpression XAddress true . 
  refine {{ require_ ( (* int.value().get() *) {} > (_listing_cfg_ ^^ ListingConfig.register_pair_cost) , 1 (* error_code::not_enough_funds *) ) ; { _ } }} . 
  refine {{ require_ ( ~ ( {} (* _xchg_pair_listing_requests_.contains({pubkey}) *) ) , 1 (* error_code::xchg_pair_with_such_pubkey_already_requested *) ) ; { _ } }} . 
-(*  refine {{ xchg_pair_listing_requests_.set_at ( {pubkey} , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3_major_root , tip3_minor_root , min_amount , notify_addr } ) ; { _ } }} . *)
+(*  refine {{ xchg_pair_listing_requests_.set_at ( {pubkey} , { int_sender ( ) , msg.value () - listing_cfg_ . register_return_value , tip3_major_root , tip3_minor_root , min_amount , notify_addr } ) ; { _ } }} . *)
  	 	 refine {{ new 'pair_data : ( DXchgPairLRecord ) @ "pair_data" :=  
                	 	 [$  ( tvm.address () ) ⇒ { DXchgPair_ι_flex_addr_ } ; 
                       { tip3_major_root } ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
@@ -754,8 +765,8 @@ Definition rejectWrapperImpl
                                       _workchain_id_ , 
                                       _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _xchg_pair_listing_requests_ := !{xchg_pair_listing_requests} ; { _ } }} . 
- 	 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := {} (* int_value ( ) *) ; { _ } }} . 
-(*  	 	 	 refine {{ tvm_rawreserve ( tvm_balance ( ) - value_gr ( ) , rawreserve_flag : : up_to ) ; { _ } }} .  *)
+ 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := msg.value () ; { _ } }} . 
+  	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) ; { _ } }} .  
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ !{ xchg_pair } }} . 
  Defined . 
@@ -780,8 +791,8 @@ Definition rejectXchgPair_INTERNAL ( pubkey : URValue ( XInteger256 ) false ) : 
 (*  	 	 refine {{ check_owner ( ) ; { _ } }} .  *)
  	 	 refine {{ _xchg_pair_listing_requests_ := 
           rejectXchgPairImpl_ ( { pubkey } , _xchg_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
- 	 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := {} (* int_value ( ) *) ; { _ } }} . 
-(*  	 	 	 refine {{ tvm_rawreserve ( tvm_balance ( ) - value_gr ( ) , rawreserve_flag : : up_to ) ; { _ } }} .  *)
+ 	 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := msg.value () ; { _ } }} . 
+ 	 	 	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) ; { _ } }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
  Defined . 
@@ -794,10 +805,10 @@ Definition rejectXchgPair_EXTERNAL ( pubkey : URValue ( XInteger256 ) false ) : 
  Defined . 
 
  Definition registerWrapper ( pubkey : URValue ( XInteger256 ) false ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) false ) : UExpression XAddress true . 
- 	 	 refine {{ require_ ( (* ( int_value ( ) . get ( ) *) 
-          {} > ( _listing_cfg_ ^^ ListingConfig.register_wrapper_cost ) , 1 (* error_code::not_enough_funds *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( msg.value () 
+           > ( _listing_cfg_ ^^ ListingConfig.register_wrapper_cost ) , 1 (* error_code::not_enough_funds *) ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( ~ {} (* wrapper_listing_requests_.contains ( {pubkey} ) *) ) , 1 (* error_code::wrapper_with_such_pubkey_already_requested *) ) ; { _ } }} . 
-(*  	 	 refine {{ wrapper_listing_requests_ ^^ set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3cfg } ) ; { _ } }} .  *)
+(*  	 	 refine {{ wrapper_listing_requests_ ^^ set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( msg.value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3cfg } ) ; { _ } }} .  *)
  	 	 refine {{ new 'wrapper_data : ( DWrapperLRecord ) @ "wrapper_data" := 
  	 	 [$ ({tip3cfg} ^^ Tip3Config.name) ⇒ { DWrapper_ι_name_ } ; 
         ({tip3cfg} ^^ Tip3Config.symbol) ⇒ { DWrapper_ι_symbol_ } ; 
@@ -832,8 +843,8 @@ Definition rejectXchgPair_EXTERNAL ( pubkey : URValue ( XInteger256 ) false ) : 
                                   _workchain_id_ , 
                                   _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _wrapper_listing_requests_ := !{new_wrapper_listing_requests} ; { _ } }} . 
- 	 	 	 refine {{new 'value_gr : XInteger @ "value_gr" := {} (* int_value ( ) *) ; { _ } }} . 
-(*  	 	 	 refine {{ tvm_rawreserve ( tvm.balance () - !{value_gr} , rawreserve_flag : : up_to ) ; { _ } }} .  *)
+ 	 	 refine {{new 'value_gr : XInteger @ "value_gr" := msg.value () ; { _ } }} . 
+  	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) ; { _ } }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ !{ wrapper_addr } }} . 
 Defined . 
@@ -860,8 +871,8 @@ Defined .
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _wrapper_listing_requests_ := 
             rejectWrapperImpl_ ( { pubkey } , _wrapper_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
- 	 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := {} (* int_value ( ) *) ; { _ } }} . 
-(*  	 	 	 refine {{ tvm_rawreserve ( tvm_balance ( ) - value_gr ( ) , rawreserve_flag : : up_to ) ; { _ } }} .  *)
+ 	 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := msg.value () ; { _ } }} . 
+ 	 	 	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) ; { _ } }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
 Defined . 
