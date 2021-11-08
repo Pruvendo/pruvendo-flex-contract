@@ -444,7 +444,7 @@ Local Open Scope string_scope.
  code ) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition transfer_left { R a1 a2 }  ( tto : URValue ( XAddress ) a1 ) ( tons : URValue ( XInteger128 ) a2 ) : UExpression R ( orb a2 a1 ) := 
+ Definition transfer_left { R a1 a2 }  ( tto : URValue ( XAddress ) a1 ) ( tons : URValue ( XInteger128 ) a2 ) : UExpression R true (* ( orb a2 a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) transfer 
  tto tons ) . 
  
@@ -465,39 +465,21 @@ Local Open Scope string_scope.
  , min_amount custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveTradingPair_INTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveTradingPair_INTERNAL 
+ Definition approveTradingPair_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveTradingPair 
  pubkey ) . 
  
- Notation " 'approveTradingPair_INTERNAL_' '(' pubkey ')' " := 
- ( approveTradingPair_INTERNAL_right 
+ Notation " 'approveTradingPair_' '(' pubkey ')' " := 
+ ( approveTradingPair_right 
  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveTradingPair_EXTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveTradingPair_EXTERNAL 
+ Definition rejectTradingPair_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectTradingPair 
  pubkey ) . 
  
- Notation " 'approveTradingPair_EXTERNAL_' '(' pubkey ')' " := 
- ( approveTradingPair_EXTERNAL_right 
- pubkey ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
-
- Definition rejectTradingPair_INTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectTradingPair_INTERNAL 
- pubkey ) . 
- 
- Notation " 'rejectTradingPair_INTERNAL_' '(' pubkey ')' " := 
- ( rejectTradingPair_INTERNAL_right 
- pubkey ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
-
- Definition rejectTradingPair_EXTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectTradingPair_EXTERNAL 
- pubkey ) . 
- 
- Notation " 'rejectTradingPair_EXTERNAL_' '(' pubkey ')' " := 
- ( rejectTradingPair_EXTERNAL_right 
+ Notation " 'rejectTradingPair_' '(' pubkey ')' " := 
+ ( rejectTradingPair_right 
  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
@@ -514,39 +496,21 @@ Local Open Scope string_scope.
  , min_amount custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveXchgPair_INTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveXchgPair_INTERNAL 
+ Definition approveXchgPair_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveXchgPair 
  pubkey ) . 
  
- Notation " 'approveXchgPair_INTERNAL_' '(' pubkey ')' " := 
- ( approveXchgPair_INTERNAL_right 
+ Notation " 'approveXchgPair_' '(' pubkey ')' " := 
+ ( approveXchgPair_right 
  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveXchgPair_EXTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveXchgPair_EXTERNAL 
+ Definition rejectXchgPair_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectXchgPair 
  pubkey ) . 
  
- Notation " 'approveXchgPair_EXTERNAL_' '(' pubkey ')' " := 
- ( approveXchgPair_EXTERNAL_right 
- pubkey ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
-
- Definition rejectXchgPair_INTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectXchgPair_INTERNAL 
- pubkey ) . 
- 
- Notation " 'rejectXchgPair_INTERNAL_' '(' pubkey ')' " := 
- ( rejectXchgPair_INTERNAL_right 
- pubkey ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
-
- Definition rejectXchgPair_EXTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectXchgPair_EXTERNAL 
- pubkey ) . 
- 
- Notation " 'rejectXchgPair_EXTERNAL_' '(' pubkey ')' " := 
- ( rejectXchgPair_EXTERNAL_right 
+ Notation " 'rejectXchgPair_' '(' pubkey ')' " := 
+ ( rejectXchgPair_right 
  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
@@ -560,39 +524,21 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , tip3cfg custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveWrapper_INTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveWrapper_INTERNAL 
+ Definition approveWrapper_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveWrapper 
  pubkey ) . 
  
- Notation " 'approveWrapper_INTERNAL_' '(' pubkey ')' " := 
- ( approveWrapper_INTERNAL_right 
+ Notation " 'approveWrapper_' '(' pubkey ')' " := 
+ ( approveWrapper_right 
  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveWrapper_EXTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XAddress true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveWrapper_EXTERNAL 
+ Definition rejectWrapper_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectWrapper 
  pubkey ) . 
  
- Notation " 'approveWrapper_EXTERNAL_' '(' pubkey ')' " := 
- ( approveWrapper_EXTERNAL_right 
- pubkey ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
-
- Definition rejectWrapper_INTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectWrapper_INTERNAL 
- pubkey ) . 
- 
- Notation " 'rejectWrapper_INTERNAL_' '(' pubkey ')' " := 
- ( rejectWrapper_INTERNAL_right 
- pubkey ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
-
- Definition rejectWrapper_EXTERNAL_right { a1 }  ( pubkey : URValue ( XInteger256 ) a1 ) : URValue XBool true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectWrapper_EXTERNAL 
- pubkey ) . 
- 
- Notation " 'rejectWrapper_EXTERNAL_' '(' pubkey ')' " := 
- ( rejectWrapper_EXTERNAL_right 
+ Notation " 'rejectWrapper_' '(' pubkey ')' " := 
+ ( rejectWrapper_right 
  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
