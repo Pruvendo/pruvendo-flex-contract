@@ -9,7 +9,7 @@ Require Import Contracts.Flex.Ledger.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
-Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm.
+(* Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm. *)
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export tvmNotationsModule := tvmNotations xt sm LedgerModuleForFuncSig. 
 

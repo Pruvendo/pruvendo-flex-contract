@@ -31,8 +31,9 @@ Module FlexPublicInterface := PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
-
 Import xt.
+
+Fail Check OutgoingMessage_default.
 
 Import UrsusNotations.
 
