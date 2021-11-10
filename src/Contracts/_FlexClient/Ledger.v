@@ -28,18 +28,8 @@ Local Open Scope glist_scope.
 
 
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_SelfDeployer | _EmittedEvents | _MessagesLog.
-(* 1 *) Inductive ContractFields := 
-| owner_ 
-| trading_pair_code_ 
-| xchg_pair_code_ 
-| workchain_id_ 
-| tons_cfg_ 
-| flex_ 
-| ext_wallet_code_ 
-| flex_wallet_code_ 
-| flex_wrapper_code_ .
-
-(* 1 *) Inductive LedgerFieldsI  := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
+(* 1 *) Inductive ContractFields := | owner_ | trading_pair_code_ | xchg_pair_code_ | workchain_id_ | tons_cfg_ | flex_ | ext_wallet_code_ | flex_wallet_code_ | flex_wrapper_code_ .
+(* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
@@ -64,77 +54,75 @@ GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
  ( XCell ) : Type ; 
  ( XInteger8 ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
- ( XAddress (* addr_std_compact *) ) : Type ; 
- ( XMaybe XCell ) : Type ; 
- ( XMaybe XCell ) : Type ; 
- ( XMaybe XCell ) : Type ] .
+ ( XAddress ) : Type ; 
+ ( ( XMaybe XCell ) ) : Type ; 
+ ( ( XMaybe XCell ) ) : Type ; 
+ ( ( XMaybe XCell ) ) : Type ] .
 Elpi GeneratePruvendoRecord ContractL ContractFields . 
  Opaque ContractLRecord . 
  
-Locate SellArgsStateL.
-
 Inductive LocalStateFields00000I := | ι000000 | ι000001 . 
- Definition LocalState00000L := [ ( XHMap (string*nat) XInteger256 ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00000L := [ ( XHMap (string*nat) XInteger128 ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00000L LocalStateFields00000I . 
  Opaque LocalState00000LRecord . 
  
  Inductive LocalStateFields00001I := | ι000010 | ι000011 . 
- Definition LocalState00001L := [ ( XHMap (string*nat) XCell ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00001L := [ ( XHMap (string*nat) XAddress ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00001L LocalStateFields00001I . 
  Opaque LocalState00001LRecord . 
  
  Inductive LocalStateFields00010I := | ι000100 | ι000101 . 
- Definition LocalState00010L := [ ( XHMap (string*nat) TonsConfigLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00010L := [ ( XHMap (string*nat) DTradingPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00010L LocalStateFields00010I . 
  Opaque LocalState00010LRecord . 
  
  Inductive LocalStateFields00011I := | ι000110 | ι000111 . 
- Definition LocalState00011L := [ ( XHMap (string*nat) XAddress ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00011L := [ ( XHMap (string*nat) auto ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00011L LocalStateFields00011I . 
  Opaque LocalState00011LRecord . 
  
  Inductive LocalStateFields00100I := | ι001000 | ι001001 . 
- Definition LocalState00100L := [ ( XHMap (string*nat) XInteger128 ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00100L := [ ( XHMap (string*nat) DXchgPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00100L LocalStateFields00100I . 
  Opaque LocalState00100LRecord . 
  
- Inductive LocalStateFields00101I := | ι001010 | ι001011 .
- Definition LocalState00101L := [ ( XHMap (string*nat) TradingPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Inductive LocalStateFields00101I := | ι001010 | ι001011 . 
+ Definition LocalState00101L := [ ( XHMap (string*nat) XCell ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00101L LocalStateFields00101I . 
  Opaque LocalState00101LRecord . 
  
  Inductive LocalStateFields00110I := | ι001100 | ι001101 . 
- Definition LocalState00110L := [ ( XHMap (string*nat) ( StateInitLRecord * XInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00110L := [ ( XHMap (string*nat) SellArgsLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00110L LocalStateFields00110I . 
  Opaque LocalState00110LRecord . 
  
  Inductive LocalStateFields00111I := | ι001110 | ι001111 . 
- Definition LocalState00111L := [ ( XHMap (string*nat) StateInitLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00111L := [ ( XHMap (string*nat) Tip3ConfigLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00111L LocalStateFields00111I . 
  Opaque LocalState00111LRecord . 
  
  Inductive LocalStateFields01000I := | ι010000 | ι010001 . 
- Definition LocalState01000L := [ ( XHMap (string*nat) XchgPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState01000L := [ ( XHMap (string*nat) TonsConfigLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState01000L LocalStateFields01000I . 
  Opaque LocalState01000LRecord . 
  
  Inductive LocalStateFields01001I := | ι010010 | ι010011 . 
- Definition LocalState01001L := [ ( XHMap (string*nat) ( StateInitLRecord * XAddress * XInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState01001L := [ ( XHMap (string*nat) StateInitLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState01001L LocalStateFields01001I . 
  Opaque LocalState01001LRecord . 
  
  Inductive LocalStateFields01010I := | ι010100 | ι010101 . 
- Definition LocalState01010L := [ ( XHMap (string*nat) SellArgsLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState01010L := [ ( XHMap (string*nat) PayloadArgsLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState01010L LocalStateFields01010I . 
  Opaque LocalState01010LRecord . 
  
  Inductive LocalStateFields01011I := | ι010110 | ι010111 . 
- Definition LocalState01011L := [ ( XHMap (string*nat) XAddress (* ITONTokenWalletPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState01011L := [ ( XHMap (string*nat) XInteger256 ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState01011L LocalStateFields01011I . 
  Opaque LocalState01011LRecord . 
  
- Inductive LocalStateFields01100I := | ι011000 | ι011001 .
- Definition LocalState01100L := [ ( XHMap (string*nat) OrderInfoXchgLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Inductive LocalStateFields01100I := | ι011000 | ι011001 . 
+ Definition LocalState01100L := [ ( XHMap (string*nat) XBool ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState01100L LocalStateFields01100I . 
  Opaque LocalState01100LRecord . 
  
@@ -144,44 +132,19 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState01101LRecord . 
  
  Inductive LocalStateFields01110I := | ι011100 | ι011101 . 
- Definition LocalState01110L := [ ( XHMap (string*nat) DPriceLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState01110L := [ ( XHMap (string*nat) ( StateInitLRecord * XAddress * XInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState01110L LocalStateFields01110I . 
  Opaque LocalState01110LRecord . 
  
  Inductive LocalStateFields01111I := | ι011110 | ι011111 . 
- Definition LocalState01111L := [ ( XHMap (string*nat) XInteger8 ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState01111L := [ ( XHMap (string*nat) DPriceLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState01111L LocalStateFields01111I . 
  Opaque LocalState01111LRecord . 
  
  Inductive LocalStateFields10000I := | ι100000 | ι100001 . 
- Definition LocalState10000L := [ ( XHMap (string*nat) XInteger32 ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState10000L := [ ( XHMap (string*nat) DPriceXchgLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState10000L LocalStateFields10000I . 
  Opaque LocalState10000LRecord . 
- 
- Inductive LocalStateFields10001I := | ι100010 | ι100011 . 
- Definition LocalState10001L := [ ( XHMap (string*nat) Tip3ConfigLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10001L LocalStateFields10001I . 
- Opaque LocalState10001LRecord . 
- 
- Inductive LocalStateFields10010I := | ι100100 | ι100101 . 
- Definition LocalState10010L := [ ( XHMap (string*nat) DPriceXchgLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10010L LocalStateFields10010I . 
- Opaque LocalState10010LRecord . 
- 
- Inductive LocalStateFields10011I := | ι100110 | ι100111 . 
- Definition LocalState10011L := [ ( XHMap (string*nat) PayloadArgsLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10011L LocalStateFields10011I . 
- Opaque LocalState10011LRecord . 
- 
- Inductive LocalStateFields10100I := | ι101000 | ι101001 . 
- Definition LocalState10100L := [ ( XHMap (string*nat) DWrapperLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10100L LocalStateFields10100I . 
- Opaque LocalState10100LRecord . 
- 
- Inductive LocalStateFields10101I := | ι101010 | ι101011 . 
- Definition LocalState10101L := [ ( XHMap (string*nat) XBool ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10101L LocalStateFields10101I . 
- Opaque LocalState10101LRecord . 
  
  
  Inductive LocalStateFields0000I := | ι00000 | ι00001 . 
@@ -224,21 +187,6 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  GeneratePruvendoRecord LocalState0111L LocalStateFields0111I . 
  Opaque LocalState0111LRecord . 
  
- Inductive LocalStateFields1000I := | ι10000 | ι10001 . 
- Definition LocalState1000L := [ LocalState10000LRecord ; LocalState10001LRecord ] . 
- GeneratePruvendoRecord LocalState1000L LocalStateFields1000I . 
- Opaque LocalState1000LRecord . 
- 
- Inductive LocalStateFields1001I := | ι10010 | ι10011 . 
- Definition LocalState1001L := [ LocalState10010LRecord ; LocalState10011LRecord ] . 
- GeneratePruvendoRecord LocalState1001L LocalStateFields1001I . 
- Opaque LocalState1001LRecord . 
- 
- Inductive LocalStateFields1010I := | ι10100 | ι10101 . 
- Definition LocalState1010L := [ LocalState10100LRecord ; LocalState10101LRecord ] . 
- GeneratePruvendoRecord LocalState1010L LocalStateFields1010I . 
- Opaque LocalState1010LRecord . 
- 
  
  
  Inductive LocalStateFields000I := | ι0000 | ι0001 . 
@@ -261,11 +209,6 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  GeneratePruvendoRecord LocalState011L LocalStateFields011I . 
  Opaque LocalState011LRecord . 
  
- Inductive LocalStateFields100I := | ι1000 | ι1001 . 
- Definition LocalState100L := [ LocalState1000LRecord ; LocalState1001LRecord ] . 
- GeneratePruvendoRecord LocalState100L LocalStateFields100I . 
- Opaque LocalState100LRecord . 
- 
  
  
  Inductive LocalStateFields00I := | ι000 | ι001 . 
@@ -278,11 +221,6 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  GeneratePruvendoRecord LocalState01L LocalStateFields01I . 
  Opaque LocalState01LRecord . 
  
- Inductive LocalStateFields10I := | ι100 | ι101 . 
- Definition LocalState10L := [ LocalState100LRecord ; LocalState1010LRecord ] . 
- GeneratePruvendoRecord LocalState10L LocalStateFields10I . 
- Opaque LocalState10LRecord . 
- 
  
  
  Inductive LocalStateFields0I := | ι00 | ι01 . 
@@ -293,12 +231,14 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  
  
  Inductive LocalStateFieldsI := | ι0 | ι1 . 
- Definition LocalStateL := [ LocalState0LRecord ; LocalState10LRecord ] . 
+ Definition LocalStateL := [ LocalState0LRecord ; LocalState10000LRecord ] . 
  GeneratePruvendoRecord LocalStateL LocalStateFieldsI . 
  Opaque LocalStateLRecord . 
  
 
-Opaque LocalStateLRecord . 
+
+
+
 
 Check VMStateLRecord.
 
@@ -316,8 +256,7 @@ Transparent MessagesAndEventsLRecord .
 Transparent ContractLRecord .
 Transparent LocalStateLRecord .
 Transparent LedgerLRecord .
- Transparent LocalState00000LRecord LocalState00001LRecord LocalState00010LRecord LocalState00011LRecord LocalState00100LRecord LocalState00101LRecord LocalState00110LRecord LocalState00111LRecord LocalState01000LRecord LocalState01001LRecord LocalState01010LRecord LocalState01011LRecord LocalState01100LRecord LocalState01101LRecord LocalState01110LRecord LocalState01111LRecord LocalState10000LRecord LocalState10001LRecord LocalState10010LRecord LocalState10011LRecord LocalState10100LRecord LocalState10101LRecord LocalState0000LRecord LocalState0001LRecord LocalState0010LRecord LocalState0011LRecord LocalState0100LRecord LocalState0101LRecord LocalState0110LRecord LocalState0111LRecord LocalState1000LRecord LocalState1001LRecord LocalState1010LRecord LocalState000LRecord LocalState001LRecord LocalState010LRecord LocalState011LRecord LocalState100LRecord LocalState00LRecord LocalState01LRecord LocalState10LRecord LocalState0LRecord LocalStateLRecord .
-
+ Transparent LocalState00000LRecord LocalState00001LRecord LocalState00010LRecord LocalState00011LRecord LocalState00100LRecord LocalState00101LRecord LocalState00110LRecord LocalState00111LRecord LocalState01000LRecord LocalState01001LRecord LocalState01010LRecord LocalState01011LRecord LocalState01100LRecord LocalState01101LRecord LocalState01110LRecord LocalState01111LRecord LocalState10000LRecord LocalState0000LRecord LocalState0001LRecord LocalState0010LRecord LocalState0011LRecord LocalState0100LRecord LocalState0101LRecord LocalState0110LRecord LocalState0111LRecord LocalState10000LRecord LocalState000LRecord LocalState001LRecord LocalState010LRecord LocalState011LRecord LocalState00LRecord LocalState01LRecord LocalState0LRecord LocalStateLRecord .
 (***************************************)
 Definition LedgerEmbedded := LedgerLEmbeddedType.
 Definition LedgerLocalState := LocalStateLRecord .
@@ -377,7 +316,7 @@ Definition  VMState_IsCommittedEmbedded := VMStateLEmbeddedType VMState_ι_IsCom
 Definition MainCopySameType : field_type  Ledger_MainState = field_type Ledger_MainStateCopy := eq_refl.
 Definition MessagesCopySameType : field_type  Ledger_MessagesState = field_type Ledger_MessagesStateCopy := eq_refl.
 
-#[global, program] Instance LocalStateField00000 : LocalStateField XInteger256.
+#[global, program] Instance LocalStateField00000 : LocalStateField XInteger128.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -397,7 +336,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00000 : typeclass_instances. 
- #[global, program] Instance LocalStateField00001 : LocalStateField XCell.
+ #[global, program] Instance LocalStateField00001 : LocalStateField XAddress.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -417,7 +356,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00001 : typeclass_instances. 
- #[global, program] Instance LocalStateField00010 : LocalStateField TonsConfigLRecord.
+ #[global, program] Instance LocalStateField00010 : LocalStateField DTradingPairLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -437,7 +376,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00010 : typeclass_instances. 
- #[global, program] Instance LocalStateField00011 : LocalStateField XAddress.
+ #[global, program] Instance LocalStateField00011 : LocalStateField auto.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -457,7 +396,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00011 : typeclass_instances. 
- #[global, program] Instance LocalStateField00100 : LocalStateField XInteger128.
+ #[global, program] Instance LocalStateField00100 : LocalStateField DXchgPairLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -476,8 +415,8 @@ Next Obligation.
  Defined.
  Fail Next Obligation.
 #[local]
-Remove Hints LocalStateField00100 : typeclass_instances.
- #[global, program] Instance LocalStateField00101 : LocalStateField TradingPairLRecord.
+Remove Hints LocalStateField00100 : typeclass_instances. 
+ #[global, program] Instance LocalStateField00101 : LocalStateField XCell.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -497,7 +436,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00101 : typeclass_instances. 
- #[global, program] Instance LocalStateField00110 : LocalStateField ( StateInitLRecord * XInteger256 ).
+ #[global, program] Instance LocalStateField00110 : LocalStateField SellArgsLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -517,7 +456,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00110 : typeclass_instances. 
- #[global, program] Instance LocalStateField00111 : LocalStateField StateInitLRecord.
+ #[global, program] Instance LocalStateField00111 : LocalStateField Tip3ConfigLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -537,7 +476,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00111 : typeclass_instances. 
- #[global, program] Instance LocalStateField01000 : LocalStateField XchgPairLRecord.
+ #[global, program] Instance LocalStateField01000 : LocalStateField TonsConfigLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -557,7 +496,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01000 : typeclass_instances. 
- #[global, program] Instance LocalStateField01001 : LocalStateField ( StateInitLRecord * XAddress * XInteger256 ).
+ #[global, program] Instance LocalStateField01001 : LocalStateField StateInitLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -577,7 +516,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01001 : typeclass_instances. 
- #[global, program] Instance LocalStateField01010 : LocalStateField SellArgsLRecord.
+ #[global, program] Instance LocalStateField01010 : LocalStateField PayloadArgsLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -597,7 +536,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01010 : typeclass_instances. 
- #[global, program] Instance LocalStateField01011 : LocalStateField XAddress (* ITONTokenWalletPtrLRecord *).
+ #[global, program] Instance LocalStateField01011 : LocalStateField XInteger256.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -617,7 +556,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01011 : typeclass_instances. 
- #[global, program] Instance LocalStateField01100 : LocalStateField OrderInfoXchgLRecord .
+ #[global, program] Instance LocalStateField01100 : LocalStateField XBool.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -657,7 +596,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01101 : typeclass_instances. 
- #[global, program] Instance LocalStateField01110 : LocalStateField DPriceLRecord.
+ #[global, program] Instance LocalStateField01110 : LocalStateField ( StateInitLRecord * XAddress * XInteger256 ).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -677,7 +616,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01110 : typeclass_instances. 
- #[global, program] Instance LocalStateField01111 : LocalStateField XInteger8.
+ #[global, program] Instance LocalStateField01111 : LocalStateField DPriceLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -697,113 +636,21 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01111 : typeclass_instances. 
- #[global, program] Instance LocalStateField10000 : LocalStateField XInteger32.
+ #[global, program] Instance LocalStateField10000 : LocalStateField DPriceXchgLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι100). 
- eapply TransEmbedded. eapply (_ ι1000). 
- eapply TransEmbedded. eapply (_ ι10000). 
  eapply (LocalState10000LEmbeddedType ι100001). 
  Defined.
  Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι100). 
- eapply TransEmbedded. eapply (_ ι1000). 
- eapply TransEmbedded. eapply (_ ι10000). 
  eapply (LocalState10000LEmbeddedType ι100000). 
  Defined.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10000 : typeclass_instances. 
- #[global, program] Instance LocalStateField10001 : LocalStateField Tip3ConfigLRecord.
-Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι100). 
- eapply TransEmbedded. eapply (_ ι1000). 
- eapply TransEmbedded. eapply (_ ι10001). 
- eapply (LocalState10001LEmbeddedType ι100011). 
- Defined.
- Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι100). 
- eapply TransEmbedded. eapply (_ ι1000). 
- eapply TransEmbedded. eapply (_ ι10001). 
- eapply (LocalState10001LEmbeddedType ι100010). 
- Defined.
- Fail Next Obligation.
-#[local]
-Remove Hints LocalStateField10001 : typeclass_instances. 
- #[global, program] Instance LocalStateField10010 : LocalStateField DPriceXchgLRecord.
-Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι100). 
- eapply TransEmbedded. eapply (_ ι1001). 
- eapply TransEmbedded. eapply (_ ι10010). 
- eapply (LocalState10010LEmbeddedType ι100101). 
- Defined.
- Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι100). 
- eapply TransEmbedded. eapply (_ ι1001). 
- eapply TransEmbedded. eapply (_ ι10010). 
- eapply (LocalState10010LEmbeddedType ι100100). 
- Defined.
- Fail Next Obligation.
-#[local]
-Remove Hints LocalStateField10010 : typeclass_instances. 
- #[global, program] Instance LocalStateField10011 : LocalStateField PayloadArgsLRecord.
-Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι100). 
- eapply TransEmbedded. eapply (_ ι1001). 
- eapply TransEmbedded. eapply (_ ι10011). 
- eapply (LocalState10011LEmbeddedType ι100111). 
- Defined.
- Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι100). 
- eapply TransEmbedded. eapply (_ ι1001). 
- eapply TransEmbedded. eapply (_ ι10011). 
- eapply (LocalState10011LEmbeddedType ι100110). 
- Defined.
- Fail Next Obligation.
-#[local]
-Remove Hints LocalStateField10011 : typeclass_instances. 
- #[global, program] Instance LocalStateField10100 : LocalStateField DWrapperLRecord.
-Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι101). 
- eapply TransEmbedded. eapply (_ ι10100). 
- eapply (LocalState10100LEmbeddedType ι101001). 
- Defined.
- Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι101). 
- eapply TransEmbedded. eapply (_ ι10100). 
- eapply (LocalState10100LEmbeddedType ι101000). 
- Defined.
- Fail Next Obligation.
-#[local]
-Remove Hints LocalStateField10100 : typeclass_instances. 
- #[global, program] Instance LocalStateField10101 : LocalStateField XBool.
-Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι101). 
- eapply TransEmbedded. eapply (_ ι10101). 
- eapply (LocalState10101LEmbeddedType ι101011). 
- Defined.
- Next Obligation. 
- eapply TransEmbedded. eapply (_ ι1). 
- eapply TransEmbedded. eapply (_ ι101). 
- eapply TransEmbedded. eapply (_ ι10101). 
- eapply (LocalState10101LEmbeddedType ι101010). 
- Defined.
- Fail Next Obligation.
-#[local]
-Remove Hints LocalStateField10101 : typeclass_instances. 
 
 Definition LocalStateField_XInteger := LocalStateField00000 .
-Definition LocalStateField_XBool := LocalStateField10101 .
+Definition LocalStateField_XBool := LocalStateField01100 .
 Definition LocalStateField_XCell := LocalStateField00001 .
 
 

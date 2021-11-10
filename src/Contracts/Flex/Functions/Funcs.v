@@ -308,9 +308,12 @@ Definition check_owner : UExpression PhantomType true .
  	 	 refine {{ require_ ( ( ~ {} (* _trading_pair_listing_requests_ .contains ( pubkey.get ( ) ) *) ) ,  error_code::trading_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
 (*  	 	 refine {{ trading_pair_listing_requests_.set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3_root , min_amount , notify_addr } ) ; { _ } }} .  *)
 (*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
- 	 	 refine {{ new 'state_init : ( StateInitLRecord ) @ "state_init" := {} ; { _ } }} . 
- 	 	 refine {{ new 'std_addr : ( XInteger256 ) @ "std_addr" := {} ; { _ } }} . 
- 	 	 refine {{ [ { state_init } , { std_addr } ] := prepare_trading_pair_ ( tvm.address () , {tip3_root} , _pair_code_ -> get_default () ) ; { _ } }} . 
+
+      refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : XInteger256 ) @ ("state_init", "std_addr") :=
+                prepare_trading_pair_ ( tvm.address () , {tip3_root} , _pair_code_ -> get_default () ) ; { _ } }} .
+
+Check {{ {state_init} }}.
+
  	 	 refine {{ return_ {} (* Address :: make_std ( workchain_id_ , std_addr ) *) }} . 
  Defined .
  
@@ -325,10 +328,8 @@ Definition approveTradingPairImpl ( pubkey : URValue ( XInteger256 ) false )
  	 	 refine {{ require_ ( !{opt_req_info}  ,  error_code::trading_pair_not_requested  ) ; { _ } }} . 
  	 	 refine {{ new 'req_info : ( TradingPairListingRequestLRecord ) @ "req_info" := {} ; { _ } }} . 
  	 	 refine {{ { req_info } := (!{opt_req_info}) -> get_default () ; { _ } }} . 
- 	 	 refine {{ new 'state_init : ( StateInitLRecord ) @ "state_init" := {} ; { _ } }} . 
- 	 	 refine {{ new 'std_addr : ( XInteger256 ) @ "std_addr" := {} ; { _ } }} . 
- 	 	 refine {{ [ { state_init } , { std_addr } ] := 
-                prepare_trading_pair_ ( tvm.address () , 
+ 	 	 refine {{ new ( 'state_init : StateInitLRecord, 'std_addr : XInteger256 ) @ ("state_init", "std_addr") := 
+                 prepare_trading_pair_ ( tvm.address () , 
                 (!{req_info}) ^^ TradingPairListingRequest.tip3_root , 
                 {pair_code} ) ; { _ } }} . 
  	 	 refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} (*  
@@ -362,10 +363,8 @@ URValue ( XAddress * (XHMap XInteger256 (XInteger256 * TradingPairListingRequest
  Definition approveTradingPair ( pubkey : URValue ( XInteger256 ) false ) : UExpression XAddress true . 
   	 	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} ; { _ } }} . 
- 	 	 refine {{ new 'new_trading_pair_listing_requests :
-         (XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord) ) @ "new_trading_pair_listing_requests" := {} ; { _ } }} . 
- 	 	 refine {{ [ { trade_pair } , { new_trading_pair_listing_requests } ] := 
+ 	 	 refine {{ new ( 'trade_pair : XAddress , 'new_trading_pair_listing_requests : (XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord) ) ) 
+       @ ("trade_pair", "new_trading_pair_listing_requests")    := 
             approveTradingPairImpl_ ( {pubkey} , _trading_pair_listing_requests_ , _pair_code_ -> get_default () , _workchain_id_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _trading_pair_listing_requests_ := !{new_trading_pair_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } ; { _ } }} . 
@@ -483,9 +482,7 @@ Definition approveXchgPairImpl ( pubkey : URValue ( XInteger256 ) false )
                0 ⇒ { DXchgPair_ι_min_amount_ } ; 
                0 ⇒ { DXchgPair_ι_notify_addr_ }  
                $] ; { _ } }} . 
- 	 	 refine {{ new 'state_init : ( StateInitLRecord ) @ "state_init" := {} ; { _ } }} . 
- 	 	 refine {{ new 'std_addr : ( XInteger256 ) @ "std_addr" := {} ; { _ } }} . 
- 	 	 refine {{ [ { state_init } , { std_addr } ] := prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , {xchg_pair_code} ) ; { _ } }} . 
+ 	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : XInteger256 ) @ ( "state_init" , "std_addr" ) := prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , {xchg_pair_code} ) ; { _ } }} . 
  	 	 refine {{ new 'xchg_pair : ( XAddress ) @ "xchg_pair" := {} 
                 (* IXchgPairPtr ( Address :: make_std ( !{ workchain_id } , std_addr ) ) *) ; { _ } }} . 
 (*  	 	 refine {{ xchg_pair.deploy ( state_init , Grams ( listing_cfg . pair_deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . onDeploy ( req_info . min_amount , listing_cfg . pair_keep_balance , req_info . notify_addr ) ; { _ } }} .  *)
@@ -664,15 +661,12 @@ refine {{ new 'wallet_data : ( DTONTokenWalletExternalLRecord ) @ "wallet_data" 
                ( {listing_cfg} ^^ ListingConfig.wrapper_keep_balance ) ⇒ { DWrapper_ι_start_balance_ } ; 
                {} ⇒ { DWrapper_ι_external_wallet_ }  
                $] ; { _ } }} . 
- 	 	 refine {{ new 'wrapper_init : ( StateInitLRecord ) @ "wrapper_init" := {} ; { _ } }} . 
- 	 	 refine {{ new 'wrapper_hash_addr : ( XInteger256 ) @ "wrapper_hash_addr" := {}  ; { _ } }} . 
- 	 	 refine {{ [ { wrapper_init } , { wrapper_hash_addr } ] := 
+ 	 	 refine {{ new ( 'wrapper_init : ( StateInitLRecord ) , 
+                     'wrapper_hash_addr : XInteger256 ) @ ( "wrapper_init" , "wrapper_hash_addr" ) := 
                prepare_wrapper_state_init_and_addr_ ( {wrapper_code} , !{wrapper_data} ) ; { _ } }} . 
  refine {{ new 'wrapper_addr : XAddress @ "wrapper_addr" := {} ; { _ } }} .
 (*  	 	 refine {{ IWrapperPtr wrapper_addr ( address : : make_std ( workchain_id , wrapper_hash_addr ) ) ; { _ } }} .  *)
- 	 	 refine {{ wallet_init : ( StateInitLRecord ) @ "wallet_init" ; { _ } }} . 
- 	 	 refine {{ wallet_hash_addr : ( XInteger256 ) @ "wallet_hash_addr" ; { _ } }} . 
- 	 	 refine {{ [ { wallet_init } , { wallet_hash_addr } ] := 
+ 	 	 refine {{ new ( 'wallet_init : StateInitLRecord , 'wallet_hash_addr : XInteger256 ) @ ( "wallet_init" , "wallet_hash_addr" ) := 
        prepare_external_wallet_state_init_and_addr_ 
            ( (!{ tip3cfg }) ^^ Tip3Config.name , 
              (!{ tip3cfg }) ^^ Tip3Config.symbol , 
@@ -759,9 +753,7 @@ Definition rejectWrapperImpl
                       0 ⇒ { DXchgPair_ι_notify_addr_ }  
                    $] ; { _ } }} . 
  	 	 (* refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} . *) 
- 	 	 refine {{ state_init : ( StateInitLRecord ) @ "state_init" ; { _ } }} . 
- 	 	 refine {{ std_addr : ( XAddress ) @ "std_addr" ; { _ } }} . 
- 	 	 refine {{ [ { state_init } , { std_addr } ] := 
+ 	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : XInteger256 ) @ ( "state_init" , "std_addr" )  := 
        prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , _xchg_pair_code_ -> get_default () ) ; { _ } }} . 
  	 	 refine {{ return_ {} (* Address :: make_std ( workchain_id_ , std_addr ) *) }} . 
  Defined . 
@@ -769,10 +761,8 @@ Definition rejectWrapperImpl
  Definition approveXchgPair ( pubkey : URValue ( XInteger256 ) false ) : UExpression XAddress true . 
   	 	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ xchg_pair : ( XAddress ) @ "xchg_pair" ; { _ } }} . 
- 	 	 refine {{ xchg_pair_listing_requests : (XHMap XInteger256 
-               (XInteger256 * XchgPairListingRequestLRecord) ) @ "xchg_pair_listing_requests" ; { _ } }} .
- 	 	 refine {{ [ { xchg_pair } , { xchg_pair_listing_requests } ] := 
+ 	 	 refine {{ new ( 'xchg_pair : XAddress , 'xchg_pair_listing_requests : (XHMap XInteger256 
+               (XInteger256 * XchgPairListingRequestLRecord) ) ) @ ( "xchg_pair" , "xchg_pair_listing_requests" ) := 
                approveXchgPairImpl_ ( {pubkey} , 
                                       _xchg_pair_listing_requests_ , 
                                       _xchg_pair_code_ -> get_default () , 
@@ -815,9 +805,7 @@ Definition registerWrapper ( pubkey : URValue ( XInteger256 ) false ) ( tip3cfg 
         {} ⇒ { DWrapper_ι_external_wallet_ }  
       $] ; { _ } }} . 
 (*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
- 	 	 refine {{ wrapper_init : ( StateInitLRecord ) @ "wrapper_init" ; { _ } }} . 
- 	 	 refine {{ wrapper_hash_addr : ( XInteger256 ) @ "wrapper_hash_addr" ; { _ } }} . 
- 	 	 refine {{ [ { wrapper_init } , { wrapper_hash_addr } ] := 
+ 	 	 refine {{ new ( 'wrapper_init :StateInitLRecord , 'wrapper_hash_addr : XInteger256 ) @ ( "wrapper_init" , "wrapper_hash_addr" ) := 
                prepare_wrapper_state_init_and_addr_ ( _wrapper_code_ -> get_default () , !{wrapper_data} ) ; { _ } }} . 
  	 	 refine {{ return_ {} (* Address :: make_std ( workchain_id_ , wrapper_hash_addr ) *) }} . 
  Defined . 
@@ -825,9 +813,9 @@ Definition registerWrapper ( pubkey : URValue ( XInteger256 ) false ) ( tip3cfg 
  Definition approveWrapper ( pubkey : URValue ( XInteger256 ) false ) : UExpression XAddress true . 
   	 	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ wrapper_addr : ( XAddress ) @ "wrapper_addr" ; { _ } }} . 
- 	 	 refine {{ new_wrapper_listing_requests : (XHMap XInteger256 (XInteger256 * WrapperListingRequestLRecord) ) @ "new_wrapper_listing_requests" ; { _ } }} . 
- 	 	 refine {{ [ { wrapper_addr } , { new_wrapper_listing_requests } ] := 
+ 	 	 refine {{ new ( 'wrapper_addr : XAddress , 
+                     'new_wrapper_listing_requests : (XHMap XInteger256 (XInteger256 * WrapperListingRequestLRecord) ) )
+                     @ ( "wrapper_addr" , "new_wrapper_listing_requests" ) := 
                  approveWrapperImpl_ ( {pubkey} , 
                                   _wrapper_listing_requests_ , 
                                   _wrapper_code_ -> get_default () , 
