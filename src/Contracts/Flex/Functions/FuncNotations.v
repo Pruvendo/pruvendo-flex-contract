@@ -705,6 +705,7 @@ Local Open Scope string_scope.
  wrapper_code wrapper_data ) 
  (in custom URValue at level 0 , wrapper_code custom URValue at level 0 
  , wrapper_data custom URValue at level 0 ) : ursus_scope . 
+
  Definition prepare_flex_state_init_and_addr_right { a1 a2 }  ( flex_data : URValue ( ContractLRecord ) a1 ) ( flex_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord * XInteger256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_flex_state_init_and_addr 
  flex_data flex_code ) . 
