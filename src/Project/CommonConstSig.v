@@ -21,4 +21,11 @@ Parameter FLEX_TIMESTAMP_DELAY : XInteger .
  Parameter trading_pair_with_such_pubkey_already_requested : XInteger . 
  Parameter xchg_pair_with_such_pubkey_already_requested : XInteger . 
 
+Parameter TIMESTAMP_DELAY : XInteger . 
+ Parameter message_sender_is_not_my_owner : XInteger . 
+ Parameter missed_ext_wallet_code : XInteger . 
+ Parameter missed_flex_wallet_code : XInteger . 
+ Parameter missed_flex_wrapper_code : XInteger . 
+ Parameter zero_owner_pubkey : XInteger . 
+
 End ConstsTypesSig.
