@@ -250,7 +250,11 @@ Export tc.
 
 Local Open Scope string_scope.
 
- Definition constructor_left { R a1 a2 a3 }  ( pubkey : URValue ( XInteger256 ) a1 ) ( trading_pair_code : URValue ( XCell ) a2 ) ( xchg_pair_code : URValue ( XCell ) a3 ) : UExpression R true := 
+ Definition constructor_left { R a1 a2 a3 }  
+( pubkey : URValue ( XInteger256 ) a1 ) 
+( trading_pair_code : URValue ( XCell ) a2 ) 
+( xchg_pair_code : URValue ( XCell ) a3 ) 
+: UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) constructor 
  pubkey trading_pair_code xchg_pair_code ) . 
  
@@ -451,7 +455,8 @@ Local Open Scope string_scope.
  , receive_wallet custom URValue at level 0 
  , major_tip3cfg custom URValue at level 0 
  , minor_tip3cfg custom URValue at level 0 
- , notify_addr custom URValue at level 0 ) : ursus_scope . 
+ , notify_addr custom URValue at level 0 ) : ursus_scope .
+
  Definition deployWrapperWithWallet_right { a1 a2 a3 a4 a5 a6 }  ( wrapper_pubkey : URValue ( XInteger256 ) a1 ) ( wrapper_deploy_value : URValue ( XInteger128 ) a2 ) ( wrapper_keep_balance : URValue ( XInteger128 ) a3 ) ( ext_wallet_balance : URValue ( XInteger128 ) a4 ) ( set_internal_wallet_value : URValue ( XInteger128 ) a5 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) : URValue XAddress true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) deployWrapperWithWallet 
  wrapper_pubkey wrapper_deploy_value wrapper_keep_balance ext_wallet_balance set_internal_wallet_value tip3cfg ) . 

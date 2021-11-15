@@ -253,14 +253,14 @@ Definition check_owner : UExpression PhantomType true .
  ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
 
- Definition transfer ( tto :  ( XAddress ) ) ( tons :  ( XInteger128 ) ) : UExpression PhantomType true . 
+ Definition transfer ( tto :  ( XAddress ) ) ( crystals :  ( XInteger128 ) ) : UExpression PhantomType true . 
   	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm.accept () (* ; { _ } }} . 
 
      refine {{ ⤳ Flex._transfer @ {_} with [$ {_} ⇒ {Messsage_ι_value} ;
                  {_} ⇒ {Messsage_ι_bounce} ;
                  {_} ⇒ {Messsage_ι_flags} $] }} .
- 	 	 refine {{ tvm_transfer ( tto , tons . get ( ) , true ) *) }} . 
+ 	 	 refine {{ tvm_transfer ( tto , crystals . get ( ) , true ) *) }} . 
  Defined . 
 
  Definition prepare_trading_pair_state_init_and_addr ( pair_data :  ( DTradingPairLRecord ) ) ( pair_code :  ( XCell ) ) : UExpression ( StateInitLRecord * XInteger256 )  false . 
@@ -375,7 +375,7 @@ URValue ( XAddress * (XHMap XInteger256 (XInteger256 * TradingPairListingRequest
        @ ("trade_pair", "new_trading_pair_listing_requests")    := 
             approveTradingPairImpl_ ( #{pubkey} , _trading_pair_listing_requests_ , _pair_code_ -> get_default () , _workchain_id_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _trading_pair_listing_requests_ := !{new_trading_pair_listing_requests} ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := int_value ()  ; { _ } }} . 
   	 	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} ) (* {} (* rawreserve_flag::up_to *) ) *) (* ; { _ } *) }} .
 (*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -429,7 +429,7 @@ UExpression (XHMap XInteger256 (XInteger256 * TradingPairListingRequestLRecord) 
               rejectTradingPairImpl_ ( #{pubkey} , _trading_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := int_value () ; { _ } }} . 
   	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) ; { _ } }} .
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	   refine {{ {value_gr} := int_value () (* ; { _ } *) }} .  	 	 	 
 (*    refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
@@ -790,7 +790,7 @@ Definition rejectWrapperImpl
                                       _workchain_id_ , 
                                       _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _xchg_pair_listing_requests_ := !{xchg_pair_listing_requests} ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := int_value () ; { _ } }} . 
   	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .  
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -801,7 +801,7 @@ Definition rejectXchgPair ( pubkey : ( XInteger256 ) ) : UExpression XBool true 
   	 	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ _xchg_pair_listing_requests_ := 
           rejectXchgPairImpl_ ( #{pubkey} , _xchg_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := int_value () ; { _ } }} . 
  	 	 	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -818,7 +818,9 @@ Definition registerWrapper ( pubkey :  ( XInteger256 ) ) ( tip3cfg :  ( Tip3Conf
         ((#{tip3cfg}) ^^ Tip3Config.symbol) ⇒ { DWrapper_ι_symbol_ } ; 
         ((#{tip3cfg}) ^^ Tip3Config.decimals) ⇒ { DWrapper_ι_decimals_ } ;
         _workchain_id_ ⇒ { DWrapper_ι_workchain_id_ } ;
-         (#{pubkey}) ⇒ { DWrapper_ι_root_public_key_ } ;
+          (#{pubkey}) ⇒ { DWrapper_ι_root_public_key_ } ; 
+(* (#{pubkey}) ⇒ { DWrapper_ι_root_pubkey_ } ;
+ ( tvm.address () ) ⇒ { DWrapper_ι_root_owner_ } ;*)
         {} ⇒ { DWrapper_ι_total_granted_ } ; 
         {} ⇒ { DWrapper_ι_internal_wallet_code_ } ; 
        ( (tvm.address ()) -> set() ) ⇒ { DWrapper_ι_owner_address_ } ;
@@ -845,7 +847,7 @@ Definition registerWrapper ( pubkey :  ( XInteger256 ) ) ( tip3cfg :  ( Tip3Conf
                                   _workchain_id_ , 
                                   _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _wrapper_listing_requests_ := !{new_wrapper_listing_requests} ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 refine {{new 'value_gr : XInteger @ "value_gr" := int_value () ; { _ } }} . 
   	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -858,7 +860,7 @@ Defined .
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _wrapper_listing_requests_ := 
             rejectWrapperImpl_ ( #{pubkey} , _wrapper_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : XInteger @ "value_gr" := int_value () ; { _ } }} . 
  	 	 	 refine {{ tvm.rawReserve ( tvm.balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)

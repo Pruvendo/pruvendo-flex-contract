@@ -17,34 +17,34 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 
 
-Parameter constructor :  URValue ( XInteger256 ) false ->  URValue ( XCell ) false ->  URValue ( XCell ) false -> UExpression PhantomType true . 
- Parameter setFlexCfg :  URValue ( TonsConfigLRecord ) false ->  URValue ( XAddress ) false -> UExpression PhantomType true . 
- Parameter setExtWalletCode :  URValue ( XCell ) false -> UExpression PhantomType true . 
- Parameter setFlexWalletCode :  URValue ( XCell ) false -> UExpression PhantomType true . 
- Parameter setFlexWrapperCode :  URValue ( XCell ) false -> UExpression PhantomType true . 
- Parameter deployTradingPair :  URValue ( XAddress ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XAddress ) false -> UExpression XAddress true . 
- Parameter deployXchgPair :  URValue ( XAddress ) false ->  URValue ( XAddress ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XAddress ) false -> UExpression XAddress true . 
- Parameter deployPriceWithSell :  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger32 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger8 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XCell ) false ->  URValue ( XAddress ) false ->  URValue ( XAddress ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( XAddress ) false -> UExpression XAddress true . 
- Parameter deployPriceWithBuy :  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger32 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger8 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XCell ) false ->  URValue ( XAddress ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( XAddress ) false -> UExpression XAddress true . 
- Parameter cancelSellOrder :  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger8 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XCell ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( XAddress ) false -> UExpression PhantomType true . 
- Parameter cancelBuyOrder :  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger8 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XCell ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( XAddress ) false -> UExpression PhantomType true . 
- Parameter cancelXchgOrder :  URValue ( XBool ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger8 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XCell ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( XAddress ) false -> UExpression PhantomType true . 
- Parameter transfer :  URValue ( XAddress ) false ->  URValue ( XInteger128 ) false ->  URValue ( XBool ) false -> UExpression PhantomType true . 
- Parameter deployPriceXchg :  URValue ( XBool ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger32 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger8 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XCell ) false ->  URValue ( XAddress ) false ->  URValue ( XAddress ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( XAddress ) false -> UExpression XAddress true . 
- Parameter registerWrapper :  URValue ( XInteger256 ) false ->  URValue ( XInteger128 ) false ->  URValue ( Tip3ConfigLRecord ) false -> UExpression PhantomType true . 
- Parameter registerTradingPair :  URValue ( XInteger256 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XAddress ) false ->  URValue ( XInteger128 ) false ->  URValue ( XAddress ) false -> UExpression PhantomType true . 
- Parameter registerXchgPair :  URValue ( XInteger256 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XAddress ) false ->  URValue ( XAddress ) false ->  URValue ( XInteger128 ) false ->  URValue ( XAddress ) false -> UExpression PhantomType true . 
- Parameter deployEmptyFlexWallet :  URValue ( XInteger256 ) false ->  URValue ( XInteger128 ) false ->  URValue ( Tip3ConfigLRecord ) false -> UExpression XAddress true . 
- Parameter burnWallet :  URValue ( XInteger128 ) false ->  URValue ( XInteger256 ) false ->  URValue ( XAddress ) false ->  URValue ( XAddress ) false -> UExpression PhantomType true . 
+Parameter constructor :  ( XInteger256 ) ->  ( XCell ) ->  ( XCell ) -> UExpression PhantomType true . 
+ Parameter setFlexCfg :  ( TonsConfigLRecord ) ->  ( XAddress ) -> UExpression PhantomType true . 
+ Parameter setExtWalletCode :  ( XCell ) -> UExpression PhantomType true . 
+ Parameter setFlexWalletCode :  ( XCell ) -> UExpression PhantomType true . 
+ Parameter setFlexWrapperCode :  ( XCell ) -> UExpression PhantomType true . 
+ Parameter deployTradingPair :  ( XAddress ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XAddress ) -> UExpression XAddress true . 
+ Parameter deployXchgPair :  ( XAddress ) ->  ( XAddress ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XAddress ) -> UExpression XAddress true . 
+ Parameter deployPriceWithSell :  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger32 ) ->  ( XInteger128 ) ->  ( XInteger8 ) ->  ( XInteger128 ) ->  ( XCell ) ->  ( XAddress ) ->  ( XAddress ) ->  ( Tip3ConfigLRecord ) ->  ( XAddress ) -> UExpression XAddress true . 
+ Parameter deployPriceWithBuy :  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger32 ) ->  ( XInteger128 ) ->  ( XInteger8 ) ->  ( XInteger128 ) ->  ( XCell ) ->  ( XAddress ) ->  ( Tip3ConfigLRecord ) ->  ( XAddress ) -> UExpression XAddress true . 
+ Parameter cancelSellOrder :  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger8 ) ->  ( XInteger128 ) ->  ( XCell ) ->  ( Tip3ConfigLRecord ) ->  ( XAddress ) -> UExpression PhantomType true . 
+ Parameter cancelBuyOrder :  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger8 ) ->  ( XInteger128 ) ->  ( XCell ) ->  ( Tip3ConfigLRecord ) ->  ( XAddress ) -> UExpression PhantomType true . 
+ Parameter cancelXchgOrder :  ( XBool ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger8 ) ->  ( XInteger128 ) ->  ( XCell ) ->  ( Tip3ConfigLRecord ) ->  ( Tip3ConfigLRecord ) ->  ( XAddress ) -> UExpression PhantomType true . 
+ Parameter transfer :  ( XAddress ) ->  ( XInteger128 ) ->  ( XBool ) -> UExpression PhantomType true . 
+ Parameter deployPriceXchg :  ( XBool ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger32 ) ->  ( XInteger128 ) ->  ( XInteger8 ) ->  ( XInteger128 ) ->  ( XCell ) ->  ( XAddress ) ->  ( XAddress ) ->  ( Tip3ConfigLRecord ) ->  ( Tip3ConfigLRecord ) ->  ( XAddress ) -> UExpression XAddress true . 
+ Parameter registerWrapper :  ( XInteger256 ) ->  ( XInteger128 ) ->  ( Tip3ConfigLRecord ) -> UExpression PhantomType true . 
+ Parameter registerTradingPair :  ( XInteger256 ) ->  ( XInteger128 ) ->  ( XAddress ) ->  ( XInteger128 ) ->  ( XAddress ) -> UExpression PhantomType true . 
+ Parameter registerXchgPair :  ( XInteger256 ) ->  ( XInteger128 ) ->  ( XAddress ) ->  ( XAddress ) ->  ( XInteger128 ) ->  ( XAddress ) -> UExpression PhantomType true . 
+ Parameter deployEmptyFlexWallet :  ( XInteger256 ) ->  ( XInteger128 ) ->  ( Tip3ConfigLRecord ) -> UExpression XAddress true . 
+ Parameter burnWallet :  ( XInteger128 ) ->  ( XInteger256 ) ->  ( XAddress ) ->  ( XAddress ) -> UExpression PhantomType true . 
  Parameter getOwner : UExpression XInteger256 false . 
  Parameter getFlex : UExpression XAddress false . 
  Parameter hasExtWalletCode : UExpression XBool false . 
  Parameter hasFlexWalletCode : UExpression XBool false . 
  Parameter hasFlexWrapperCode : UExpression XBool false . 
- Parameter getPayloadForDeployInternalWallet :  URValue ( XInteger256 ) false ->  URValue ( XAddress ) false ->  URValue ( XInteger128 ) false -> UExpression XCell false . 
- Parameter _fallback : URValue ( XCell ) false -> URValue ( XSlice ) false -> UExpression XInteger false . 
- Parameter preparePrice :  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger8 ) false ->  URValue ( XCell ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( XCell ) false ->  URValue ( XAddress ) false -> UExpression ( StateInitLRecord # XAddress # XInteger256 )  false . 
- Parameter preparePriceXchg :  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger128 ) false ->  URValue ( XInteger8 ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( Tip3ConfigLRecord ) false ->  URValue ( XCell ) false ->  URValue ( XAddress ) false -> UExpression ( StateInitLRecord # XAddress # XInteger256 )  false . 
+ Parameter getPayloadForDeployInternalWallet :  ( XInteger256 ) ->  ( XAddress ) ->  ( XInteger128 ) -> UExpression XCell false . 
+ Parameter _fallback : ( XCell ) -> ( XSlice ) -> UExpression XInteger false . 
+ Parameter preparePrice :  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger8 ) ->  ( XCell ) ->  ( Tip3ConfigLRecord ) ->  ( XCell ) ->  ( XAddress ) -> UExpression ( StateInitLRecord # XAddress # XInteger256 )  false . 
+ Parameter preparePriceXchg :  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger128 ) ->  ( XInteger8 ) ->  ( Tip3ConfigLRecord ) ->  ( Tip3ConfigLRecord ) ->  ( XCell ) ->  ( XAddress ) -> UExpression ( StateInitLRecord # XAddress # XInteger256 )  false . 
 
 
 End SpecSig.
