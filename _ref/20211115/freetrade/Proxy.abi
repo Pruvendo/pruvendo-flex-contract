@@ -1,0 +1,44 @@
+{
+  "ABI version": 2,
+  "version": "2.2.0",
+  "header": [
+    "pubkey",
+    "time",
+    "expire"
+  ],
+  "functions": [
+  {
+    "name": "constructor",
+    "inputs": [
+    { "name":"pubkey", "type":"uint256" }
+    ],
+    "outputs": [
+    ],
+    "id": "0x1"
+  },
+  {
+    "name": "sendMessage",
+    "inputs": [
+    { "name":"msg", "type":"cell" },
+    { "name":"flags", "type":"uint8" }
+    ],
+    "outputs": [
+    ],
+    "id": "0x2"
+  },
+  {
+    "name": "onDeploy",
+    "inputs": [
+    ],
+    "outputs": [
+    ],
+    "id": "0x3"
+  }
+  ],
+  "fields": [
+    { "name":"__uninitialized", "type":"bool" },
+    { "name":"owner_", "type":"uint256" }
+  ],
+  "events": [
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "ABI version": 2,
+  "version": "2.2.0",
+  "header": [
+    "time",
+    "expire"
+  ],
+  "functions": [
+  {
+    "name": "constructor",
+    "inputs": [
+    ],
+    "outputs": [
+    ],
+    "id": "0x1"
+  },
+  {
+    "name": "start",
+    "inputs": [
+    ],
+    "outputs": [
+    ],
+    "id": "0x2"
+  }
+  ],
+  "fields": [
+    { "name":"__uninitialized", "type":"bool" },
+    { "name":"__await_next_id", "type":"uint32" },
+    { "name":"__await_dict", "type":"optional(cell)" },
+    { "name":"client_addr_", "type":"optional(address)" }
+  ],
+  "events": [
+  ]
+}

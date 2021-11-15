@@ -1,0 +1,46 @@
+{
+  "ABI version": 2,
+  "version": "2.2.0",
+  "header": [
+    "time",
+    "expire"
+  ],
+  "functions": [
+  {
+    "name": "constructor",
+    "inputs": [
+    ],
+    "outputs": [
+    ],
+    "id": "0x1"
+  },
+  {
+    "name": "start",
+    "inputs": [
+    ],
+    "outputs": [
+    ],
+    "id": "0x2"
+  }
+  ],
+  "fields": [
+    { "name":"__uninitialized", "type":"bool" },
+    { "name":"__await_next_id", "type":"uint32" },
+    { "name":"__await_dict", "type":"optional(cell)" },
+    { "name":"client1_addr_", "type":"optional(address)" },
+    { "components":[
+      { "name":"dict_", "type":"cell" }
+    ], "name":"flex_wallet_code_", "type":"tuple" },
+    { "components":[
+      { "name":"dict_", "type":"cell" }
+    ], "name":"flex_wrapper_code_", "type":"tuple" },
+    { "components":[
+      { "name":"dict_", "type":"cell" }
+    ], "name":"ext_wallet_code_", "type":"tuple" },
+    { "components":[
+      { "name":"dict_", "type":"cell" }
+    ], "name":"ext_troot_code_", "type":"tuple" }
+  ],
+  "events": [
+  ]
+}

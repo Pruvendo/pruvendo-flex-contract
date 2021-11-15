@@ -1,0 +1,108 @@
+{
+  "ABI version": 2,
+  "version": "2.2.0",
+  "header": [
+    "pubkey",
+    "time",
+    "expire"
+  ],
+  "functions": [
+  {
+    "name": "constructor",
+    "inputs": [
+    { "name":"owner_key", "type":"uint256" }
+    ],
+    "outputs": [
+    ]
+  },
+  {
+    "name": "set_root_code",
+    "inputs": [
+    { "name":"root_code", "type":"cell" }
+    ],
+    "outputs": [
+    ]
+  },
+  {
+    "name": "set_wallet_code",
+    "inputs": [
+    { "name":"wallet_code", "type":"cell" }
+    ],
+    "outputs": [
+    ]
+  },
+  {
+    "name": "deployRoot",
+    "inputs": [
+    { "name":"name", "type":"string" },
+    { "name":"symbol", "type":"string" },
+    { "name":"decimals", "type":"uint8" },
+    { "name":"gramsToRoot", "type":"uint128" }
+    ],
+    "outputs": [
+    ]
+  },
+  {
+    "name": "deployWallet",
+    "inputs": [
+    { "name":"processingGrams", "type":"uint128" },
+    { "name":"pubkey", "type":"uint256" },
+    { "name":"internal_owner", "type":"address" },
+    { "name":"tokens", "type":"uint128" },
+    { "name":"grams", "type":"uint128" }
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ]
+  },
+  {
+    "name": "grant",
+    "inputs": [
+    { "name":"processingGrams", "type":"uint128" },
+    { "name":"dest", "type":"address" },
+    { "name":"tokens", "type":"uint128" },
+    { "name":"grams", "type":"uint128" }
+    ],
+    "outputs": [
+    ]
+  },
+  {
+    "name": "mint",
+    "inputs": [
+    { "name":"processingGrams", "type":"uint128" },
+    { "name":"tokens", "type":"uint128" }
+    ],
+    "outputs": [
+    ]
+  },
+  {
+    "name": "getOwnerKey",
+    "inputs": [
+    ],
+    "outputs": [
+    { "name":"value0", "type":"uint256" }
+    ]
+  },
+  {
+    "name": "getTokenRoot",
+    "inputs": [
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ]
+  }
+  ],
+  "fields": [
+    { "name":"__uninitialized", "type":"bool" },
+    { "name":"__await_next_id", "type":"uint32" },
+    { "name":"__await_dict", "type":"optional(cell)" },
+    { "name":"owner_key_", "type":"uint256" },
+    { "components":[
+      { "name":"addr_", "type":"address" }
+    ], "name":"token_root_", "type":"tuple" },
+    { "name":"root_code_", "type":"optional(cell)" },
+    { "name":"wallet_code_", "type":"optional(cell)" }
+  ],
+  "events": [
+  ]
+}
