@@ -1,13 +1,11 @@
 #include "DePoolMock.hpp"
 #include "stTONs.hpp"
+#include "DePool.hpp"
 #include <tvm/contract.hpp>
 #include <tvm/smart_switcher.hpp>
 #include <tvm/contract_handle.hpp>
 #include <tvm/default_support_functions.hpp>
-<<<<<<< HEAD
-=======
 #include <tvm/suffixes.hpp>
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
 
 using namespace tvm;
 using namespace schema;
@@ -35,12 +33,9 @@ public:
   __always_inline
   void transferStake(address destination, uint64 amount) {
     bck_records_.push_back({destination, int_sender(), uint128(amount.get()), uint64(tvm_now())});
-<<<<<<< HEAD
-=======
     tvm_rawreserve(tvm_balance() - int_value().get(), rawreserve_flag::up_to);
     IParticipantPtr(int_sender())(Grams(0), SEND_ALL_GAS).
       receiveAnswer(0u32, 0u64);
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
   }
 
   __always_inline

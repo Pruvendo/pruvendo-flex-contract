@@ -12,7 +12,6 @@ function sleep(ms) {
 describe('RootTokenContract test', function () {
     this.timeout(240000);
     let ton;
-    let nullAddress = "0:0000000000000000000000000000000000000000000000000000000000000000";
     before(async function () {
         const config = {
             network: {
@@ -91,7 +90,7 @@ describe('RootTokenContract test', function () {
         it("check deployWallet", async function () {
             console.log('[Test]: deploying wallet through TestRootOwner...');
             let deploy1 = await contract.TestRootOwner_deployWallet(ton, rootOwner,
-              4e8, "0x" + wallet1.keys.public, nullAddress, 15, 2e8);
+              4e8, "0x" + wallet1.keys.public, null, 15, 2e8);
             console.log('[Test]: deploy1 =', deploy1);
             wallet1.addr = deploy1;
 
@@ -189,9 +188,9 @@ describe('RootTokenContract test', function () {
         });
         it("check wallet deploy and address", async function () {
             console.log('[Test]: get wallet address for pubkey =', wallet1.keys.public);
-            let address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet1.keys.public, nullAddress);
+            let address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet1.keys.public, null);
             console.log('response: wallet calculated address = ', address);
-            let deployedAddress = await contract.deployWallet(ton, pepsi_root, "0x" + wallet1.keys.public, nullAddress, 77, 1000000000);
+            let deployedAddress = await contract.deployWallet(ton, pepsi_root, "0x" + wallet1.keys.public, null, 77, 1000000000);
             console.log('response: wallet deployed address = ', deployedAddress);
             assert.equal(address, deployedAddress);
             wallet1.addr = deployedAddress;
@@ -221,6 +220,11 @@ describe('RootTokenContract test', function () {
             assert.equal(allowance.spender, '0:0000000000000000000000000000000000000000000000000000000000000000');
             assert.equal(allowance.remainingTokens, 0);
 
+            const wallet_code_hash = await contract.Wallet_getCodeHash(ton, wallet1.addr);
+            console.log('response: wallet.code_hash = ', wallet_code_hash);
+            const hashCodeOriginal = await contract.getHashCode(ton, walletCode);
+            assert.equal(wallet_code_hash, "0x" + hashCodeOriginal.hash);
+
             console.log('[Test]: Now granting 23 pepsi tokens to wallet1...');
             await contract.grant(ton, pepsi_root, wallet1.addr, 23, 40000000);
             //await sleep(10000);
@@ -240,10 +244,10 @@ describe('RootTokenContract test', function () {
         });
         it("Deploy empty wallet2", async function () {
             console.log('[Test]: get wallet2 address for pubkey =', wallet2.keys.public);
-            let address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet2.keys.public, nullAddress);
+            let address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet2.keys.public, null);
             console.log('response: wallet2 calculated address = ', address);
             let deployedAddress =
-              await contract.deployWallet(ton, pepsi_root, "0x" + wallet2.keys.public, nullAddress, 0, 1000000000);
+              await contract.deployWallet(ton, pepsi_root, "0x" + wallet2.keys.public, null, 0, 1000000000);
             console.log('response: wallet2 deployed address = ', deployedAddress);
             //await sleep(10000);
             wallet2.addr = deployedAddress;
@@ -252,7 +256,7 @@ describe('RootTokenContract test', function () {
             console.log('[Test]: wallet2 balance =', await contract.getBalance(ton, deployedAddress));
         });
         it("check wallet1 -> wallet2 transfer", async function () {
-            let wallet2_address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet2.keys.public, nullAddress);
+            let wallet2_address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet2.keys.public, null);
             console.log('response: wallet2 calculated address = ', wallet2_address);
             assert.equal(wallet2_address, wallet2.addr);
             await contract.Wallet_transfer(ton, wallet1, wallet1.addr, wallet2_address, 5, 160000000, false);
@@ -272,10 +276,10 @@ describe('RootTokenContract test', function () {
         });
         it("Deploy empty wallet3", async function () {
             console.log('[Test]: get wallet3 address for pubkey =', wallet3.keys.public);
-            let address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet3.keys.public, nullAddress);
+            let address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet3.keys.public, null);
             console.log('response: wallet3 calculated address = ', address);
             let deployedAddress =
-              await contract.deployWallet(ton, pepsi_root, "0x" + wallet3.keys.public, nullAddress, 0, 1000000000);
+              await contract.deployWallet(ton, pepsi_root, "0x" + wallet3.keys.public, null, 0, 1000000000);
             console.log('response: wallet3 deployed address = ', deployedAddress);
             //await sleep(10000);
             wallet3.addr = deployedAddress;
@@ -320,21 +324,21 @@ describe('RootTokenContract test', function () {
             console.log('[Test]: wallet3 gas balance =', await contract.getBalance(ton, wallet3.addr));
         });
         it("transferToRecipient to wallet4", async function () {
-            let wallet4_address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet4.keys.public, nullAddress);
+            let wallet4_address = await contract.getWalletAddress(ton, pepsi_root, "0x" + wallet4.keys.public, null);
             console.log('response: wallet4 calculated address = ', wallet4_address);
             wallet4.addr = wallet4_address;
 
             let wallet4_pub = "0x" + wallet4.keys.public;
             await contract.Wallet_transferToRecipient(
-              ton, wallet1, wallet1.addr, wallet4_pub, nullAddress,
+              ton, wallet1, wallet1.addr, wallet4_pub, null,
               await contract.Wallet_getBalance(ton, wallet1.addr),
               200000000, true, false);
             await contract.Wallet_transferToRecipient(
-              ton, wallet2, wallet2.addr, wallet4_pub, nullAddress,
+              ton, wallet2, wallet2.addr, wallet4_pub, null,
               await contract.Wallet_getBalance(ton, wallet2.addr),
               200000000, true, false);
             await contract.Wallet_transferToRecipient(
-              ton, wallet3, wallet3.addr, wallet4_pub, nullAddress,
+              ton, wallet3, wallet3.addr, wallet4_pub, null,
               await contract.Wallet_getBalance(ton, wallet3.addr),
               200000000, true, false);
               

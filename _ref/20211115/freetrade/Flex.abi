@@ -54,7 +54,7 @@
     "name": "transfer",
     "inputs": [
     { "name":"to", "type":"address" },
-    { "name":"tons", "type":"uint128" }
+    { "name":"crystals", "type":"uint128" }
     ],
     "outputs": [
     ],
@@ -212,7 +212,7 @@
     { "components":[
       { "name":"deployer_pubkey", "type":"uint256" },
       { "name":"ownership_description", "type":"string" },
-      { "name":"owner_contract", "type":"optional(address)" }
+      { "name":"owner", "type":"optional(address)" }
     ], "name":"ownership", "type":"tuple" },
     { "components":[
       { "name":"wrapper_pubkey", "type":"uint256" },
@@ -229,7 +229,7 @@
       ], "name":"request", "type":"tuple" }
     ], "name":"wrapper_listing_requests", "type":"tuple[]" },
     { "components":[
-      { "name":"wrapper_pubkey", "type":"uint256" },
+      { "name":"pubkey", "type":"uint256" },
       { "components":[
         { "name":"client_addr", "type":"address" },
         { "name":"client_funds", "type":"uint128" },
@@ -239,7 +239,7 @@
       ], "name":"request", "type":"tuple" }
     ], "name":"trading_pair_listing_requests", "type":"tuple[]" },
     { "components":[
-      { "name":"request_pubkey", "type":"uint256" },
+      { "name":"pubkey", "type":"uint256" },
       { "components":[
         { "name":"client_addr", "type":"address" },
         { "name":"client_funds", "type":"uint128" },

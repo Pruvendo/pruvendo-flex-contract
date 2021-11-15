@@ -16,13 +16,6 @@
     ]
   },
   {
-<<<<<<< HEAD
-    "name": "storeCrystalls",
-    "inputs": [
-    { "name":"client_addr", "type":"address" },
-    { "name":"dst", "type":"address" },
-    { "name":"amount", "type":"uint128" }
-=======
     "name": "deployStTONs",
     "inputs": [
     { "name":"crystals", "type":"uint128" },
@@ -43,27 +36,17 @@
     { "name":"dst", "type":"address" },
     { "name":"processing_crystals", "type":"uint128" },
     { "name":"depool_processing_crystals", "type":"uint128" }
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
     ],
     "outputs": [
     ]
   },
   {
-<<<<<<< HEAD
-    "name": "sendTransferBack",
-    "inputs": [
-    { "name":"stTONsAddr", "type":"address" },
-    { "name":"wallet", "type":"address" },
-    { "name":"crystals", "type":"uint128" },
-    { "name":"amount", "type":"uint128" }
-=======
     "name": "finalize",
     "inputs": [
     { "name":"stTONsAddr", "type":"address" },
     { "name":"dst", "type":"address" },
     { "name":"processing_crystals", "type":"uint128" },
     { "name":"ignore_errors", "type":"bool" }
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
     ],
     "outputs": [
     ]

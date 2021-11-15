@@ -1,3 +1,9 @@
+/** \file
+ *  \brief Wrapper contract implementation
+ *  \author Andrew Zhogin
+ *  \copyright 2019-2021 (c) TON LABS
+ */
+
 #include "Wrapper.hpp"
 #include "TONTokenWallet.hpp"
 
@@ -7,30 +13,36 @@
 #include <tvm/default_support_functions.hpp>
 
 using namespace tvm;
-using namespace schema;
+
+#ifndef TIP3_WALLET_CODE_HASH
+#error "Macros TIP3_WALLET_CODE_HASH must be defined (code hash of FlexWallet)"
+#endif
+
+#ifndef TIP3_WALLET_CODE_DEPTH
+#error "Macros TIP3_WALLET_CODE_DEPTH must be defined (code depth of FlexWallet)"
+#endif
 
 template<bool Internal>
 class Wrapper final : public smart_interface<IWrapper>, public DWrapper {
 public:
-  static constexpr unsigned internal_wallet_hash = 0x6a2b3b28065ac68b7617e74a75f8235aa1687d2f8d90eb836c25e7b7c4b30d06;
+  static constexpr bool _checked_deploy = true; /// Deploy is only allowed with [[deploy]] function call
+  static constexpr unsigned internal_wallet_hash       = TIP3_WALLET_CODE_HASH;
+  static constexpr unsigned internal_wallet_code_depth = TIP3_WALLET_CODE_DEPTH;
 
   struct error_code : tvm::error_code {
-    static constexpr unsigned message_sender_is_not_my_owner    = 100;
-    static constexpr unsigned not_enough_balance                = 101;
-    static constexpr unsigned wrong_bounced_header              = 102;
-    static constexpr unsigned wrong_bounced_args                = 103;
-    static constexpr unsigned internal_owner_enabled            = 104;
-    static constexpr unsigned internal_owner_disabled           = 105;
-    static constexpr unsigned define_pubkey_or_internal_owner   = 106;
-    static constexpr unsigned wrong_wallet_code_hash            = 107;
-    static constexpr unsigned cant_override_wallet_code         = 108;
-    static constexpr unsigned too_big_decimals                  = 109;
-    static constexpr unsigned not_my_wallet_notifies            = 110;
-    static constexpr unsigned burn_unallocated                  = 111;
-    static constexpr unsigned message_sender_is_not_good_wallet = 112;
-    static constexpr unsigned cant_override_external_wallet     = 113;
-    static constexpr unsigned only_flex_may_deploy_me           = 114;
-    static constexpr unsigned unexpected_refs_count_in_code     = 115;
+    static constexpr unsigned message_sender_is_not_my_owner    = 100; ///< Authorization error
+    static constexpr unsigned wrong_bounced_header              = 101; ///< Wrong header of bounced message
+    static constexpr unsigned wrong_bounced_args                = 102; ///< Wrong arguments in bounced message
+    static constexpr unsigned internal_owner_enabled            = 103; ///< Internal ownership is enabled (can't process external commands)
+    static constexpr unsigned internal_owner_disabled           = 104; ///< Internal ownership is disabled (can't process internal commands)
+    static constexpr unsigned wrong_wallet_code_hash            = 105; ///< Wallet code hash is differ from TIP3_WALLET_CODE_HASH macros
+    static constexpr unsigned cant_override_wallet_code         = 106; ///< Wallet code is already set and can't be overriden
+    static constexpr unsigned not_my_wallet_notifies            = 107; ///< Wallet notification received from wrong address
+    static constexpr unsigned burn_unallocated                  = 108; ///< Burn more tokens that was allocated
+    static constexpr unsigned message_sender_is_not_good_wallet = 109; ///< Message sender is not a good wallet
+    static constexpr unsigned cant_override_external_wallet     = 110; ///< Can't override external wallet
+    static constexpr unsigned only_flex_may_deploy_me           = 111; ///< Wrapper may only be deployed by Flex contract
+    static constexpr unsigned unexpected_refs_count_in_code     = 112; ///< Unexpected references count in code
   };
 
   __always_inline
@@ -44,7 +56,7 @@ public:
 
   __always_inline
   bool_t init(address external_wallet) {
-    require(!external_wallet_, error_code::cant_override_external_wallet);
+    require(!wallet_, error_code::cant_override_external_wallet);
 
     auto parsed_msg = parse<message<anyval>>(parser(msg_slice()), error_code::bad_incoming_msg);
     require(!!parsed_msg.init, error_code::bad_incoming_msg);
@@ -59,7 +71,7 @@ public:
     auto flex_addr = parse<address>(mycode_salt);
     require(flex_addr == int_sender(), error_code::only_flex_may_deploy_me);
 
-    external_wallet_ = external_wallet;
+    wallet_ = external_wallet;
 
     tvm_rawreserve(start_balance_.get(), rawreserve_flag::up_to);
     set_int_return_flag(SEND_ALL_GAS);
@@ -71,8 +83,8 @@ public:
     check_owner();
     tvm_accept();
     require(!internal_wallet_code_, error_code::cant_override_wallet_code);
-    //require(__builtin_tvm_hashcu(wallet_code) == internal_wallet_hash,
-    //        error_code::wrong_wallet_code_hash);
+    require(__builtin_tvm_hashcu(wallet_code) == internal_wallet_hash,
+            error_code::wrong_wallet_code_hash);
     internal_wallet_code_ = wallet_code;
 
     if constexpr (Internal) {
@@ -85,17 +97,17 @@ public:
 
   __always_inline
   address deployEmptyWallet(
-    uint256 pubkey,
-    address internal_owner,
-    uint128 grams
+    uint256     pubkey,
+    address_opt internal_owner,
+    uint128     crystals
   ) {
     // This protects from spending root balance to deploy message
-    auto value_gr = int_value();
-    tvm_rawreserve(tvm_balance() - value_gr(), rawreserve_flag::up_to);
+    auto value = int_value();
+    tvm_rawreserve(tvm_balance() - value(), rawreserve_flag::up_to);
 
     auto [wallet_init, dest] = calc_internal_wallet_init(pubkey, internal_owner);
     ITONTokenWalletPtr dest_handle(dest);
-    dest_handle.deploy_noop(wallet_init, Grams(grams.get()));
+    dest_handle.deploy_noop(wallet_init, Crystals(crystals.get()));
 
     // sending all rest gas except reserved old balance, processing and deployment costs
     set_int_return_flag(SEND_ALL_GAS);
@@ -105,14 +117,14 @@ public:
   // Notification about incoming tokens from Wrapper owned external wallet
   __always_inline
   WrapperRet onTip3Transfer(
-    address answer_addr,
-    uint128 balance,
-    uint128 new_tokens,
-    uint256 sender_pubkey,
-    address sender_owner,
-    cell    payload
+    uint128     balance,
+    uint128     new_tokens,
+    uint256     sender_pubkey,
+    address_opt sender_owner,
+    cell        payload,
+    address     answer_addr
   ) {
-    require(int_sender() == external_wallet_->get(), error_code::not_my_wallet_notifies);
+    require(int_sender() == wallet_->get(), error_code::not_my_wallet_notifies);
 
     // to send answer to the original caller (caller->tip3wallet->wrapper->caller)
     set_int_sender(answer_addr);
@@ -121,12 +133,12 @@ public:
 
     auto args = parse<FlexDeployWalletArgs>(payload.ctos());
 
-    auto value_gr = int_value();
-    tvm_rawreserve(tvm_balance() - value_gr(), rawreserve_flag::up_to);
+    auto value = int_value();
+    tvm_rawreserve(tvm_balance() - value(), rawreserve_flag::up_to);
 
-    auto [wallet_init, dest] = calc_internal_wallet_init(args.pubkey, args.internal_owner);
+    auto [wallet_init, dest] = calc_internal_wallet_init(args.pubkey, args.owner);
     ITONTokenWalletPtr dest_handle(dest);
-    dest_handle.deploy(wallet_init, Grams(args.grams.get())).accept(new_tokens, int_sender(), args.grams);
+    dest_handle.deploy(wallet_init, Crystals(args.crystals.get())).accept(new_tokens, int_sender(), args.crystals);
     total_granted_ += new_tokens;
 
     return { uint32(0), dest_handle.get() };
@@ -134,28 +146,28 @@ public:
 
   __always_inline
   void burn(
-    address answer_addr,
-    uint256 sender_pubkey,
-    address sender_owner,
-    uint256 out_pubkey,
-    address out_internal_owner,
-    uint128 tokens
+    uint128     tokens,
+    address     answer_addr,
+    uint256     sender_pubkey,
+    address_opt sender_owner,
+    uint256     out_pubkey,
+    address_opt out_owner
   ) {
     require(total_granted_ >= tokens, error_code::burn_unallocated);
     auto [sender, value_gr] = int_sender_and_value();
     require(sender == expected_internal_address(sender_pubkey, sender_owner),
             error_code::message_sender_is_not_good_wallet);
     tvm_rawreserve(tvm_balance() - value_gr(), rawreserve_flag::up_to);
-    (*external_wallet_)(Grams(0), SEND_ALL_GAS).
-      transferToRecipient(answer_addr, out_pubkey, out_internal_owner, tokens, uint128(0),
+    (*wallet_)(Crystals(0), SEND_ALL_GAS).
+      transferToRecipient(answer_addr, out_pubkey, out_owner, tokens, uint128(0),
                           bool_t{true}, bool_t{false});
     total_granted_ -= tokens;
   }
 
   __always_inline
   uint128 requestTotalGranted() {
-    auto value_gr = int_value();
-    tvm_rawreserve(tvm_balance() - value_gr(), rawreserve_flag::up_to);
+    auto value = int_value();
+    tvm_rawreserve(tvm_balance() - value(), rawreserve_flag::up_to);
     set_int_return_flag(SEND_ALL_GAS);
     return total_granted_;
   }
@@ -164,8 +176,8 @@ public:
   __always_inline
   wrapper_details_info getDetails() {
     return { getName(), getSymbol(), getDecimals(),
-             getRootKey(), getTotalGranted(), getInternalWalletCode(),
-             getOwnerAddress(), getExternalWallet() };
+             getRootKey(), getRootOwner(), getTotalGranted(), getInternalWalletCode(),
+             getExternalWallet() };
   }
 
   __always_inline string getName() {
@@ -181,7 +193,11 @@ public:
   }
 
   __always_inline uint256 getRootKey() {
-    return root_public_key_;
+    return root_pubkey_;
+  }
+
+  __always_inline address getRootOwner() {
+    return root_owner_ ? *root_owner_ : address::make_std(int8(0), uint256(0));
   }
 
   __always_inline uint128 getTotalGranted() {
@@ -196,17 +212,13 @@ public:
     return internal_wallet_code_.get();
   }
 
-  __always_inline address getOwnerAddress() {
-    return owner_address_ ? *owner_address_ : address::make_std(int8(0), uint256(0));
-  }
-
   __always_inline address getExternalWallet() {
-    return external_wallet_->get();
+    return wallet_->get();
   }
 
   __always_inline
-  address getWalletAddress(uint256 pubkey, address owner) {
-    return calc_internal_wallet_init(pubkey, owner).second;
+  address getWalletAddress(uint256 pubkey, address_opt owner) {
+    return expected_internal_address(pubkey, owner);
   }
 
   // received bounced message back
@@ -242,45 +254,45 @@ public:
   // =============== Support functions ==================
   DEFAULT_SUPPORT_FUNCTIONS(IWrapper, wrapper_replay_protection_t)
 private:
-  // transform x:0000...0000 address into empty optional<address>
   __always_inline
-  std::optional<address> optional_owner(address owner) {
-    return std::get<addr_std>(owner()).address ?
-      std::optional<address>(owner) : std::optional<address>();
+  address expected_internal_address(uint256 sender_pubkey, address_opt sender_owner) {
+    auto hash = calc_int_wallet_init_hash(
+      name_, symbol_, decimals_,
+      root_pubkey_, address{tvm_myaddr()},
+      sender_pubkey, sender_owner,
+      uint256(internal_wallet_hash), uint16(internal_wallet_code_depth),
+      workchain_id_
+    );
+    return address::make_std(workchain_id_, hash);
   }
-  __always_inline
-  address expected_internal_address(uint256 sender_public_key, address sender_owner_addr) {
-    uint256 hash_addr =
-      prepare_internal_wallet_state_init_and_addr(
-        name_, symbol_, decimals_, root_public_key_,
-        sender_public_key, address{tvm_myaddr()}, optional_owner(sender_owner_addr),
-        internal_wallet_code_.get(), workchain_id_).second;
-    return address::make_std(workchain_id_, hash_addr);
-  }
+
   __always_inline
   std::pair<StateInit, address> calc_internal_wallet_init(uint256 pubkey,
-                                                          address owner_addr) {
+                                                          address_opt owner_addr) {
     auto [wallet_init, dest_addr] =
       prepare_internal_wallet_state_init_and_addr(
-        name_, symbol_, decimals_, root_public_key_, pubkey,
-        address{tvm_myaddr()}, optional_owner(owner_addr), internal_wallet_code_.get(), workchain_id_);
+        name_, symbol_, decimals_,
+        root_pubkey_, address{tvm_myaddr()},
+        pubkey, owner_addr,
+        uint256(internal_wallet_hash), uint16(internal_wallet_code_depth),
+        workchain_id_, internal_wallet_code_.get());
     address dest = address::make_std(workchain_id_, dest_addr);
     return { wallet_init, dest };
   }
 
-  __always_inline bool is_internal_owner() const { return owner_address_.has_value(); }
+  __always_inline bool is_internal_owner() const { return root_owner_.has_value(); }
 
   __always_inline
   void check_internal_owner() {
     require(is_internal_owner(), error_code::internal_owner_disabled);
-    require(*owner_address_ == int_sender(),
+    require(*root_owner_ == int_sender(),
             error_code::message_sender_is_not_my_owner);
   }
 
   __always_inline
   void check_external_owner() {
     require(!is_internal_owner(), error_code::internal_owner_enabled);
-    require(msg_pubkey() == root_public_key_, error_code::message_sender_is_not_my_owner);
+    require(msg_pubkey() == root_pubkey_, error_code::message_sender_is_not_my_owner);
   }
 
   __always_inline

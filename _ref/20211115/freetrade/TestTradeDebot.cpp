@@ -188,7 +188,8 @@ public:
 
     auto nuka1_wallet = deployWallet(
       nuka_name, nuka_symbol, nuka_decimals,
-      nuka_root_pubkey, nuka1_pubkey, nuka_root.get(), *client1_addr_, 0_i8);
+      nuka_root_pubkey, nuka_root.get(),
+      nuka1_pubkey, *client1_addr_, 0_i8);
     co_await printf("[Test] Nuka wallet #1 deploying: {address}", nuka1_wallet.get());
     co_return;
   }
@@ -223,12 +224,12 @@ public:
       .symbol_ = symbol,
       .decimals_ = decimals,
       .workchain_id_ = workchain_id,
-      .root_public_key_ = root_pubkey,
+      .root_pubkey_ = root_pubkey,
+      .root_owner_ = *client1_addr_,
       .total_granted_ = 0_u128,
       .internal_wallet_code_ = flex_wallet_code_,
-      .owner_address_ = *client1_addr_,
       .start_balance_ = 1_T,
-      .external_wallet_ = external_wallet
+      .wallet_ = external_wallet
     };
     auto [wrapper_init, hash_addr] = prepare_wrapper_state_init_and_addr(flex_wrapper_code_.get(), wrapper_data);
     IWrapperPtr wrapper_addr(address::make_std(workchain_id, hash_addr));
@@ -246,12 +247,11 @@ public:
       .name_ = name,
       .symbol_ = symbol,
       .decimals_ = decimals,
-      .root_public_key_ = root_pubkey,
+      .root_pubkey_ = root_pubkey,
+      .root_owner_ = *client1_addr_,
       .total_supply_ = total_supply,
       .total_granted_ = total_granted,
-      .wallet_code_ = ext_wallet_code_,
-      .owner_address_ = *client1_addr_,
-      .start_balance_ = 1_T
+      .wallet_code_ = ext_wallet_code_
     };
     auto [root_init, hash_addr] = prepare_root_state_init_and_addr(ext_troot_code_.get(), root_data);
     IRootTokenContractPtr root_addr(address::make_std(workchain_id, hash_addr));
@@ -262,13 +262,15 @@ public:
   __always_inline
   ITONTokenWalletPtr deployWallet(
     string name, string symbol, uint8 decimals,
-    uint256 root_pubkey, uint256 wallet_pubkey,
-    address root_address, address owner_addr, int8 workchain_id
+    uint256 root_pubkey, address root_address,
+    uint256 wallet_pubkey, address_opt wallet_owner, int8 workchain_id
   ) {
     auto [wallet_init, hash_addr] = prepare_internal_wallet_state_init_and_addr(
       name, symbol, decimals,
-      root_pubkey, wallet_pubkey, root_address,
-      owner_addr, flex_wallet_code_.get(), workchain_id);
+      root_pubkey, root_address,
+      wallet_pubkey, wallet_owner,
+      uint256(tvm_hash(flex_wallet_code_.get())), uint16(flex_wallet_code_.get().cdepth()),
+      workchain_id, flex_wallet_code_.get());
     ITONTokenWalletPtr wallet_addr(address::make_std(workchain_id, hash_addr));
     wallet_addr.deploy_noop(wallet_init, 1_T);
     return wallet_addr;

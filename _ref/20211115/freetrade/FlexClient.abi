@@ -297,9 +297,9 @@
   {
     "name": "burnWallet",
     "inputs": [
-    { "name":"tons_value", "type":"uint128" },
+    { "name":"crystals_value", "type":"uint128" },
     { "name":"out_pubkey", "type":"uint256" },
-    { "name":"out_internal_owner", "type":"address" },
+    { "name":"out_owner", "type":"optional(address)" },
     { "name":"my_tip3_addr", "type":"address" }
     ],
     "outputs": [
@@ -355,8 +355,8 @@
     "name": "getPayloadForDeployInternalWallet",
     "inputs": [
     { "name":"owner_pubkey", "type":"uint256" },
-    { "name":"owner_addr", "type":"address" },
-    { "name":"tons", "type":"uint128" }
+    { "name":"owner_addr", "type":"optional(address)" },
+    { "name":"crystals", "type":"uint128" }
     ],
     "outputs": [
     { "name":"value0", "type":"cell" }

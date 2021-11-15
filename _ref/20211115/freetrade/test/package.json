@@ -1,7 +1,7 @@
 {
   "name": "tests",
   "version": "1.0.0",
-  "description": "SMV contracts tests",
+  "description": "Flex contracts tests",
   "main": "index.js",
   "scripts": {
     "test": "mocha test.js --exit"

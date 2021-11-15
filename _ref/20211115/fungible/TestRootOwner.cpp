@@ -9,27 +9,27 @@ using namespace tvm;
 using namespace schema;
 
 __interface ITestRootOwner {
-  [[external, dyn_chain_parse]]
+  [[external]]
   void constructor(uint256 owner_key);
 
-  [[external, noaccept, dyn_chain_parse]]
+  [[external, noaccept]]
   void set_root_code(cell root_code);
 
-  [[external, noaccept, dyn_chain_parse]]
+  [[external, noaccept]]
   void set_wallet_code(cell wallet_code);
 
-  [[external, noaccept, dyn_chain_parse]]
-  void deployRoot(string name, string symbol, uint8 decimals, uint128 gramsToRoot);
+  [[external, noaccept]]
+  void deployRoot(string name, string symbol, uint8 decimals, uint128 crystalsToRoot);
 
-  [[external, noaccept, dyn_chain_parse]]
-  resumable<address> deployWallet(uint128 processingGrams, uint256 pubkey,
-                                  address internal_owner, uint128 tokens, uint128 grams);
+  [[external, noaccept]]
+  resumable<address> deployWallet(uint128 processingCrystals,
+    uint256 pubkey, address_opt owner, uint128 tokens, uint128 crystals);
 
-  [[external, noaccept, dyn_chain_parse]]
-  void grant(uint128 processingGrams, address dest, uint128 tokens, uint128 grams);
+  [[external, noaccept]]
+  void grant(uint128 processingCrystals, address dest, uint128 tokens, uint128 crystals);
 
-  [[external, noaccept, dyn_chain_parse]]
-  void mint(uint128 processingGrams, uint128 tokens);
+  [[external, noaccept]]
+  void mint(uint128 processingCrystals, uint128 tokens);
 
   // === getters ===
 
@@ -83,43 +83,43 @@ public:
   }
 
   __always_inline
-  void deployRoot(string name, string symbol, uint8 decimals, uint128 gramsToRoot) {
+  void deployRoot(string name, string symbol, uint8 decimals, uint128 crystalsToRoot) {
     require(msg_pubkey() == owner_key_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
     address myaddr{tvm_myaddr()};
     int8 workchain_id = std::get<addr_std>(myaddr()).workchain_id;
-    auto [root_init, dest] = calc_root_init(workchain_id, myaddr, name, symbol, decimals, gramsToRoot);
+    auto [root_init, dest] = calc_root_init(workchain_id, myaddr, name, symbol, decimals, crystalsToRoot);
     token_root_ = handle<IRootTokenContract>(dest);
-    token_root_.deploy(root_init, Grams(gramsToRoot.get())).
+    token_root_.deploy(root_init, Crystals(crystalsToRoot.get())).
       mint(uint128{0});
   }
 
   __always_inline
-  resumable<address> deployWallet(uint128 processingGrams,
-                                  uint256 pubkey, address internal_owner,
-                                  uint128 tokens, uint128 grams) {
+  resumable<address> deployWallet(uint128 processingCrystals,
+                                  uint256 pubkey, address_opt owner,
+                                  uint128 tokens, uint128 crystals) {
     require(msg_pubkey() == owner_key_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
 
-    address wallet_addr = co_await token_root_(Grams(processingGrams.get())).
-      deployWallet(pubkey, internal_owner, tokens, grams);
+    address wallet_addr = co_await token_root_(Crystals(processingCrystals.get())).
+      deployWallet(pubkey, owner, tokens, crystals);
     co_return wallet_addr;
   }
 
   __always_inline
-  void grant(uint128 processingGrams, address dest, uint128 tokens, uint128 grams) {
+  void grant(uint128 processingCrystals, address dest, uint128 tokens, uint128 crystals) {
     require(msg_pubkey() == owner_key_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
 
-    token_root_(Grams(processingGrams.get())).grant(dest, tokens, grams);
+    token_root_(Crystals(processingCrystals.get())).grant(dest, tokens, crystals);
   }
 
   __always_inline
-  void mint(uint128 processingGrams, uint128 tokens) {
+  void mint(uint128 processingCrystals, uint128 tokens) {
     require(msg_pubkey() == owner_key_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
 
-    token_root_(Grams(processingGrams.get())).mint(tokens);
+    token_root_(Crystals(processingCrystals.get())).mint(tokens);
   }
 
   // ==================== getters ============================
@@ -145,17 +145,16 @@ public:
 private:
   __always_inline
   std::pair<StateInit, address> calc_root_init(int8 workchain_id,
-                                               std::optional<address> owner_addr,
+                                               address_opt owner_addr,
                                                string name, string symbol, uint8 decimals,
-                                               uint128 gramsToRoot) {
+                                               uint128 crystalsToRoot) {
     DRootTokenContract root_data {
       name, symbol, decimals,
-      .root_public_key_ = uint256{0},
+      .root_pubkey_ = uint256{0},
+      .root_owner_ = owner_addr,
       .total_supply_ = uint128(0),
       .total_granted_ = uint128(0),
-      .wallet_code_ = *wallet_code_,
-      .owner_address_ = owner_addr,
-      .start_balance_ = gramsToRoot.get()
+      .wallet_code_ = *wallet_code_
     };
     auto [root_init, dest_addr] = prepare_root_state_init_and_addr(*root_code_, root_data);
     address dest = address::make_std(workchain_id, dest_addr);

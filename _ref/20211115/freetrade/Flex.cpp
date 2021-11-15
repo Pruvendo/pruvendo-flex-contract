@@ -1,3 +1,9 @@
+/** \file
+ *  \brief Flex root contract implementation
+ *  \author Andrew Zhogin
+ *  \copyright 2019-2021 (c) TON LABS
+ */
+
 #include "Flex.hpp"
 #include "TradingPair.hpp"
 #include "XchgPair.hpp"
@@ -8,9 +14,8 @@
 #include <tvm/default_support_functions.hpp>
 
 using namespace tvm;
-using namespace schema;
 
-__always_inline //  __attribute__((noinline))
+__always_inline
 static std::pair<StateInit, uint256> prepare_trading_pair(address flex, address tip3_root, cell pair_code) {
   DTradingPair pair_data {
     .flex_addr_ = address{tvm_myaddr()},
@@ -186,10 +191,10 @@ public:
   }
 
   __always_inline
-  void transfer(address to, uint128 tons) {
+  void transfer(address to, uint128 crystals) {
     check_owner();
     tvm_accept();
-    tvm_transfer(to, tons.get(), true);
+    tvm_transfer(to, crystals.get(), true);
   }
 
   // Listing procedures
@@ -321,12 +326,12 @@ public:
       .symbol_ = tip3cfg.symbol,
       .decimals_ = tip3cfg.decimals,
       .workchain_id_ = workchain_id_,
-      .root_public_key_ = pubkey,
+      .root_pubkey_ = pubkey,
+      .root_owner_ = address{tvm_myaddr()},
       .total_granted_ = {},
       .internal_wallet_code_ = {},
-      .owner_address_ = address{tvm_myaddr()},
-      .start_balance_ = Grams(listing_cfg_.wrapper_keep_balance.get()),
-      .external_wallet_ = {}
+      .start_balance_ = Crystals(listing_cfg_.wrapper_keep_balance.get()),
+      .wallet_ = {}
     };
 
     set_int_return_value(listing_cfg_.register_return_value.get());
@@ -422,7 +427,7 @@ public:
   cell getXchgPriceCode(address tip3_addr1, address tip3_addr2) {
     auto price_code_sl = xchg_price_code_.get().ctos();
     require(price_code_sl.srefs() == 2, error_code::unexpected_refs_count_in_code);
-    auto keys = std::make_tuple(tip3_addr1, tip3_addr2);
+    auto keys = std::make_tuple(address{tvm_myaddr()}, tip3_addr1, tip3_addr2);
     return builder().stslice(price_code_sl).stref(build(keys).endc()).endc();
   }
 
@@ -515,11 +520,11 @@ std::pair<address, DFlex::trading_pairs_map> approveTradingPairImpl(
 
   auto [state_init, std_addr] = prepare_trading_pair(address{tvm_myaddr()}, req_info.tip3_root, pair_code);
   auto trade_pair = ITradingPairPtr(address::make_std(workchain_id, std_addr));
-  trade_pair.deploy(state_init, Grams(listing_cfg.pair_deploy_value.get()), DEFAULT_MSG_FLAGS, false).
+  trade_pair.deploy(state_init, Crystals(listing_cfg.pair_deploy_value.get()), DEFAULT_MSG_FLAGS, false).
     onDeploy(req_info.min_amount, listing_cfg.pair_keep_balance, req_info.notify_addr);
 
   auto remaining_funds = req_info.client_funds - listing_cfg.register_pair_cost;
-  IListingAnswerPtr(req_info.client_addr)(Grams(remaining_funds.get())).
+  IListingAnswerPtr(req_info.client_addr)(Crystals(remaining_funds.get())).
     onTradingPairApproved(pubkey, trade_pair.get());
   return { trade_pair.get(), trading_pair_listing_requests };
 }
@@ -535,7 +540,7 @@ DFlex::trading_pairs_map rejectTradingPairImpl(
   auto req_info = *opt_req_info;
 
   auto remaining_funds = req_info.client_funds - listing_cfg.reject_pair_cost;
-  IListingAnswerPtr(req_info.client_addr)(Grams(remaining_funds.get())).
+  IListingAnswerPtr(req_info.client_addr)(Crystals(remaining_funds.get())).
     onTradingPairRejected(pubkey);
   return trading_pair_listing_requests;
 }
@@ -562,11 +567,11 @@ std::pair<address, DFlex::xchg_pairs_map> approveXchgPairImpl(
 
   auto [state_init, std_addr] = prepare_xchg_pair_state_init_and_addr(pair_data, xchg_pair_code);
   auto xchg_pair = IXchgPairPtr(address::make_std(workchain_id, std_addr));
-  xchg_pair.deploy(state_init, Grams(listing_cfg.pair_deploy_value.get()), DEFAULT_MSG_FLAGS, false).
+  xchg_pair.deploy(state_init, Crystals(listing_cfg.pair_deploy_value.get()), DEFAULT_MSG_FLAGS, false).
     onDeploy(req_info.min_amount, listing_cfg.pair_keep_balance, req_info.notify_addr);
 
   auto remaining_funds = req_info.client_funds - listing_cfg.register_pair_cost;
-  IListingAnswerPtr(req_info.client_addr)(Grams(remaining_funds.get())).
+  IListingAnswerPtr(req_info.client_addr)(Crystals(remaining_funds.get())).
     onXchgPairApproved(pubkey, xchg_pair.get());
   return { xchg_pair.get(), xchg_pair_listing_requests };
 }
@@ -582,7 +587,7 @@ DFlex::xchg_pairs_map rejectXchgPairImpl(
   auto req_info = *opt_req_info;
 
   auto remaining_funds = req_info.client_funds - listing_cfg.reject_pair_cost;
-  IListingAnswerPtr(req_info.client_addr)(Grams(remaining_funds.get())).
+  IListingAnswerPtr(req_info.client_addr)(Crystals(remaining_funds.get())).
     onXchgPairRejected(pubkey);
   return xchg_pair_listing_requests;
 }
@@ -606,12 +611,12 @@ std::pair<address, DFlex::wrappers_map> approveWrapperImpl(
     .symbol_ = tip3cfg.symbol,
     .decimals_ = tip3cfg.decimals,
     .workchain_id_ = workchain_id,
-    .root_public_key_ = pubkey,
+    .root_pubkey_ = pubkey,
+    .root_owner_ = address{tvm_myaddr()},
     .total_granted_ = {},
     .internal_wallet_code_ = {},
-    .owner_address_ = address{tvm_myaddr()},
-    .start_balance_ = Grams(listing_cfg.wrapper_keep_balance.get()),
-    .external_wallet_ = {}
+    .start_balance_ = Crystals(listing_cfg.wrapper_keep_balance.get()),
+    .wallet_ = {}
   };
   auto [wrapper_init, wrapper_hash_addr] = prepare_wrapper_state_init_and_addr(wrapper_code, wrapper_data);
   IWrapperPtr wrapper_addr(address::make_std(workchain_id, wrapper_hash_addr));
@@ -619,15 +624,17 @@ std::pair<address, DFlex::wrappers_map> approveWrapperImpl(
   // ============= Deploying external wallet for Flex wrapper ============ //
   auto [wallet_init, wallet_hash_addr] = prepare_external_wallet_state_init_and_addr(
     tip3cfg.name, tip3cfg.symbol, tip3cfg.decimals,
-    tip3cfg.root_public_key, pubkey, tip3cfg.root_address,
-    wrapper_addr.get(), ext_wallet_code.get(), workchain_id);
+    tip3cfg.root_public_key, tip3cfg.root_address,
+    pubkey, wrapper_addr.get(),
+    uint256(tvm_hash(ext_wallet_code)), uint16(ext_wallet_code.cdepth()),
+    workchain_id, ext_wallet_code.get());
   ITONTokenWalletPtr wallet_addr(address::make_std(workchain_id, wallet_hash_addr));
-  wallet_addr.deploy_noop(wallet_init, Grams(listing_cfg.ext_wallet_balance.get()));
+  wallet_addr.deploy_noop(wallet_init, Crystals(listing_cfg.ext_wallet_balance.get()));
 
   // ================== Deploying Flex wrapper ================== //
-  wrapper_addr.deploy(wrapper_init, Grams(listing_cfg.wrapper_deploy_value.get())).init(wallet_addr.get());
+  wrapper_addr.deploy(wrapper_init, Crystals(listing_cfg.wrapper_deploy_value.get())).init(wallet_addr.get());
 
-  wrapper_addr(Grams(listing_cfg.set_internal_wallet_value.get())).setInternalWalletCode(flex_wallet_code);
+  wrapper_addr(Crystals(listing_cfg.set_internal_wallet_value.get())).setInternalWalletCode(flex_wallet_code);
 
   return { wrapper_addr.get(), wrapper_listing_requests };
 }
@@ -643,7 +650,7 @@ DFlex::wrappers_map rejectWrapperImpl(
   auto req_info = *opt_req_info;
 
   auto remaining_funds = req_info.client_funds - listing_cfg.reject_wrapper_cost;
-  IListingAnswerPtr(req_info.client_addr)(Grams(remaining_funds.get())).
+  IListingAnswerPtr(req_info.client_addr)(Crystals(remaining_funds.get())).
     onWrapperRejected(pubkey);
   return wrapper_listing_requests;
 }

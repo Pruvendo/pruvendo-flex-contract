@@ -7,7 +7,7 @@
 #include "Price.hpp"
 #include "PriceXchg.hpp"
 
-namespace tvm { inline namespace schema {
+namespace tvm {
 
 __interface IFlexClient {
 
@@ -157,10 +157,10 @@ __interface IFlexClient {
 
   [[external, noaccept]]
   void burnWallet(
-    uint128 tons_value,
-    uint256 out_pubkey,
-    address_t out_internal_owner,
-    address_t my_tip3_addr
+    uint128     crystals_value,
+    uint256     out_pubkey,
+    address_opt out_owner,
+    address     my_tip3_addr
   ) = 26;
 
   [[getter]]
@@ -182,9 +182,9 @@ __interface IFlexClient {
   // to deploy flex internal wallet
   [[getter]]
   cell getPayloadForDeployInternalWallet(
-    uint256 owner_pubkey,
-    address_t owner_addr,
-    uint128 tons
+    uint256     owner_pubkey,
+    address_opt owner_addr,
+    uint128     crystals
   ) = 32;
 };
 using IFlexClientPtr = handle<IFlexClient>;
@@ -204,6 +204,5 @@ struct DFlexClient {
 __interface EFlexClient {
 };
 
-}} // namespace tvm::schema
-
+} // namespace tvm
 

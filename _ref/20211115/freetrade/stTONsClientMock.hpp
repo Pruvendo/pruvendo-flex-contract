@@ -5,7 +5,7 @@
 #include <tvm/contract_handle.hpp>
 #include <tvm/replay_attack_protection/timestamp.hpp>
 
-namespace tvm { inline namespace schema {
+namespace tvm {
 
 __interface IstTONsClientMock {
 
@@ -13,12 +13,6 @@ __interface IstTONsClientMock {
   void constructor(uint256 owner_pubkey);
 
   [[external, noaccept]]
-<<<<<<< HEAD
-  void storeCrystalls(address client_addr, address dst, uint128 amount);
-
-  [[external, noaccept]]
-  void sendTransferBack(address stTONsAddr, address wallet, uint128 crystals, uint128 amount);
-=======
   address deployStTONs(
     uint128 crystals,
     cell code,
@@ -43,7 +37,6 @@ __interface IstTONsClientMock {
     uint128 processing_crystals,
     bool_t ignore_errors
   );
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
 
   // ========== getters ==========
   [[getter]]
@@ -58,5 +51,5 @@ struct DstTONsClientMock {
 __interface EstTONsClientMock {
 };
 
-}} // namespace tvm::schema
+} // namespace tvm
 

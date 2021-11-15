@@ -9,8 +9,8 @@
   "author": "TON Labs",
   "license": "ISC",
   "dependencies": {
-    "@tonclient/core": "^1.20.1",
-    "@tonclient/lib-node": "^1.20.1",
+    "@tonclient/core": "^1.22.1",
+    "@tonclient/lib-node": "^1.22.0",
     "ton-client-js": "^0.28.1"
   },
   "devDependencies": {

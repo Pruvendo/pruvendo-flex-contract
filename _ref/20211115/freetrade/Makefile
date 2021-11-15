@@ -1,4 +1,4 @@
-all: Proxy.tvc Flex.tvc TradingPair.tvc XchgPair.tvc Price.tvc PriceXchg.tvc tip3info.tvc FlexClient.tvc TestTradeDebot.tvc stTONs.tvc DePoolMock.tvc stTONsClientMock.tvc
+all: Proxy.tvc Flex.tvc TradingPair.tvc XchgPair.tvc Price.tvc PriceXchg.tvc tip3info.tvc FlexClient.tvc TestTradeDebot.tvc stTONs.tvc DePoolMock.tvc stTONsClientMock.tvc WrongListingMock.tvc
 
 Proxy.tvc: Proxy.cpp Proxy.hpp
 	clang -o Proxy.tvc Proxy.cpp -I ../tokens/fungible -Wall
@@ -13,10 +13,10 @@ XchgPair.tvc: XchgPair.cpp Flex.hpp XchgPair.hpp PriceXchg.hpp PriceCommon.hpp
 	clang -o XchgPair.tvc XchgPair.cpp -I ../tokens/fungible -Wall
 
 Price.tvc: Price.cpp Flex.hpp TradingPair.hpp Price.hpp PriceCommon.hpp
-	clang -mtvm-refunc -o Price.tvc Price.cpp -I ../tokens/fungible -Wall
+	clang -mtvm-refunc -o Price.tvc $(file < ../tokens/fungible/FlexWallet.hashes) Price.cpp -I ../tokens/fungible -Wall
 
 PriceXchg.tvc: PriceXchg.cpp Flex.hpp XchgPair.hpp PriceXchg.hpp PriceCommon.hpp
-	clang -mtvm-refunc -o PriceXchg.tvc PriceXchg.cpp -I ../tokens/fungible -Wall
+	clang -mtvm-refunc -o PriceXchg.tvc $(file < ../tokens/fungible/FlexWallet.hashes) PriceXchg.cpp -I ../tokens/fungible -Wall
 
 freetr_debot.tvc: freetr_debot.cpp Flex.hpp TradingPair.hpp XchgPair.hpp Price.hpp PriceXchg.hpp PriceCommon.hpp
 	clang -o freetr_debot.tvc freetr_debot.cpp -I ../tokens/fungible -Wall
@@ -47,6 +47,17 @@ DePoolMock.tvc: DePoolMock.cpp DePoolMock.hpp
 
 stTONsClientMock.tvc: stTONsClientMock.cpp stTONsClientMock.hpp
 	clang -o stTONsClientMock.tvc stTONsClientMock.cpp -I ../tokens/fungible -Wall
+
+WrongListingMock.tvc: WrongListingMock.cpp WrongListingMock.hpp
+	clang -o WrongListingMock.tvc WrongListingMock.cpp -I ../tokens/fungible -Wall
+
+docs: stTONs-doc
+
+stTONs-doc:
+	doxygen stTONs.doxycfg
+
+Flex-doc:
+	doxygen Flex.doxycfg
 
 clean:
 	rm -f *.abi

@@ -5,7 +5,7 @@
 #include <tvm/contract_handle.hpp>
 #include <tvm/replay_attack_protection/timestamp.hpp>
 
-namespace tvm { inline namespace schema {
+namespace tvm {
 
 static constexpr unsigned PROXY_TIMESTAMP_DELAY = 1800;
 using proxy_replay_protection_t = replay_attack_protection::timestamp<PROXY_TIMESTAMP_DELAY>;
@@ -43,5 +43,5 @@ std::pair<StateInit, address> prepare_proxy_state_init_and_addr(int8 wch, cell p
   return { st_init, address::make_std(wch, uint256(tvm_hash(init_cl))) };
 }
 
-}} // namespace tvm::schema
+} // namespace tvm
 

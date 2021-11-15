@@ -1,14 +1,10 @@
 #include "stTONsClientMock.hpp"
-#include "TONTokenWallet.hpp"
 #include "stTONs.hpp"
 #include <tvm/contract.hpp>
 #include <tvm/smart_switcher.hpp>
 #include <tvm/contract_handle.hpp>
 #include <tvm/default_support_functions.hpp>
-<<<<<<< HEAD
-=======
 #include <tvm/suffixes.hpp>
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
 
 using namespace tvm;
 using namespace schema;
@@ -29,20 +25,6 @@ public:
   }
 
   __always_inline
-<<<<<<< HEAD
-  void storeCrystalls(address client_addr, address dst, uint128 amount) {
-    require(msg_pubkey() == owner_pubkey_, error_code::sender_is_not_my_owner);
-    tvm_accept();
-    IstTONsPtr(dst)(Grams(amount.get())).storeCrystalls(client_addr);
-  }
-
-  __always_inline
-  void sendTransferBack(address stTONsAddr, address wallet, uint128 crystals, uint128 amount) {
-    require(msg_pubkey() == owner_pubkey_, error_code::sender_is_not_my_owner);
-    tvm_accept();
-    ITONTokenWalletPtr(wallet)(Grams(crystals.get())).
-      transfer(address{tvm_myaddr()}, stTONsAddr, amount, uint128(0), bool_t{false});
-=======
   address deployStTONs(
     uint128 crystals,
     cell code,
@@ -94,7 +76,6 @@ public:
     tvm_accept();
     IstTONsPtr(stTONsAddr)(Grams(processing_crystals.get())).
       finalize(dst, ignore_errors);
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
   }
 
   __always_inline

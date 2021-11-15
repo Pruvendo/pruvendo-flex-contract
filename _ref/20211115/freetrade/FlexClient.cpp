@@ -36,7 +36,7 @@ public:
   }
 
   __always_inline
-  void setFlexCfg(TonsConfig tons_cfg, address_t flex) {
+  void setFlexCfg(TonsConfig tons_cfg, address flex) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
     tons_cfg_ = tons_cfg;
@@ -68,11 +68,11 @@ public:
 
   __always_inline
   address deployTradingPair(
-    address_t tip3_root,
+    address tip3_root,
     uint128 deploy_min_value,
     uint128 deploy_value,
     uint128 min_trade_amount,
-    address_t notify_addr
+    address notify_addr
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
@@ -85,7 +85,7 @@ public:
 
     auto [state_init, std_addr] = prepare_trading_pair_state_init_and_addr(pair_data, trading_pair_code_);
     auto trade_pair = ITradingPairPtr(address::make_std(workchain_id_, std_addr));
-    trade_pair.deploy(state_init, Grams(deploy_value.get()), DEFAULT_MSG_FLAGS, false).
+    trade_pair.deploy(state_init, Crystals(deploy_value.get()), DEFAULT_MSG_FLAGS, false).
       onDeploy(min_trade_amount, deploy_min_value, notify_addr);
 
     return trade_pair.get();
@@ -93,12 +93,12 @@ public:
 
   __always_inline
   address deployXchgPair(
-    address_t tip3_major_root,
-    address_t tip3_minor_root,
+    address tip3_major_root,
+    address tip3_minor_root,
     uint128 deploy_min_value,
     uint128 deploy_value,
     uint128 min_trade_amount,
-    address_t notify_addr
+    address notify_addr
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
@@ -112,7 +112,7 @@ public:
 
     auto [state_init, std_addr] = prepare_xchg_pair_state_init_and_addr(pair_data, xchg_pair_code_);
     auto trade_pair = IXchgPairPtr(address::make_std(workchain_id_, std_addr));
-    trade_pair.deploy(state_init, Grams(deploy_value.get()), DEFAULT_MSG_FLAGS, false).
+    trade_pair.deploy(state_init, Crystals(deploy_value.get()), DEFAULT_MSG_FLAGS, false).
       onDeploy(min_trade_amount, deploy_min_value, notify_addr);
 
     return trade_pair.get();
@@ -127,10 +127,10 @@ public:
     uint8   deals_limit,
     uint128 tons_value,
     cell    price_code,
-    address_t my_tip3_addr,
-    address_t receive_wallet,
+    address my_tip3_addr,
+    address receive_wallet,
     Tip3Config tip3cfg,
-    address_t notify_addr
+    address notify_addr
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     require(flex_wallet_code_, error_code::missed_flex_wallet_code);
@@ -147,8 +147,8 @@ public:
     cell payload = build(sell_args).endc();
 
     ITONTokenWalletPtr my_tip3(my_tip3_addr);
-    my_tip3(Grams(tons_value.get()), DEFAULT_MSG_FLAGS, false).
-      lendOwnership(address{tvm_myaddr()}, uint128(0), std_addr, amount,
+    my_tip3(Crystals(tons_value.get()), DEFAULT_MSG_FLAGS, false).
+      lendOwnership(address{tvm_myaddr()}, uint128(0), addr, amount,
                     lend_finish_time, deploy_init_cl, payload);
 
     return price_addr.get();
@@ -163,9 +163,9 @@ public:
     uint8 deals_limit,
     uint128 deploy_value,
     cell price_code,
-    address_t my_tip3_addr,
+    address my_tip3_addr,
     Tip3Config tip3cfg,
-    address_t notify_addr
+    address notify_addr
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     require(flex_wallet_code_, error_code::missed_flex_wallet_code);
@@ -174,7 +174,7 @@ public:
     auto [state_init, addr, std_addr] =
       preparePrice(price, min_amount, deals_limit, flex_wallet_code_.get(), tip3cfg, price_code, notify_addr);
     IPricePtr price_addr(addr);
-    price_addr.deploy(state_init, Grams(deploy_value.get()), DEFAULT_MSG_FLAGS, false).
+    price_addr.deploy(state_init, Crystals(deploy_value.get()), DEFAULT_MSG_FLAGS, false).
       buyTip3(amount, my_tip3_addr, order_finish_time);
     return price_addr.get();
   }
@@ -187,7 +187,7 @@ public:
     uint128 value,
     cell    price_code,
     Tip3Config tip3cfg,
-    address_t notify_addr
+    address notify_addr
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     require(flex_wallet_code_, error_code::missed_flex_wallet_code);
@@ -196,7 +196,7 @@ public:
     auto [state_init, addr, std_addr] =
       preparePrice(price, min_amount, deals_limit, flex_wallet_code_.get(), tip3cfg, price_code, notify_addr);
     IPricePtr price_addr(addr);
-    price_addr(Grams(value.get()), DEFAULT_MSG_FLAGS, false).cancelSell();
+    price_addr(Crystals(value.get()), DEFAULT_MSG_FLAGS, false).cancelSell();
   }
 
   __always_inline
@@ -207,7 +207,7 @@ public:
     uint128 value,
     cell    price_code,
     Tip3Config tip3cfg,
-    address_t notify_addr
+    address notify_addr
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     require(flex_wallet_code_, error_code::missed_flex_wallet_code);
@@ -216,7 +216,7 @@ public:
     auto [state_init, addr, std_addr] =
       preparePrice(price, min_amount, deals_limit, flex_wallet_code_.get(), tip3cfg, price_code, notify_addr);
     IPricePtr price_addr(addr);
-    price_addr(Grams(value.get()), DEFAULT_MSG_FLAGS, false).cancelBuy();
+    price_addr(Crystals(value.get()), DEFAULT_MSG_FLAGS, false).cancelBuy();
   }
 
   __always_inline
@@ -230,7 +230,7 @@ public:
     cell    xchg_price_code,
     Tip3Config major_tip3cfg,
     Tip3Config minor_tip3cfg,
-    address_t notify_addr
+    address notify_addr
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     require(flex_wallet_code_, error_code::missed_flex_wallet_code);
@@ -241,13 +241,13 @@ public:
                        major_tip3cfg, minor_tip3cfg, xchg_price_code, notify_addr);
     IPriceXchgPtr price_addr(addr);
     if (sell)
-      price_addr(Grams(value.get()), DEFAULT_MSG_FLAGS, false).cancelSell();
+      price_addr(Crystals(value.get()), DEFAULT_MSG_FLAGS, false).cancelSell();
     else
-      price_addr(Grams(value.get()), DEFAULT_MSG_FLAGS, false).cancelBuy();
+      price_addr(Crystals(value.get()), DEFAULT_MSG_FLAGS, false).cancelBuy();
   }
 
   __always_inline
-  void transfer(address_t dest, uint128 value, bool_t bounce) {
+  void transfer(address dest, uint128 value, bool_t bounce) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
     tvm_transfer(dest, value.get(), bounce.get());
@@ -265,11 +265,11 @@ public:
     uint8   deals_limit,
     uint128 tons_value,
     cell    xchg_price_code,
-    address_t my_tip3_addr,
-    address_t receive_wallet,
+    address my_tip3_addr,
+    address receive_wallet,
     Tip3Config major_tip3cfg,
     Tip3Config minor_tip3cfg,
-    address_t notify_addr
+    address notify_addr
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     require(flex_wallet_code_, error_code::missed_flex_wallet_code);
@@ -289,8 +289,8 @@ public:
     cell payload = build(payload_args).endc();
 
     ITONTokenWalletPtr my_tip3(my_tip3_addr);
-    my_tip3(Grams(tons_value.get()), DEFAULT_MSG_FLAGS, false).
-      lendOwnership(address{tvm_myaddr()}, uint128(0), std_addr, lend_amount,
+    my_tip3(Crystals(tons_value.get()), DEFAULT_MSG_FLAGS, false).
+      lendOwnership(address{tvm_myaddr()}, uint128(0), addr, lend_amount,
                     lend_finish_time, deploy_init_cl, payload);
     return price_addr.get();
   }
@@ -303,7 +303,7 @@ public:
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
-    IFlexPtr(flex_)(Grams(value.get())).registerWrapper(wrapper_pubkey, tip3cfg);
+    IFlexPtr(flex_)(Crystals(value.get())).registerWrapper(wrapper_pubkey, tip3cfg);
   }
 
   __always_inline
@@ -316,7 +316,7 @@ public:
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
-    IFlexPtr(flex_)(Grams(value.get())).
+    IFlexPtr(flex_)(Crystals(value.get())).
       registerTradingPair(request_pubkey, tip3_root, min_amount, notify_addr);
   }
 
@@ -331,14 +331,14 @@ public:
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
-    IFlexPtr(flex_)(Grams(value.get())).
+    IFlexPtr(flex_)(Crystals(value.get())).
       registerXchgPair(request_pubkey, tip3_major_root, tip3_minor_root, min_amount, notify_addr);
   }
 
   __always_inline
   address deployEmptyFlexWallet(
-    uint256 pubkey,
-    uint128 tons_to_wallet,
+    uint256    pubkey,
+    uint128    crystals_to_wallet,
     Tip3Config tip3cfg
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
@@ -346,27 +346,30 @@ public:
     tvm_accept();
 
     auto [init, hash_addr] = prepare_internal_wallet_state_init_and_addr(
-      tip3cfg.name, tip3cfg.symbol, tip3cfg.decimals, tip3cfg.root_public_key,
-      pubkey, tip3cfg.root_address, address{tvm_myaddr()}, flex_wallet_code_.get(), workchain_id_
+      tip3cfg.name, tip3cfg.symbol, tip3cfg.decimals,
+      tip3cfg.root_public_key, tip3cfg.root_address,
+      pubkey, address{tvm_myaddr()},
+      uint256(tvm_hash(flex_wallet_code_.get())), uint16(flex_wallet_code_.get().cdepth()),
+      workchain_id_, flex_wallet_code_.get()
       );
     ITONTokenWalletPtr new_wallet(address::make_std(workchain_id_, hash_addr));
-    new_wallet.deploy_noop(init, Grams(tons_to_wallet.get()));
+    new_wallet.deploy_noop(init, Crystals(crystals_to_wallet.get()));
     return new_wallet.get();
   }
 
   __always_inline
   void burnWallet(
-    uint128 tons_value,
-    uint256 out_pubkey,
-    address_t out_internal_owner,
-    address_t my_tip3_addr
+    uint128     crystals_value,
+    uint256     out_pubkey,
+    address_opt out_owner,
+    address     my_tip3_addr
   ) {
     require(msg_pubkey() == owner_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
 
     ITONTokenWalletPtr my_tip3(my_tip3_addr);
-    my_tip3(Grams(tons_value.get())).
-      burn(out_pubkey, out_internal_owner);
+    my_tip3(Crystals(crystals_value.get())).
+      burn(out_pubkey, out_owner);
   }
 
   __always_inline
@@ -396,11 +399,11 @@ public:
 
   __always_inline
   cell getPayloadForDeployInternalWallet(
-    uint256 owner_pubkey,
-    address_t owner_addr,
-    uint128 tons
+    uint256     owner_pubkey,
+    address_opt owner_addr,
+    uint128     crystals
   ) {
-    return build(FlexDeployWalletArgs{owner_pubkey, owner_addr, tons}).endc();
+    return build(FlexDeployWalletArgs{owner_pubkey, owner_addr, crystals}).endc();
   }
 
   // =============== Support functions ==================
@@ -415,7 +418,7 @@ private:
   __always_inline
   std::tuple<StateInit, address, uint256> preparePrice(
       uint128 price, uint128 min_amount, uint8 deals_limit, cell tip3_code, Tip3Config tip3cfg,
-      cell price_code, address_t notify_addr) const {
+      cell price_code, address notify_addr) const {
     DPrice price_data {
       .price_ = price,
       .sells_amount_ = uint128(0),
@@ -426,7 +429,6 @@ private:
       .notify_addr_ = IFlexNotifyPtr(notify_addr),
       .workchain_id_ = workchain_id_,
       .tons_cfg_ = tons_cfg_,
-      .tip3_code_ = tip3_code,
       .tip3cfg_ = tip3cfg,
       .sells_ = {},
       .buys_ = {}
@@ -438,7 +440,7 @@ private:
   __always_inline
   std::tuple<StateInit, address, uint256> preparePriceXchg(
       uint128 price_num, uint128 price_denum, uint128 min_amount, uint8 deals_limit,
-      Tip3Config major_tip3cfg, Tip3Config minor_tip3cfg, cell price_code, address_t notify_addr) const {
+      Tip3Config major_tip3cfg, Tip3Config minor_tip3cfg, cell price_code, address notify_addr) const {
 
     DPriceXchg price_data {
       .price_ = { price_num, price_denum },
@@ -450,7 +452,6 @@ private:
       .notify_addr_ = IFlexNotifyPtr(notify_addr),
       .workchain_id_ = workchain_id_,
       .tons_cfg_ = tons_cfg_,
-      .tip3_code_ = flex_wallet_code_.get(),
       .major_tip3cfg_ = major_tip3cfg,
       .minor_tip3cfg_ = minor_tip3cfg,
       .sells_ = {},

@@ -1,20 +1,20 @@
+/** \file
+ *  \brief stTONs contract implementation
+ *  \author Andrew Zhogin
+ *  \copyright 2019-2021 (c) TON LABS
+ */
+
 #include "stTONs.hpp"
 #include <tvm/contract.hpp>
 #include <tvm/smart_switcher.hpp>
 #include <tvm/contract_handle.hpp>
 #include <tvm/default_support_functions.hpp>
-<<<<<<< HEAD
-=======
 #include <tvm/suffixes.hpp>
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
 
 #include "DePool.hpp"
 
 using namespace tvm;
-using namespace schema;
 
-<<<<<<< HEAD
-=======
 enum class DePoolError {
   STATUS_SUCCESS                           = 0,
   STATUS_DEPOOL_CLOSED                     = 3,
@@ -28,75 +28,35 @@ enum class DePoolError {
   STATUS_NOT_REPORTED_YET                  = 0xFF
 };
 
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
 template<bool Internal>
 class stTONs final : public smart_interface<IstTONs>, public DstTONs {
 public:
   struct error_code : tvm::error_code {
-<<<<<<< HEAD
-    static constexpr unsigned sender_is_not_my_owner        = 100;
-    static constexpr unsigned crystalls_inconsistency       = 101;
-    static constexpr unsigned not_enough_crystalls          = 102;
-    static constexpr unsigned store_crystalls_first         = 103;
-    static constexpr unsigned small_tokens_value            = 104;
-    static constexpr unsigned not_good_wallet               = 105;
-    static constexpr unsigned too_big_amount_to_return_back = 106;
+    static constexpr unsigned sender_is_not_my_owner               = 100; ///< Authorization error
+    static constexpr unsigned transferring_stake_back              = 101; ///< Contract is in "transferring stake back" state
+    static constexpr unsigned not_transferred_stake_back           = 102; ///< IstTONs::returnStake() should be called first
+    static constexpr unsigned not_enough_balance                   = 103; ///< Not enough token balance to proceed
+    static constexpr unsigned finish_time_must_be_greater_than_now = 104; ///< Lend finish time must be in some future
+    static constexpr unsigned internal_owner_enabled               = 105; ///< Internal ownership is enabled
+    static constexpr unsigned internal_owner_disabled              = 106; ///< Internal ownership is disabled
+    static constexpr unsigned wallet_in_lend_owneship              = 107; ///< The wallet is in lend ownership state
+    static constexpr unsigned incorrect_depool_address             = 108; ///< Received DePool notification from incorrect address
+    static constexpr unsigned has_depool_error                     = 109; ///< Contract received an error notification from DePool
+    static constexpr unsigned only_original_owner_allowed          = 110; ///< This method may be called only by original owner (not by lend owner)
+    static constexpr unsigned wrong_bounced_header                 = 111; ///< Incorrect header in bounced message
+    static constexpr unsigned wrong_bounced_args                   = 112; ///< Incorrect arguments in bounced message
   };
 
-  __always_inline
-  void constructor(
-    uint256 owner_pubkey,
-    Tip3Config tip3cfg,
-    address depool,
-    stTONsCosts costs,
-    cell tip3code
-  ) {
-    require(costs.receive_stake_transfer_costs >
-              costs.store_crystals_costs + costs.mint_costs + costs.deploy_wallet_costs,
-            error_code::crystalls_inconsistency);
-
-    owner_pubkey_ = owner_pubkey;
-    tip3cfg_ = tip3cfg;
-    depool_ = depool;
-    costs_ = costs;
-    tip3code_ = tip3code;
-    workchain_id_ = std::get<addr_std>(address{tvm_myaddr()}.val()).workchain_id;
-  }
-
-  __always_inline
-  IRootTokenContractPtr tip3root() const { return IRootTokenContractPtr(tip3cfg_.root_address); }
-
-  __always_inline
-  void storeCrystalls(address client_addr) {
-    require(int_value().get() > costs_.receive_stake_transfer_costs, error_code::not_enough_crystalls);
-
-    auto std_addr = std::get<addr_std>(client_addr.val()).address;
-    if (auto opt_exist = stored_crystals_.lookup(std_addr.get()))
-      stored_crystals_.set_at(std_addr.get(), *opt_exist + int_value().get() - costs_.store_crystals_costs);
-    else
-      stored_crystals_.set_at(std_addr.get(), int_value().get() - costs_.store_crystals_costs);
-=======
-    static constexpr unsigned sender_is_not_my_owner               = 100;
-    static constexpr unsigned transferring_stake_back              = 101;
-    static constexpr unsigned not_transferred_stake_back           = 102;
-    static constexpr unsigned not_enough_balance                   = 103;
-    static constexpr unsigned finish_time_must_be_greater_than_now = 104;
-    static constexpr unsigned internal_owner_enabled               = 105;
-    static constexpr unsigned internal_owner_disabled              = 106;
-    static constexpr unsigned wallet_in_lend_owneship              = 107;
-    static constexpr unsigned incorrect_depool_address             = 108;
-    static constexpr unsigned has_depool_error                     = 109;
-    static constexpr unsigned only_original_owner_allowed          = 110;
-  };
-
+  /// Implements tvm::IstTONs::onDeploy()
   __always_inline
   void onDeploy() {
   }
 
+  /// Implements tvm::IstTONs::lendOwnership()
   __always_inline
   void lendOwnership(
     address answer_addr,
-    uint128 grams,
+    uint128 crystals,
     address dest,
     uint128 lend_balance,
     uint32  lend_finish_time,
@@ -122,26 +82,29 @@ public:
 
     lend_ownership_.set_at(dest, {sum_lend_balance, sum_lend_finish_time});
 
-    unsigned msg_flags = prepare_transfer_message_flags(grams);
+    unsigned msg_flags = prepare_transfer_message_flags(crystals);
     auto deploy_init_sl = deploy_init_cl.ctos();
     StateInit deploy_init;
     if (!deploy_init_sl.empty())
-      deploy_init = parse<StateInit>(deploy_init_cl.ctos());
+      deploy_init = parse<StateInit>(deploy_init_sl);
     if (deploy_init.code && deploy_init.data) {
       // performing `tail call` - requesting dest to answer to our caller
       temporary_data::setglob(global_id::answer_id, return_func_id()->get());
-      IstTONsNotifyPtr(dest).deploy(deploy_init, Grams(grams.get()), msg_flags).
-        onLendOwnership(answer_addr_fxd, lend_balance, lend_finish_time,
-                        owner_pubkey_, owner_address_, depool_.get(), depool_pubkey_, payload);
+      IstTONsNotifyPtr(dest).deploy(deploy_init, Grams(crystals.get()), msg_flags).
+        onLendOwnership(lend_balance, lend_finish_time,
+                        owner_pubkey_, owner_address_, depool_.get(), depool_pubkey_, payload,
+                        answer_addr_fxd);
     } else {
       // performing `tail call` - requesting dest to answer to our caller
       temporary_data::setglob(global_id::answer_id, return_func_id()->get());
-      IstTONsNotifyPtr(dest)(Grams(grams.get()), msg_flags).
-        onLendOwnership(answer_addr_fxd, lend_balance, lend_finish_time,
-                        owner_pubkey_, owner_address_, depool_.get(), depool_pubkey_, payload);
+      IstTONsNotifyPtr(dest)(Grams(crystals.get()), msg_flags).
+        onLendOwnership(lend_balance, lend_finish_time,
+                        owner_pubkey_, owner_address_, depool_.get(), depool_pubkey_, payload,
+                        answer_addr_fxd);
     }
   }
 
+  /// Implements tvm::IstTONs::returnOwnership()
   __always_inline
   void returnOwnership(uint128 tokens) {
     check_owner(/*original_owner_only*/false, /*allowed_for_original_owner_in_lend_state*/false);
@@ -155,6 +118,7 @@ public:
     }
   }
 
+  /// Implements tvm::IstTONs::returnStake()
   __always_inline
   void returnStake(address dst, uint128 processing_crystals) {
     check_owner(/*original_owner_only*/true, /*allowed_for_original_owner_in_lend_state*/false);
@@ -163,85 +127,45 @@ public:
     last_depool_error_ = static_cast<unsigned>(DePoolError::STATUS_NOT_REPORTED_YET);
   }
 
+  /// Implements tvm::IstTONs::finalize()
   __always_inline
   void finalize(address dst, bool_t ignore_errors) {
     require(transferring_stake_back_.get(), error_code::not_transferred_stake_back);
     check_owner(/*original_owner_only*/true, /*allowed_for_original_owner_in_lend_state*/false);
-    tvm_accept();
     require(ignore_errors ||
       (last_depool_error_ == static_cast<unsigned>(DePoolError::STATUS_SUCCESS)) ||
       (last_depool_error_ == static_cast<unsigned>(DePoolError::STATUS_DEPOOL_CLOSED)) ||
       (last_depool_error_ == static_cast<unsigned>(DePoolError::STATUS_NO_PARTICIPANT)),
       error_code::has_depool_error);
+    tvm_accept();
     suicide(dst);
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
   }
 
+  /// Implements tvm::IParticipant::onTransfer()
   __always_inline
   void receiveStakeTransfer(address source, uint128 amount) {
-<<<<<<< HEAD
-    // transferStake has uint64 amount argument, so we will not be able to return back stakes > (1 << 64)
-    require((amount >> 64) == 0, error_code::too_big_amount_to_return_back);
-    auto std_addr = std::get<addr_std>(source.val()).address;
-    auto opt_account = stored_crystals_.extract(std_addr.get());
-    require(!!opt_account, error_code::store_crystalls_first);
-    tvm_accept();
-
-    tip3root()(Grams(costs_.mint_costs.get())).mint(amount);
-
-    auto rest_crystals = *opt_account - costs_.process_receive_stake_costs - costs_.mint_costs;
-    tip3root()(Grams(rest_crystals.get())).
-      deployWallet(uint256(0), source, amount, rest_crystals - costs_.deploy_wallet_costs);
-  }
-
-  __always_inline
-  void internalTransfer(
-    uint128 tokens,
-    address answer_addr,
-    uint256 sender_pubkey,
-    address sender_owner,
-    bool_t  notify_receiver,
-    cell    payload
-  ) {
-    require(tokens >= costs_.min_transfer_tokens, error_code::small_tokens_value);
-
-    uint256 expected_address = expected_sender_address(sender_pubkey, sender_owner);
-    auto [sender, value_gr] = int_sender_and_value();
-    require(std::get<addr_std>(sender()).address == expected_address,
-            error_code::not_good_wallet);
-
-    depool_(Grams(costs_.transfer_stake_costs.get())).transferStake(sender_owner, uint64(tokens.get()));
-=======
     require(int_sender() == depool_.get(), error_code::incorrect_depool_address);
     tvm_accept();
 
     balance_ += amount;
   }
 
+  /// Implements tvm::IParticipant::receiveAnswer()
   __always_inline
   void receiveAnswer(uint32 errcode, uint64 comment) {
     require(int_sender() == depool_.get(), error_code::incorrect_depool_address);
     tvm_accept();
 
     last_depool_error_ = uint8(errcode.get());
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
   }
 
+  /// Implements tvm::IstTONs::getDetails()
   __always_inline
   stTONsDetails getDetails() {
-<<<<<<< HEAD
-    return {
-      owner_pubkey_,
-      owner_address_,
-      tip3root().get(),
-      depool_.get(),
-      getStoredCrystals(),
-      costs_
-=======
     auto [filtered_lend_array, lend_balance] = filter_lend_ownerhip_array();
     return {
       owner_pubkey_,
-      owner_address_,
+      get_owner_addr(),
       depool_.get(),
       depool_pubkey_,
       balance_,
@@ -249,57 +173,23 @@ public:
       lend_balance,
       transferring_stake_back_,
       last_depool_error_
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
       };
   }
 
+  /// Implements tvm::IstTONs::calcStTONsAddr()
   __always_inline
-<<<<<<< HEAD
-  dict_array<StoredCrystalsPair> getStoredCrystals() const {
-    dict_array<StoredCrystalsPair> rv;
-    for (auto v : stored_crystals_) {
-      rv.push_back({v.first, v.second});
-    }
-    return rv;
-  }
-
-  __always_inline
-  void check_owner() {
-    bool internal_ownership = !!owner_address_;
-    if constexpr (Internal)
-      require(internal_ownership && (int_sender() == *owner_address_), error_code::sender_is_not_my_owner);
-    else
-      require(!internal_ownership && (msg_pubkey() == owner_pubkey_), error_code::sender_is_not_my_owner);
-  }
-
-  // transform x:0000...0000 address into empty optional<address>
-  __always_inline
-  std::optional<address> optional_owner(address owner) {
-    return std::get<addr_std>(owner()).address ?
-      std::optional<address>(owner) : std::optional<address>();
-  }
-
-  __always_inline
-  std::pair<StateInit, uint256> calc_wallet_init_hash(uint256 pubkey, address internal_owner) {
-    return prepare_internal_wallet_state_init_and_addr(
-      tip3cfg_.name, tip3cfg_.symbol, tip3cfg_.decimals, tip3cfg_.root_public_key, pubkey, tip3cfg_.root_address,
-      optional_owner(internal_owner), tip3code_, workchain_id_);
-  }
-
-  __always_inline
-  uint256 expected_sender_address(uint256 sender_public_key, address sender_owner) {
-    return calc_wallet_init_hash(sender_public_key, sender_owner).second;
-=======
   address calcStTONsAddr(
     cell code,
     uint256 owner_pubkey,
     std::optional<address> owner_address,
-    address depool
+    address depool,
+    uint256 depool_pubkey
   ) {
     DstTONs data {
       .owner_pubkey_ = owner_pubkey,
       .owner_address_ = owner_address,
       .depool_ = depool,
+      .depool_pubkey_ = depool_pubkey,
       .balance_ = 0u128,
       .lend_ownership_ = {},
       .transferring_stake_back_ = bool_t{false},
@@ -336,12 +226,14 @@ public:
   }
 
   __always_inline
-  uint128 check_external_owner() {
+  uint128 check_external_owner(bool allowed_for_original_owner_in_lend_state) {
     require(!is_internal_owner(), error_code::internal_owner_enabled);
     require(msg_pubkey() == owner_pubkey_, error_code::sender_is_not_my_owner);
     tvm_accept();
-    auto [filtered_map, lend_balance] = filter_lend_ownerhip_map();
-    require(filtered_map.empty(), error_code::wallet_in_lend_owneship);
+    auto [filtered_map, actual_lend_balance] = filter_lend_ownerhip_map();
+    if (actual_lend_balance > 0 && allowed_for_original_owner_in_lend_state)
+      return balance_ - actual_lend_balance;
+    require(actual_lend_balance == 0, error_code::wallet_in_lend_owneship);
     return balance_;
   }
 
@@ -350,16 +242,16 @@ public:
     if constexpr (Internal)
       return check_internal_owner(original_owner_only, allowed_in_lend_state);
     else
-      return check_external_owner();
+      return check_external_owner(allowed_in_lend_state);
   }
 
   __always_inline
-  unsigned prepare_transfer_message_flags(uint128 &grams) {
+  unsigned prepare_transfer_message_flags(uint128 &crystals) {
     unsigned msg_flags = 0;
     if constexpr (Internal) {
       tvm_rawreserve(tvm_balance() - int_value().get(), rawreserve_flag::up_to);
       msg_flags = SEND_ALL_GAS;
-      grams = 0;
+      crystals = 0;
     }
     return msg_flags;
   }
@@ -415,13 +307,43 @@ public:
   address get_owner_addr() {
     return owner_address_ ? *owner_address_ :
                             address::make_std(int8(0), uint256(0));
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
   }
 
   // =============== Support functions ==================
   DEFAULT_SUPPORT_FUNCTIONS(IstTONs, sttons_replay_protection_t)
 
-  // default processing of unknown messages
+  /// Received bounced message back
+  __always_inline static int _on_bounced(cell msg, slice msg_body) {
+    tvm_accept();
+
+    parser p(msg_body);
+    require(p.ldi(32) == -1, error_code::wrong_bounced_header);
+    auto [opt_hdr, =p] = parse_continue<abiv2::internal_msg_header>(p);
+    require(!!opt_hdr, error_code::wrong_bounced_header);
+    auto [hdr, persist] = load_persistent_data<IstTONs, sttons_replay_protection_t, DstTONs>();
+
+    // If it is bounced onTip3LendOwnership, then we need to reset lend ownership
+    if (opt_hdr->function_id == id_v<&IstTONsNotify::onLendOwnership>) {
+      auto parsed_msg = parse<int_msg_info>(parser(msg), error_code::bad_incoming_msg);
+      auto sender = incoming_msg(parsed_msg).int_sender();
+
+      auto [answer_id, =p] = parse_continue<uint32>(p);
+      // Parsing only first `balance` variable of onLendOwnership, other arguments won't fit into bounced response
+      auto bounced_val = parse<uint128>(p, error_code::wrong_bounced_args);
+
+      auto v = persist.lend_ownership_[sender];
+      if (v.lend_balance <= bounced_val) {
+        persist.lend_ownership_.erase(sender);
+      } else {
+        v.lend_balance -= bounced_val;
+        persist.lend_ownership_.set_at(sender, v);
+      }
+      save_persistent_data<IstTONs, sttons_replay_protection_t>(hdr, persist);
+    }
+    return 0;
+  }
+
+  /// Default processing of unknown messages
   __always_inline static int _fallback(cell /*msg*/, slice /*msg_body*/) {
     return 0;
   }

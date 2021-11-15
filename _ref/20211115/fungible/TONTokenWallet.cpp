@@ -1,3 +1,11 @@
+/** \file
+ *  \brief TONTokenWallet contract implementation
+ *  Compiles into two contract versions: TONTokenWallet.tvc (external wallet) and FlexWallet.tvc (internal wallet).
+ *  With different macroses.
+ *  \author Andrew Zhogin
+ *  \copyright 2019-2021 (c) TON LABS
+ */
+
 #include "TONTokenWallet.hpp"
 
 #ifdef TIP3_ENABLE_BURN
@@ -11,89 +19,92 @@
 using namespace tvm;
 using namespace schema;
 
+/// Implementation of TONTokenWallet contract
 template<bool Internal>
 class TONTokenWallet final : public smart_interface<ITONTokenWallet>, public DTONTokenWallet {
 public:
   static constexpr unsigned min_transfer_costs = 150000000;
 
+  /// Error codes of TONTokenWallet contract
   struct error_code : tvm::error_code {
-    static constexpr unsigned message_sender_is_not_my_owner       = 100;
-    static constexpr unsigned not_enough_balance                   = 101;
-    static constexpr unsigned message_sender_is_not_my_root        = 102;
-    static constexpr unsigned message_sender_is_not_good_wallet    = 103;
-    static constexpr unsigned wrong_bounced_header                 = 104;
-    static constexpr unsigned wrong_bounced_args                   = 105;
-    static constexpr unsigned non_zero_remaining                   = 106;
-    static constexpr unsigned no_allowance_set                     = 107;
-    static constexpr unsigned wrong_spender                        = 108;
-    static constexpr unsigned not_enough_allowance                 = 109;
-    static constexpr unsigned internal_owner_enabled               = 110;
-    static constexpr unsigned internal_owner_disabled              = 111;
-    static constexpr unsigned destroy_non_empty_wallet             = 112;
-    static constexpr unsigned only_original_owner_allowed          = 113;
-    static constexpr unsigned wallet_in_lend_owneship              = 114;
-    static constexpr unsigned finish_time_must_be_greater_than_now = 115;
-    static constexpr unsigned not_enough_tons_to_process           = 116;
-    static constexpr unsigned allowance_is_set                     = 117;
-    static constexpr unsigned transfer_to_zero_address             = 118;
-    
+    static constexpr unsigned message_sender_is_not_my_owner       = 100; ///< Authorization error
+    static constexpr unsigned not_enough_balance                   = 101; ///< Not enough token balance to proceed
+    static constexpr unsigned message_sender_is_not_my_root        = 102; ///< Message sender is not RootTokenContract address
+    static constexpr unsigned message_sender_is_not_good_wallet    = 103; ///< Message sender is not a good wallet
+    static constexpr unsigned wrong_bounced_header                 = 104; ///< Wrong header of bounced message
+    static constexpr unsigned wrong_bounced_args                   = 105; ///< Wrong arguments in bounced message
+    static constexpr unsigned non_zero_remaining                   = 106; ///< Allowance is empty and remainingTokens is non zero
+    static constexpr unsigned no_allowance_set                     = 107; ///< Allowance is not set up
+    static constexpr unsigned wrong_spender                        = 108; ///< Wrong spender for allowance
+    static constexpr unsigned not_enough_allowance                 = 109; ///< Not enough allowance to proceed
+    static constexpr unsigned internal_owner_enabled               = 110; ///< Internal ownership is enabled (can't process external commands)
+    static constexpr unsigned internal_owner_disabled              = 111; ///< Internal ownership is disabled (can't process internal commands)
+    static constexpr unsigned destroy_non_empty_wallet             = 112; ///< Wallet with non-zero token balance can't be destroyed
+    static constexpr unsigned only_original_owner_allowed          = 113; ///< Command may be requested only by original owner (not lend owner)
+    static constexpr unsigned wallet_in_lend_owneship              = 114; ///< Wallet in lend ownership state
+    static constexpr unsigned finish_time_must_be_greater_than_now = 115; ///< Lend finish time must be in future
+    static constexpr unsigned not_enough_crystals_to_process       = 116; ///< Not enough crystals to process
+    static constexpr unsigned allowance_is_set                     = 117; ///< Allowance is set (wallet can't process lendOwnership)
+    static constexpr unsigned transfer_to_zero_address             = 118; ///< Transfer to zero address
   };
 
   __always_inline
   void transfer(
-    address_t answer_addr,
-    address_t to,
+    address answer_addr,
+    address to,
     uint128 tokens,
-    uint128 grams,
+    uint128 crystals,
     bool_t  return_ownership
   ) {
-    transfer_impl(answer_addr, to, tokens, grams, return_ownership.get(), false, builder().endc());
+    transfer_impl(answer_addr, to, tokens, crystals, return_ownership.get(), false, builder().endc());
   }
 
   __always_inline
   void transferWithNotify(
-    address_t answer_addr,
-    address_t to,
+    address answer_addr,
+    address to,
     uint128 tokens,
-    uint128 grams,
+    uint128 crystals,
     bool_t  return_ownership,
     cell    payload
   ) {
     // performing `tail call` - requesting dest to answer to our caller
     temporary_data::setglob(global_id::answer_id, return_func_id()->get());
-    transfer_impl(answer_addr, to, tokens, grams, return_ownership.get(), true, payload);
+    transfer_impl(answer_addr, to, tokens, crystals, return_ownership.get(), true, payload);
   }
 
+#ifdef TIP3_IMPROVED_TRANSFER
   __always_inline
   void transferToRecipient(
-    address_t answer_addr,
-    uint256 recipient_public_key,
-    address_t recipient_internal_owner,
-    uint128 tokens,
-    uint128 grams,
-    bool_t  deploy,
-    bool_t  return_ownership
+    address     answer_addr,
+    uint256     recipient_pubkey,
+    address_opt recipient_owner,
+    uint128     tokens,
+    uint128     crystals,
+    bool_t      deploy,
+    bool_t      return_ownership
   ) {
-    transfer_to_recipient_impl(answer_addr, recipient_public_key, recipient_internal_owner,
-                               tokens, grams, deploy.get(), return_ownership.get(), false, builder().endc());
+    transfer_to_recipient_impl(answer_addr, recipient_pubkey, recipient_owner,
+                               tokens, crystals, deploy.get(), return_ownership.get(), false, builder().endc());
   }
 
   __always_inline
   void transferToRecipientWithNotify(
-    address_t answer_addr,
-    uint256 recipient_public_key,
-    address_t recipient_internal_owner,
-    uint128 tokens,
-    uint128 grams,
-    bool_t  deploy,
-    bool_t  return_ownership,
-    cell    payload
+    address     answer_addr,
+    uint256     recipient_pubkey,
+    address_opt recipient_owner,
+    uint128     tokens,
+    uint128     crystals,
+    bool_t      deploy,
+    bool_t      return_ownership,
+    cell        payload
   ) {
     // performing `tail call` - requesting dest to answer to our caller
     temporary_data::setglob(global_id::answer_id, return_func_id()->get());
-    transfer_to_recipient_impl(answer_addr, recipient_public_key, recipient_internal_owner,
-                               tokens, grams, deploy.get(), return_ownership.get(), true, payload);
+    transfer_to_recipient_impl(answer_addr, recipient_pubkey, recipient_owner,
+                               tokens, crystals, deploy.get(), return_ownership.get(), true, payload);
   }
+#endif
 
   __always_inline
   uint128 requestBalance() {
@@ -103,14 +114,18 @@ public:
   }
 
   __always_inline
-  bool_t accept(uint128 tokens, address answer_addr, uint128 keep_grams) {
-    auto [sender, value_gr] = int_sender_and_value();
+  bool_t accept(
+    uint128 tokens,
+    address answer_addr,
+    uint128 keep_crystals
+  ) {
+    auto [sender, value] = int_sender_and_value();
     // the function must check that message sender is the RTW.
     require(root_address_ == sender, error_code::message_sender_is_not_my_root);
     tvm_accept();
     balance_ += tokens;
 
-    tvm_rawreserve(tvm_balance() + keep_grams.get() - value_gr(), rawreserve_flag::up_to);
+    tvm_rawreserve(tvm_balance() + keep_crystals.get() - value(), rawreserve_flag::up_to);
 
     set_int_sender(answer_addr);
     set_int_return_value(0);
@@ -121,16 +136,16 @@ public:
 
   __always_inline
   void internalTransfer(
-    uint128 tokens,
-    address answer_addr,
-    uint256 sender_pubkey,
-    address sender_owner,
-    bool_t  notify_receiver,
-    cell    payload
+    uint128     tokens,
+    address     answer_addr,
+    uint256     sender_pubkey,
+    address_opt sender_owner,
+    bool_t      notify_receiver,
+    cell        payload
   ) {
-    uint256 expected_address = expected_sender_address(sender_pubkey, sender_owner);
+    uint256 expected_addr = expected_address(sender_pubkey, sender_owner);
     auto [sender, value_gr] = int_sender_and_value();
-    require(std::get<addr_std>(sender()).address == expected_address,
+    require(std::get<addr_std>(sender()).address == expected_addr,
             error_code::message_sender_is_not_good_wallet);
     balance_ += tokens;
 
@@ -139,8 +154,8 @@ public:
     if (notify_receiver && owner_address_) {
       // performing `tail call` - requesting dest to answer to our caller
       temporary_data::setglob(global_id::answer_id, return_func_id()->get());
-      ITONTokenWalletNotifyPtr(*owner_address_)(Grams(0), SEND_ALL_GAS).
-        onTip3Transfer(answer_addr, balance_, tokens, sender_pubkey, sender_owner, payload);
+      ITONTokenWalletNotifyPtr(*owner_address_)(Crystals(0), SEND_ALL_GAS).
+        onTip3Transfer(balance_, tokens, sender_pubkey, sender_owner, payload, answer_addr);
     } else {
       // In some cases (allowance request, for example) answer_addr may be this contract
       if (answer_addr != address{tvm_myaddr()})
@@ -149,7 +164,7 @@ public:
   }
 
   __always_inline
-  void destroy(address_t dest) {
+  void destroy(address dest) {
     check_owner(/*original_owner_only*/true, /*allowed_for_original_owner_in_lend_state*/false);
     require(balance_ == 0, error_code::destroy_non_empty_wallet);
     tvm_accept();
@@ -159,23 +174,26 @@ public:
 
 #ifdef TIP3_ENABLE_BURN
   __always_inline
-  void burn(uint256 out_pubkey, address out_internal_owner) {
+  void burn(
+    uint256     out_pubkey,
+    address_opt out_owner
+  ) {
     check_owner(/*original_owner_only*/true, /*allowed_for_original_owner_in_lend_state*/false);
     tvm_accept();
     IWrapperPtr root_ptr(root_address_);
     unsigned flags = SEND_ALL_GAS | SENDER_WANTS_TO_PAY_FEES_SEPARATELY | DELETE_ME_IF_I_AM_EMPTY |
                      IGNORE_ACTION_ERRORS;
-    root_ptr(Grams(0), flags).
-      burn(int_sender(), wallet_public_key_, get_owner_addr(), out_pubkey, out_internal_owner, getBalance());
+    root_ptr(Crystals(0), flags).
+      burn(getBalance(), int_sender(), wallet_pubkey_, owner_address_, out_pubkey, out_owner);
   }
 #endif
 
 #ifdef TIP3_ENABLE_LEND_OWNERSHIP
   __always_inline
   void lendOwnership(
-    address_t answer_addr,
-    uint128 grams,
-    uint256 std_dest,
+    address answer_addr,
+    uint128 crystals,
+    address dest,
     uint128 lend_balance,
     uint32  lend_finish_time,
     cell    deploy_init_cl,
@@ -191,7 +209,6 @@ public:
     tvm_accept();
 
     auto answer_addr_fxd = fixup_answer_addr(answer_addr);
-    auto dest = address::make_std(workchain_id_, std_dest);
 
     // repeated lend to the same address will be { sumX + sumY, max(timeX, timeY) }
     auto sum_lend_balance = lend_balance;
@@ -203,21 +220,25 @@ public:
 
     lend_ownership_.set_at(dest, {sum_lend_balance, sum_lend_finish_time});
 
-    auto deploy_init = parse<StateInit>(deploy_init_cl.ctos());
-    unsigned msg_flags = prepare_transfer_message_flags(grams);
+    unsigned msg_flags = prepare_transfer_message_flags(crystals);
+
+    auto deploy_init_sl = deploy_init_cl.ctos();
+    StateInit deploy_init;
+    if (!deploy_init_sl.empty())
+      deploy_init = parse<StateInit>(deploy_init_sl);
 
     if (deploy_init.code && deploy_init.data) {
       // performing `tail call` - requesting dest to answer to our caller
       temporary_data::setglob(global_id::answer_id, return_func_id()->get());
-      ITONTokenWalletNotifyPtr(dest).deploy(deploy_init, Grams(grams.get()), msg_flags, false).
-        onTip3LendOwnership(answer_addr_fxd, lend_balance, lend_finish_time,
-                            wallet_public_key_, get_owner_addr(), payload);
+      ITONTokenWalletNotifyPtr(dest).deploy(deploy_init, Crystals(crystals.get()), msg_flags, false).
+        onTip3LendOwnership(lend_balance, lend_finish_time,
+                            wallet_pubkey_, owner_address_, payload, answer_addr_fxd);
     } else {
       // performing `tail call` - requesting dest to answer to our caller
       temporary_data::setglob(global_id::answer_id, return_func_id()->get());
-      ITONTokenWalletNotifyPtr(dest)(Grams(grams.get()), msg_flags, false).
-        onTip3LendOwnership(answer_addr_fxd, lend_balance, lend_finish_time,
-                            wallet_public_key_, get_owner_addr(), payload);
+      ITONTokenWalletNotifyPtr(dest)(Crystals(crystals.get()), msg_flags, false).
+        onTip3LendOwnership(lend_balance, lend_finish_time,
+                            wallet_pubkey_, owner_address_, payload, answer_addr_fxd);
     }
   }
 
@@ -240,9 +261,9 @@ public:
   details_info getDetails() {
     auto [filtered_lend_array, lend_balance] = filter_lend_ownerhip_array();
     return { getName(), getSymbol(), getDecimals(),
-             getBalance(), getRootKey(), getWalletKey(),
-             getRootAddress(), getOwnerAddress(), filtered_lend_array, lend_balance,
-             getCode(), allowance(), workchain_id_ };
+             getBalance(), getRootKey(), getRootAddress(),
+             getWalletKey(), getOwnerAddress(), filtered_lend_array, lend_balance,
+             code_hash_, code_depth_, allowance(), workchain_id_ };
   }
 
   __always_inline string getName() {
@@ -258,19 +279,16 @@ public:
     return balance_;
   }
   __always_inline uint256 getRootKey() {
-    return root_public_key_;
+    return root_pubkey_;
   }
   __always_inline uint256 getWalletKey() {
-    return wallet_public_key_;
+    return wallet_pubkey_;
   }
   __always_inline address getRootAddress() {
     return root_address_;
   }
   __always_inline address getOwnerAddress() {
     return owner_address_ ? *owner_address_ : address::make_std(int8(0), uint256(0));
-  }
-  __always_inline cell getCode() {
-    return code_;
   }
   __always_inline allowance_info allowance() {
 #ifdef TIP3_ENABLE_ALLOWANCE
@@ -283,7 +301,7 @@ public:
 #ifdef TIP3_ENABLE_ALLOWANCE
   __always_inline
   void approve(
-    address_t spender,
+    address spender,
     uint128 remainingTokens,
     uint128 tokens
   ) {
@@ -303,25 +321,25 @@ public:
 
   __always_inline
   void transferFrom(
-    address_t answer_addr,
-    address_t from,
-    address_t to,
+    address answer_addr,
+    address from,
+    address to,
     uint128 tokens,
-    uint128 grams
+    uint128 crystals
   ) {
-    transfer_from_impl(answer_addr, from, to, tokens, grams, false, builder().endc());
+    transfer_from_impl(answer_addr, from, to, tokens, crystals, false, builder().endc());
   }
 
   __always_inline
   void transferFromWithNotify(
-    address_t answer_addr,
-    address_t from,
-    address_t to,
+    address answer_addr,
+    address from,
+    address to,
     uint128 tokens,
-    uint128 grams,
+    uint128 crystals,
     cell    payload
   ) {
-    transfer_from_impl(answer_addr, from, to, tokens, grams, true, payload);
+    transfer_from_impl(answer_addr, from, to, tokens, crystals, true, payload);
   }
 
   __always_inline
@@ -339,8 +357,8 @@ public:
 
     ITONTokenWalletPtr dest_wallet(to);
     tvm_rawreserve(tvm_balance() - int_value().get(), rawreserve_flag::up_to);
-    dest_wallet(Grams(0), SEND_ALL_GAS).
-      internalTransfer(tokens, answer_addr, wallet_public_key_, get_owner_addr(), notify_receiver, payload);
+    dest_wallet(Crystals(0), SEND_ALL_GAS).
+      internalTransfer(tokens, answer_addr, wallet_pubkey_, owner_address_, notify_receiver, payload);
 
     allowance_->remainingTokens -= tokens;
     balance_ -= tokens;
@@ -375,7 +393,18 @@ public:
 #ifdef TIP3_ENABLE_LEND_OWNERSHIP
     if (opt_hdr->function_id == id_v<&ITONTokenWalletNotify::onTip3LendOwnership>) {
       auto parsed_msg = parse<int_msg_info>(parser(msg), error_code::bad_incoming_msg);
-      persist.lend_ownership_.erase(incoming_msg(parsed_msg).int_sender());
+      auto sender = incoming_msg(parsed_msg).int_sender();
+      auto [answer_id, =p] = parse_continue<uint32>(p);
+      // Parsing only first `balance` variable, other arguments won't fit into bounced response
+      auto bounced_val = parse<uint128>(p, error_code::wrong_bounced_args);
+
+      auto v = persist.lend_ownership_[sender];
+      if (v.lend_balance <= bounced_val) {
+        persist.lend_ownership_.erase(sender);
+      } else {
+        v.lend_balance -= bounced_val;
+        persist.lend_ownership_.set_at(sender, v);
+      }
 #else
     if (false) {
 #endif
@@ -404,66 +433,62 @@ public:
   DEFAULT_SUPPORT_FUNCTIONS(ITONTokenWallet, wallet_replay_protection_t)
 private:
   __always_inline
-  void transfer_impl(address answer_addr, address to, uint128 tokens, uint128 grams,
+  void transfer_impl(address answer_addr, address to, uint128 tokens, uint128 crystals,
                      bool return_ownership, bool send_notify, cell payload) {
-    auto active_balance = check_transfer_requires(tokens, grams);
+    auto active_balance = check_transfer_requires(tokens, crystals);
     // Transfer to zero address is not allowed.
     require(std::get<addr_std>(to()).address != 0, error_code::transfer_to_zero_address);
     tvm_accept();
 
     auto answer_addr_fxd = fixup_answer_addr(answer_addr);
 
-    unsigned msg_flags = prepare_transfer_message_flags(grams);
+    unsigned msg_flags = prepare_transfer_message_flags(crystals);
     ITONTokenWalletPtr dest_wallet(to);
-    dest_wallet(Grams(grams.get()), msg_flags).
-      internalTransfer(tokens, answer_addr_fxd, wallet_public_key_, get_owner_addr(), bool_t{send_notify}, payload);
+    dest_wallet(Crystals(crystals.get()), msg_flags).
+      internalTransfer(tokens, answer_addr_fxd, wallet_pubkey_, owner_address_, bool_t{send_notify}, payload);
     update_spent_balance(tokens, return_ownership);
   }
 
+#ifdef TIP3_IMPROVED_TRANSFER
   __always_inline
   void transfer_to_recipient_impl(address answer_addr,
-                                  uint256 recipient_public_key, address recipient_internal_owner,
-                                  uint128 tokens, uint128 grams, bool deploy,
+                                  uint256 recipient_pubkey, address_opt recipient_owner,
+                                  uint128 tokens, uint128 crystals, bool deploy,
                                   bool return_ownership, bool send_notify, cell payload) {
-    auto active_balance = check_transfer_requires(tokens, grams);
+    auto active_balance = check_transfer_requires(tokens, crystals);
     tvm_accept();
 
     auto answer_addr_fxd = fixup_answer_addr(answer_addr);
 
-    unsigned msg_flags = prepare_transfer_message_flags(grams);
-    auto [wallet_init, dest] = calc_wallet_init(recipient_public_key, recipient_internal_owner);
+    unsigned msg_flags = prepare_transfer_message_flags(crystals);
+    auto [wallet_init, dest] = calc_wallet_init(recipient_pubkey, recipient_owner);
     ITONTokenWalletPtr dest_wallet(dest);
     if (deploy) {
-      dest_wallet.deploy(wallet_init, Grams(grams.get()), msg_flags).
-        internalTransfer(tokens, answer_addr_fxd, wallet_public_key_, get_owner_addr(), bool_t{send_notify}, payload);
+      dest_wallet.deploy(wallet_init, Crystals(crystals.get()), msg_flags).
+        internalTransfer(tokens, answer_addr_fxd, wallet_pubkey_, owner_address_, bool_t{send_notify}, payload);
     } else {
-      dest_wallet(Grams(grams.get()), msg_flags).
-        internalTransfer(tokens, answer_addr_fxd, wallet_public_key_, get_owner_addr(), bool_t{send_notify}, payload);
+      dest_wallet(Crystals(crystals.get()), msg_flags).
+        internalTransfer(tokens, answer_addr_fxd, wallet_pubkey_, owner_address_, bool_t{send_notify}, payload);
     }
     update_spent_balance(tokens, return_ownership);
   }
+#endif
 
 #ifdef TIP3_ENABLE_ALLOWANCE
   __always_inline
   void transfer_from_impl(address answer_addr, address from, address to,
-                          uint128 tokens, uint128 grams, bool send_notify, cell payload) {
+                          uint128 tokens, uint128 crystals, bool send_notify, cell payload) {
     check_owner(/*original_owner_only*/true, /*allowed_for_original_owner_in_lend_state*/false);
     tvm_accept();
 
     auto answer_addr_fxd = fixup_answer_addr(answer_addr);
-    unsigned msg_flags = prepare_transfer_message_flags(grams);
+    unsigned msg_flags = prepare_transfer_message_flags(crystals);
 
     ITONTokenWalletPtr dest_wallet(from);
-    dest_wallet(Grams(grams.get()), msg_flags).
+    dest_wallet(Crystals(crystals.get()), msg_flags).
       internalTransferFrom(answer_addr_fxd, to, tokens, bool_t{send_notify}, payload);
   }
 #endif
-
-  __always_inline
-  address get_owner_addr() {
-    return owner_address_ ? *owner_address_ :
-                            address::make_std(int8(0), uint256(0));
-  }
 
   // If zero answer_addr is specified, it is corrected to incoming sender (for internal message),
   // or this contract address (for external message)
@@ -479,25 +504,25 @@ private:
   }
 
   __always_inline
-  uint128 check_transfer_requires(uint128 tokens, uint128 grams) {
+  uint128 check_transfer_requires(uint128 tokens, uint128 crystals) {
     auto active_balance = check_owner(/*original_owner_only*/false, /*allowed_for_original_owner_in_lend_state*/false);
     require(tokens <= active_balance, error_code::not_enough_balance);
 
     if constexpr (Internal)
-      require(int_value().get() >= min_transfer_costs, error_code::not_enough_tons_to_process);
+      require(int_value().get() >= min_transfer_costs, error_code::not_enough_crystals_to_process);
     else
-      require(grams.get() >= min_transfer_costs && tvm_balance() > grams.get(),
-              error_code::not_enough_tons_to_process);
+      require(crystals.get() >= min_transfer_costs && tvm_balance() > crystals.get(),
+              error_code::not_enough_crystals_to_process);
     return active_balance;
   }
 
   __always_inline
-  unsigned prepare_transfer_message_flags(uint128 &grams) {
+  unsigned prepare_transfer_message_flags(uint128 &crystals) {
     unsigned msg_flags = IGNORE_ACTION_ERRORS;
     if constexpr (Internal) {
       tvm_rawreserve(tvm_balance() - int_value().get(), rawreserve_flag::up_to);
       msg_flags = SEND_ALL_GAS;
-      grams = 0;
+      crystals = 0;
     }
     return msg_flags;
   }
@@ -522,32 +547,55 @@ private:
 #endif
   }
 
-  // transform x:0000...0000 address into empty optional<address>
   __always_inline
-  std::optional<address> optional_owner(address owner) {
-    return std::get<addr_std>(owner()).address ?
-      std::optional<address>(owner) : std::optional<address>();
+  uint256 expected_address(uint256 sender_pubkey, address_opt sender_owner) {
+    DTONTokenWallet wallet_data {
+      name_, symbol_, decimals_,
+      uint128(0), root_pubkey_, root_address_,
+      sender_pubkey, sender_owner,
+#ifdef TIP3_ENABLE_LEND_OWNERSHIP
+      {},
+#endif
+#ifdef TIP3_IMPROVED_TRANSFER
+      code_,
+#endif
+      code_hash_, code_depth_,
+#ifdef TIP3_ENABLE_ALLOWANCE
+      {},
+#endif
+      workchain_id_
+    };
+//#ifdef TIP3_IMPROVED_TRANSFER
+    //auto orig_hash = prepare_wallet_state_init_and_addr(wallet_data, code_).second;
+//#else
+
+    auto init_hdr = persistent_data_header<ITONTokenWallet, wallet_replay_protection_t>::init();
+    cell data_cl = prepare_persistent_data<ITONTokenWallet, wallet_replay_protection_t>(init_hdr, wallet_data);
+    return tvm_state_init_hash(code_hash_, uint256(tvm_hash(data_cl)), code_depth_, uint16(data_cl.cdepth()));
+//#endif
   }
 
+#ifdef TIP3_IMPROVED_TRANSFER
   __always_inline
-  std::pair<StateInit, uint256> calc_wallet_init_hash(uint256 pubkey, address internal_owner) {
-    DTONTokenWallet wallet_data =
-      prepare_wallet_data(name_, symbol_, decimals_, root_public_key_, pubkey, root_address_,
-                          optional_owner(internal_owner), code_, workchain_id_);
-    return prepare_wallet_state_init_and_addr(wallet_data);
+  std::pair<StateInit, address> calc_wallet_init(uint256 pubkey, address_opt owner) {
+    DTONTokenWallet wallet_data {
+      name_, symbol_, decimals_,
+      uint128(0), root_pubkey_, root_address_,
+      pubkey, owner,
+#ifdef TIP3_ENABLE_LEND_OWNERSHIP
+      {},
+#endif
+      code_,
+      code_hash_, code_depth_,
+#ifdef TIP3_ENABLE_ALLOWANCE
+      {},
+#endif
+      workchain_id_
+    };
+    auto [init, hash] = prepare_wallet_state_init_and_addr(wallet_data, code_);
+    return { init, address::make_std(workchain_id_, hash) };
   }
-
-  __always_inline
-  uint256 expected_sender_address(uint256 sender_public_key, address sender_owner) {
-    return calc_wallet_init_hash(sender_public_key, sender_owner).second;
-  }
-
-  __always_inline
-  std::pair<StateInit, address> calc_wallet_init(uint256 pubkey, address internal_owner) {
-    auto [wallet_init, dest_addr] = calc_wallet_init_hash(pubkey, internal_owner);
-    address dest = address::make_std(workchain_id_, dest_addr);
-    return { wallet_init, dest };
-  }
+#endif
 
   // Filter lend ownership map to keep only actual (unexpired) records and common lend balance
   __always_inline
@@ -619,7 +667,7 @@ private:
   __always_inline
   uint128 check_external_owner() {
     require(!is_internal_owner(), error_code::internal_owner_enabled);
-    require(msg_pubkey() == wallet_public_key_, error_code::message_sender_is_not_my_owner);
+    require(msg_pubkey() == wallet_pubkey_, error_code::message_sender_is_not_my_owner);
     tvm_accept();
     auto [filtered_map, lend_balance] = filter_lend_ownerhip_map();
     require(filtered_map.empty(), error_code::wallet_in_lend_owneship);

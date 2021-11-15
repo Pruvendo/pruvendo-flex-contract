@@ -1,0 +1,134 @@
+{
+  "ABI version": 2,
+  "version": "2.2.0",
+  "header": [
+    "pubkey",
+    "time",
+    "expire"
+  ],
+  "functions": [
+  {
+    "name": "constructor",
+    "inputs": [
+    { "name":"pubkey", "type":"uint256" },
+    { "name":"trading_pair_code", "type":"cell" },
+    { "name":"xchg_pair_code", "type":"cell" }
+    ],
+    "outputs": [
+    ],
+    "id": "0xa"
+  },
+  {
+    "name": "setFlexWrapperCode",
+    "inputs": [
+    { "name":"flex_wrapper_code", "type":"cell" }
+    ],
+    "outputs": [
+    ],
+    "id": "0xe"
+  },
+  {
+    "name": "deployWrapper",
+    "inputs": [
+    { "name":"wrapper_pubkey", "type":"uint256" },
+    { "name":"wrapper_deploy_value", "type":"uint128" },
+    { "name":"wrapper_keep_balance", "type":"uint128" },
+    { "components":[
+      { "name":"name", "type":"string" },
+      { "name":"symbol", "type":"string" },
+      { "name":"decimals", "type":"uint8" },
+      { "name":"root_public_key", "type":"uint256" },
+      { "name":"root_address", "type":"address" }
+    ], "name":"tip3cfg", "type":"tuple" }
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ],
+    "id": "0xf"
+  },
+  {
+    "name": "deployWrapperWithWrongCall",
+    "inputs": [
+    { "name":"wrapper_pubkey", "type":"uint256" },
+    { "name":"wrapper_deploy_value", "type":"uint128" },
+    { "name":"wrapper_keep_balance", "type":"uint128" },
+    { "components":[
+      { "name":"name", "type":"string" },
+      { "name":"symbol", "type":"string" },
+      { "name":"decimals", "type":"uint8" },
+      { "name":"root_public_key", "type":"uint256" },
+      { "name":"root_address", "type":"address" }
+    ], "name":"tip3cfg", "type":"tuple" }
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ],
+    "id": "0x10"
+  },
+  {
+    "name": "deployTradingPair",
+    "inputs": [
+    { "name":"tip3_root", "type":"address" },
+    { "name":"deploy_min_value", "type":"uint128" },
+    { "name":"deploy_value", "type":"uint128" },
+    { "name":"min_trade_amount", "type":"uint128" },
+    { "name":"notify_addr", "type":"address" }
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ],
+    "id": "0x11"
+  },
+  {
+    "name": "deployTradingPairWithWrongCall",
+    "inputs": [
+    { "name":"tip3_root", "type":"address" },
+    { "name":"deploy_value", "type":"uint128" }
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ],
+    "id": "0x12"
+  },
+  {
+    "name": "deployXchgPair",
+    "inputs": [
+    { "name":"tip3_major_root", "type":"address" },
+    { "name":"tip3_minor_root", "type":"address" },
+    { "name":"deploy_min_value", "type":"uint128" },
+    { "name":"deploy_value", "type":"uint128" },
+    { "name":"min_trade_amount", "type":"uint128" },
+    { "name":"notify_addr", "type":"address" }
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ],
+    "id": "0x13"
+  },
+  {
+    "name": "deployXchgPairWithWrongCall",
+    "inputs": [
+    { "name":"tip3_major_root", "type":"address" },
+    { "name":"tip3_minor_root", "type":"address" },
+    { "name":"deploy_value", "type":"uint128" }
+    ],
+    "outputs": [
+    { "name":"value0", "type":"address" }
+    ],
+    "id": "0x14"
+  }
+  ],
+  "fields": [
+    { "name":"__uninitialized", "type":"bool" },
+    { "name":"owner_", "type":"uint256" },
+    { "name":"trading_pair_code_", "type":"cell" },
+    { "name":"xchg_pair_code_", "type":"cell" },
+    { "name":"workchain_id_", "type":"int8" },
+    { "name":"flex_", "type":"address" },
+    { "components":[
+      { "name":"dict_", "type":"cell" }
+    ], "name":"flex_wrapper_code_", "type":"tuple" }
+  ],
+  "events": [
+  ]
+}

@@ -171,9 +171,8 @@ public:
   IRootTokenContractPtr deployTokenRoot(cell token_root_code) {
     DRootTokenContract root_data {
       "Funtics", "FUN", uint8(2),
-      /*pubkey*/ RunIdx,
-      /*total_supply*/ uint128(200000), /*total_granted*/ uint128(0),
-      {}, *client_addr_, 1_T
+      /*pubkey*/ RunIdx, /*owner*/*client_addr_,
+      /*total_supply*/ uint128(200000), /*total_granted*/ uint128(0), {}
     };
     auto [root_init, hash_addr] = prepare_root_state_init_and_addr(token_root_code, root_data);
     IRootTokenContractPtr root_addr(address::make_std(int8(0), hash_addr));
@@ -185,9 +184,9 @@ public:
   std::pair<IWrapperPtr, StateInit> prepareDeployWrapper(cell wrapper_code, Grams start_balance) {
     DWrapper wrapper_data {
       "Funtics", "FUN", uint8(2), int8(0),
-      /*pubkey*/ RunIdx,
+      /*pubkey*/ RunIdx, *client_addr_,
       /*total_granted*/ uint128(0),
-      {}, *client_addr_, start_balance, {}
+      {}, start_balance, {}
     };
     auto [wrapper_init, hash_addr] = prepare_wrapper_state_init_and_addr(wrapper_code, wrapper_data);
     IWrapperPtr wrapper_addr(address::make_std(int8(0), hash_addr));

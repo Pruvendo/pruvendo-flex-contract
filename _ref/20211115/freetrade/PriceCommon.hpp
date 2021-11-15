@@ -1,6 +1,6 @@
 #pragma once
 
-namespace tvm { inline namespace schema {
+namespace tvm {
 
 using address_t = address; // for sparse packing in solidity debots
 
@@ -24,4 +24,4 @@ __interface IPriceCallback {
 };
 using IPriceCallbackPtr = handle<IPriceCallback>;
 
-}} // namespace tvm::schema
+} // namespace tvm

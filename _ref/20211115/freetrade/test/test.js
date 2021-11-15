@@ -37,6 +37,99 @@ describe('Flex Contracts test', function () {
         TonClient.useBinaryLibrary(libNode);
         ton = new TonClient(config);
     });
+    describe('Disallowed ', function () {
+        let wrongListingMock;
+        let tradingPairCode;
+        let xchgPairCode;
+        let flexWrapperCode;
+        before(async function () {
+            tradingPairCode = await contract.getCodeFromImage(ton, contract.pairPackage.imageBase64);
+            xchgPairCode = await contract.getCodeFromImage(ton, contract.xchgPairPackage.imageBase64);
+            flexWrapperCode = await contract.getCodeFromImage(ton, contract.flexWrapperPackage.imageBase64);
+        });
+        it("Deploying WrongListingMock", async function () {
+            wrongListingMock = await contract.deployWrongListingMock(ton, conf, tradingPairCode, xchgPairCode);
+            await contract.WrongListingMock_setFlexWrapperCode(ton, wrongListingMock, flexWrapperCode);
+            const balance = await contract.getBalance(ton, wrongListingMock.addr);
+            console.log('[Test]: WrongListingMock balance =', balance);
+            assert(balance > 0);
+        });
+        it("Deploying Wrapper without permission", async function () {
+            const disallow_wrapper_keys = await ton.crypto.generate_random_sign_keys();
+
+            const test_tip3cfg = {
+                name:            "Test",
+                symbol:          "TST",
+                decimals:        0,
+                root_public_key: "0x" + disallow_wrapper_keys.public,
+                root_address:    null_addr
+            };
+
+            const wrapper = await contract.WrongListingMock_deployWrapper(ton, wrongListingMock,
+              "0x" + disallow_wrapper_keys.public, 1.2e9, 1e9, test_tip3cfg);
+
+            console.log('[Test]: Disallowed Wrapper addr =', wrapper);
+            const balance = await contract.getBalance(ton, wrapper);
+            console.log('[Test]: Wrapper balance =', balance);
+            assert(balance == 0);
+        });
+        it("Deploying Wrapper with non-deploy function call", async function () {
+            const disallow_wrapper_keys = await ton.crypto.generate_random_sign_keys();
+
+            const test_tip3cfg = {
+                name:            "Test",
+                symbol:          "TST",
+                decimals:        0,
+                root_public_key: "0x" + disallow_wrapper_keys.public,
+                root_address:    null_addr
+            };
+
+            const wrapper = await contract.WrongListingMock_deployWrapperWithWrongCall(ton, wrongListingMock,
+              "0x" + disallow_wrapper_keys.public, 1.2e9, 1e9, test_tip3cfg);
+
+            console.log('[Test]: Disallowed Wrapper addr =', wrapper);
+            const balance = await contract.getBalance(ton, wrapper);
+            console.log('[Test]: Wrapper balance =', balance);
+            assert(balance == 0);
+        });
+        it("Deploying TradingPair without permission", async function () {
+            const pair = await contract.WrongListingMock_deployTradingPair(ton, wrongListingMock,
+              null_addr, 1e9, 1.2e9, 10, null_addr);
+
+            console.log('[Test]: Disallowed TradingPair addr =', pair);
+            const balance = await contract.getBalance(ton, pair);
+            console.log('[Test]: TradingPair balance =', balance);
+            assert(balance == 0);
+        });
+        it("Deploying TradingPair with noop call", async function () {
+            const pair = await contract.WrongListingMock_deployTradingPairWithWrongCall(ton, wrongListingMock,
+              null_addr, 1.2e9);
+
+            console.log('[Test]: Disallowed TradingPair addr =', pair);
+            const balance = await contract.getBalance(ton, pair);
+            console.log('[Test]: TradingPair balance =', balance);
+            assert(balance == 0);
+        });
+        it("Deploying XchgPair without permission", async function () {
+            const pair = await contract.WrongListingMock_deployXchgPair(ton, wrongListingMock,
+              null_addr, null_addr, 1e9, 1.2e9, 10, null_addr);
+
+            console.log('[Test]: Disallowed XchgPair addr =', pair);
+            const balance = await contract.getBalance(ton, pair);
+            console.log('[Test]: XchgPair balance =', balance);
+            assert(balance == 0);
+        });
+        it("Deploying XchgPair with noop call", async function () {
+            const pair = await contract.WrongListingMock_deployXchgPairWithWrongCall(ton, wrongListingMock,
+              null_addr, null_addr, 1.2e9);
+
+            console.log('[Test]: Disallowed XchgPair addr =', pair);
+            const balance = await contract.getBalance(ton, pair);
+            console.log('[Test]: XchgPair balance =', balance);
+            assert(balance == 0);
+        });
+        //it("End", async function () { assert(false); });
+    });
     describe('stTONs test', function () {
         let sttons_tip3cfg = {
             name:            "stTONs",
@@ -44,128 +137,28 @@ describe('Flex Contracts test', function () {
             decimals:        0
         };
         let client_mock;
-<<<<<<< HEAD
-        let mywallet;
-        let flexWalletCode;
-        let flex_tip3_root;
-        let depool_mock;
-        let stTONs;
-        let stTONskeys;
-        let stTONsFwd;
-        const stTONcosts = {
-            receive_stake_transfer_costs: 1e9, // full costs of receiveStakeTransfer processing
-            store_crystals_costs: 0.1e9, // costs of storeCrystalls processing
-            mint_costs: 0.1e9, // costs of `mint` call
-            process_receive_stake_costs: 0.1e9, // costs of receiveStakeTransfer function processing itself
-            deploy_wallet_costs: 0.2e9, // costs of deployWallet (without crystals stored in the wallet)
-            min_transfer_tokens: 10000,
-            transfer_stake_costs: 0.1e9
-        };
-        const src_client1 = '0:0000000000000000000000000000000000000000000000000000000000000001';
-        before(async function () {
-            flexWalletCode = await contract.getCodeFromImage(ton, contract.flexWalletPackage.imageBase64);
-=======
         let depool_mock;
         let stTONs;
         let stTONsCode;
         let stTONskeys;
         before(async function () {
             stTONsCode = await contract.getCodeFromImage(ton, contract.stTONsPackage.imageBase64);
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
             stTONskeys = await ton.crypto.generate_random_sign_keys();
             console.log(`[Test] stTONs keys:`, stTONskeys);
         });
         it("Deploying stTONsClientMock", async function () {
             client_mock = await contract.deployStTONsClientMock(ton, conf);
-<<<<<<< HEAD
-=======
             console.log('[Test]: stTONsClientMock addr =', client_mock.addr);
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
             const balance = await contract.getBalance(ton, client_mock.addr);
             console.log('[Test]: stTONsClientMock balance =', balance);
             assert(balance > 0);
         });
-<<<<<<< HEAD
-        it("stTONs deploy flex token root", async function () {
-            const stTONsFwdOptions = {
-              owner_pubkey: '0x' + stTONskeys.public,
-              tip3cfg: { name: "", symbol: "", decimals: 0, root_public_key: "0x0", root_address: null_addr },
-              depool: null_addr,
-              costs: stTONcosts,
-              tip3code: flexWalletCode
-              };
-            stTONsFwd = await contract.calcDeployAddress(ton, conf, contract.stTONsPackage, stTONskeys,
-              stTONsFwdOptions);
-            console.log('[Test]: stTONsFwd =', stTONsFwd);
-            flex_tip3_root = await contract.deployFlexTip3Root(ton, conf,
-              sttons_tip3cfg.name, sttons_tip3cfg.symbol, sttons_tip3cfg.decimals, flexWalletCode, 0, stTONsFwd);
-            sttons_tip3cfg.root_public_key = "0x" + flex_tip3_root.keys.public;
-            sttons_tip3cfg.root_address = flex_tip3_root.addr;
-
-            const balance = await contract.getBalance(ton, flex_tip3_root.addr);
-            console.log('[Test]: stTONs tip3 root balance =', balance);
-            assert(balance > 0);
-        });
-=======
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
         it("stTONs deploy DePool mock", async function () {
             depool_mock = await contract.deployDePoolMock(ton, conf);
             const balance = await contract.getBalance(ton, depool_mock.addr);
             console.log('[Test]: DePool mock balance =', balance);
             assert(balance > 0);
         });
-<<<<<<< HEAD
-        it("stTONs deploy itself", async function () {
-            stTONs = await contract.deployStTONs(ton, conf, stTONskeys, sttons_tip3cfg, depool_mock.addr, stTONcosts, flexWalletCode);
-            const balance = await contract.getBalance(ton, stTONs.addr);
-            console.log('[Test]: stTONs balance =', balance);
-            assert(balance > 0);
-            assert.equal(stTONsFwd, stTONs.addr);
-        });
-        it("stTONsClientMock storeCrystalls", async function () {
-            await contract.stTONsClientMock_storeCrystalls(ton, client_mock, client_mock.addr, stTONs.addr, 3e9);
-            const details = await contract.stTONs_getDetails(ton, stTONs.addr);
-            console.log('[Test] details: ', details);
-            assert.equal(details.accounts.length, 1);
-            // assert.equal(details.accounts[0].std_addr, 0x1);
-            assert(details.accounts[0].account > 2e9);
-        });
-        it("DePoolMock sendOnTransfer", async function () {
-            await contract.DePoolMock_sendOnTransfer(ton, depool_mock, stTONs.addr, client_mock.addr, 10e9);
-            const details = await contract.DePoolMock_getDetails(ton, depool_mock.addr);
-            console.log('[Test] details: ', details);
-            assert.equal(details.fwd_records.length, 1);
-            assert.equal(details.fwd_records[0].dst, stTONs.addr);
-            assert.equal(details.fwd_records[0].src, client_mock.addr);
-            assert.equal(details.fwd_records[0].amount, 10e9);
-
-            mywallet = await contract.FlexTip3Root_getWalletAddress(ton, flex_tip3_root.addr, 0x0, client_mock.addr);
-            console.log('[Test] mywallet addr: ', mywallet);
-            const balance = await contract.getBalance(ton, mywallet);
-            console.log('[Test]: mywallet crystals balance =', balance);
-            assert(balance > 0);
-
-            const token_balance = await contract.Tip3Wallet_getBalance(ton, mywallet);
-            console.log('[Test]: mywallet token balance =', token_balance);
-            assert.equal(token_balance, 10e9);
-        });
-        it("Transferring back from tip3", async function () {
-            await contract.stTONsClientMock_sendTransferBack(ton, client_mock,
-                stTONs.addr, mywallet, 1e9, 10e9);
-                
-            const details = await contract.DePoolMock_getDetails(ton, depool_mock.addr);
-            console.log('[Test] details: ', details);
-            assert.equal(details.fwd_records.length, 1);
-            assert.equal(details.fwd_records[0].dst, stTONs.addr);
-            assert.equal(details.fwd_records[0].src, client_mock.addr);
-            assert.equal(details.fwd_records[0].amount, 10e9);
-            
-            assert.equal(details.bck_records.length, 1);
-            assert.equal(details.bck_records[0].dst, client_mock.addr);
-            assert.equal(details.bck_records[0].src, stTONs.addr);
-            assert.equal(details.bck_records[0].amount, 10e9);
-        });
-=======
         it("Deploying stTONs", async function () {
             stTONs = await contract.stTONsClientMock_deployStTONs(ton, client_mock,
               5e9, stTONsCode, "0x" + stTONskeys.public, client_mock.addr, depool_mock.addr,
@@ -216,7 +209,6 @@ describe('Flex Contracts test', function () {
             assert(balance > 0);
         });
         // it("End", async function () { assert(false); });
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
     });
     describe('Flex deploy', function () {
         let deployForSolidityStyleDebots = true;
@@ -373,7 +365,7 @@ describe('Flex Contracts test', function () {
             };
         });
         it("Nuka wallet1 deploy", async function () {
-            nuka_wallet1 = await contract.Tip3Root_deployWallet(ton, conf, nuka_root, null_addr, 1000, 5e9);
+            nuka_wallet1 = await contract.Tip3Root_deployWallet(ton, conf, nuka_root, null, 1000, 5e9);
             console.log('nuka_wallet1 address = ', nuka_wallet1.addr);
             console.log('[Test]: nuka_wallet1 balance =', await contract.getBalance(ton, nuka_wallet1.addr));
             const nuka_wallet1_balance = await contract.Tip3Wallet_getBalance(ton, nuka_wallet1.addr);
@@ -381,7 +373,7 @@ describe('Flex Contracts test', function () {
             assert.equal(nuka_wallet1_balance, 1000);
         });
         it("Nuka wallet2 deploy", async function () {
-            nuka_wallet2 = await contract.Tip3Root_deployWallet(ton, conf, nuka_root, null_addr, 100, 5e9);
+            nuka_wallet2 = await contract.Tip3Root_deployWallet(ton, conf, nuka_root, null, 100, 5e9);
             console.log('nuka_wallet2 address = ', nuka_wallet2.addr);
             console.log('[Test]: nuka_wallet2 balance =', await contract.getBalance(ton, nuka_wallet2.addr));
             const nuka_wallet2_balance = await contract.Tip3Wallet_getBalance(ton, nuka_wallet2.addr);
@@ -403,7 +395,7 @@ describe('Flex Contracts test', function () {
             };
         });
         it("funtics wallet1 deploy", async function () {
-            funtics_wallet1 = await contract.Tip3Root_deployWallet(ton, conf, funtics_root, null_addr, 100, 5000000000);
+            funtics_wallet1 = await contract.Tip3Root_deployWallet(ton, conf, funtics_root, null, 100, 5000000000);
             console.log('FUNT wallet1 address = ', funtics_wallet1.addr);
             console.log('[Test]: FUNT wallet1 balance =', await contract.getBalance(ton, funtics_wallet1.addr));
             const funtics_wallet1_balance = await contract.Tip3Wallet_getBalance(ton, funtics_wallet1.addr);
@@ -411,7 +403,7 @@ describe('Flex Contracts test', function () {
             assert.equal(funtics_wallet1_balance, 100);
         });
         it("funtics wallet2 deploy", async function () {
-            funtics_wallet2 = await contract.Tip3Root_deployWallet(ton, conf, funtics_root, null_addr, 20000, 5000000000);
+            funtics_wallet2 = await contract.Tip3Root_deployWallet(ton, conf, funtics_root, null, 20000, 5000000000);
             console.log('FUNT wallet2 address = ', funtics_wallet2.addr);
             console.log('[Test]: FUNT wallet2 balance =', await contract.getBalance(ton, funtics_wallet2.addr));
             const funtics_wallet2_balance = await contract.Tip3Wallet_getBalance(ton, funtics_wallet2.addr);
@@ -494,11 +486,10 @@ describe('Flex Contracts test', function () {
             const owner_pubkey = "0x" + client1.keys.public;
             const payload = await contract.FlexClient_getPayloadForDeployInternalWallet(ton, client1,
                 owner_pubkey, client1.addr, 1e9);
+            console.log('Got payload');
             const wallet1_details = await contract.Tip3Wallet_getDetails(ton, nuka_wallet1.addr);
+            console.log('Got details');
             const nuka_wrapper_wallet_details = await contract.Tip3Wallet_getDetails(ton, nuka_wrapper_wallet);
-
-            assert.equal((await contract.getHashCode(ton, wallet1_details.code)).hash,
-                         (await contract.getHashCode(ton, nuka_wrapper_wallet_details.code)).hash);
 
             await contract.Tip3Wallet_transferWithNotify(ton, nuka_wallet1,
                 nuka_wallet1.addr, nuka_wrapper_wallet, 500, 1.5e9, false, payload
@@ -658,19 +649,19 @@ describe('Flex Contracts test', function () {
         it("Transferring internal tokens back to external", async function () {
             if (!deployForSolidityStyleDebots)
                 return;
-            await contract.FlexClient_burnWallet(ton, client1, 1e9, "0x" + nuka_wallet1.keys.public, null_addr, nuka_wallet1_intern);
+            await contract.FlexClient_burnWallet(ton, client1, 1e9, "0x" + nuka_wallet1.keys.public, null, nuka_wallet1_intern);
             const nuka_wallet1_balance = await contract.Tip3Wallet_getBalance(ton, nuka_wallet1.addr);
             console.log('external NUKA wallet1 tokens: ', nuka_wallet1_balance);
             
-            await contract.FlexClient_burnWallet(ton, client1, 1e9, "0x" + funtics_wallet1.keys.public, null_addr, funtics_wallet1_intern);
+            await contract.FlexClient_burnWallet(ton, client1, 1e9, "0x" + funtics_wallet1.keys.public, null, funtics_wallet1_intern);
             const funtics_wallet1_balance = await contract.Tip3Wallet_getBalance(ton, funtics_wallet1.addr);
             console.log('external FUNT wallet1 tokens: ', funtics_wallet1_balance);
             
-            await contract.FlexClient_burnWallet(ton, client2, 1e9, "0x" + nuka_wallet2.keys.public, null_addr, nuka_wallet2_intern);
+            await contract.FlexClient_burnWallet(ton, client2, 1e9, "0x" + nuka_wallet2.keys.public, null, nuka_wallet2_intern);
             const nuka_wallet2_balance = await contract.Tip3Wallet_getBalance(ton, nuka_wallet2.addr);
             console.log('external NUKA wallet2 tokens: ', nuka_wallet2_balance);
             
-            await contract.FlexClient_burnWallet(ton, client2, 1e9, "0x" + funtics_wallet2.keys.public, null_addr, funtics_wallet2_intern);
+            await contract.FlexClient_burnWallet(ton, client2, 1e9, "0x" + funtics_wallet2.keys.public, null, funtics_wallet2_intern);
             const funtics_wallet2_balance = await contract.Tip3Wallet_getBalance(ton, funtics_wallet2.addr);
             console.log('external FUNT wallet2 tokens: ', funtics_wallet2_balance);
 

@@ -5,7 +5,7 @@
 #include <tvm/contract_handle.hpp>
 #include <tvm/replay_attack_protection/timestamp.hpp>
 
-namespace tvm { inline namespace schema {
+namespace tvm {
 
 static constexpr unsigned DEPOOL_MOCK_TIMESTAMP_DELAY = 1800;
 using depool_mock_replay_protection_t = replay_attack_protection::timestamp<DEPOOL_MOCK_TIMESTAMP_DELAY>;
@@ -22,17 +22,6 @@ struct DePoolMockDetails {
   dict_array<TransferRecord> fwd_records;
   dict_array<TransferRecord> bck_records;
 };
-
-__interface IParticipant {
-  [[internal, noaccept]]
-  void onTransfer(address source, uint128 amount) = 0x23c4771d;
-<<<<<<< HEAD
-=======
-  [[internal, noaccept]]
-  void receiveAnswer(uint32 errcode, uint64 comment) = 0x3f109e44;
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
-};
-using IParticipantPtr = handle<IParticipant>;
 
 __interface IDePoolMock {
 
@@ -60,5 +49,5 @@ struct DDePoolMock {
 __interface EDePoolMock {
 };
 
-}} // namespace tvm::schema
+} // namespace tvm
 

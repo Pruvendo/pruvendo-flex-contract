@@ -34,8 +34,8 @@
     "inputs": [
     { "name":"_answer_id", "type":"uint32" },
     { "name":"pubkey", "type":"uint256" },
-    { "name":"internal_owner", "type":"address" },
-    { "name":"grams", "type":"uint128" }
+    { "name":"owner", "type":"optional(address)" },
+    { "name":"crystals", "type":"uint128" }
     ],
     "outputs": [
     { "name":"value0", "type":"address" }
@@ -46,12 +46,12 @@
     "name": "onTip3Transfer",
     "inputs": [
     { "name":"_answer_id", "type":"uint32" },
-    { "name":"answer_addr", "type":"address" },
     { "name":"balance", "type":"uint128" },
     { "name":"new_tokens", "type":"uint128" },
     { "name":"sender_pubkey", "type":"uint256" },
-    { "name":"sender_owner", "type":"address" },
-    { "name":"payload", "type":"cell" }
+    { "name":"sender_owner", "type":"optional(address)" },
+    { "name":"payload", "type":"cell" },
+    { "name":"answer_addr", "type":"address" }
     ],
     "outputs": [
     { "name":"err_code", "type":"uint32" },
@@ -62,12 +62,12 @@
   {
     "name": "burn",
     "inputs": [
+    { "name":"tokens", "type":"uint128" },
     { "name":"answer_addr", "type":"address" },
     { "name":"sender_pubkey", "type":"uint256" },
-    { "name":"sender_owner", "type":"address" },
+    { "name":"sender_owner", "type":"optional(address)" },
     { "name":"out_pubkey", "type":"uint256" },
-    { "name":"out_internal_owner", "type":"address" },
-    { "name":"tokens", "type":"uint128" }
+    { "name":"out_owner", "type":"optional(address)" }
     ],
     "outputs": [
     ],
@@ -91,10 +91,10 @@
     { "name":"name", "type":"string" },
     { "name":"symbol", "type":"string" },
     { "name":"decimals", "type":"uint8" },
-    { "name":"root_public_key", "type":"uint256" },
+    { "name":"root_pubkey", "type":"uint256" },
+    { "name":"root_owner", "type":"address" },
     { "name":"total_granted", "type":"uint128" },
     { "name":"wallet_code", "type":"cell" },
-    { "name":"owner_address", "type":"address" },
     { "name":"external_wallet", "type":"address" }
     ],
     "id": "0xf"
@@ -112,7 +112,7 @@
     "name": "getWalletAddress",
     "inputs": [
     { "name":"pubkey", "type":"uint256" },
-    { "name":"owner", "type":"address" }
+    { "name":"owner", "type":"optional(address)" }
     ],
     "outputs": [
     { "name":"value0", "type":"address" }
@@ -126,16 +126,16 @@
     { "name":"symbol_", "type":"string" },
     { "name":"decimals_", "type":"uint8" },
     { "name":"workchain_id_", "type":"int8" },
-    { "name":"root_public_key_", "type":"uint256" },
+    { "name":"root_pubkey_", "type":"uint256" },
+    { "name":"root_owner_", "type":"optional(address)" },
     { "name":"total_granted_", "type":"uint128" },
     { "components":[
       { "name":"dict_", "type":"cell" }
     ], "name":"internal_wallet_code_", "type":"tuple" },
-    { "name":"owner_address_", "type":"optional(address)" },
     { "name":"start_balance_", "type":"varuint16" },
     { "components":[
       { "name":"addr_", "type":"address" }
-    ], "name":"external_wallet_", "type":"optional(tuple)" }
+    ], "name":"wallet_", "type":"optional(tuple)" }
   ],
   "events": [
   ]

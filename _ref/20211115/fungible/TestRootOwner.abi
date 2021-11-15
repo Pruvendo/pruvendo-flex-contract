@@ -37,7 +37,7 @@
     { "name":"name", "type":"string" },
     { "name":"symbol", "type":"string" },
     { "name":"decimals", "type":"uint8" },
-    { "name":"gramsToRoot", "type":"uint128" }
+    { "name":"crystalsToRoot", "type":"uint128" }
     ],
     "outputs": [
     ]
@@ -45,11 +45,11 @@
   {
     "name": "deployWallet",
     "inputs": [
-    { "name":"processingGrams", "type":"uint128" },
+    { "name":"processingCrystals", "type":"uint128" },
     { "name":"pubkey", "type":"uint256" },
-    { "name":"internal_owner", "type":"address" },
+    { "name":"owner", "type":"optional(address)" },
     { "name":"tokens", "type":"uint128" },
-    { "name":"grams", "type":"uint128" }
+    { "name":"crystals", "type":"uint128" }
     ],
     "outputs": [
     { "name":"value0", "type":"address" }
@@ -58,10 +58,10 @@
   {
     "name": "grant",
     "inputs": [
-    { "name":"processingGrams", "type":"uint128" },
+    { "name":"processingCrystals", "type":"uint128" },
     { "name":"dest", "type":"address" },
     { "name":"tokens", "type":"uint128" },
-    { "name":"grams", "type":"uint128" }
+    { "name":"crystals", "type":"uint128" }
     ],
     "outputs": [
     ]
@@ -69,7 +69,7 @@
   {
     "name": "mint",
     "inputs": [
-    { "name":"processingGrams", "type":"uint128" },
+    { "name":"processingCrystals", "type":"uint128" },
     { "name":"tokens", "type":"uint128" }
     ],
     "outputs": [

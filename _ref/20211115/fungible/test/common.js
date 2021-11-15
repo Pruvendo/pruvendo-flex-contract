@@ -98,7 +98,7 @@ async function waitForFinalExternalAnswer(ton, result, abi, function_name, N) {
         timeout: 60000 * 5
     });
     for (const msg of tree.messages) {
-      console.log('cur msg = ', msg);
+      //console.log('cur msg = ', msg);
       if ((msg.src == orig_addr) && (msg.dst.length === 0)) {
         externalMessages.push(msg);
       }
@@ -144,7 +144,7 @@ async function deploy(ton, conf, contract, keys, options = {}) {
         });
         await waitForResultXN(ton, result);
     }
-    console.log("[Test] giver sent grams to ", futureAddress);
+    console.log("[Test] giver sent crystals to ", futureAddress);
     const txn = await ton.processing.send_message({
         abi: abiContract(contract.abi),
         message: msg.message,
@@ -181,7 +181,7 @@ async function deployRoot(ton, conf, name, symbol, decimals, walletCode, totalSu
 
     let ctorParams = {
         name: utf8ToHex(name), symbol: utf8ToHex(symbol), decimals: decimals,
-        root_public_key: '0x' + rootKeys.public, root_owner: '0:0000000000000000000000000000000000000000000000000000000000000000',
+        root_pubkey: '0x' + rootKeys.public, root_owner: null,
         total_supply: totalSupply,
     };
 
@@ -228,7 +228,7 @@ async function TestRootOwner_set_wallet_code(ton, rootOwner, wallet_code) {
     const gas = await getGas(ton, result.transaction.id);
     console.log('[set_wallet_code] gas used:', gas);
 }
-async function TestRootOwner_deployRoot(ton, rootOwner, name, symbol, decimals, gramsToRoot) {
+async function TestRootOwner_deployRoot(ton, rootOwner, name, symbol, decimals, crystalsToRoot) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
@@ -237,7 +237,7 @@ async function TestRootOwner_deployRoot(ton, rootOwner, name, symbol, decimals, 
             call_set: {
                 function_name: 'deployRoot',
                 input: {name: utf8ToHex(name), symbol: utf8ToHex(symbol), decimals: decimals,
-                        gramsToRoot: gramsToRoot}
+                        crystalsToRoot: crystalsToRoot}
             },
             signer: signerKeys(rootOwner.keys)
         }
@@ -247,7 +247,7 @@ async function TestRootOwner_deployRoot(ton, rootOwner, name, symbol, decimals, 
     console.log('[deployRoot] gas used:', gas);
 }
 
-async function deployRootOwner(ton, conf, gramsToRoot, rootCode, walletCode, name, symbol, decimals) {
+async function deployRootOwner(ton, conf, crystalsToRoot, rootCode, walletCode, name, symbol, decimals) {
     const rootKeys = await ton.crypto.generate_random_sign_keys();
     console.log(`[Test] root keys:`, rootKeys);
 
@@ -261,7 +261,7 @@ async function deployRootOwner(ton, conf, gramsToRoot, rootCode, walletCode, nam
 
     await TestRootOwner_set_root_code(ton, root_owner, rootCode);
     await TestRootOwner_set_wallet_code(ton, root_owner, walletCode);
-    await TestRootOwner_deployRoot(ton, root_owner, name, symbol, decimals, gramsToRoot);
+    await TestRootOwner_deployRoot(ton, root_owner, name, symbol, decimals, crystalsToRoot);
     return root_owner;
 }
 
@@ -321,7 +321,7 @@ async function getCodeFromImage(ton, imageBase64) {
 }
 
 // ===================  RootTokenContract methods  ======================================
-async function deployWallet(ton, root, pubkey, internal_owner, tokens, grams) {
+async function deployWallet(ton, root, pubkey, owner, tokens, crystals) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
@@ -330,7 +330,7 @@ async function deployWallet(ton, root, pubkey, internal_owner, tokens, grams) {
             call_set: {
                 function_name: 'deployWallet',
                 input: {_answer_id: "0x0", pubkey: pubkey,
-                        internal_owner: internal_owner, tokens: tokens, grams: grams}
+                        owner: owner, tokens: tokens, crystals: crystals}
             },
             signer: signerKeys(root.keys)
         }
@@ -341,7 +341,7 @@ async function deployWallet(ton, root, pubkey, internal_owner, tokens, grams) {
     return result.decoded.output.value0;
 }
 
-async function grant(ton, root, dest, tokens, grams) {
+async function grant(ton, root, dest, tokens, crystals) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
@@ -349,7 +349,7 @@ async function grant(ton, root, dest, tokens, grams) {
             abi: abiContract(rootPackage.abi),
             call_set: {
                 function_name: 'grant',
-                input: {_answer_id: "0x0", dest: dest, tokens: tokens, grams: grams}
+                input: {_answer_id: "0x0", dest: dest, tokens: tokens, crystals: crystals}
             },
             signer: signerKeys(root.keys)
         }
@@ -438,7 +438,7 @@ async function getWalletCodeHash(ton, root) {
 }
 
 // ===================  TONTokenWallet methods  ======================================
-async function Wallet_transfer(ton, wallet, answer_addr, to, tokens, grams, return_ownership) {
+async function Wallet_transfer(ton, wallet, answer_addr, to, tokens, crystals, return_ownership) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
@@ -446,7 +446,7 @@ async function Wallet_transfer(ton, wallet, answer_addr, to, tokens, grams, retu
             abi: abiContract(walletPackage.abi),
             call_set: {
                 function_name: 'transfer',
-                input: {answer_addr: answer_addr, to: to, tokens: tokens, grams: grams, return_ownership: return_ownership}
+                input: {answer_addr: answer_addr, to: to, tokens: tokens, crystals: crystals, return_ownership: return_ownership}
             },
             signer: signerKeys(wallet.keys)
         }
@@ -456,8 +456,8 @@ async function Wallet_transfer(ton, wallet, answer_addr, to, tokens, grams, retu
     await waitForResultXN(ton, result);
 }
 
-async function Wallet_transferToRecipient(ton, wallet, answer_addr, recipient_public_key, recipient_internal_owner,
-                                          tokens, grams, deploy, return_ownership) {
+async function Wallet_transferToRecipient(ton, wallet, answer_addr, recipient_pubkey, recipient_owner,
+                                          tokens, crystals, deploy, return_ownership) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
@@ -465,8 +465,8 @@ async function Wallet_transferToRecipient(ton, wallet, answer_addr, recipient_pu
             abi: abiContract(walletPackage.abi),
             call_set: {
                 function_name: 'transferToRecipient',
-                input: {answer_addr: answer_addr, recipient_public_key: recipient_public_key,
-                        recipient_internal_owner: recipient_internal_owner, tokens: tokens, grams: grams,
+                input: {answer_addr: answer_addr, recipient_pubkey: recipient_pubkey,
+                        recipient_owner: recipient_owner, tokens: tokens, crystals: crystals,
                         deploy: deploy, return_ownership: return_ownership}
             },
             signer: signerKeys(wallet.keys)
@@ -504,6 +504,9 @@ async function Wallet_getRootAddress(ton, wallet_address) {
 async function Wallet_allowance(ton, wallet_address) {
     return (await tvm_run_local(ton, wallet_address, walletPackage.abi, 'getDetails')).output.allowance;
 }
+async function Wallet_getCodeHash(ton, wallet_address) {
+    return (await tvm_run_local(ton, wallet_address, walletPackage.abi, 'getDetails')).output.code_hash;
+}
 
 async function Wallet_destroy(ton, wallet, dest) {
     const result = await ton.processing.process_message({
@@ -540,7 +543,7 @@ async function Wallet_approve(ton, wallet, spender, remainingTokens, tokens) {
     console.log('[wallet approve] gas used:', gas);
 }
 
-async function Wallet_transferFrom(ton, wallet, answer_addr, from, to, tokens, grams) {
+async function Wallet_transferFrom(ton, wallet, answer_addr, from, to, tokens, crystals) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
@@ -548,7 +551,7 @@ async function Wallet_transferFrom(ton, wallet, answer_addr, from, to, tokens, g
             abi: abiContract(walletPackage.abi),
             call_set: {
                 function_name: 'transferFrom',
-                input: {answer_addr: answer_addr, from: from, to: to, tokens: tokens, grams: grams}
+                input: {answer_addr: answer_addr, from: from, to: to, tokens: tokens, crystals: crystals}
             },
             signer: signerKeys(wallet.keys)
         }
@@ -580,7 +583,7 @@ async function TestRootOwner_getTokenRoot(ton, rootOwner) {
     return (await tvm_run_local(ton, rootOwner.addr, rootOwnerPackage.abi, 'getTokenRoot')).output.value0;
 }
 
-async function TestRootOwner_mint(ton, rootOwner, processingGrams, tokens) {
+async function TestRootOwner_mint(ton, rootOwner, processingCrystals, tokens) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
@@ -588,7 +591,7 @@ async function TestRootOwner_mint(ton, rootOwner, processingGrams, tokens) {
             abi: abiContract(rootOwnerPackage.abi),
             call_set: {
                 function_name: 'mint',
-                input: {processingGrams: processingGrams, tokens: tokens}
+                input: {processingCrystals: processingCrystals, tokens: tokens}
             },
             signer: signerKeys(rootOwner.keys)
         }
@@ -598,7 +601,7 @@ async function TestRootOwner_mint(ton, rootOwner, processingGrams, tokens) {
     console.log('[mint] gas used:', gas);
 }
 
-async function TestRootOwner_grant(ton, rootOwner, processingGrams, dest, tokens, grams) {
+async function TestRootOwner_grant(ton, rootOwner, processingCrystals, dest, tokens, crystals) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
@@ -606,7 +609,7 @@ async function TestRootOwner_grant(ton, rootOwner, processingGrams, dest, tokens
             abi: abiContract(rootOwnerPackage.abi),
             call_set: {
                 function_name: 'grant',
-                input: {processingGrams: processingGrams, dest: dest, tokens: tokens, grams: grams}
+                input: {processingCrystals: processingCrystals, dest: dest, tokens: tokens, crystals: crystals}
             },
             signer: signerKeys(rootOwner.keys)
         }
@@ -616,7 +619,7 @@ async function TestRootOwner_grant(ton, rootOwner, processingGrams, dest, tokens
     console.log('[grant] gas used:', gas);
 }
 
-async function TestRootOwner_deployWallet(ton, rootOwner, processingGrams, pubkey, internal_owner, tokens, grams) {
+async function TestRootOwner_deployWallet(ton, rootOwner, processingCrystals, pubkey, owner, tokens, crystals) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
@@ -624,13 +627,13 @@ async function TestRootOwner_deployWallet(ton, rootOwner, processingGrams, pubke
             abi: abiContract(rootOwnerPackage.abi),
             call_set: {
                 function_name: 'deployWallet',
-                input: {processingGrams: processingGrams, pubkey: pubkey,
-                        internal_owner: internal_owner, tokens: tokens, grams: grams}
+                input: {processingCrystals: processingCrystals,
+                        pubkey: pubkey, owner: owner, tokens: tokens, crystals: crystals}
             },
             signer: signerKeys(rootOwner.keys)
         }
     });
-    console.log('[deployWallet] initial result:', result);
+    //console.log('[deployWallet] initial result:', result);
     const gas = await getGas(ton, result.transaction.id);
     console.log('[deployWallet] gas used:', gas);
     const answer = await waitForFinalExternalAnswer(ton, result, rootOwnerPackage.abi, 'deployWallet', 10);
@@ -671,6 +674,7 @@ module.exports = {
     Wallet_getWalletKey,
     Wallet_getRootAddress,
     Wallet_allowance,
+    Wallet_getCodeHash,
     Wallet_approve,
     Wallet_transferFrom,
     Wallet_disapprove,

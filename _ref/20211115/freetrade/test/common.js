@@ -275,13 +275,13 @@ const xchgPricePackage = loadPackage('PriceXchg');
 const depoolMockPackage = loadPackage('DePoolMock');
 const stTONsPackage = loadPackage('stTONs');
 const stTONsClientMockPackage = loadPackage('stTONsClientMock');
+const WrongListingMockPackage = loadPackage('WrongListingMock');
 
 const tip3RootPackage = loadPackage('../tokens/fungible/RootTokenContract');
 const flexTip3RootPackage = loadPackage('../tokens/fungible/FlexTokenRoot');
 const tip3WalletPackage = loadPackage('../tokens/fungible/TONTokenWallet');
 const flexWalletPackage = loadPackage('../tokens/fungible/FlexWallet');
 const flexWrapperPackage = loadPackage('../tokens/fungible/Wrapper');
-
 
 const emptyParams = {};
 
@@ -371,7 +371,7 @@ async function deploy(ton, conf, contract, keys, options = {}) {
         //    keyPair: conf.giverKeys
         //});
     }
-    console.log("[Test] giver sent grams to ", futureAddress);
+    console.log("[Test] giver sent crystals to ", futureAddress);
     const txn = await ton.processing.send_message({
         abi: abiContract(contract.abi),
         message: msg.message,
@@ -748,30 +748,159 @@ async function FlexClient_transfer(ton, flexClient,
     console.log('[FlexClient transfer] gas used:', gas);
 }
 
-async function FlexClient_deployWrapperWithWallet(ton, flexClient, wrapper_pubkey,
-    wrapper_deploy_value, wrapper_keep_balance, ext_wallet_balance, set_internal_wallet_value,
-    tip3cfg
-) {
+async function WrongListingMock_setFlexWrapperCode(ton, wrongListingMock, flex_wrapper_code) {
     const result = await ton.processing.process_message({
         send_events: false,
         message_encode_params: {
-            address: flexClient.addr,
-            abi: abiContract(clientPackage.abi),
+            address: wrongListingMock.addr,
+            abi: abiContract(WrongListingMockPackage.abi),
             call_set: {
-                function_name: 'deployWrapperWithWallet',
-                input: {wrapper_pubkey: wrapper_pubkey,
-                        wrapper_deploy_value: wrapper_deploy_value,
-                        wrapper_keep_balance: wrapper_keep_balance,
-                        ext_wallet_balance: ext_wallet_balance,
-                        set_internal_wallet_value: set_internal_wallet_value,
-                        tip3cfg: tip3cfg}
+                function_name: 'setFlexWrapperCode',
+                input: {flex_wrapper_code: flex_wrapper_code}
             },
-            signer: signerKeys(flexClient.keys)
+            signer: signerKeys(wrongListingMock.keys)
         }
     });
     await waitForResultXN(ton, result);
     const gas = await getGas(ton, result.transaction.id);
-    console.log('[FlexClient deployWrapperWithWallet] gas used:', gas);
+    console.log('[WrongListingMock setFlexWrapperCode] gas used:', gas);
+}
+
+async function WrongListingMock_deployWrapper(ton, wrongListingMock, wrapper_pubkey,
+    wrapper_deploy_value, wrapper_keep_balance, tip3cfg
+) {
+    const result = await ton.processing.process_message({
+        send_events: false,
+        message_encode_params: {
+            address: wrongListingMock.addr,
+            abi: abiContract(WrongListingMockPackage.abi),
+            call_set: {
+                function_name: 'deployWrapper',
+                input: {wrapper_pubkey: wrapper_pubkey,
+                        wrapper_deploy_value: wrapper_deploy_value,
+                        wrapper_keep_balance: wrapper_keep_balance,
+                        tip3cfg: tip3cfg}
+            },
+            signer: signerKeys(wrongListingMock.keys)
+        }
+    });
+    await waitForResultXN(ton, result);
+    const gas = await getGas(ton, result.transaction.id);
+    console.log('[WrongListingMock deployWrapper] gas used:', gas);
+    return result.decoded.output.value0;
+}
+
+async function WrongListingMock_deployWrapperWithWrongCall(ton, wrongListingMock, wrapper_pubkey,
+    wrapper_deploy_value, wrapper_keep_balance, tip3cfg
+) {
+    const result = await ton.processing.process_message({
+        send_events: false,
+        message_encode_params: {
+            address: wrongListingMock.addr,
+            abi: abiContract(WrongListingMockPackage.abi),
+            call_set: {
+                function_name: 'deployWrapperWithWrongCall',
+                input: {wrapper_pubkey: wrapper_pubkey,
+                        wrapper_deploy_value: wrapper_deploy_value,
+                        wrapper_keep_balance: wrapper_keep_balance,
+                        tip3cfg: tip3cfg}
+            },
+            signer: signerKeys(wrongListingMock.keys)
+        }
+    });
+    await waitForResultXN(ton, result);
+    const gas = await getGas(ton, result.transaction.id);
+    console.log('[WrongListingMock deployWrapperWithWrongCall] gas used:', gas);
+    return result.decoded.output.value0;
+}
+
+async function WrongListingMock_deployTradingPair(ton, wrongListingMock,
+    tip3_root, deploy_min_value, deploy_value, min_trade_amount, notify_addr
+) {
+    const result = await ton.processing.process_message({
+        send_events: false,
+        message_encode_params: {
+            address: wrongListingMock.addr,
+            abi: abiContract(WrongListingMockPackage.abi),
+            call_set: {
+                function_name: 'deployTradingPair',
+                input: {tip3_root: tip3_root, deploy_min_value: deploy_min_value,
+                        deploy_value: deploy_value, min_trade_amount: min_trade_amount,
+                        notify_addr: notify_addr}
+            },
+            signer: signerKeys(wrongListingMock.keys)
+        }
+    });
+    await waitForResultXN(ton, result);
+    const gas = await getGas(ton, result.transaction.id);
+    console.log('[WrongListingMock deployTradingPair] gas used:', gas);
+    return result.decoded.output.value0;
+}
+
+async function WrongListingMock_deployTradingPairWithWrongCall(ton, wrongListingMock,
+    tip3_root, deploy_value
+) {
+    const result = await ton.processing.process_message({
+        send_events: false,
+        message_encode_params: {
+            address: wrongListingMock.addr,
+            abi: abiContract(WrongListingMockPackage.abi),
+            call_set: {
+                function_name: 'deployTradingPairWithWrongCall',
+                input: {tip3_root: tip3_root,
+                        deploy_value: deploy_value}
+            },
+            signer: signerKeys(wrongListingMock.keys)
+        }
+    });
+    await waitForResultXN(ton, result);
+    const gas = await getGas(ton, result.transaction.id);
+    console.log('[WrongListingMock deployTradingPairWithWrongCall] gas used:', gas);
+    return result.decoded.output.value0;
+}
+
+async function WrongListingMock_deployXchgPair(ton, wrongListingMock,
+    tip3_major_root, tip3_minor_root, deploy_min_value, deploy_value, min_trade_amount, notify_addr
+) {
+    const result = await ton.processing.process_message({
+        send_events: false,
+        message_encode_params: {
+            address: wrongListingMock.addr,
+            abi: abiContract(WrongListingMockPackage.abi),
+            call_set: {
+                function_name: 'deployXchgPair',
+                input: {tip3_major_root: tip3_major_root, tip3_minor_root: tip3_minor_root,
+                        deploy_min_value: deploy_min_value, deploy_value: deploy_value,
+                        min_trade_amount: min_trade_amount, notify_addr: notify_addr}
+            },
+            signer: signerKeys(wrongListingMock.keys)
+        }
+    });
+    await waitForResultXN(ton, result);
+    const gas = await getGas(ton, result.transaction.id);
+    console.log('[WrongListingMock deployXchgPair] gas used:', gas);
+    return result.decoded.output.value0;
+}
+
+async function WrongListingMock_deployXchgPairWithWrongCall(ton, wrongListingMock,
+    tip3_major_root, tip3_minor_root, deploy_value
+) {
+    const result = await ton.processing.process_message({
+        send_events: false,
+        message_encode_params: {
+            address: wrongListingMock.addr,
+            abi: abiContract(WrongListingMockPackage.abi),
+            call_set: {
+                function_name: 'deployXchgPairWithWrongCall',
+                input: {tip3_major_root: tip3_major_root, tip3_minor_root: tip3_minor_root,
+                        deploy_value: deploy_value}
+            },
+            signer: signerKeys(wrongListingMock.keys)
+        }
+    });
+    await waitForResultXN(ton, result);
+    const gas = await getGas(ton, result.transaction.id);
+    console.log('[WrongListingMock deployXchgPairWithWrongCall] gas used:', gas);
     return result.decoded.output.value0;
 }
 
@@ -799,7 +928,7 @@ async function FlexClient_deployEmptyFlexWallet(ton, flexClient,
 }
 
 async function FlexClient_burnWallet(ton, flexClient,
-    tons_value, out_pubkey, out_internal_owner, my_tip3_addr
+    crystals_value, out_pubkey, out_owner, my_tip3_addr
 ) {
     const result = await ton.processing.process_message({
         send_events: false,
@@ -808,8 +937,8 @@ async function FlexClient_burnWallet(ton, flexClient,
             abi: abiContract(clientPackage.abi),
             call_set: {
                 function_name: 'burnWallet',
-                input: {tons_value: tons_value, out_pubkey: out_pubkey,
-                        out_internal_owner: out_internal_owner, my_tip3_addr: my_tip3_addr}
+                input: {crystals_value: crystals_value, out_pubkey: out_pubkey,
+                        out_owner: out_owner, my_tip3_addr: my_tip3_addr}
             },
             signer: signerKeys(flexClient.keys)
         }
@@ -820,13 +949,31 @@ async function FlexClient_burnWallet(ton, flexClient,
 }
 
 async function FlexClient_getPayloadForDeployInternalWallet(ton, flexClient,
-    owner_pubkey, owner_addr, tons
+    owner_pubkey, owner_addr, crystals
 ) {
     return (await tvm_run_local(ton, flexClient.addr, clientPackage.abi, 'getPayloadForDeployInternalWallet', {
         owner_pubkey: owner_pubkey,
         owner_addr: owner_addr,
-        tons: tons
+        crystals: crystals
     })).output.value0;
+}
+
+async function deployWrongListingMock(ton, conf, tradingPairCode, xchgPairCode) {
+    const mockKeys = await ton.crypto.generate_random_sign_keys();
+    if (conf.verbose) {
+        console.log(`[Test] WrongListingMock keys:`, mockKeys);
+    }
+    let ctorParams = {
+        pubkey: "0x" + mockKeys.public,
+        trading_pair_code: tradingPairCode,
+        xchg_pair_code: xchgPairCode
+    };
+    const address = await deploy(ton, conf, WrongListingMockPackage, mockKeys, ctorParams);
+    if (conf.verbose) {
+        console.log('[Test]: WrongListingMock address', address);
+    }
+
+    return {addr: address, keys: mockKeys};
 }
 
 async function DePoolMock_sendOnTransfer(ton, depool_mock,
@@ -849,13 +996,8 @@ async function DePoolMock_sendOnTransfer(ton, depool_mock,
     console.log('[DePoolMock sendOnTransfer] gas used:', gas);
 }
 
-<<<<<<< HEAD
-async function stTONsClientMock_storeCrystalls(ton, client_mock,
-    client_addr, dst, amount
-=======
 async function stTONsClientMock_deployStTONs(ton, client_mock,
     crystals, code, owner_pubkey, owner_address, depool, depool_pubkey
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
 ) {
     const result = await ton.processing.process_message({
         send_events: false,
@@ -863,24 +1005,16 @@ async function stTONsClientMock_deployStTONs(ton, client_mock,
             address: client_mock.addr,
             abi: abiContract(stTONsClientMockPackage.abi),
             call_set: {
-<<<<<<< HEAD
-                function_name: 'storeCrystalls',
-                input: {client_addr: client_addr, dst: dst, amount: amount}
-=======
                 function_name: 'deployStTONs',
                 input: { crystals: crystals, code: code,
                          owner_pubkey: owner_pubkey, owner_address: owner_address,
                          depool: depool, depool_pubkey: depool_pubkey }
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
             },
             signer: signerKeys(client_mock.keys)
         }
     });
     await waitForResultXN(ton, result);
     const gas = await getGas(ton, result.transaction.id);
-<<<<<<< HEAD
-    console.log('[stTONsClientMock storeCrystalls] gas used:', gas);
-=======
     console.log('[stTONsClientMock deployStTONs] gas used:', gas);
     return result.decoded.output.value0;
 }
@@ -926,7 +1060,6 @@ async function stTONsClientMock_finalize(ton, client_mock,
     await waitForResultXN(ton, result);
     const gas = await getGas(ton, result.transaction.id);
     console.log('[stTONsClientMock finalize] gas used:', gas);
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
 }
 
 // ======== Tip3 root methods ========
@@ -956,8 +1089,8 @@ async function deployTip3Root(ton, conf, name, symbol, decimals, walletCode, tot
 
     let ctorParams = {
         name: name, symbol: symbol, decimals: decimals,
-        root_public_key: '0x' + rootKeys.public,
-        root_owner: '0:0000000000000000000000000000000000000000000000000000000000000000',
+        root_pubkey: '0x' + rootKeys.public,
+        root_owner: null,
         total_supply: totalSupply,
     };
 
@@ -1001,23 +1134,6 @@ async function deployDePoolMock(ton, conf) {
     return {addr: mockAddress, keys: keys};
 }
 
-<<<<<<< HEAD
-async function deployStTONs(ton, conf, keys, tip3cfg, depool, costs, tip3code) {
-    let ctorParams = {
-        owner_pubkey: '0x' + keys.public,
-        tip3cfg: tip3cfg,
-        depool: depool,
-        costs: costs,
-        tip3code: tip3code
-    };
-
-    const addr = await deploy(ton, conf, stTONsPackage, keys, ctorParams);
-    console.log('[Test]: stTONs address', addr);
-    return {addr: addr, keys: keys};
-}
-
-=======
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
 const trade_pair_code = 1;
 const xchg_pair_code = 2;
 const wrapper_code = 3;
@@ -1381,7 +1497,7 @@ async function Flex_getXchgPairListingRequests(ton, flex) {
 
 
 // ===================  RootTokenContract methods  ======================================
-async function Tip3Root_deployWallet(ton, conf, root, internal_owner, tokens, grams) {
+async function Tip3Root_deployWallet(ton, conf, root, owner, tokens, crystals) {
     const walletKeys = await ton.crypto.generate_random_sign_keys();
     if (conf.verbose) {
         console.log(`[Test] tip3 wallet keys:`, walletKeys);
@@ -1394,7 +1510,7 @@ async function Tip3Root_deployWallet(ton, conf, root, internal_owner, tokens, gr
             call_set: {
                 function_name: 'deployWallet',
                 input: {_answer_id: "0x0", pubkey: "0x" + walletKeys.public,
-                internal_owner: internal_owner, tokens: tokens, grams: grams}
+                owner: owner, tokens: tokens, crystals: crystals}
             },
             signer: signerKeys(root.keys)
         }
@@ -1411,7 +1527,7 @@ async function Tip3Root_getWalletCodeHash(ton, root) {
 
 // Tip3 wallet methods
 async function Tip3Wallet_transferWithNotify(ton, wallet,
-    answer_addr, to, tokens, grams, return_ownership, payload
+    answer_addr, to, tokens, crystals, return_ownership, payload
 ) {
     const result = await ton.processing.process_message({
         send_events: false,
@@ -1420,7 +1536,7 @@ async function Tip3Wallet_transferWithNotify(ton, wallet,
             abi: abiContract(tip3WalletPackage.abi),
             call_set: {
                 function_name: 'transferWithNotify',
-                input: {_answer_id: "0x0", answer_addr: answer_addr, to: to, tokens: tokens, grams: grams,
+                input: {_answer_id: "0x0", answer_addr: answer_addr, to: to, tokens: tokens, crystals: crystals,
                         return_ownership: return_ownership, payload: payload}
             },
             signer: signerKeys(wallet.keys)
@@ -1432,7 +1548,7 @@ async function Tip3Wallet_transferWithNotify(ton, wallet,
 }
 
 async function Tip3Wallet_transfer(ton, wallet,
-    answer_addr, to, tokens, grams, return_ownership
+    answer_addr, to, tokens, crystals, return_ownership
 ) {
     const result = await ton.processing.process_message({
         send_events: false,
@@ -1441,7 +1557,7 @@ async function Tip3Wallet_transfer(ton, wallet,
             abi: abiContract(tip3WalletPackage.abi),
             call_set: {
                 function_name: 'transfer',
-                input: {_answer_id: "0x0", answer_addr: answer_addr, to: to, tokens: tokens, grams: grams,
+                input: {_answer_id: "0x0", answer_addr: answer_addr, to: to, tokens: tokens, crystals: crystals,
                         return_ownership: return_ownership}
             },
             signer: signerKeys(wallet.keys)
@@ -1470,29 +1586,6 @@ async function stTONs_getDetails(ton, stTONs_addr) {
     return (await tvm_run_local(ton, stTONs_addr, stTONsPackage.abi, 'getDetails')).output;
 }
 
-<<<<<<< HEAD
-async function stTONsClientMock_sendTransferBack(ton, client,
-    stTONsAddr, wallet, crystals, amount
-) {
-    const result = await ton.processing.process_message({
-        send_events: false,
-        message_encode_params: {
-            address: client.addr,
-            abi: abiContract(stTONsClientMockPackage.abi),
-            call_set: {
-                function_name: 'sendTransferBack',
-                input: {stTONsAddr: stTONsAddr, wallet: wallet, crystals: crystals, amount: amount}
-            },
-            signer: signerKeys(client.keys)
-        }
-    });
-    await waitForResultXN(ton, result);
-    const gas = await getGas(ton, result.transaction.id);
-    console.log('[sendTransferBack] gas used:', gas);
-}
-
-=======
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
 // Wrapper methods
 async function Wrapper_getWalletAddress(ton, wrapper_addr, pubkey, owner) {
     return (await tvm_run_local(ton, wrapper_addr, flexWrapperPackage.abi, 'getWalletAddress', {
@@ -1590,21 +1683,15 @@ module.exports = {
     flexWrapperPackage,
     tip3RootPackage,
     stTONsPackage,
-<<<<<<< HEAD
-=======
     stTONsClientMockPackage,
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
     getBalance,
     deploy,
     deployProxy,
     deployFlexClient,
+    deployWrongListingMock,
     deployFlex,
     deployTip3Root,
     deployFlexTip3Root,
-<<<<<<< HEAD
-    deployStTONs,
-=======
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
     deployDePoolMock,
     deployStTONsClientMock,
     FlexClient_setFlexCfg,
@@ -1620,10 +1707,16 @@ module.exports = {
     FlexClient_cancelBuyOrder,
     FlexClient_cancelXchgOrder,
     FlexClient_transfer,
-    FlexClient_deployWrapperWithWallet,
     FlexClient_deployEmptyFlexWallet,
     FlexClient_burnWallet,
     FlexClient_getPayloadForDeployInternalWallet,
+    WrongListingMock_setFlexWrapperCode,
+    WrongListingMock_deployWrapper,
+    WrongListingMock_deployWrapperWithWrongCall,
+    WrongListingMock_deployTradingPair,
+    WrongListingMock_deployTradingPairWithWrongCall,
+    WrongListingMock_deployXchgPair,
+    WrongListingMock_deployXchgPairWithWrongCall,
     Tip3Root_deployWallet,
     Tip3Root_getWalletCodeHash,
     Tip3Wallet_transferWithNotify,
@@ -1651,18 +1744,11 @@ module.exports = {
     FlexClient_registerTradingPair,
     FlexClient_registerXchgPair,
     DePoolMock_sendOnTransfer,
-<<<<<<< HEAD
-    stTONsClientMock_storeCrystalls,
-    DePoolMock_getDetails,
-    stTONs_getDetails,
-    stTONsClientMock_sendTransferBack,
-=======
     stTONsClientMock_deployStTONs,
     stTONsClientMock_returnStake,
     stTONsClientMock_finalize,
     DePoolMock_getDetails,
     stTONs_getDetails,
->>>>>>> deb0dd63c03bbd16d2ebacf8391fb20dfecc8055
     FlexTip3Root_getWalletAddress,
     readConfig,
     getHashCode,
