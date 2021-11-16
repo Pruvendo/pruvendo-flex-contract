@@ -11,8 +11,8 @@ Require Import UMLang.SolidityNotations2.
 Require Import UrsusTVM.tvmFunc. 
 
 Require Import Project.CommonTypes. 
-Require Import Flex.ClassTypes.
-Require Import Flex.Interface.
+Require Import Contracts.Flex.ClassTypes.
+Require Import Contracts.Flex.Interface.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
 Local Open Scope record. 

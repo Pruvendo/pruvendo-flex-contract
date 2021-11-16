@@ -8,17 +8,18 @@ Require Import FinProof.MonadTransformers21.
 (* Require Import FinProof.ProgrammingWith.   *)
 Require Import UMLang.UrsusLib. 
 Require Import UMLang.SolidityNotations2. 
-Require Import UMLang.ClassGenerator.ClassGenerator.
+Require Import UMLang.LocalClassGenerator.ClassGenerator.
 Require Import UrsusTVM.tvmFunc. 
 
 Require Import Project.CommonTypes. 
-Require Import ClassTypes.
+Require Import Contracts.Price.ClassTypes.
 
 (* Local Open Scope record.  *)
 Local Open Scope program_scope.
 Local Open Scope glist_scope. 
 
 Section InterfaceDef.
+
 
 Variables XInteger XAddress InternalMessageParamsLRecord XCell: Type.
 

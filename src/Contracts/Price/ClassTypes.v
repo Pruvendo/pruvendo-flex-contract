@@ -8,7 +8,7 @@ Require Import UrsusStdLib.stdFuncNotations.
 Require Import UrsusTVM.tvmFunc.
 Require Import UrsusTVM.tvmNotations.
 Require Import FinProof.ProgrammingWith.  
-Require Import UMLang.ClassGenerator.ClassGenerator.
+Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
@@ -30,8 +30,8 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive OrderInfoFields := | OrderInfo_ι_original_amount | OrderInfo_ι_amount | OrderInfo_ι_account | OrderInfo_ι_tip3_wallet | OrderInfo_ι_client_addr | OrderInfo_ι_order_finish_time .
 (* 1 *) Inductive DetailsInfoFields := | DetailsInfo_ι_price | DetailsInfo_ι_min_amount | DetailsInfo_ι_sell_amount | DetailsInfo_ι_buy_amount .
 (* 1 *) Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address .
-(* 1 *) Inductive dealerFields := | dealer_ι_tip3root_ | dealer_ι_notify_addr_ | dealer_ι_price_ | dealer_ι_deals_limit_ | dealer_ι_tons_cfg_ | dealer_ι_sells_amount_ | dealer_ι_buys_amount_ | dealer_ι_ret_ .
-(* 1 *) Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_buys_amount | process_ret_ι_ret_ .
+(* 1 *) Inductive dealerFields := | dealer_ι_tip3root_ | dealer_ι_notify_addr_ | dealer_ι_price_ | dealer_ι_deals_limit_ | dealer_ι_tons_cfg_ | dealer_ι_sells_amount_ | dealer_ι_sells_ | dealer_ι_buys_amount_ | dealer_ι_buys_ | dealer_ι_ret_ .
+(* 1 *) Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_sells_ | process_ret_ι_buys_amount | process_ret_ι_buys_ | process_ret_ι_ret_ .
 (* 1 *) Inductive lend_ownership_infoFields := | lend_ownership_info_ι_owner | lend_ownership_info_ι_lend_balance | lend_ownership_info_ι_lend_finish_time .
 (* 1 *) Inductive allowance_infoFields := | allowance_info_ι_spender | allowance_info_ι_remainingTokens .
 (* 1 *) Inductive TONTokenWalletFields := | TONTokenWallet_ι_name_ | TONTokenWallet_ι_symbol_ | TONTokenWallet_ι_decimals_ | TONTokenWallet_ι_balance_ | TONTokenWallet_ι_root_public_key_ | TONTokenWallet_ι_wallet_public_key_ | TONTokenWallet_ι_root_address_ | TONTokenWallet_ι_owner_address_ | TONTokenWallet_ι_lend_ownership_ | TONTokenWallet_ι_code_ | TONTokenWallet_ι_allowance_ | TONTokenWallet_ι_workchain_id_ .
@@ -75,13 +75,6 @@ Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields .
 Elpi GeneratePruvendoRecord OrderRetL OrderRetFields . 
  Opaque OrderRetLRecord . 
 
-(* 2 *) Definition process_retL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XMaybe OrderRetLRecord ) : Type ] .
-Elpi GeneratePruvendoRecord process_retL process_retFields . 
- Opaque process_retLRecord . 
-
 (* 2 *) Definition SellArgsL : list Type := 
  [ ( XInteger128 ) : Type ; 
  ( XAddress ) : Type ] .
@@ -113,20 +106,30 @@ Elpi GeneratePruvendoRecord DetailsInfoL DetailsInfoFields .
  ( XInteger256 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
- Opaque Tip3ConfigLRecord . 
+ Opaque Tip3ConfigLRecord .
 
 (* 2 *) Definition dealerL : list Type := 
  [ ( XAddress ) : Type ; 
- ( XAddress ) : Type ; 
+ ( XAddress (* IFlexNotifyPtr *) ) : Type ; 
  ( XInteger128 ) : Type ; 
  ( XInteger ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( XInteger128 ) : Type ; 
+ ( ( XQueue OrderInfoLRecord ) ) : Type ; 
  ( XInteger128 ) : Type ; 
- ( XMaybe OrderRetLRecord ) : Type ] .
+ ( ( XQueue OrderInfoLRecord ) ) : Type ; 
+ ( ( XMaybe OrderRetLRecord ) ) : Type ] .
 Elpi GeneratePruvendoRecord dealerL dealerFields . 
  Opaque dealerLRecord . 
 
+(* 2 *) Definition process_retL : list Type := 
+ [ ( XInteger128 ) : Type ; 
+ ( ( XQueue OrderInfoLRecord ) ) : Type ; 
+ ( XInteger128 ) : Type ; 
+ ( ( XQueue OrderInfoLRecord ) ) : Type ; 
+ ( ( XMaybe OrderRetLRecord ) ) : Type ] .
+Elpi GeneratePruvendoRecord process_retL process_retFields . 
+ Opaque process_retLRecord . 
 
 End ClassTypes .
  
