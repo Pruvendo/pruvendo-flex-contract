@@ -61,6 +61,8 @@ Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at l
  Notation " 'TonsConfig.process_queue' " := ( TonsConfig_ι_process_queue ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'TonsConfig.send_notify' " := ( TonsConfig_ι_send_notify ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'TonsConfig.send_notify' " := ( TonsConfig_ι_send_notify ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'Tip3Config.workchain_id_ " := ( Tip3Config_ι_workchain_id_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'Tip3Config.workchain_id_ " := ( Tip3Config_ι_workchain_id_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'StateInit.split_depth' " := ( StateInit_ι_split_depth ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'StateInit.split_depth' " := ( StateInit_ι_split_depth ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'StateInit.special' " := ( StateInit_ι_special ) (in custom ULValue at level 0) : ursus_scope. 
@@ -227,7 +229,7 @@ Export tc.
 Local Open Scope string_scope.
 
 (**************************************************************************************************)
- Definition make_deal_right { a1 a2 }  ( sell : URValue ( OrderInfoLRecord ) a1 ) ( buy : URValue ( OrderInfoLRecord ) a2 ) : URValue ( XBool * XBool * XInteger128 ) ( orb a2 a1 ) := 
+ Definition make_deal_right { a1 a2 }  ( sell : URValue ( OrderInfoLRecord ) a1 ) ( buy : URValue ( OrderInfoLRecord ) a2 ) : URValue ( XBool # (XBool # XInteger128) ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) make_deal 
  sell buy ) . 
  
@@ -237,7 +239,13 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , sell custom URValue at level 0 
  , buy custom URValue at level 0 ) : ursus_scope .
 
- Definition extract_active_order_right { a1 a2 a3 a4 }  ( cur_order : URValue ( XMaybe (XInteger*OrderInfoLRecord) ) a1 ) ( orders : URValue ( XQueue OrderInfoLRecord ) a2 ) ( all_amount : URValue ( XInteger128 ) a3 ) ( sell : URValue ( XBool ) a4 ) : URValue (XQueue OrderInfoLRecord) ( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
+ Definition extract_active_order_right { a1 a2 a3 a4 }  
+( cur_order : URValue ( XMaybe (XInteger # OrderInfoLRecord) ) a1 ) 
+( orders : URValue ( XQueue OrderInfoLRecord ) a2 ) 
+( all_amount : URValue ( XInteger128 ) a3 ) 
+( sell : URValue ( XBool ) a4 ) 
+: URValue ( ( XMaybe (XInteger # OrderInfoLRecord) ) # (( XQueue OrderInfoLRecord ) # XInteger128) ) 
+( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) extract_active_order 
  cur_order orders all_amount sell ) . 
  
@@ -258,6 +266,7 @@ Local Open Scope string_scope.
  sell_idx buy_idx ) 
  (in custom ULValue at level 0 , sell_idx custom URValue at level 0 
  , buy_idx custom URValue at level 0 ) : ursus_scope . 
+
  Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( balance : URValue ( XInteger128 ) a2 ) ( lend_finish_time : URValue ( XInteger32 ) a3 ) ( pubkey : URValue ( XInteger256 ) a4 ) ( internal_owner : URValue ( XAddress ) a5 ) ( payload : URValue ( XCell ) a6 ) : URValue OrderRetLRecord ( orb ( orb ( orb ( orb ( orb a6 a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) onTip3LendOwnership 
  answer_addr balance lend_finish_time pubkey internal_owner payload ) . 
@@ -316,6 +325,7 @@ Local Open Scope string_scope.
  ( getDetails_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getPrice_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getPrice 
  ) . 
@@ -324,6 +334,7 @@ Local Open Scope string_scope.
  ( getPrice_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getMinimumAmount_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getMinimumAmount 
  ) . 
@@ -332,6 +343,7 @@ Local Open Scope string_scope.
  ( getMinimumAmount_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getTonsCfg_right  : URValue TonsConfigLRecord false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTonsCfg 
  ) . 
@@ -340,6 +352,7 @@ Local Open Scope string_scope.
  ( getTonsCfg_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getSells_right  : URValue ( XHMap XInteger OrderInfoLRecord ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSells 
  ) . 
@@ -348,6 +361,7 @@ Local Open Scope string_scope.
  ( getSells_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getBuys_right  : URValue ( XHMap XInteger OrderInfoLRecord ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuys 
  ) . 
@@ -356,6 +370,7 @@ Local Open Scope string_scope.
  ( getBuys_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getSellAmount_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSellAmount 
  ) . 
@@ -364,6 +379,7 @@ Local Open Scope string_scope.
  ( getSellAmount_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getBuyAmount_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuyAmount 
  ) . 
@@ -398,6 +414,7 @@ Local Open Scope string_scope.
  ( buyTip3MinValue_right 
  buy_cost ) 
  (in custom URValue at level 0 , buy_cost custom URValue at level 0 ) : ursus_scope . 
+
  Definition verify_tip3_addr_right { a1 a2 a3 }  ( tip3_wallet : URValue ( XAddress ) a1 ) ( wallet_pubkey : URValue ( XInteger256 ) a2 ) ( internal_owner : URValue ( XInteger256 ) a3 ) : URValue XBool ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) verify_tip3_addr 
  tip3_wallet wallet_pubkey internal_owner ) . 
@@ -408,6 +425,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , tip3_wallet custom URValue at level 0 
  , wallet_pubkey custom URValue at level 0 
  , internal_owner custom URValue at level 0 ) : ursus_scope . 
+
  Definition expected_wallet_address_right { a1 a2 }  ( wallet_pubkey : URValue ( XInteger256 ) a1 ) ( internal_owner : URValue ( XInteger256 ) a2 ) : URValue XInteger256 ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) expected_wallet_address 
  wallet_pubkey internal_owner ) . 
@@ -429,7 +447,7 @@ Local Open Scope string_scope.
  , wallet_in custom URValue at level 0 
  , amount custom URValue at level 0 ) : ursus_scope .
 
- Definition prepare_price_state_init_and_addr_right { a1 a2 }  ( price_data : URValue ( ContractLRecord ) a1 ) ( price_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord * XInteger256 ) ( orb a2 a1 ) := 
+ Definition prepare_price_state_init_and_addr_right { a1 a2 }  ( price_data : URValue ( ContractLRecord ) a1 ) ( price_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord # XInteger256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_price_state_init_and_addr 
  price_data price_code ) . 
  
@@ -457,6 +475,7 @@ Local Open Scope string_scope.
  amount price ) 
  (in custom URValue at level 0 , amount custom URValue at level 0 
  , price custom URValue at level 0 ) : ursus_scope . 
+
  Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  ( tip3root : URValue ( XAddress ) a1 ) ( notify_addr : URValue ( XAddress (* IFlexNotifyPtrLRecord *) ) a2 ) ( price : URValue ( XInteger128 ) a3 ) ( deals_limit : URValue ( XInteger8 ) a4 ) ( tons_cfg : URValue ( TonsConfigLRecord ) a5 ) ( sell_idx : URValue ( XInteger ) a6 ) ( buy_idx : URValue ( XInteger ) a7 ) ( sells_amount : URValue ( XInteger128 ) a8 ) ( sells : URValue ( XQueue OrderInfoLRecord ) a9 ) ( buys_amount : URValue ( XInteger128 ) a10 ) ( buys : URValue ( XQueue OrderInfoLRecord ) a11 ) : URValue process_retLRecord ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a11 a10 ) a9 ) a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ11 ) process_queue_impl 
  tip3root notify_addr price deals_limit tons_cfg sell_idx buy_idx sells_amount sells buys_amount buys ) . 
@@ -476,7 +495,16 @@ Local Open Scope string_scope.
  , buys_amount custom URValue at level 0 
  , buys custom URValue at level 0 ) : ursus_scope . 
 
- Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  ( orders : URValue ( XQueue OrderInfoLRecord ) a1 ) ( client_addr : URValue ( addr_std_fixedLRecord ) a2 ) ( all_amount : URValue ( XInteger128 ) a3 ) ( sell : URValue ( XBool ) a4 ) ( return_ownership : URValue ( XInteger (* Grams *) ) a5 ) ( process_queue : URValue ( XInteger (* Grams *) ) a6 ) ( incoming_val : URValue ( XInteger (* Grams *) ) a7 ) : URValue (XQueue OrderInfoLRecord) ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
+( orders : URValue ( XQueue OrderInfoLRecord ) a1 ) 
+( client_addr : URValue ( addr_std_fixedLRecord ) a2 ) 
+( all_amount : URValue ( XInteger128 ) a3 ) 
+( sell : URValue ( XBool ) a4 ) 
+( return_ownership : URValue ( XInteger (* Grams *) ) a5 ) 
+( process_queue : URValue ( XInteger (* Grams *) ) a6 ) 
+( incoming_val : URValue ( XInteger (* Grams *) ) a7 ) 
+: URValue ((XQueue OrderInfoLRecord) # XInteger128)
+ ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancel_order_impl 
  orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
  

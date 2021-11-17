@@ -199,7 +199,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState11000LRecord . 
  
  Inductive LocalStateFields11001I := | ι110010 | ι110011 . 
- Definition LocalState11001L := [ ( XHMap (string*nat) XInteger ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState11001L := [ ( XHMap (string*nat) DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState11001L LocalStateFields11001I . 
  Opaque LocalState11001LRecord . 
  
@@ -939,7 +939,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField11000 : typeclass_instances. 
- #[global, program] Instance LocalStateField11001 : LocalStateField XInteger.
+ #[global, program] Instance LocalStateField11001 : LocalStateField DTONTokenWalletInternalLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι11). 
