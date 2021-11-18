@@ -26,7 +26,7 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module FlexPublicInterface := PublicInterface xt sm.
+Module PricePublicInterface := PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
