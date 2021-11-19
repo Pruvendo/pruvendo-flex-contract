@@ -425,6 +425,7 @@ Definition make_deal_right { a1 a2 }
  (in custom URValue at level 0 , ec custom URValue at level 0 
  , wallet_in custom URValue at level 0 
  , amount custom URValue at level 0 ) : ursus_scope . 
+
  Definition numerator_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) numerator 
  ) . 
