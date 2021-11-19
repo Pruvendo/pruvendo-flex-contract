@@ -131,13 +131,16 @@ Defined .
  (in custom URValue at level 0 , amount custom URValue at level 0 
  , price custom URValue at level 0 ) : ursus_scope . 
 
-Definition make_deal ( sell : ULValue ( OrderInfoXchgLRecord ) ) ( buy : ULValue ( OrderInfoXchgLRecord ) ) : UExpression ( XBool * (XBool * XInteger128) ) false . 
+Definition make_deal
+ ( sell : ULValue ( OrderInfoXchgLRecord ) ) 
+( buy : ULValue ( OrderInfoXchgLRecord ) ) 
+: UExpression ( XBool # (XBool # XInteger128) ) false . 
  	 	 refine {{ new 'deal_amount : ( XInteger128 ) @ "deal_amount" := {}  
  	 	        (* std::min ( (#{sell}) ^^ OrderInfoLRecord.amount , (#{buy}) ^^ OrderInfoXchgLRecord.amount ) *) ; { _ } }} . 
  	 	 refine {{ new 'last_tip3_sell : ( XBool ) @ "last_tip3_sell" := (*TODO: OrderInfoXchg.amount - cannot infer type*)
-                   ( !{deal_amount} == ( ( !{sell} ) ^^ OrderInfoXchg.amount ) ) ; { _ } }} .
+                   ( !{deal_amount} == ((!{sell}) ^^ OrderInfoXchg.amount) ) ; { _ } }} .
  	 	 refine {{ new 'last_tip3_buy : ( XBool ) @ "last_tip3_buy" := 	 	 
-                   ( !{deal_amount} == ( ( !{buy} ) ^^ OrderInfoXchg.amount ) ) ; { _ } }} .
+                   ( !{deal_amount} == ( (!{buy}) ^^ OrderInfoXchg.amount ) ) ; { _ } }} .
  	 	 refine {{ new 'buy_payment : ( (XMaybe XInteger128) ) @ "buy_payment" := 
                 minor_cost_ ( !{deal_amount} , _price_ ) ; { _ } }} . 
  	 	 refine {{ if ( ~ !{ buy_payment } ) then { { _: UExpression _ false } } ; { _ } }} . 
@@ -151,27 +154,29 @@ Definition make_deal ( sell : ULValue ( OrderInfoXchgLRecord ) ) ( buy : ULValue
  	 	 	 refine {{ { sell_ton_costs } += !{ transaction_costs } }} . 
  	 	   refine {{ { buy_ton_costs } += !{ transaction_costs } }} . 
  	 	 refine {{ new 'sell_out_of_tons : ( XBool ) @ "sell_out_of_tons" := 
-              ( (!{sell}) ^^ OrderInfoXchg.account ) < (!{ sell_ton_costs } ) ; { _ } }} . 
+              (!{ sell_ton_costs } ) > ( (!{sell}) ^^ OrderInfoXchg.account ) ; { _ } }} . 
  	 	 refine {{ new 'buy_out_of_tons : ( XBool ) @ "buy_out_of_tons" := 
               ((!{buy}) ^^ OrderInfoXchg.account) < (!{ buy_ton_costs } ) ; { _ } }} . 
  	 	 refine {{ if ( !{ sell_out_of_tons } \\ !{ buy_out_of_tons } ) then { { _:UEf } } ; { _ } }} . 
  	 	 	 refine {{ return_ [ !{ sell_out_of_tons } , !{ buy_out_of_tons } , 0 ] }} . 
- 	 	 refine {{ ({sell} ^^ OrderInfoXchg.amount) -= !{deal_amount} ; { _ } }} . 
- 	 	 refine {{ ({buy} ^^ OrderInfoXchg.amount) -= !{deal_amount} ; { _ } }} . 
- 	 	 refine {{ ({sell} ^^ OrderInfoXchg.account) -= !{sell_ton_costs} ; { _ } }} . 
- 	 	 refine {{ ({buy} ^^ OrderInfoXchg.account) -= !{buy_ton_costs} ; { _ } }} . 
+ 	 	 refine {{ (({sell}) ^^ OrderInfoXchg.amount) -= !{deal_amount} ; { _ } }} . 
+ 	 	 refine {{ (({buy}) ^^ OrderInfoXchg.amount) -= !{deal_amount} ; { _ } }} . 
+ 	 	 refine {{ (({sell}) ^^ OrderInfoXchg.account) -= !{sell_ton_costs} ; { _ } }} . 
+ 	 	 refine {{ (({buy}) ^^ OrderInfoXchg.account) -= !{buy_ton_costs} ; { _ } }} . 
 (*  	 	 refine {{ ITONTokenWalletPtr ( (#{sell}) ^^ OrderInfoXchg.tip3_wallet_provide ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer ( sell . tip3_wallet_provide , buy . tip3_wallet_receive , deal_amount , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
 (*  	 	 refine {{ ITONTokenWalletPtr ( buy . tip3_wallet_provide ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer ( buy . tip3_wallet_provide , sell . tip3_wallet_receive , *buy_payment , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
 (*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgDealCompleted ( tip3root_sell_ , tip3root_buy_ , price_ . numerator ( ) , price_ . denominator ( ) , deal_amount ) ; { _ } }} .  *)
  	 	 refine {{ return_ [ FALSE , FALSE , !{ deal_amount } ] }} . 
 Defined . 
 
-(* Definition make_deal_right { a2 }  
+Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
+ 
+Definition make_deal_right  
 ( sell : ULValue ( OrderInfoXchgLRecord ) ) 
-( buy : URValue ( OrderInfoXchgLRecord ) a2 ) 
+( buy : ULValue ( OrderInfoXchgLRecord ) ) 
 : URValue ( XBool # (XBool # XInteger128) ) 
-a2 := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LR ) make_deal 
+false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LL ) make_deal 
  sell buy ) . 
  
  Notation " 'make_deal_' '(' sell buy ')' " := 
@@ -179,8 +184,6 @@ a2 :=
  sell buy ) 
  (in custom URValue at level 0 , sell custom URValue at level 0 
  , buy custom URValue at level 0 ) : ursus_scope . 
- *)
-
 
  Definition is_active_time ( order_finish_time : ( XInteger32 ) ) : UExpression XBool false . 
  	 	 refine {{ return_ ( (tvm.now ()) + (#{300})(* safe_delay_period *) ) 
@@ -223,7 +226,7 @@ UExpression ( (XMaybe ( XInteger # OrderInfoXchgLRecord )) # ( (XQueue OrderInfo
  refine {{ return_ [ !{ cur_order } , !{ orders } , !{ all_amount } ] }} . 
 Defined . 
  
-Notation "'λ4LLLR'" :=   ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ3) (at level 0) : ursus_scope. (*move 2 sml*)
+(* Notation "'λ4LLLR'" :=   ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ3) (at level 0) : ursus_scope. (*move 2 sml*) *)
 
 (* Definition extract_active_order_right { (* a2 a3 a4 *) a5 }  
 ( cur_order : ULValue ( XMaybe (XInteger # OrderInfoXchgLRecord ) ) ) 
@@ -323,9 +326,12 @@ Definition process_queue ( sell_idx : ( XInteger ) ) ( buy_idx : ( XInteger ) ) 
        refine {{ buy_opt - > second = buy ; { _ } }} .  *)
        refine {{ _sells_amount_ -= !{ deal_amount } ; { _ } }} . 
        refine {{ _buys_amount_ -= !{ deal_amount } ; { _ } }} .
-       refine {{ if ( ~ { _:URValue XInteger false } (* ((!{sell}) ^^ OrderInfoXchg.amount) *) ) 
-                   then { { _:UEf } } ; { _ } }} .
-refine || ((!{sell}) ^^ OrderInfoXchg.amount) || . (* TODO: *)
+(*       refine {{ if ( ~ { _:URValue XInteger false } )        then { { _:UEf } } ; { _ } }} . *)
+(* refine || ((!{sell}) ^^ OrderInfoXchg.amount) || . (* TODO: *) *)
+
+       refine {{ if ( ~ !(({sell}) ^^ OrderInfoXchg.amount) ) then { { _:UEf } } ; { _ } }} .
+compute. apply intFunBool.
+
 (*  	       refine {{ dealer.sells_ -> pop () ; { _ } }} .  *)
  	       refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 
  	 	 	             [ 1 (* ok *) , 
@@ -450,7 +456,7 @@ persistent_data_header base ) .
 ( owner_address :  ( XMaybe XAddress ) ) 
 ( code :  ( XCell ) ) 
 ( workchain_id :  ( XInteger8 ) ) 
-: UExpression ( StateInitLRecord * XInteger256 ) false .
+: UExpression ( StateInitLRecord # XInteger256 ) false .
  	 	 refine {{ new 'wallet_data : ( DTONTokenWalletInternalLRecord ) @ "wallet_data" := 
                  [ #{name} , #{symbol} , #{decimals} , 0 , #{root_public_key} , 
                    #{wallet_public_key} , #{root_address} , #{owner_address} , 
@@ -850,148 +856,153 @@ Definition cancelSell : UExpression PhantomType false .
  	 	 	 refine {{ _sells_ := !{ sells } (* suicide ( flex_ ) *) }} . 
 Defined . 
  
- 
- 
- 
- Definition cancelBuy : UExpression PhantomType false . 
- 	 	 refine {{ new 'canceled_amount : ( auto ) @ "canceled_amount" := {} ; { _ } }} . 
- 	 	 refine {{ { canceled_amount } := buys_amount_ ; { _ } }} . 
- 	 	 refine {{ new 'client_addr : ( addr_std_fixedLRecord ) @ "client_addr" := {} ; { _ } }} . 
- 	 	 refine {{ { client_addr } := int_sender ( ) ; { _ } }} . 
- 	 	 refine {{ new 'value : ( auto ) @ "value" := {} ; { _ } }} . 
- 	 	 refine {{ { value } := int_value ( ) ; { _ } }} . 
- 	 	 refine {{ buys : ( auto ) @ "buys" ; { _ } }} . 
- 	 	 refine {{ buys_amount : ( auto ) @ "buys_amount" ; { _ } }} . 
- 	 	 refine {{ [ { buys } , { buys_amount } ] := cancel_order_impl ( buys_ , client_addr , buys_amount_ , bool_t { false } , Grams ( tons_cfg_ . return_ownership . get ( ) ) , Grams ( tons_cfg_ . process_queue . get ( ) ) , value ) ; { _ } }} . 
- 	 	 refine {{ buys_ := !{ buys } ; { _ } }} . 
- 	 	 refine {{ buys_amount_ := buys_amount ; { _ } }} . 
- 	 	 refine {{ { canceled_amount } -= buys_amount_ ; { _ } }} . 
- 	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderCanceled ( bool_t { false } , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . numerator ( ) , price_ . denominator ( ) , canceled_amount , buys_amount_ ) ; { _ } }} . 
- 	 	 refine {{ if ( sells_ ^^ empty ( ) && buys_ ^^ empty ( ) ) then { { _ } } else { { _ } } ; { _ } }} . 
- 	 	 	 refine {{ suicide ( flex_ ) }} . 
- 
- Defined . 
- 
- 
- 
- 
- Definition getDetails : UExpression DetailsInfoXchgLRecord false . 
- 	 	 refine {{ return_ [ getPriceNum ( ) , getPriceDenum ( ) , getMinimumAmount ( ) , getSellAmount ( ) , getBuyAmount ( ) ] ; { _ } }} . 
- Defined . 
- 
- 
- 
+Definition cancelBuy : UExpression PhantomType false . 
+ 	 	 refine {{ new 'canceled_amount : ( XInteger128 ) @ "canceled_amount" := _buys_amount_ ; { _ } }} . 
+ 	 	 refine {{ new 'client_addr : ( addr_std_fixedLRecord ) @ "client_addr" := {} (* int_sender_ ( ) *) ; { _ } }} . 
+ 	 	 refine {{ new 'value : ( XInteger ) @ "value" := int_value ( ) ; { _ } }} . 
+
+ 	 	 refine {{ new ( 'buys:(XQueue OrderInfoXchgLRecord) , 'buys_amount:XInteger128 )
+                      @ ( "buys" , "buys_amount" ) :=
+        cancel_order_impl_ ( _buys_ , !{client_addr} , _buys_amount_ , 
+                             FALSE , 
+                             _tons_cfg_ ^^ TonsConfig.return_ownership , 
+                             _tons_cfg_ ^^ TonsConfig.process_queue , 
+                             !{value} ) ; { _ } }} . 
+ 	 	 refine {{ _buys_ := !{ buys } ; { _ } }} . 
+ 	 	 refine {{ _buys_amount_ := !{buys_amount} ; { _ } }} . 
+ 	 	 refine {{ {canceled_amount} -= _buys_amount_ ; { _ } }} . 
+(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderCanceled ( bool_t { false } , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . numerator ( ) , price_ . denominator ( ) , canceled_amount , buys_amount_ ) ; { _ } }} .  *)
+ 	 	 refine {{ if ( ( _sells_ -> empty () ) && (_buys_ -> empty () ) ) 
+             then { { _:UEf } } }} . 
+ 	 	 	 refine {{ _buys_ := !{ buys } (* suicide ( flex_ ) *) }} . 
+Defined . 
  
  Definition getPriceNum : UExpression XInteger128 false . 
- 	 	 refine {{ return_ price_ ^^ numerator ( ) ; { _ } }} . 
+ 	 	 refine {{ return_ _price_ ^^ RationalPrice.num }} . 
  Defined . 
  
+ Definition getPriceNum_right  : URValue XInteger128 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getPriceNum 
+ ) . 
  
- 
- 
- Definition getPriceDenum : UExpression XInteger128 false . 
- 	 	 refine {{ return_ price_ ^^ denominator ( ) ; { _ } }} . 
- Defined . 
- 
- 
- 
- 
- Definition getMinimumAmount : UExpression XInteger128 false . 
- 	 	 refine {{ return_ min_amount_ ; { _ } }} . 
- Defined . 
- 
- 
- 
- 
- Definition getTonsCfg : UExpression TonsConfigLRecord false . 
- 	 	 refine {{ return_ tons_cfg_ ; { _ } }} . 
- Defined . 
- 
- 
- 
- 
- Definition getSells : UExpression ( XHMap XInteger OrderInfoXchgLRecord ) false . 
- 	 	 refine {{ return_ dict_array ( sells_ . begin ( ) , sells_ . end ( ) ) ; { _ } }} . 
- Defined . 
- 
- 
- 
- 
- Definition getBuys : UExpression ( XHMap XInteger OrderInfoXchgLRecord ) false . 
- 	 	 refine {{ return_ dict_array ( buys_ . begin ( ) , buys_ . end ( ) ) ; { _ } }} . 
- Defined . 
- 
- 
- 
- 
- Definition getSellAmount : UExpression XInteger128 false . 
- 	 	 refine {{ return_ sells_amount_ ; { _ } }} . 
- Defined . 
- 
- 
- 
- 
- Definition getBuyAmount : UExpression XInteger128 false . 
- 	 	 refine {{ return_ buys_amount_ ; { _ } }} . 
- Defined . 
- 
- 
- 
- 
- Definition _fallback ( cell : ( (LRecord ) ) : UExpression XInteger false . 
- 	 	 refine {{ return_ 0 ; { _ } }} . 
- Defined . 
- 
- 
+ Notation " 'getPriceNum_' '(' ')' " := 
+ ( getPriceNum_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
 
+Definition getPriceDenum : UExpression XInteger128 false . 
+ 	 	 refine {{ return_ _price_ ^^ RationalPrice.denum }} . 
+Defined . 
  
+Definition getPriceDenum_right  : URValue XInteger128 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getPriceDenum 
+ ) . 
  
+ Notation " 'getPriceDenum_' '(' ')' " := 
+ ( getPriceDenum_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
  
+Definition getMinimumAmount : UExpression XInteger128 false . 
+ 	 	 refine {{ return_ _min_amount_ }} . 
+Defined . 
  
+ Definition getMinimumAmount_right  : URValue XInteger128 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getMinimumAmount 
+ ) . 
  
- 
- 
- 
- Definition numerator : UExpression XInteger128 false . 
- 	 	 refine {{ return_ num ; { _ } }} . 
+ Notation " 'getMinimumAmount_' '(' ')' " := 
+ ( getMinimumAmount_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
+
+Definition getTonsCfg : UExpression TonsConfigLRecord false . 
+ 	 	 refine {{ return_ _tons_cfg_ }} . 
  Defined . 
  
+ Definition getTonsCfg_right  : URValue TonsConfigLRecord false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTonsCfg 
+ ) . 
  
+ Notation " 'getTonsCfg_' '(' ')' " := 
+ ( getTonsCfg_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
  
- 
- Definition denominator : UExpression XInteger128 false . 
- 	 	 refine {{ return_ denum ; { _ } }} . 
+Definition getSells : UExpression ( XHMap XInteger OrderInfoXchgLRecord ) false . 
+ 	 	 refine {{ return_  {} (* dict_array ( sells_ . begin ( ) , sells_ . end ( ) ) *) }} . 
  Defined . 
  
+Definition getSells_right  : URValue ( XHMap XInteger OrderInfoXchgLRecord ) false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSells 
+ ) . 
  
+ Notation " 'getSells_' '(' ')' " := 
+ ( getSells_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
  
+Definition getBuys : UExpression ( XHMap XInteger OrderInfoXchgLRecord ) false . 
+ 	 	 refine {{ return_ {} (* dict_array ( buys_ . begin ( ) , buys_ . end ( ) ) *) }} . 
+ Defined . 
  
- Definition prepare_price_xchg_state_init_and_addr ( price_data : ( DPriceXchgLRecord ) ) ( price_code : ( XCell ) ) : UExpression ( StateInitLRecord * XInteger256 ) false . 
- 	 	 refine {{ new 'price_data_cl : ( XCell ) @ "price_data_cl" := {} ; { _ } }} . 
- 	 	 refine {{ { price_data_cl } := prepare_persistent_data ( { } , price_data ) ; { _ } }} . 
- 	 	 refine {{ new 'price_init : ( StateInitLRecord ) @ "price_init" := 	 	 refine {{ { price_init } := [ ] { } , { } , price_code , price_data_cl , { } } ; { _ } }} . 
+Definition getBuys_right  : URValue ( XHMap XInteger OrderInfoXchgLRecord ) false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuys 
+ ) . 
+ 
+ Notation " 'getBuys_' '(' ')' " := 
+ ( getBuys_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
+ 
+Definition getSellAmount : UExpression XInteger128 false . 
+ 	 	 refine {{ return_ _sells_amount_ }} . 
+ Defined . 
+ 
+Definition getSellAmount_right  : URValue XInteger128 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSellAmount 
+ ) . 
+ 
+ Notation " 'getSellAmount_' '(' ')' " := 
+ ( getSellAmount_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
+ 
+Definition getBuyAmount : UExpression XInteger128 false . 
+ 	 	 refine {{ return_ _buys_amount_ }} . 
+ Defined . 
+ 
+Definition getBuyAmount_right  : URValue XInteger128 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuyAmount 
+ ) . 
+ 
+ Notation " 'getBuyAmount_' '(' ')' " := 
+ ( getBuyAmount_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope .
+ 
+Definition _fallback ( _ : XCell ) ( _ : XSlice ) : UExpression XInteger false . 
+ 	 	 refine {{ return_ 0 }} . 
+Defined . 
+ 
+Definition prepare_price_xchg_state_init_and_addr 
+( price_data : ( ContractLRecord ) ) 
+( price_code : ( XCell ) ) 
+: UExpression ( StateInitLRecord # XInteger256 ) false . 
+ 	 	 refine {{ new 'price_data_cl : ( XCell ) @ "price_data_cl" := 
+                         prepare_persistent_data_ ( {} , #{price_data} ) ; { _ } }} . 
+ 	 	 refine {{ new 'price_init : ( StateInitLRecord ) @ "price_init" := 	
+          	 [ {} , {} , (#{price_code}) -> set () , 
+              (!{price_data_cl}) -> set () , {} ] ; { _ } }} . 
  	 	 refine {{ new 'price_init_cl : ( XCell ) @ "price_init_cl" := {} ; { _ } }} . 
- 	 	 refine {{ { price_init_cl } := build ( !{ price_init } ) . make_cell ( ) ; { _ } }} . 
- 	 	 refine {{ return_ [ !{ price_init } , tvm.hash ( price_init_cl ) ] ; { _ } }} . 
+ 	 	 refine {{ {price_init_cl} := {} (* build ( !{ price_init } ) . make_cell ( ) *) ; { _ } }} . 
+ 	 	 refine {{ return_ [ !{price_init} , {} (* tvm.hash ( !{price_init_cl} ) *) ] }} . 
  Defined . 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+Definition getDetails : UExpression DetailsInfoXchgLRecord false . 
+ 	 	 refine {{ return_ [ getPriceNum_ ( ) , getPriceDenum_ ( ) , getMinimumAmount_ ( ) , 
+                         getSellAmount_ ( ) , getBuyAmount_ ( ) ] }} . 
+ Defined . 
  
  
  

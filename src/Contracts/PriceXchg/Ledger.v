@@ -19,7 +19,6 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
 (* 1 *) Inductive ContractFields := | price_ | sells_amount_ | buys_amount_ | flex_ | min_amount_ | deals_limit_ | notify_addr_ | workchain_id_ | tons_cfg_ | tip3_code_ | major_tip3cfg_ | minor_tip3cfg_ | sells_ | buys_ .
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .

@@ -216,13 +216,14 @@ Export tc.
 Local Open Scope string_scope.
 
 (**************************************************************************************************)
+Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
 
-Definition make_deal_right { a1 a2 }  
-( sell : URValue ( OrderInfoXchgLRecord ) a1 ) 
-( buy : URValue ( OrderInfoXchgLRecord ) a2 ) 
+Definition make_deal_right  
+( sell : ULValue ( OrderInfoXchgLRecord ) ) 
+( buy : ULValue ( OrderInfoXchgLRecord ) ) 
 : URValue ( XBool # (XBool # XInteger128) ) 
-( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) make_deal 
+false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LL ) make_deal 
  sell buy ) . 
  
  Notation " 'make_deal_' '(' sell buy ')' " := 
@@ -307,6 +308,7 @@ Definition make_deal_right { a1 a2 }
  ( getDetails_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getPriceNum_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getPriceNum 
  ) . 
@@ -315,6 +317,7 @@ Definition make_deal_right { a1 a2 }
  ( getPriceNum_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getPriceDenum_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getPriceDenum 
  ) . 
@@ -323,6 +326,7 @@ Definition make_deal_right { a1 a2 }
  ( getPriceDenum_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getMinimumAmount_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getMinimumAmount 
  ) . 
@@ -331,6 +335,7 @@ Definition make_deal_right { a1 a2 }
  ( getMinimumAmount_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getTonsCfg_right  : URValue TonsConfigLRecord false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTonsCfg 
  ) . 
@@ -339,6 +344,7 @@ Definition make_deal_right { a1 a2 }
  ( getTonsCfg_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getSells_right  : URValue ( XHMap XInteger OrderInfoXchgLRecord ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSells 
  ) . 
@@ -346,7 +352,8 @@ Definition make_deal_right { a1 a2 }
  Notation " 'getSells_' '(' ')' " := 
  ( getSells_right 
  ) 
- (in custom URValue at level 0 ) : ursus_scope . 
+ (in custom URValue at level 0 ) : ursus_scope .
+ 
  Definition getBuys_right  : URValue ( XHMap XInteger OrderInfoXchgLRecord ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuys 
  ) . 
@@ -355,6 +362,7 @@ Definition make_deal_right { a1 a2 }
  ( getBuys_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getSellAmount_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSellAmount 
  ) . 
@@ -363,6 +371,7 @@ Definition make_deal_right { a1 a2 }
  ( getSellAmount_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getBuyAmount_right  : URValue XInteger128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuyAmount 
  ) . 
