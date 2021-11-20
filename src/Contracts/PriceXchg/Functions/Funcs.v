@@ -540,6 +540,7 @@ Notation " 'set_int_return_flag_' '(' ')' " :=
  ( set_int_return_flag ) 
  (in custom ULValue at level 0 ) : ursus_scope .
 Parameter int_value__ : URValue XInteger false .
+
 Notation " 'int_value' '(' ')' " := 
  ( int_value__ ) 
  (in custom URValue at level 0 ) : ursus_scope .
