@@ -1,0 +1,202 @@
+Require Import Coq.Program.Basics. 
+Require Import Coq.Strings.String. 
+From elpi Require Import elpi.
+Require Import Setoid.
+Require Import ZArith.
+Require Import Coq.Program.Equality.
+
+Require Import FinProof.Common. 
+Require Import FinProof.ProgrammingWith.
+
+Require Import UMLang.UrsusLib.
+Require Import UMLang.ProofEnvironment2.
+
+Require Import UrsusTVM.tvmFunc.
+Require Import UrsusTVM.tvmNotations.
+
+Require Import Project.CommonConstSig.
+(*Fully qualified name are mandatory in multi-contract environment*)
+Require Import Contracts.XchgPair.Ledger.
+Require Import Contracts.XchgPair.Functions.FuncSig.
+Require Import Contracts.XchgPair.Functions.FuncNotations.
+Require Contracts.XchgPair.Interface.
+
+(*this elpi code move to the Ursus lib afterwards*)
+
+Unset Typeclasses Iterative Deepening.
+Set Typeclasses Depth 30.
+
+
+Elpi Command AddLocalState.
+
+Elpi Accumulate lp:{{
+
+main [Name , Term, LocalStateFieldT] :-
+  trm TrmInternal = Term,
+  trm LocalStateField = LocalStateFieldT,
+  str NameStr = Name,
+  N is NameStr ^ "_j",
+  coq.env.add-axiom N  (app [LocalStateField , TrmInternal]) _ , 
+  coq.locate  N GR, 
+  coq.TC.declare-instance GR 0,
+  coq.say TrmInternal.
+main _ :- coq.error "usage: AddLocalState <name> <term> <LocalStateField>".
+
+}}.
+
+Elpi Typecheck.
+Elpi Export AddLocalState.
+
+Elpi Command TestDefinitions. 
+Elpi Accumulate lp:{{
+
+pred get_name i:string , o:term.
+get_name NameS NameG :-
+    coq.locate NameS GR ,
+    NameG = global GR . 
+
+pred constructors_names i:string , o:list constructor.
+constructors_names IndName Names :-
+  std.assert! (coq.locate IndName (indt GR)) "not an inductive type",
+  coq.env.indt GR _ _ _ _ Names _.
+
+pred coqlist->list i:term, o: list term.
+coqlist->list {{ [ ]%xlist }} [ ].
+coqlist->list {{ (lp:X::lp:XS)%xlist }} [X | M] :- coqlist->list XS M.
+coqlist->list X _ :- coq.say "error",
+                    coq.say X.
+
+main [ A ] :-
+  coq.say  A. 
+}}. 
+
+Elpi Typecheck.
+ 
+(* Module trainContractSpecModuleForFuncs := trainContractSpec XTypesModule StateMonadModule. *)
+
+Module Type Has_Internal.
+
+Parameter Internal: bool .
+
+End Has_Internal.
+
+Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModule) .
+
+Import ha.
+
+Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
+Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
+
+Export SpecModuleForFuncNotations(* ForFuncs *).tvmNotationsModule.
+
+Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
+ 
+Import UrsusNotations.
+Local Open Scope ursus_scope.
+Local Open Scope ucpp_scope.
+Local Open Scope struct_scope.
+Local Open Scope Z_scope.
+Local Open Scope string_scope.
+Local Open Scope xlist_scope.
+
+Local Notation UE := (UExpression _ _).
+Local Notation UEf := (UExpression _ false).
+Local Notation UEt := (UExpression _ true).
+
+Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
+ 
+Arguments urgenerate_field {_} {_} {_} _ & .
+
+Notation " |{ e }| " := e (in custom URValue at level 0, 
+                           e custom ULValue ,  only parsing ) : ursus_scope.
+
+Existing Instance xbool_default.
+
+Parameter int_value__ : URValue XInteger false .
+Notation " 'int_value' '(' ')' " := 
+ ( int_value__ ) 
+ (in custom URValue at level 0 ) : ursus_scope .
+
+Parameter set_int_return_flag :UExpression OrderRetLRecord false .
+Notation " 'set_int_return_flag_' '(' ')' " := 
+ ( set_int_return_flag ) 
+ (in custom ULValue at level 0 ) : ursus_scope .
+Parameter int_value__ : URValue XInteger false .
+
+Definition onDeploy 
+( min_amount : ( XInteger128 ) ) 
+( deploy_value : ( XInteger128 ) ) 
+( notify_addr : ( XAddress ) ) 
+: UExpression XBool true . 
+ 	 	 refine {{ require_ ( ( ( int_value ( ) ) > #{ deploy_value } ) , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( # min_amount_ ) , 1 (* error_code::double_deploy *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( #{ min_amount } > 0 ) , 1 (* error_code::zero_min_amount *) ) ; { _ } }} . 
+ 	 	 refine {{ _min_amount_ := #{ min_amount } ; { _ } }} . 
+ 	 	 refine {{ notify_addr_ := !{ notify_addr } ; { _ } }} . 
+ 	 	 refine {{ tvm.rawreserve ( #{deploy_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} . 
+ 	 	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
+ 	 	 refine {{ return TRUE ; { _ } }} . 
+ Defined . 
+ 
+ 
+ 
+ 
+ Definition getFlexAddr : UExpression XAddress FALSE . 
+ 	 	 refine {{ return_ _flex_addr_ ; { _ } }} . 
+ Defined . 
+ 
+ 
+ 
+ 
+ Definition getTip3MajorRoot : UExpression XAddress FALSE . 
+ 	 	 refine {{ return_ _tip3_major_root_ ; { _ } }} . 
+ Defined . 
+ 
+ 
+ 
+ 
+ Definition getTip3MinorRoot : UExpression XAddress FALSE . 
+ 	 	 refine {{ return_ _tip3_minor_root_ }} . 
+ Defined . 
+ 
+ 
+ 
+ 
+ Definition getMinAmount : UExpression XInteger128 FALSE . 
+ 	 	 refine {{ return_ _min_amount_ }} . 
+ Defined . 
+ 
+ 
+ 
+ 
+ Definition getNotifyAddr : UExpression XAddress FALSE . 
+ 	 	 refine {{ return_ _notify_addr_ }} . 
+ Defined . 
+ 
+ 
+ 
+ 
+ Definition _fallback ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression XInteger FALSE . 
+ 	 	 refine {{ return_ 0 }} . 
+ Defined . 
+ 
+ 
+ 
+ 
+ Definition prepare_xchg_pair_state_init_and_addr ( pair_data : ( DXchgPairLRecord ) ) ( pair_code : ( XCell ) ) : UExpression ( StateInitLRecord * XInteger256 ) FALSE . 
+ 	 	 refine {{ new 'pair_data_cl : ( XCell ) @ "pair_data_cl" := 
+                    = prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
+ 	 	 refine {{ new 'pair_init : ( StateInitLRecord ) @ "pair_init" := 
+                        [ {} , {} , #{pair_code} , !{pair_data_cl} , {} } ; { _ } }} . 
+ 	 	 refine {{ new 'pair_init_cl : ( XCell ) @ "pair_init_cl" := {} ; { _ } }} . 
+ 	 	 refine {{ {pair_init_cl} := {} (* build ( !{pair_init} ) . make_cell ( ) *) ; { _ } }} . 
+ 	 	 refine {{ return_ [ !{ pair_init } , {} (* tvm.hash ( !{pair_init_cl} ) *) ] }} . 
+ Defined . 
+
+ 
+End FuncsInternal.
+End Funcs.
+
+ 
+ 
+ .
