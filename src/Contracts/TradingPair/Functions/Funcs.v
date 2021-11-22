@@ -16,10 +16,10 @@ Require Import UrsusTVM.tvmNotations.
 
 Require Import Project.CommonConstSig.
 (*Fully qualified name are mandatory in multi-contract environment*)
-Require Import Contracts.Flex.Ledger.
-Require Import Contracts.Flex.Functions.FuncSig.
-Require Import Contracts.Flex.Functions.FuncNotations.
-Require Contracts.Flex.Interface.
+Require Import Contracts.TradingPair.Ledger.
+Require Import Contracts.TradingPair.Functions.FuncSig.
+Require Import Contracts.TradingPair.Functions.FuncNotations.
+Require Contracts.TradingPair.Interface.
 
 (*this elpi code move to the Ursus lib afterwards*)
 
@@ -87,22 +87,23 @@ Parameter int_value__ : URValue XInteger false .
 Notation " 'int_value' '(' ')' " := 
  ( int_value__ ) 
  (in custom URValue at level 0 ) : ursus_scope .
-
-Parameter set_int_return_flag :UExpression OrderRetLRecord false .
+ 
+Parameter set_int_return_flag : UExpression XBool false .
 Notation " 'set_int_return_flag_' '(' ')' " := 
  ( set_int_return_flag ) 
  (in custom ULValue at level 0 ) : ursus_scope .
-Parameter int_value__ : URValue XInteger false .
 
- Definition onDeploy ( min_amount : ( XInteger128 ) ) ( deploy_value : ( XInteger128 ) ) ( notify_addr : ( XAddress ) ) : UExpression XBool true . 
- 	 	 refine {{ require_ ( ( int_value ( ) ) > #{ deploy_value } ) , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( _min_amount_ , 1 (* error_code::double_deploy *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( #{ min_amount } ) > 0 , error_code::zero_min_amount ) ; { _ } }} . 
- 	 	 refine {{ min_amount_ := (#{ min_amount }) ; { _ } }} . 
- 	 	 refine {{ notify_addr_ := (#{ notify_addr }) ; { _ } }} . 
- 	 	 refine {{ tvm.rawreserve ( #{deploy_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} . 
+Definition onDeploy ( min_amount : ( XInteger128 ) ) ( deploy_value : ( XInteger128 ) ) ( notify_addr : ( XAddress ) ) : UExpression XBool true . 
+ 	 	 refine {{ require_ ( ( int_value ( ) ) > #{ deploy_value }  , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ~ 1 (* _min_amount_ *) , 1 (* error_code::double_deploy *) ) ; { _ } }} .
+
+ 	 	 refine {{ require_ ( ( #{ min_amount } ) > 0 , 1 (* error_code::zero_min_amount *) ) ; { _ } }} . 
+ 	 	 refine {{ _min_amount_ := (#{ min_amount }) ; { _ } }} . 
+ 	 	 refine {{ _notify_addr_ := (#{ notify_addr }) ; { _ } }} . 
+(*  	 	 refine {{ tvm.rawreserve ( #{deploy_value} ) , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .  *)
  	 	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
- 	 	 refine {{ return TRUE }} .
+ 	 	 refine {{ return_ TRUE }} .
+Defined.
 
 Definition getFlexAddr : UExpression XAddress false . 
  	 	 refine {{ return_ _flex_addr_ }} . 
@@ -144,14 +145,18 @@ persistent_data_header base ) .
  , b custom URValue at level 0 ) : ursus_scope . 
 
 
-Definition prepare_trading_pair_state_init_and_addr ( pair_data : ( DTradingPairLRecord ) ) ( pair_code : ( XCell ) ) : UExpression ( StateInitLRecord * XInteger256 ) FALSE . 
+Definition prepare_trading_pair_state_init_and_addr 
+( pair_data : ( ContractLRecord ) ) 
+( pair_code : ( XCell ) ) 
+: UExpression ( StateInitLRecord * XInteger256 ) false . 
  	 	 refine {{ new 'pair_data_cl : ( XCell ) @ "pair_data_cl" := 
                    prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
  	 	 refine {{ new 'pair_init : ( StateInitLRecord ) @ "pair_init" :=
-                     [ {} , {} , #{pair_code} , !{pair_data_cl} , {} } ; { _ } }} . 
+                     [ {} , {} , (#{pair_code}) -> set () , 
+                       (!{pair_data_cl}) -> set () , {} ] ; { _ } }} . 
  	 	 refine {{ new 'pair_init_cl : ( XCell ) @ "pair_init_cl" := {} ; { _ } }} . 
  	 	 refine {{ { pair_init_cl } := {} (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
- 	 	 refine {{ return_ [ !{ pair_init } , tvm.hash ( !{pair_sinit_cl} ) ] }} . 
+ 	 	 refine {{ return_ [ !{ pair_init } , {} (* tvm.hash ( !{pair_sinit_cl} ) *) ] }} . 
  Defined . 
 
 

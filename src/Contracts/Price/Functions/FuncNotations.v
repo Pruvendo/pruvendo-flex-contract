@@ -18,7 +18,7 @@ Require Import Contracts.Price.Ledger.
 Require Import Contracts.Price.Functions.FuncSig.
 
 (* здесь инмпортируем все внешние интерфейсы *)
-Require Import Interface.
+Require Import Contracts.Price.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 

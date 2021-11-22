@@ -23,7 +23,7 @@ Parameter onDeploy : ( ( XInteger128 ) ) -> ( ( XInteger128 ) ) -> ( ( XAddress 
  Parameter getMinAmount : UExpression XInteger128 false . 
  Parameter getNotifyAddr : UExpression XAddress false . 
  Parameter _fallback : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression XInteger false . 
- Parameter prepare_xchg_pair_state_init_and_addr : ( ( DXchgPairLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord # XInteger256 ) false . 
+ Parameter prepare_xchg_pair_state_init_and_addr : ( ( ContractLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord # XInteger256 ) false . 
 
 
 End SpecSig.

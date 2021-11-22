@@ -19,7 +19,7 @@ Require Import Contracts.TradingPair.Ledger.
 Require Import Contracts.TradingPair.Functions.FuncSig.
 
 (* здесь инмпортируем все внешние интерфейсы *)
-Require Import Interface.
+Require Import Contracts.TradingPair.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -134,8 +134,12 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( XInteger128 ) a
  ( _fallback_right 
  msg msg_body ) 
  (in custom URValue at level 0 , msg custom URValue at level 0 
- , msg_body custom URValue at level 0 ) : ursus_scope . 
- Definition prepare_trading_pair_state_init_and_addr_right { a1 a2 }  ( pair_data : URValue ( DTradingPairLRecord ) a1 ) ( pair_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord * XInteger256 ) ( orb a2 a1 ) := 
+ , msg_body custom URValue at level 0 ) : ursus_scope .
+
+ Definition prepare_trading_pair_state_init_and_addr_right { a1 a2 }  
+( pair_data : URValue ( ContractLRecord ) a1 )
+ ( pair_code : URValue ( XCell ) a2 ) 
+: URValue ( StateInitLRecord * XInteger256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_trading_pair_state_init_and_addr 
  pair_data pair_code ) . 
  

@@ -34,7 +34,7 @@ Import xt.
 
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ ( XQueue FlexPublicInterfaceModule.OutgoingMessage ) : Type ; 
+ [ ( XQueue TradingPairPublicInterfaceModule.OutgoingMessage ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
@@ -85,17 +85,17 @@ Inductive LocalStateFields0000I := | ι00000 | ι00001 .
  Opaque LocalState0110LRecord . 
  
  Inductive LocalStateFields0111I := | ι01110 | ι01111 . 
- Definition LocalState0111L := [ ( XHMap (string*nat) type1LRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState0111L := [ ( XHMap (string*nat) XInteger (* type1LRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState0111L LocalStateFields0111I . 
  Opaque LocalState0111LRecord . 
  
  Inductive LocalStateFields1000I := | ι10000 | ι10001 . 
- Definition LocalState1000L := [ ( XHMap (string*nat) type2LRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState1000L := [ ( XHMap (string*nat) XInteger (* type2LRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState1000L LocalStateFields1000I . 
  Opaque LocalState1000LRecord . 
  
  Inductive LocalStateFields1001I := | ι10010 | ι10011 . 
- Definition LocalState1001L := [ ( XHMap (string*nat) type3LRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState1001L := [ ( XHMap (string*nat) XInteger (* type3LRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState1001L LocalStateFields1001I . 
  Opaque LocalState1001LRecord . 
  
@@ -407,13 +407,9 @@ Next Obligation.
 #[local]
 Remove Hints LocalStateField1001 : typeclass_instances. 
 
-
-
-
-
-Definition LocalStateField_XInteger := LocalStateField011100 .
-Definition LocalStateField_XBool := LocalStateField010001 .
-Definition LocalStateField_XCell := LocalStateField000001 .
+Definition LocalStateField_XInteger := LocalStateField0110 .
+Definition LocalStateField_XBool := LocalStateField0011 .
+Definition LocalStateField_XCell := LocalStateField0001 .
 
 
 (***************************************)

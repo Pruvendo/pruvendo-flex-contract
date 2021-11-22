@@ -114,7 +114,7 @@ Existing Instance xbool_default.
 
  Definition minor_cost ( amount : ( XInteger128 ) ) ( price : ( RationalPriceLRecord ) ) : UExpression (XMaybe XInteger128) false . 
  	 	 refine {{ new 'cost : ( XInteger ) @ "cost" := {} 
-                   (* __builtin_tvm_muldivr ( amount ^^ XInteger128:get ( ) , price ^^ RationalPriceLRecord:numerator ( ) . get ( ) , price ^^ RationalPriceLRecord:denominator ( ) . get ( ) ) *) ; { _ } }} . 
+                   (* __builtin_tvm_muldivr ( amount ^^ XInteger128:get ( ) , price ^^ RationalPriceLRecord:num , price ^^ RationalPriceLRecord:denum ) *) ; { _ } }} . 
  	 	 refine {{ if ( ( ?((!{cost}) >> #{128})) \\ ( (!{cost}) == 0 ) ) 
                then { { _:UExpression (XMaybe XInteger128) false } } ; { _ } }} . 
  	 	 	 refine {{ return_ {} }} . 
@@ -165,7 +165,7 @@ Definition make_deal
  	 	 refine {{ (({buy}) ^^ OrderInfoXchg.account) -= !{buy_ton_costs} ; { _ } }} . 
 (*  	 	 refine {{ ITONTokenWalletPtr ( (#{sell}) ^^ OrderInfoXchg.tip3_wallet_provide ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer ( sell . tip3_wallet_provide , buy . tip3_wallet_receive , deal_amount , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
 (*  	 	 refine {{ ITONTokenWalletPtr ( buy . tip3_wallet_provide ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer ( buy . tip3_wallet_provide , sell . tip3_wallet_receive , *buy_payment , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgDealCompleted ( tip3root_sell_ , tip3root_buy_ , price_ . numerator ( ) , price_ . denominator ( ) , deal_amount ) ; { _ } }} .  *)
+(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgDealCompleted ( tip3root_sell_ , tip3root_buy_ , price_ . num , price_ . denom , deal_amount ) ; { _ } }} .  *)
  	 	 refine {{ return_ [ FALSE , FALSE , !{ deal_amount } ] }} . 
 Defined . 
 
@@ -327,7 +327,8 @@ Definition process_queue ( sell_idx : ( XInteger ) ) ( buy_idx : ( XInteger ) ) 
        refine {{ _sells_amount_ -= !{ deal_amount } ; { _ } }} . 
        refine {{ _buys_amount_ -= !{ deal_amount } ; { _ } }} .
        refine {{ if ( ~ { _:URValue XInteger false } )        then { { _:UEf } } ; { _ } }} . 
- refine || ((!{sell}) ^^ OrderInfoXchg.amount) || . (* TODO: *) 
+
+       refine || ((!{sell}) ^^ OrderInfoXchg.amount) || . (* TODO: *) 
 
 (*        refine {{ if ( ~ !(({sell}) ^^ OrderInfoXchg.amount) ) then { { _:UEf } } ; { _ } }} .
 compute. apply intFunBool.
@@ -712,7 +713,7 @@ Print ClassGenerator.prod_list .
      	 refine {{ _buys_amount_ += !{ord} ^^ OrderInfoXchg.amount ; { _ } }} . 
      	 refine {{ { buy_idx } := {} (* buys_ ^^ back_with_idx ( ) . first *) ; { _ } }} . 
      	 refine {{ {notify_amount} := _buys_amount_ }} . 
-(*  refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderAdded ( is_sell , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . numerator ( ) , price_ . denominator ( ) , ord . amount , notify_amount ) ; { _ } }} .  *)
+(*  refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderAdded ( is_sell , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . num , price_ . denum , ord . amount , notify_amount ) ; { _ } }} .  *)
  	 	 refine {{ new ( 'sells_amount:XInteger128 , 'sells:(XQueue OrderInfoXchgLRecord) , 
                      'buys_amount:XInteger128 , 
                      'buys:(XQueue OrderInfoXchgLRecord) , 
@@ -851,7 +852,7 @@ Definition cancelSell : UExpression PhantomType false .
  	 	 refine {{ _sells_ := !{ sells } ; { _ } }} . 
  	 	 refine {{ _sells_amount_ := !{sells_amount} ; { _ } }} . 
  	 	 refine {{ { canceled_amount } -= _sells_amount_ ; { _ } }} . 
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderCanceled ( bool_t { true } , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . numerator ( ) , price_ . denominator ( ) , canceled_amount , sells_amount_ ) ; { _ } }} .  *)
+(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderCanceled ( bool_t { true } , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . num , price_ . denum , canceled_amount , sells_amount_ ) ; { _ } }} .  *)
  	 	 refine {{ if ( (_sells_ -> empty ()) && (_buys_ -> empty ()) ) 
                then { { _:UEf } } }} . 
  	 	 	 refine {{ _sells_ := !{ sells } (* suicide ( flex_ ) *) }} . 
@@ -872,7 +873,7 @@ Definition cancelBuy : UExpression PhantomType false .
  	 	 refine {{ _buys_ := !{ buys } ; { _ } }} . 
  	 	 refine {{ _buys_amount_ := !{buys_amount} ; { _ } }} . 
  	 	 refine {{ {canceled_amount} -= _buys_amount_ ; { _ } }} . 
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderCanceled ( bool_t { false } , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . numerator ( ) , price_ . denominator ( ) , canceled_amount , buys_amount_ ) ; { _ } }} .  *)
+(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderCanceled ( bool_t { false } , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . num , price_ . denum , canceled_amount , buys_amount_ ) ; { _ } }} .  *)
  	 	 refine {{ if ( ( _sells_ -> empty () ) && (_buys_ -> empty () ) ) 
              then { { _:UEf } } }} . 
  	 	 	 refine {{ _buys_ := !{ buys } (* suicide ( flex_ ) *) }} . 
@@ -1003,14 +1004,9 @@ Definition prepare_price_xchg_state_init_and_addr
 Definition getDetails : UExpression DetailsInfoXchgLRecord false . 
  	 	 refine {{ return_ [ getPriceNum_ ( ) , getPriceDenum_ ( ) , getMinimumAmount_ ( ) , 
                          getSellAmount_ ( ) , getBuyAmount_ ( ) ] }} . 
- Defined . 
- 
- 
- 
- 
+ Defined .
+
 End FuncsInternal.
 End Funcs.
 
- 
- 
- .
+

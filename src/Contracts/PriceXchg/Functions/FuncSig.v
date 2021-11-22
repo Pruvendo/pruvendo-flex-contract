@@ -19,7 +19,7 @@ Local Open Scope ursus_scope.
 Parameter make_deal : ( (ULValue OrderInfoXchgLRecord ) ) -> ( (ULValue OrderInfoXchgLRecord ) ) -> UExpression ( XBool # (XBool # XInteger128) ) false . 
  Parameter extract_active_order : ( ULValue( XMaybe (XInteger # OrderInfoXchgLRecord ) )) -> 
                                   ( ULValue( ( XQueue OrderInfoXchgLRecord ) )) -> 
-                                  ( ULValue ( XInteger128 ) )) -> 
+                                  ( ULValue ( XInteger128 ) ) -> 
                                             ( ( XBool ) ) -> 
 UExpression ( (XMaybe ( XInteger # OrderInfoXchgLRecord )) # ( (XQueue OrderInfoXchgLRecord) # XInteger128 ) ) false . 
 
@@ -43,13 +43,11 @@ UExpression ( (XMaybe ( XInteger # OrderInfoXchgLRecord )) # ( (XQueue OrderInfo
  Parameter verify_tip3_addr : ( ( Tip3ConfigLRecord ) ) -> ( ( XAddress ) ) -> ( ( XInteger256 ) ) -> ( ( XInteger256 ) ) -> UExpression XBool false . 
  Parameter expected_wallet_address : ( ( Tip3ConfigLRecord ) ) -> ( ( XInteger256 ) ) -> ( ( XInteger256 ) ) -> UExpression XInteger256 false . 
  Parameter on_ord_fail : ( ( XInteger ) ) -> ( ( XAddress (* ITONTokenWalletPtrLRecord *) ) ) -> ( ( XInteger128 ) ) -> UExpression OrderRetLRecord false . 
- Parameter numerator : UExpression XInteger128 false . 
- Parameter denominator : UExpression XInteger128 false .
  Parameter prepare_price_xchg_state_init_and_addr : ( ( ContractLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord # XInteger256 ) false . 
  Parameter is_active_time : ( ( XInteger32 ) ) -> UExpression XBool false . 
  Parameter minor_cost : ( ( XInteger128 ) ) -> ( ( RationalPriceLRecord ) ) -> UExpression (XMaybe XInteger128) false . 
  Parameter process_queue_impl : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XAddress (* IFlexNotifyPtrLRecord *) ) ) -> ( ( RationalPriceLRecord ) ) -> ( ( XInteger8 ) ) -> ( ( TonsConfigLRecord ) ) -> ( ( XInteger ) ) -> ( ( XInteger ) ) -> ( ( XInteger128 ) ) -> ( ( XQueue OrderInfoXchgLRecord ) ) -> ( ( XInteger128 ) ) -> ( ( XQueue OrderInfoXchgLRecord ) ) -> UExpression process_retLRecord false . 
- Parameter cancel_order_impl : ( ( XQueue OrderInfoXchgLRecord ) ) -> ( ( addr_std_fixedLRecord ) ) -> ( ( XInteger128 ) ) -> ( ( XBool ) ) -> ( ( XInteger (* Grams *) ) ) -> ( ( XInteger (* Grams *) ) ) -> ( ( XInteger (* Grams *) ) ) -> UExpression (XQueue OrderInfoXchgLRecord) false . 
+ Parameter cancel_order_impl : ( ( XQueue OrderInfoXchgLRecord ) ) -> ( ( addr_std_fixedLRecord ) ) -> ( ( XInteger128 ) ) -> ( ( XBool ) ) -> ( ( XInteger (* Grams *) ) ) -> ( ( XInteger (* Grams *) ) ) -> ( ( XInteger (* Grams *) ) ) -> UExpression ((XQueue OrderInfoXchgLRecord) # XInteger128) false . 
  Parameter int_sender_and_value : UExpression ( XAddress # XInteger (* Grams *) ) false . 
 
 End SpecSig.

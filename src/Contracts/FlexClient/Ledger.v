@@ -19,8 +19,8 @@ Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 Require Import UrsusTVM.tvmFunc. 
 
 Require Import Project.CommonTypes. 
-Require Import FlexClient.ClassTypes.
-Require Import FlexClient.Interface.
+Require Import Contracts.FlexClient.ClassTypes.
+Require Import Contracts.FlexClient.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.

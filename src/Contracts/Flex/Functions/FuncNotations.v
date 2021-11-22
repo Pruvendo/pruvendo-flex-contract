@@ -19,7 +19,7 @@ Require Import Contracts.Flex.Ledger.
 Require Import Contracts.Flex.Functions.FuncSig.
 
 (* здесь инмпортируем все внешние интерфейсы *)
-Require Import Interface.
+Require Import Contracts.Flex.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 

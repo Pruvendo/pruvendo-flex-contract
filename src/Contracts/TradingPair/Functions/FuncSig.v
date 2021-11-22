@@ -21,7 +21,7 @@ Module Type SpecSig.
  Parameter getMinAmount : UExpression XInteger128 false . 
  Parameter getNotifyAddr : UExpression XAddress false . 
  Parameter _fallback : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression XInteger false . 
- Parameter prepare_trading_pair_state_init_and_addr : ( ( DTradingPairLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord * XInteger256 ) false . 
+ Parameter prepare_trading_pair_state_init_and_addr : ( ( ContractLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord * XInteger256 ) false . 
 
 End SpecSig.
 

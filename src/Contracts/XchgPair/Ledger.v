@@ -25,7 +25,7 @@ Local Open Scope glist_scope.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
-Module PriceXchgPublicInterfaceModule := PublicInterface xt sm.
+Module XchgPairPublicInterfaceModule := PublicInterface xt sm.
 
 Module Import SolidityNotationsClass := SolidityNotations xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
@@ -370,7 +370,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField0110 : typeclass_instances. 
- #[global, program] Instance LocalStateField0111 : LocalStateField type1LRecord.
+ #[global, program] Instance LocalStateField0111 : LocalStateField XInteger (* type1LRecord *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -388,7 +388,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField0111 : typeclass_instances. 
- #[global, program] Instance LocalStateField1000 : LocalStateField type2LRecord.
+ #[global, program] Instance LocalStateField1000 : LocalStateField XInteger (* type2LRecord *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι100). 
@@ -404,7 +404,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField1000 : typeclass_instances. 
- #[global, program] Instance LocalStateField1001 : LocalStateField type3LRecord.
+ #[global, program] Instance LocalStateField1001 : LocalStateField XInteger (* type3LRecord *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι100). 
@@ -437,9 +437,9 @@ Remove Hints LocalStateField1010 : typeclass_instances.
 
 
 
-Definition LocalStateField_XInteger := LocalStateField01110 .
-Definition LocalStateField_XBool := LocalStateField00011 .
-Definition LocalStateField_XCell := LocalStateField00000 .
+Definition LocalStateField_XInteger := LocalStateField0110 .
+Definition LocalStateField_XBool := LocalStateField0011 .
+Definition LocalStateField_XCell := LocalStateField0001 .
 
 
 Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 

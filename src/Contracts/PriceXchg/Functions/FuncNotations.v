@@ -18,7 +18,7 @@ Require Import Contracts.PriceXchg.Ledger.
 Require Import Contracts.PriceXchg.Functions.FuncSig.
 
 (* здесь инмпортируем все внешние интерфейсы *)
-Require Import Interface.
+Require Import Contracts.PriceXchg.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -435,23 +435,6 @@ false :=
  , wallet_in custom URValue at level 0 
  , amount custom URValue at level 0 ) : ursus_scope . 
 
- Definition numerator_right  : URValue XInteger128 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) numerator 
- ) . 
- 
- Notation " 'numerator_' '(' ')' " := 
- ( numerator_right 
- ) 
- (in custom URValue at level 0 ) : ursus_scope . 
- Definition denominator_right  : URValue XInteger128 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) denominator 
- ) . 
- 
- Notation " 'denominator_' '(' ')' " := 
- ( denominator_right 
- ) 
- (in custom URValue at level 0 ) : ursus_scope . 
-
  Definition prepare_price_xchg_state_init_and_addr_right { a1 a2 }  ( price_data : URValue ( ContractLRecord ) a1 ) ( price_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord # XInteger256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_price_xchg_state_init_and_addr 
  price_data price_code ) . 
@@ -516,7 +499,16 @@ false :=
  , buys_amount custom URValue at level 0 
  , buys custom URValue at level 0 ) : ursus_scope . 
 
- Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  ( orders : URValue ( XQueue OrderInfoXchgLRecord ) a1 ) ( client_addr : URValue ( addr_std_fixedLRecord ) a2 ) ( all_amount : URValue ( XInteger128 ) a3 ) ( sell : URValue ( XBool ) a4 ) ( return_ownership : URValue ( XInteger (* Grams *) ) a5 ) ( process_queue : URValue ( XInteger (* Grams *) ) a6 ) ( incoming_val : URValue ( XInteger (* Grams *) ) a7 ) : URValue (XQueue OrderInfoXchgLRecord) ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
+( orders : URValue ( XQueue OrderInfoXchgLRecord ) a1 ) 
+( client_addr : URValue ( addr_std_fixedLRecord ) a2 ) 
+( all_amount : URValue ( XInteger128 ) a3 ) 
+( sell : URValue ( XBool ) a4 ) 
+( return_ownership : URValue ( XInteger (* Grams *) ) a5 ) 
+( process_queue : URValue ( XInteger (* Grams *) ) a6 ) 
+( incoming_val : URValue ( XInteger (* Grams *) ) a7 ) 
+: URValue ((XQueue OrderInfoXchgLRecord) # XInteger128) 
+( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancel_order_impl 
  orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
  
