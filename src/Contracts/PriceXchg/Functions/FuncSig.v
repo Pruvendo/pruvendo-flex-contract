@@ -17,7 +17,13 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 
 Parameter make_deal : ( (ULValue OrderInfoXchgLRecord ) ) -> ( (ULValue OrderInfoXchgLRecord ) ) -> UExpression ( XBool # (XBool # XInteger128) ) false . 
- Parameter extract_active_order : ( XMaybe (XInteger # OrderInfoXchgLRecord ) ) -> ( ( XQueue OrderInfoXchgLRecord ) ) -> ( ( XInteger128 ) ) -> ( ( XBool ) ) -> UExpression ( (XMaybe ( XInteger # OrderInfoXchgLRecord )) # ( (XQueue OrderInfoXchgLRecord) # XInteger128 ) ) false . 
+ Parameter extract_active_order : ( ULValue( XMaybe (XInteger # OrderInfoXchgLRecord ) )) -> 
+                                  ( ULValue( ( XQueue OrderInfoXchgLRecord ) )) -> 
+                                  ( ULValue ( XInteger128 ) )) -> 
+                                            ( ( XBool ) ) -> 
+UExpression ( (XMaybe ( XInteger # OrderInfoXchgLRecord )) # ( (XQueue OrderInfoXchgLRecord) # XInteger128 ) ) false . 
+
+
  Parameter process_queue : ( ( XInteger ) ) -> ( ( XInteger ) ) -> UExpression PhantomType false . 
  Parameter onTip3LendOwnership : ( ( XAddress ) ) -> ( ( XInteger128 ) ) -> ( ( XInteger32 ) ) -> ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XCell ) ) -> UExpression OrderRetLRecord false . 
  Parameter processQueue : UExpression PhantomType false . 

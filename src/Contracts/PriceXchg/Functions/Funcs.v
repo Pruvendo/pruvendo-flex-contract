@@ -326,12 +326,12 @@ Definition process_queue ( sell_idx : ( XInteger ) ) ( buy_idx : ( XInteger ) ) 
        refine {{ buy_opt - > second = buy ; { _ } }} .  *)
        refine {{ _sells_amount_ -= !{ deal_amount } ; { _ } }} . 
        refine {{ _buys_amount_ -= !{ deal_amount } ; { _ } }} .
-(*       refine {{ if ( ~ { _:URValue XInteger false } )        then { { _:UEf } } ; { _ } }} . *)
-(* refine || ((!{sell}) ^^ OrderInfoXchg.amount) || . (* TODO: *) *)
+       refine {{ if ( ~ { _:URValue XInteger false } )        then { { _:UEf } } ; { _ } }} . 
+ refine || ((!{sell}) ^^ OrderInfoXchg.amount) || . (* TODO: *) 
 
-       refine {{ if ( ~ !(({sell}) ^^ OrderInfoXchg.amount) ) then { { _:UEf } } ; { _ } }} .
+(*        refine {{ if ( ~ !(({sell}) ^^ OrderInfoXchg.amount) ) then { { _:UEf } } ; { _ } }} .
 compute. apply intFunBool.
-
+ *)
 (*  	       refine {{ dealer.sells_ -> pop () ; { _ } }} .  *)
  	       refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 
  	 	 	             [ 1 (* ok *) , 
