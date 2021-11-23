@@ -1,12 +1,12 @@
-Require Import UMLang.SolidityNotations2.
+Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
-Require Import UrsusStdLib.stdFunc.
-Require Import UrsusStdLib.stdNotations.
-Require Import UrsusStdLib.stdFuncNotations.
+Require Import UrsusStdLib.Cpp.stdFunc.
+Require Import UrsusStdLib.Cpp.stdNotations.
+Require Import UrsusStdLib.Cpp.stdFuncNotations.
 
-Require Import UrsusTVM.tvmFunc.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import FinProof.ProgrammingWith.  
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
@@ -14,7 +14,7 @@ Require Import Project.CommonTypes.
 
 
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
-Module Import CommonTypes := Types xt sm.
+Module Export CommonTypes := Types xt sm.
 
 Local Open Scope xlist_scope.
 Local Open Scope record. 
@@ -44,7 +44,7 @@ Elpi GeneratePruvendoRecord TickTockL TickTockFields .
  Opaque TickTockLRecord .
 
 (* 2 *) Definition StateInitL : list Type := 
- [ ( XMaybe XInteger ) : Type ; 
+ [ ( XMaybe XUInteger ) : Type ; 
  ( XMaybe TickTockLRecord ) : Type ; 
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ; 
@@ -54,73 +54,73 @@ Elpi GeneratePruvendoRecord StateInitL StateInitFields .
 (* 2 *) Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
  Opaque Tip3ConfigLRecord . 
 
 (* 2 *) Definition RationalPriceL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ] .
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord RationalPriceL RationalPriceFields . 
  Opaque RationalPriceLRecord . 
 
 (* 2 *) Definition addr_std_fixedL : list Type := 
- [ ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ] .
+ [ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ] .
 Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
  Opaque addr_std_fixedLRecord . 
 
 (* 2 *) Definition PayloadArgsL : list Type := 
  [ ( XBool ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ] .
 Elpi GeneratePruvendoRecord PayloadArgsL PayloadArgsFields . 
  Opaque PayloadArgsLRecord . 
 
 (* 2 *) Definition OrderInfoXchgL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
- ( XInteger32 ) : Type ] .
+ ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
  Opaque OrderInfoXchgLRecord . 
 
 (* 2 *) Definition DetailsInfoXchgL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ] .
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord DetailsInfoXchgL DetailsInfoXchgFields . 
  Opaque DetailsInfoXchgLRecord . 
 
 (* 2 *) Definition TonsConfigL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ] .
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
  Opaque TonsConfigLRecord .
 
 (* 2 *) Definition OrderRetL : list Type := 
- [ ( XInteger32 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ] .
+ [ ( XUInteger32 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderRetL OrderRetFields . 
  Opaque OrderRetLRecord . 
 
 (* 2 *) Definition process_retL : list Type := 
- [ ( XInteger128 ) : Type ; 
+ [ ( XUInteger128 ) : Type ; 
  ( ( XQueue OrderInfoXchgLRecord ) ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( ( XQueue OrderInfoXchgLRecord ) ) : Type ; 
  ( ( XMaybe OrderRetLRecord ) ) : Type ] .
 Elpi GeneratePruvendoRecord process_retL process_retFields . 
@@ -132,34 +132,34 @@ Elpi GeneratePruvendoRecord process_retL process_retFields .
  ( XAddress ) : Type ; 
  ( XAddress (* IFlexNotifyPtrLRecord *) ) : Type ; 
  ( RationalPriceLRecord ) : Type ; 
- ( XInteger ) : Type ; 
+ ( XUInteger ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( ( XQueue OrderInfoXchgLRecord ) ) : Type ; 
- ( XInteger128 ) : Type ;
+ ( XUInteger128 ) : Type ;
  ( ( XQueue OrderInfoXchgLRecord ) ) : Type ; 
  ( ( XMaybe OrderRetLRecord ) ) : Type ] .
 Elpi GeneratePruvendoRecord dealerL dealerFields . 
  Opaque dealerLRecord . 
 
 (* 2 *) Definition lend_recordL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger32 ) : Type ] .
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord lend_recordL lend_recordFields . 
  Opaque lend_recordLRecord . 
 
 (* 2 *) Definition DTONTokenWalletInternalL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger256 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
  ( XAddress ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
  ( XHMap addr_std_fixedLRecord lend_recordLRecord ) : Type ; 
  ( XCell ) : Type ; 
- ( XInteger8 ) : Type ] .
+ ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
  Opaque DTONTokenWalletInternalLRecord . 
 

@@ -6,7 +6,7 @@ Require Import Ledger.
 Require Import FuncSig.
 Require Import Project.CommonConstSig.
 Require Import FuncNotations.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import FinProof.Common. 
 Require Import FinProof.ProgrammingWith.
 (* From elpi Require Import elpi. *)

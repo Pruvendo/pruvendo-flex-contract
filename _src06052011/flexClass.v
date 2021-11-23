@@ -12,7 +12,7 @@ Require Import FinProof.MonadTransformers21.
 Require Import FinProof.StateMonad21.
 
 (* Require Import FinProof.Lib.BasicModuleTypes. *)
-Require Import UMLang.SolidityNotations2.
+Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.SML_NG20.
 (* Require Import flexTypes. *)
 

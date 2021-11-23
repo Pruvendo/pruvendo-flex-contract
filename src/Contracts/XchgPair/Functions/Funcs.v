@@ -11,8 +11,8 @@ Require Import FinProof.ProgrammingWith.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 
-Require Import UrsusTVM.tvmFunc.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 (*Fully qualified name are mandatory in multi-contract environment*)
@@ -112,7 +112,7 @@ Notation " |{ e }| " := e (in custom URValue at level 0,
 
 Existing Instance xbool_default.
 
-Parameter int_value__ : URValue XInteger false .
+Parameter int_value__ : URValue uint false .
 Notation " 'int_value' '(' ')' " := 
  ( int_value__ ) 
  (in custom URValue at level 0 ) : ursus_scope .
@@ -123,8 +123,8 @@ Notation " 'set_int_return_flag_' '(' ')' " :=
  (in custom ULValue at level 0 ) : ursus_scope . 
 
 Definition onDeploy 
-( min_amount : ( XInteger128 ) ) 
-( deploy_value : ( XInteger128 ) ) 
+( min_amount : ( uint128 ) ) 
+( deploy_value : ( uint128 ) ) 
 ( notify_addr : ( XAddress ) ) 
 : UExpression XBool true . 
  	 	 refine {{ require_ ( ( ( int_value ( ) ) > #{ deploy_value } ) , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
@@ -161,7 +161,7 @@ Definition onDeploy
  
  
  
- Definition getMinAmount : UExpression XInteger128 false . 
+ Definition getMinAmount : UExpression uint128 false . 
  	 	 refine {{ return_ _min_amount_ }} . 
  Defined . 
  
@@ -175,7 +175,7 @@ Definition onDeploy
  
  
  
- Definition _fallback ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression XInteger false . 
+ Definition _fallback ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression uint false . 
  	 	 refine {{ return_ 0 }} . 
  Defined . 
  
@@ -200,7 +200,7 @@ persistent_data_header base ) .
 
  
  
- Definition prepare_xchg_pair_state_init_and_addr ( pair_data : ( ContractLRecord ) ) ( pair_code : ( XCell ) ) : UExpression ( StateInitLRecord # XInteger256 ) false . 
+ Definition prepare_xchg_pair_state_init_and_addr ( pair_data : ( ContractLRecord ) ) ( pair_code : ( XCell ) ) : UExpression ( StateInitLRecord # uint256 ) false . 
  	 	 refine {{ new 'pair_data_cl : ( XCell ) @ "pair_data_cl" := 
                     prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
  	 	 refine {{ new 'pair_init : ( StateInitLRecord ) @ "pair_init" := 

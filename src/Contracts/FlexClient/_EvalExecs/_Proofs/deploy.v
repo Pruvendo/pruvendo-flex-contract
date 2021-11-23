@@ -8,7 +8,7 @@ Require Import FinProof.ProgrammingWith.
 Require Import UMLang.ProofEnvironment2.
 Require Import UMLang.SML_NG28.
 
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 Require Import Ledger.
@@ -28,12 +28,12 @@ Local Open Scope ursus_scope.
 Module Import FuncExForEvalExec := FuncEx trainFuncsInternal.
 
 
-Lemma deploy_exec: forall (l: Ledger) (value: XInteger) , 
+Lemma deploy_exec: forall (l: Ledger) (value: uint) , 
       exec_state (Uinterpreter {{ deploy_ ( #{value} ) }} ) l = l.
 Admitted.
 
 
-Lemma deploy_eval: forall (l: Ledger) (value: XInteger) , 
+Lemma deploy_eval: forall (l: Ledger) (value: uint) , 
       eval_state (sRReader || deploy_ ( #{value} ) || ) l = ControlValue false default.
 Admitted.
 

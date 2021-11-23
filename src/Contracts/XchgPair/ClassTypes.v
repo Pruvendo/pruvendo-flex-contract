@@ -1,12 +1,13 @@
-Require Import UMLang.SolidityNotations2.
+Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
-Require Import UrsusStdLib.stdFunc.
-Require Import UrsusStdLib.stdNotations.
-Require Import UrsusStdLib.stdFuncNotations.
+Require Import UrsusStdLib.Cpp.stdFunc.
+Require Import UrsusStdLib.Cpp.stdNotations.
+Require Import UrsusStdLib.Cpp.stdFuncNotations.
+(* Require Import UrsusStdLib.Cpp.stdTypes. *)
 
-Require Import UrsusTVM.tvmFunc.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import FinProof.ProgrammingWith.  
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
@@ -14,9 +15,10 @@ Require Import Project.CommonTypes.
 
 
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
-Module Import CommonTypes := Types xt sm.
+Module Export CommonTypes := Types xt sm.
 
 Local Open Scope xlist_scope.
+(* Local Open Scope ucpp_scope. *)
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
@@ -31,7 +33,7 @@ Elpi GeneratePruvendoRecord TickTockL TickTockFields .
  Opaque TickTockLRecord . 
 
 (* 2 *) Definition StateInitL : list Type := 
- [ ( ( XMaybe XInteger ) ) : Type ; 
+ [ ( ( XMaybe XUInteger ) ) : Type ; 
  ( ( XMaybe TickTockLRecord ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 

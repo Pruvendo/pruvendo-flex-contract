@@ -1,12 +1,12 @@
-Require Import UMLang.SolidityNotations2.
+Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
-Require Import UrsusStdLib.stdFunc.
-Require Import UrsusStdLib.stdNotations.
-Require Import UrsusStdLib.stdFuncNotations.
+Require Import UrsusStdLib.Cpp.stdFunc.
+Require Import UrsusStdLib.Cpp.stdNotations.
+Require Import UrsusStdLib.Cpp.stdFuncNotations.
 
-Require Import UrsusTVM.tvmFunc.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import FinProof.ProgrammingWith.  
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
@@ -48,8 +48,8 @@ Locate XBool.
 (* 2 *) Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
  Opaque Tip3ConfigLRecord . 
@@ -60,21 +60,21 @@ Elpi GeneratePruvendoRecord TickTockL TickTockFields .
  Opaque TickTockLRecord . 
 
 (* 2 *) Definition addr_std_fixedL : list Type := 
- [ ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ] .
+ [ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ] .
 Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
  Opaque addr_std_fixedLRecord . 
 
 (* 2 *) Definition PayloadArgsL : list Type := 
  [ ( XBool ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ] .
 Elpi GeneratePruvendoRecord PayloadArgsL PayloadArgsFields . 
  Opaque PayloadArgsLRecord . 
 
 (* 2 *) Definition StateInitL : list Type := 
- [ ( ( XMaybe XInteger ) ) : Type ; 
+ [ ( ( XMaybe XUInteger ) ) : Type ; 
  ( ( XMaybe TickTockLRecord ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
@@ -86,65 +86,65 @@ Elpi GeneratePruvendoRecord StateInitL StateInitFields .
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord DXchgPairL DXchgPairFields . 
  Opaque DXchgPairLRecord . 
 
 (* 2 *) Definition TonsConfigL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ] .
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
  Opaque TonsConfigLRecord . 
 
 (* 2 *) Definition DTradingPairL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
- ( XInteger128 ) : Type ;
+ ( XUInteger128 ) : Type ;
  ( XAddress ) :Type ] .
 Elpi GeneratePruvendoRecord DTradingPairL DTradingPairFields . 
  Opaque DTradingPairLRecord .
  
 (* 2 *) Definition OrderInfoL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
- ( XInteger32 ) : Type ] .
+ ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderInfoL OrderInfoFields . 
  Opaque OrderInfoLRecord . 
 
 (* 2 *) Definition OrderInfoXchgL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
- ( XInteger32 ) : Type ] .
+ ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
  Opaque OrderInfoXchgLRecord . 
 
 (* 2 *) Definition SellArgsL : list Type := 
- [ ( XInteger128 ) : Type ; 
+ [ ( XUInteger128 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord SellArgsL SellArgsFields . 
  Opaque SellArgsLRecord . 
 
 (* 2 *) Definition DPriceL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger8 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
  ( XAddress (* IFlexNotify *) ) : Type ; 
- ( XInteger8 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 
@@ -154,18 +154,18 @@ Elpi GeneratePruvendoRecord DPriceL DPriceFields .
  Opaque DPriceLRecord .
 
 (* 2 *) Definition RationalPriceL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ] .
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord RationalPriceL RationalPriceFields . 
  Opaque RationalPriceLRecord . 
 
 (* 2 *) Definition DWrapperL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
  ( Grams ) : Type ; 
@@ -175,13 +175,13 @@ Elpi GeneratePruvendoRecord DWrapperL DWrapperFields .
 
 (* 2 *) Definition DPriceXchgL : list Type := 
  [ ( RationalPriceLRecord ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger8 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
  ( XAddress (* IFlexNotifyPtr *) ) : Type ; 
- ( XInteger8 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 
@@ -192,23 +192,23 @@ Elpi GeneratePruvendoRecord DPriceXchgL DPriceXchgFields .
  Opaque DPriceXchgLRecord . 
 
 (* 2 *) Definition lend_recordL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger32 ) : Type ] .
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord lend_recordL lend_recordFields . 
  Opaque lend_recordLRecord . 
 
 (* 2 *) Definition DTONTokenWalletInternalL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger256 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
  ( XAddress ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
  ( XHMap addr_std_fixedLRecord lend_recordLRecord ) : Type ; 
  ( XCell ) : Type ; 
- ( XInteger8 ) : Type ] .
+ ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
  Opaque DTONTokenWalletInternalLRecord . 
 

@@ -1,22 +1,22 @@
-Parameter ec_ι_out_of_tons : XInteger . 
-Parameter ec_ι_deals_limit : XInteger . 
-Parameter ec_ι_not_enough_tons_to_process : XInteger . 
-Parameter ec_ι_not_enough_tokens_amount : XInteger . 
-Parameter ec_ι_too_big_tokens_amount : XInteger . 
-Parameter ec_ι_different_workchain_id : XInteger . 
-Parameter ec_ι_unverified_tip3_wallet : XInteger . 
-Parameter ec_ι_canceled : XInteger . 
-Parameter error_code_ι_sender_is_not_deployer : XInteger . 
-Parameter error_code_ι_unexpected_refs_count_in_code : XInteger . 
-Parameter error_code_ι_cant_override_code : XInteger . 
-Parameter error_code_ι_not_enough_tons : XInteger . 
-Parameter error_code_ι_message_sender_is_not_my_owner : XInteger . 
-Parameter Price_ι_safe_delay_period : XInteger . 
-Parameter Stock_ι_sender_is_not_deployer : XInteger . 
-Parameter Stock_ι_unexpected_refs_count_in_code : XInteger . 
-Parameter Stock_ι_cant_override_code : XInteger . 
-Parameter TradingPair_ι_not_enough_tons : XInteger . 
-Parameter FLeXClient_ι_message_sender_is_not_my_owner : XInteger . 
+Parameter ec_ι_out_of_tons : uint . 
+Parameter ec_ι_deals_limit : uint . 
+Parameter ec_ι_not_enough_tons_to_process : uint . 
+Parameter ec_ι_not_enough_tokens_amount : uint . 
+Parameter ec_ι_too_big_tokens_amount : uint . 
+Parameter ec_ι_different_workchain_id : uint . 
+Parameter ec_ι_unverified_tip3_wallet : uint . 
+Parameter ec_ι_canceled : uint . 
+Parameter error_code_ι_sender_is_not_deployer : uint . 
+Parameter error_code_ι_unexpected_refs_count_in_code : uint . 
+Parameter error_code_ι_cant_override_code : uint . 
+Parameter error_code_ι_not_enough_tons : uint . 
+Parameter error_code_ι_message_sender_is_not_my_owner : uint . 
+Parameter Price_ι_safe_delay_period : uint . 
+Parameter Stock_ι_sender_is_not_deployer : uint . 
+Parameter Stock_ι_unexpected_refs_count_in_code : uint . 
+Parameter Stock_ι_cant_override_code : uint . 
+Parameter TradingPair_ι_not_enough_tons : uint . 
+Parameter FLeXClient_ι_message_sender_is_not_my_owner : uint . 
 (* 
 Notation "' ec::out_of_tons '" := (sInject ec_ι_out_of_tons ) (in custom SMLRValue at level 0) : sml_scope . 
 Notation "' ec::deals_limit '" := (sInject ec_ι_deals_limit ) (in custom SMLRValue at level 0) : sml_scope . 

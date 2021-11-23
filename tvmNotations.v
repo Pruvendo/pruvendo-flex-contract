@@ -12,7 +12,7 @@ Require Import FinProof.StateMonad21.
 
 Local Open Scope record. 
 
-Require Import UMLang.SolidityNotations2. 
+Require Import UMLang.BasicModuleTypes. 
 (* Require Import UMLang.SML_NG19.  *)
 
 Require Import tip3ContractClass.
@@ -20,7 +20,7 @@ Require Import tip3ContractClass.
 Require Import tip3ContractConsts.  
 Require Import tip3Variables. *)
 
-Module tvmNotations (xt: XTypesSig) (sm: StateMonadSig) .
+Module Cpp.tvmNotations (xt: XTypesSig) (sm: StateMonadSig) .
 Module Export LedgerClass := LedgerClass xt sm.
 
 (* Export dc. Export var.  
@@ -56,26 +56,26 @@ Notation "'λ12'" := ( @SMLExpression_Next_Ledgerable Ledger _ LocalState FullSt
 (**************************************************************************************************)
 
 Parameter __builtin_tvm_hashcu : 
-            XCell ->  SMLExpression (S:=Ledger) false XInteger XInteger .
+            XCell ->  SMLExpression (S:=Ledger) false uint uint .
 
 Notation " '__builtin_tvm_hashcu_' '(' x ')' " := ( SMLRScalar (sml_call 
   (Ledgerable := λ1)
-  (* (T := XCell ->  SMLExpression (S:=Ledger) false XInteger XInteger)*) __builtin_tvm_hashcu x ))  
+  (* (T := XCell ->  SMLExpression (S:=Ledger) false uint uint)*) __builtin_tvm_hashcu x ))  
   (in custom SMLRValue at level 0 , x custom SMLRValue at level 0) : sml_scope.
 
 Notation " '__builtin_tvm_hashcu_' '(' x ')' " := ( ResultExpression (sml_call 
   (Ledgerable := λ1)
-  (* (T := XCell ->  SMLExpression (S:=Ledger) false XInteger XInteger) *) __builtin_tvm_hashcu x )) 
+  (* (T := XCell ->  SMLExpression (S:=Ledger) false uint uint) *) __builtin_tvm_hashcu x )) 
   (in custom SMLLValue at level 0 , x custom SMLRValue at level 0) : sml_scope.
 
 (**************************************************************************************************)  
   
-Parameter tvm_balance : SMLExpression (S:=Ledger) false XInteger XInteger .
+Parameter tvm_balance : SMLExpression (S:=Ledger) false uint uint .
 
 
 Section functions.
 
-Variables f g : SMLExpression (S:=Ledger) false True XInteger .
+Variables f g : SMLExpression (S:=Ledger) false True uint .
 
 Notation " 'f_' " := ( (SMLRScalar (sml_call (Ledgerable := λ0)
  f ))) (in custom SMLRValue at level 0) : sml_scope. 
@@ -92,7 +92,7 @@ Notation " 'g_' " := (
   g ))) (in custom SMLLValue at level 0) : sml_scope.  
 
 
-Definition strict_bind_fg : SMLExpression (S:=Ledger) false True XInteger :=
+Definition strict_bind_fg : SMLExpression (S:=Ledger) false True uint :=
 {{ f_ ; g_ }}.
 
 End functions.
@@ -100,29 +100,29 @@ End functions.
 
 Notation " 'tvm.balance' '()' " := ( 
   (SMLRScalar (sml_call (Ledgerable := λ0)
-  (* (T :=  SMLExpression (S:=Ledger) false XInteger XInteger) *) tvm_balance ))) 
+  (* (T :=  SMLExpression (S:=Ledger) false uint uint) *) tvm_balance ))) 
   (in custom SMLRValue at level 0) : sml_scope. 
 
 Notation " 'tvm.balance' '()' " := ( 
   (ResultExpression (sml_call (Ledgerable := λ0)
-  (* (T :=  SMLExpression (S:=Ledger) false XInteger XInteger) *) tvm_balance ))) 
+  (* (T :=  SMLExpression (S:=Ledger) false uint uint) *) tvm_balance ))) 
   (in custom SMLLValue at level 0) : sml_scope.  
 
 (**************************************************************************************************) 
 
 Parameter prepare_persistent_data1 : 
-          XInteger -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger .
+          uint -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) uint .
 
 Notation " 'prepare_persistent_data1_' '(' a ',' b ')' " := ( 
   (SMLRScalar (sml_call (Ledgerable := λ2)
-  (* (T :=  XInteger -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data1 a b ))) 
+  (* (T :=  uint -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) uint) *) prepare_persistent_data1 a b ))) 
   (in custom SMLRValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope. 
 
 Notation " 'prepare_persistent_data1_' '(' a ',' b ')' " := ( 
   (ResultExpression (sml_call (Ledgerable := λ2)
-  (* (T :=  XInteger -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data1 a b))) 
+  (* (T :=  uint -> DTONTokenWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) uint) *) prepare_persistent_data1 a b))) 
   (in custom SMLLValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope.
@@ -131,18 +131,18 @@ Notation " 'prepare_persistent_data1_' '(' a ',' b ')' " := (
 
 
 Parameter prepare_persistent_data2 : 
-   XInteger ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger .
+   uint ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe XCell) uint .
 
 Notation " 'prepare_persistent_data2_' '(' a ',' b ')' " := ( 
   (SMLRScalar (sml_call (Ledgerable := λ2)
-  (* (T := XInteger ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data2 a b ))) 
+  (* (T := uint ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe XCell) uint) *) prepare_persistent_data2 a b ))) 
   (in custom SMLRValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope. 
 
 Notation " 'prepare_persistent_data2_' '(' a ',' b ')' " := ( 
   (ResultExpression (sml_call (Ledgerable := λ2)
-  (* (T := XInteger ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data2 a b ))) 
+  (* (T := uint ->  DRootTokenContract -> SMLExpression (S:=Ledger) false (XMaybe XCell) uint) *) prepare_persistent_data2 a b ))) 
   (in custom SMLLValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope.
@@ -150,18 +150,18 @@ Notation " 'prepare_persistent_data2_' '(' a ',' b ')' " := (
 (**************************************************************************************************)   
 
 Parameter prepare_persistent_data3 : 
-   XInteger ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger .
+   uint ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) uint .
 
 Notation " 'prepare_persistent_data3_' '(' a ',' b ')' " := ( 
   (SMLRScalar (sml_call (Ledgerable := λ2)
-  (* (T := XInteger ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data3 a b ))) 
+  (* (T := uint ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) uint) *) prepare_persistent_data3 a b ))) 
   (in custom SMLRValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope. 
 
 Notation " 'prepare_persistent_data3_' '(' a ',' b ')' " := ( 
   (ResultExpression (sml_call (Ledgerable := λ2)
-  (* (T := XInteger ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) XInteger) *) prepare_persistent_data3 a b ))) 
+  (* (T := uint ->  DAuthWallet -> SMLExpression (S:=Ledger) false (XMaybe XCell) uint) *) prepare_persistent_data3 a b ))) 
   (in custom SMLLValue at level 0,
   a custom SMLRValue at level 0 , 
   b custom SMLRValue at level 0) : sml_scope.
@@ -169,78 +169,78 @@ Notation " 'prepare_persistent_data3_' '(' a ',' b ')' " := (
 (**************************************************************************************************) 
 
 
-Parameter tvm_hash : XCell -> SMLExpression (S:=Ledger) false XInteger XInteger .
+Parameter tvm_hash : XCell -> SMLExpression (S:=Ledger) false uint uint .
 
 Notation " 'tvm.hash' '(' a ')' " := ( 
   (SMLRScalar (sml_call (Ledgerable := λ1)
-  (* (T := XCell -> SMLExpression (S:=Ledger) false XInteger XInteger) *) tvm_hash a  ))) 
+  (* (T := XCell -> SMLExpression (S:=Ledger) false uint uint) *) tvm_hash a  ))) 
   (in custom SMLRValue at level 0,
   a custom SMLRValue at level 0 ) : sml_scope. 
 
 Notation " 'tvm.hash' '(' a ')' " := ( 
   (ResultExpression (sml_call (Ledgerable := λ1)
-  (* (T := XCell -> SMLExpression (S:=Ledger) false XInteger XInteger) *) tvm_hash a  ))) 
+  (* (T := XCell -> SMLExpression (S:=Ledger) false uint uint) *) tvm_hash a  ))) 
   (in custom SMLLValue at level 0,
   a custom SMLRValue at level 0 ) : sml_scope. 
 
 (**************************************************************************************************) 
 
-Parameter make_std : XInteger -> XInteger -> SMLExpression (S:=Ledger) false  (XMaybe address) XInteger.
+Parameter make_std : uint -> uint -> SMLExpression (S:=Ledger) false  (XMaybe address) uint.
 
 Notation " 'address::make_std' '(' a ',' b ')' " :=  ( 
     (SMLRScalar (sml_call (Ledgerable := λ2)
-    (* (T := XInteger -> XInteger -> SMLExpression (S:=Ledger) false  (XMaybe address) XInteger) *) make_std a b ))) 
+    (* (T := uint -> uint -> SMLExpression (S:=Ledger) false  (XMaybe address) uint) *) make_std a b ))) 
     (in custom SMLRValue at level 0,
     a custom SMLRValue at level 0 , 
     b custom SMLRValue at level 0) : sml_scope.
 
 Notation " 'address::make_std' '(' a ',' b ')' " :=  ( 
     (ResultExpression (sml_call (Ledgerable := λ2)
-    (* (T := XInteger -> XInteger -> SMLExpression (S:=Ledger) false  (XMaybe address) XInteger) *) make_std a b ))) 
+    (* (T := uint -> uint -> SMLExpression (S:=Ledger) false  (XMaybe address) uint) *) make_std a b ))) 
     (in custom SMLLValue at level 0,
     a custom SMLRValue at level 0 , 
     b custom SMLRValue at level 0) : sml_scope.      
 
 (**************************************************************************************************) 
 
-Parameter check_owner : SMLExpression (S:=Ledger) false True XInteger .
+Parameter check_owner : SMLExpression (S:=Ledger) false True uint .
 
 Notation " 'check_owner_' '()' " := ( 
     (SMLRScalar (sml_call (Ledgerable := λ0)
-    (* (T := SMLExpression (S:=Ledger) false True XInteger) *) check_owner ))) 
+    (* (T := SMLExpression (S:=Ledger) false True uint) *) check_owner ))) 
     (in custom SMLRValue at level 0) : sml_scope.
 
 Notation " 'check_owner_' '()' " := ( 
     (ResultExpression (sml_call (Ledgerable := λ0)
-    (* (T := SMLExpression (S:=Ledger) false True XInteger) *) check_owner ))) 
+    (* (T := SMLExpression (S:=Ledger) false True uint) *) check_owner ))) 
     (in custom SMLLValue at level 0) : sml_scope.    
 
 (**************************************************************************************************) 
 
-Parameter tvm_accept : SMLExpression (S:=Ledger) false True XInteger.
+Parameter tvm_accept : SMLExpression (S:=Ledger) false True uint.
 
 Notation " 'tvm.accept' '()' " := ( 
     (SMLRScalar (sml_call (Ledgerable := λ0)
-   (*  (T := SMLExpression (S:=Ledger) false True XInteger) *) tvm_accept ))) 
+   (*  (T := SMLExpression (S:=Ledger) false True uint) *) tvm_accept ))) 
     (in custom SMLRValue at level 0) : sml_scope.
 
 Notation " 'tvm.accept' '()' " := ( 
     (ResultExpression (sml_call (Ledgerable := λ0)
-    (* (T := SMLExpression (S:=Ledger) false True XInteger) *) tvm_accept ))) 
+    (* (T := SMLExpression (S:=Ledger) false True uint) *) tvm_accept ))) 
     (in custom SMLLValue at level 0) : sml_scope. 
 
 (**************************************************************************************************) 
 
-Parameter tvm_rawreserve : XInteger ->  XInteger -> SMLExpression (S:=Ledger) false True XInteger .   
+Parameter tvm_rawreserve : uint ->  uint -> SMLExpression (S:=Ledger) false True uint .   
 
 Notation " 'tvm.rawreserve' '(' a ',' b ')'  " :=  (SMLRScalar (sml_call (Ledgerable := λ2)
-        (* (T := XInteger -> XInteger ->  SMLExpression (S:=Ledger) false  True XInteger) *) tvm_rawreserve a b )) 
+        (* (T := uint -> uint ->  SMLExpression (S:=Ledger) false  True uint) *) tvm_rawreserve a b )) 
         (in custom SMLRValue at level 0 , 
           a custom SMLRValue at level 0 ,
           b custom SMLRValue at level 0  ) : sml_scope.
 
 Notation " 'tvm.rawreserve' '(' a ',' b ')'  " :=  (ResultExpression (sml_call (Ledgerable := λ2)
-        (* (T := XInteger -> XInteger ->  SMLExpression (S:=Ledger) false  True XInteger) *) tvm_rawreserve a b )) 
+        (* (T := uint -> uint ->  SMLExpression (S:=Ledger) false  True uint) *) tvm_rawreserve a b )) 
         (in custom SMLLValue at level 0 , 
           a custom SMLRValue at level 0 ,
           b custom SMLRValue at level 0  ) : sml_scope.
@@ -248,90 +248,90 @@ Notation " 'tvm.rawreserve' '(' a ',' b ')'  " :=  (ResultExpression (sml_call (
 (**************************************************************************************************)           
 
 (*TODO*)
-Parameter int_value : SMLExpression (S:=Ledger) false XInteger XInteger.
+Parameter int_value : SMLExpression (S:=Ledger) false uint uint.
 
 Notation " 'int_value_' '()' " := ( 
     (SMLRScalar (sml_call (Ledgerable := λ0)
-    (* (T := SMLExpression (S:=Ledger) false XInteger XInteger) *) int_value ))) 
+    (* (T := SMLExpression (S:=Ledger) false uint uint) *) int_value ))) 
     (in custom SMLRValue at level 0) : sml_scope.
 
 Notation " 'int_value_' '()' " := ( 
     (ResultExpression (sml_call (Ledgerable := λ0)
-   (*  (T := SMLExpression (S:=Ledger) false XInteger XInteger) *) int_value ))) 
+   (*  (T := SMLExpression (S:=Ledger) false uint uint) *) int_value ))) 
     (in custom SMLLValue at level 0) : sml_scope.
 
 (**************************************************************************************************)       
 
-Parameter intMax : XInteger -> XInteger -> SMLExpression (S:=Ledger) false XInteger XInteger. 
+Parameter intMax : uint -> uint -> SMLExpression (S:=Ledger) false uint uint. 
 
 Notation " 'std::max' '(' a ',' b ')' " := 
  (SMLRScalar (sml_call (Ledgerable := λ2)
- (* (T := XInteger -> XInteger -> SMLExpression (S:=Ledger) false  XInteger XInteger)   *)
+ (* (T := uint -> uint -> SMLExpression (S:=Ledger) false  uint uint)   *)
      intMax a b )) (in custom SMLRValue at level 0 , 
               a custom SMLRValue at level 0 ,
               b custom SMLRValue at level 0  ) : sml_scope. 
 
 Notation " 'std::max' '(' a ',' b ')'  " := 
  (ResultExpression (sml_call (Ledgerable := λ2)
- (* (T := XInteger -> XInteger -> SMLExpression (S:=Ledger) false  XInteger XInteger) *)  
+ (* (T := uint -> uint -> SMLExpression (S:=Ledger) false  uint uint) *)  
      intMax a b )) (in custom SMLLValue at level 0 , 
               a custom SMLRValue at level 0 ,
               b custom SMLRValue at level 0  ) : sml_scope.
 
 (**************************************************************************************************) 
 
-Parameter set_int_return_flag : XInteger -> SMLExpression (S:=Ledger) false True XInteger .
+Parameter set_int_return_flag : uint -> SMLExpression (S:=Ledger) false True uint .
 
 Notation " 'set_int_return_flag_' '(' a ')' " := (SMLRScalar (sml_call (Ledgerable := λ1)
-  (* (T := XInteger -> SMLExpression (S:=Ledger) false True XInteger) *) set_int_return_flag a ))
+  (* (T := uint -> SMLExpression (S:=Ledger) false True uint) *) set_int_return_flag a ))
             (in custom SMLRValue at level 0 , 
             a custom SMLRValue at level 0  ) : sml_scope.
 
 Notation " 'set_int_return_flag_' '(' a ')' " := (ResultExpression (sml_call (Ledgerable := λ1)
-  (* (T := XInteger -> SMLExpression (S:=Ledger) false True XInteger) *) set_int_return_flag a ))
+  (* (T := uint -> SMLExpression (S:=Ledger) false True uint) *) set_int_return_flag a ))
             (in custom SMLLValue at level 0 , 
             a custom SMLRValue at level 0  ) : sml_scope.             
 (**************************************************************************************************) 
 
 (*TODO*)
-Parameter tvm_transfer : SMLExpression (S:=Ledger) false True XInteger .
+Parameter tvm_transfer : SMLExpression (S:=Ledger) false True uint .
 
 Notation " 'tvm.transfer' '()' " :=  ( 
     (SMLRScalar (sml_call (Ledgerable := λ0)
-    (* (T := SMLExpression (S:=Ledger) false True XInteger) *) tvm_transfer ))) 
+    (* (T := SMLExpression (S:=Ledger) false True uint) *) tvm_transfer ))) 
     (in custom SMLRValue at level 0) : sml_scope.
     
 Notation " 'tvm.transfer' '()' " :=  ( 
     (ResultExpression (sml_call (Ledgerable := λ0)
-    (* (T := SMLExpression (S:=Ledger) false True XInteger) *) tvm_transfer ))) 
+    (* (T := SMLExpression (S:=Ledger) false True uint) *) tvm_transfer ))) 
     (in custom SMLLValue at level 0) : sml_scope.
 
 (**************************************************************************************************) 
 
-Parameter tvm_myaddr : SMLExpression (S:=Ledger) false address XInteger .
+Parameter tvm_myaddr : SMLExpression (S:=Ledger) false address uint .
 
 Notation " 'tvm.myaddr' '()' ":= (SMLRScalar ( sml_call (Ledgerable := λ0)
-   (* ( T:= SMLExpression (S:=Ledger)  false address XInteger ) *) tvm_myaddr )) 
+   (* ( T:= SMLExpression (S:=Ledger)  false address uint ) *) tvm_myaddr )) 
    (in custom SMLRValue at level 0 ) : sml_scope.
 
 Notation " 'tvm.myaddr' '()' " := (ResultExpression (sml_call (Ledgerable := λ0)
-    (* ( T := SMLExpression ( S:=Ledger ) false address XInteger) *) tvm_myaddr ) ) 
+    (* ( T := SMLExpression ( S:=Ledger ) false address uint) *) tvm_myaddr ) ) 
     (in custom SMLLValue at level 0, only parsing ) : sml_scope.  
     
 (**************************************************************************************************)     
 
-Parameter toCell: StateInit -> SMLExpression (S:=Ledger) false XCell XInteger  .
+Parameter toCell: StateInit -> SMLExpression (S:=Ledger) false XCell uint  .
 
 Notation " a  '->' 'make_cell' '()' " := (SMLRScalar ( sml_call  (Ledgerable := λ1)
-   (* ( T:= StateInit -> SMLExpression (S:=Ledger) false XCell XInteger ) *) toCell a )) 
+   (* ( T:= StateInit -> SMLExpression (S:=Ledger) false XCell uint ) *) toCell a )) 
    (in custom SMLRValue at level 0) : sml_scope.
 
 Notation " a  '->' 'make_cell' '()' " := (ResultExpression ( sml_call  (Ledgerable := λ1)
-   (* ( T:= StateInit -> SMLExpression (S:=Ledger) false XCell XInteger ) *) toCell a )) 
+   (* ( T:= StateInit -> SMLExpression (S:=Ledger) false XCell uint ) *) toCell a )) 
    (in custom SMLLValue at level 0, 
    a custom SMLRValue at level 0 ) : sml_scope.
 
-(*Variable s_expr: SMLExpression (S:=Ledger) false StateInit XInteger.
+(*Variable s_expr: SMLExpression (S:=Ledger) false StateInit uint.
 
 Notation " 's_' " := (s_expr)  (in custom SMLRValue at level 0) .
 Notation " 's_' " := (s_expr)  (in custom SMLLValue at level 0) .
@@ -341,67 +341,67 @@ Check {{ s_ -> make_cell () }}. *)
 
 (**************************************************************************************************)     
 
-Parameter parse_continue : XSlice -> SMLExpression (S:=Ledger) false ( XSlice # XSlice ) XInteger .
+Parameter parse_continue : XSlice -> SMLExpression (S:=Ledger) false ( XSlice # XSlice ) uint .
 
 Notation " 'parse_continue<abiv1::internal_msg_header>' '(' a ')' " := (SMLRScalar ( sml_call  (Ledgerable := λ1)
-   (* ( T:= XSlice -> SMLExpression (S:=Ledger) false  ( XSlice # XSlice ) XInteger ) *) parse_continue a )) 
+   (* ( T:= XSlice -> SMLExpression (S:=Ledger) false  ( XSlice # XSlice ) uint ) *) parse_continue a )) 
    (in custom SMLRValue at level 0) : sml_scope.
 
 Notation " 'parse_continue<abiv1::internal_msg_header>' '(' a ')' " := (ResultExpression ( sml_call (Ledgerable := λ1) 
-   (* ( T:= XSlice -> SMLExpression (S:=Ledger) false  ( XSlice # XSlice ) XInteger ) *) parse_continue a )) 
+   (* ( T:= XSlice -> SMLExpression (S:=Ledger) false  ( XSlice # XSlice ) uint ) *) parse_continue a )) 
    (in custom SMLLValue at level 0, 
    a custom SMLRValue at level 0 ) : sml_scope.
 
 (**************************************************************************************************)                         
-Parameter int_sender : SMLExpression (S:=Ledger) false address XInteger .
+Parameter int_sender : SMLExpression (S:=Ledger) false address uint .
 
 Notation " 'int_sender_' '()' " := (SMLRScalar ( sml_call (Ledgerable := λ0)
-(* ( T:= SMLExpression (S:=Ledger)  false address XInteger ) *) int_sender )) 
+(* ( T:= SMLExpression (S:=Ledger)  false address uint ) *) int_sender )) 
 (in custom SMLRValue at level 0 ) : sml_scope.
 
 Notation " 'int_sender_' '()' " := (ResultExpression ( sml_call (Ledgerable := λ0)
-(* ( T:= SMLExpression (S:=Ledger)  false address XInteger ) *) int_sender )) 
+(* ( T:= SMLExpression (S:=Ledger)  false address uint ) *) int_sender )) 
 (in custom SMLLValue at level 0 ) : sml_scope.
 
 (**************************************************************************************************)
 
-Parameter tvm_pubkey : SMLExpression (S:=Ledger) false XInteger256 XInteger .
+Parameter tvm_pubkey : SMLExpression (S:=Ledger) false uint256 uint .
 
 Notation " 'tvm.pubkey' '()' " :=  (SMLRScalar ( sml_call (Ledgerable := λ0)
-(* ( T:= SMLExpression (S:=Ledger)  false XInteger256 XInteger ) *) tvm_pubkey )) 
+(* ( T:= SMLExpression (S:=Ledger)  false uint256 uint ) *) tvm_pubkey )) 
 (in custom SMLRValue at level 0 ) : sml_scope.
 
 Notation " 'tvm.pubkey' '()' " :=  (ResultExpression ( sml_call (Ledgerable := λ0)
-(* ( T:= SMLExpression (S:=Ledger)  false XInteger256 XInteger ) *) tvm_pubkey )) 
+(* ( T:= SMLExpression (S:=Ledger)  false uint256 uint ) *) tvm_pubkey )) 
 (in custom SMLLValue at level 0 ) : sml_scope.
 
 (**************************************************************************************************)
 
-Parameter wallet_replay_protection_t_init : SMLExpression (S:=Ledger) false XInteger XInteger .
+Parameter wallet_replay_protection_t_init : SMLExpression (S:=Ledger) false uint uint .
 
 Notation " 'wallet_replay_protection_t::init' '()' " := 
   (SMLRScalar ( sml_call (Ledgerable := λ0)
-  (* ( T:= SMLExpression (S:=Ledger)  false XInteger256 XInteger ) *) wallet_replay_protection_t_init )) 
+  (* ( T:= SMLExpression (S:=Ledger)  false uint256 uint ) *) wallet_replay_protection_t_init )) 
   (in custom SMLRValue at level 0 ) : sml_scope.
 
 Notation " 'wallet_replay_protection_t::init' '()'" :=  
   (ResultExpression ( sml_call (Ledgerable := λ0)
-  (* ( T:= SMLExpression (S:=Ledger)  false XInteger256 XInteger ) *) wallet_replay_protection_t_init )) 
+  (* ( T:= SMLExpression (S:=Ledger)  false uint256 uint ) *) wallet_replay_protection_t_init )) 
   (in custom SMLLValue at level 0 ) : sml_scope.
 
 
 (**************************************************************************************************)
 
-Parameter root_replay_protection_t_init : SMLExpression (S:=Ledger) false XInteger XInteger .
+Parameter root_replay_protection_t_init : SMLExpression (S:=Ledger) false uint uint .
 
 Notation " 'root_replay_protection_t::init' '()' " := 
   (SMLRScalar ( sml_call (Ledgerable := λ0)
-  (* ( T:= SMLExpression (S:=Ledger)  false XInteger256 XInteger ) *) root_replay_protection_t_init )) 
+  (* ( T:= SMLExpression (S:=Ledger)  false uint256 uint ) *) root_replay_protection_t_init )) 
   (in custom SMLRValue at level 0 ) : sml_scope.
 
 Notation " 'wallet_replay_protection_t::init' '()'" :=  
   (ResultExpression ( sml_call (Ledgerable := λ0)
-  (* ( T:= SMLExpression (S:=Ledger)  false XInteger256 XInteger ) *) root_replay_protection_t_init )) 
+  (* ( T:= SMLExpression (S:=Ledger)  false uint256 uint ) *) root_replay_protection_t_init )) 
   (in custom SMLLValue at level 0 ) : sml_scope.
 
 (**************************************************************************************************)
@@ -427,7 +427,7 @@ Parameter _insert: forall {X Y}(x:RL X )(y:RL Y), RL True  (* :=
 Notation " x '->insert' y " := ( _insert x y ) 
                  (in custom SMLRValue at level 0, y custom SMLRValue at level 0) : sml_scope.
 
-Parameter _size: forall {X}(x:RL X), RL XInteger (* := 
+Parameter _size: forall {X}(x:RL X), RL uint (* := 
   {{ ρ return 1 }} *).
 
 Notation " x '->size' " := (  _size x ) 
@@ -438,4 +438,4 @@ Parameter _hasValue: forall {X }(x:RL X ), RL XBool (* :=
 Notation " x '->has_value' " := ( _hasValue x ) 
                  (in custom SMLRValue at level 0 ) : sml_scope.                
 
-End tvmNotations.                 
+End Cpp.tvmNotations.                 

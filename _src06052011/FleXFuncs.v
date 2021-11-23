@@ -1,6 +1,6 @@
 
  Definition dealer_Ф_make_deal ( sell : SellInfoP ) ( buy : BuyInfoP ) 
- : SMLExpression (S:=Ledger) false ( XBool # XBool # XInteger128 ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XBool # XBool # uint128 ) uint := 
  WeakBinding ( ResultExpression ( init SellInfoP Л_sell0 := sell ) ) of 
  WeakBinding ( ResultExpression ( init BuyInfoP Л_buy0 := buy ) ) of 
  {{ 
@@ -18,8 +18,8 @@
  if ^ ( Л_sell_out_of_tons0_ || Л_buy_out_of_tons0_ ) then { ρ return [ Л_sell_out_of_tons0_ , Л_buy_out_of_tons0_ , uint128 ( 0 ) ] 
  }} Parameter Л_sell_idx1 : XString . 
  
- Definition dealer_Ф_process_queue ( sell_idx : XInteger ) ( buy_idx : XInteger ) 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ Definition dealer_Ф_process_queue ( sell_idx : uint ) ( buy_idx : uint ) 
+ : SMLExpression (S:=Ledger) false True uint := 
  WeakBinding ( ResultExpression ( init int Л_sell_idx1 := sell_idx ) ) of 
  WeakBinding ( ResultExpression ( init int Л_buy_idx1 := buy_idx ) ) of 
  {{ 
@@ -30,8 +30,8 @@
  [ Л_buy_idx_cur1_ Л_buy1_ ] := ^ *buy_opt ; 
  if ^ ( + + Л_deals_count1_ > deals_limit_ ) then { IPricePtr ( address { tvm_myaddr ( ) } ) ( Grams ( dealer_ι_tons_cfg_ ^^ process_queue . 
  
- Definition DPrice_Ф_onTip3LendOwnership ( balance : XInteger128 ) ( lend_finish_time : XInteger32 ) ( pubkey : XInteger256 ) ( internal_owner : XInteger256 ) ( payload_cl : XCell ) ( answer_addr : XAddress ) 
- : SMLExpression (S:=Ledger) false OrderRetP XInteger := 
+ Definition DPrice_Ф_onTip3LendOwnership ( balance : uint128 ) ( lend_finish_time : uint32 ) ( pubkey : uint256 ) ( internal_owner : uint256 ) ( payload_cl : XCell ) ( answer_addr : XAddress ) 
+ : SMLExpression (S:=Ledger) false OrderRetP uint := 
  WeakBinding ( ResultExpression ( init int Л_balance2 := balance ) ) of 
  WeakBinding ( ResultExpression ( init int Л_lend_finish_time2 := lend_finish_time ) ) of 
  WeakBinding ( ResultExpression ( init int Л_pubkey2 := pubkey ) ) of 
@@ -43,8 +43,8 @@
  ITONTokenWalletPtr wallet_in ( Л_tip3_wallet2_ ) ; 
  Grams ret_owner_gr ( DPrice_ι_tons_cfg_ ^^ return_ownership . 
  
- Definition DPrice_Ф_buyTip3 ( amount : XInteger128 ) ( receive_tip3_wallet : XAddress ) 
- : SMLExpression (S:=Ledger) false OrderRetP XInteger := 
+ Definition DPrice_Ф_buyTip3 ( amount : uint128 ) ( receive_tip3_wallet : XAddress ) 
+ : SMLExpression (S:=Ledger) false OrderRetP uint := 
  WeakBinding ( ResultExpression ( init int Л_amount3 := amount ) ) of 
  WeakBinding ( ResultExpression ( init addr Л_receive_tip3_wallet3 := receive_tip3_wallet ) ) of 
  {{ 
@@ -59,7 +59,7 @@
  set_int_return_value ( DPrice_ι_tons_cfg_ ^^ order_answer . 
  
  Definition DPrice_Ф_processQueue 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ : SMLExpression (S:=Ledger) false True uint := 
  {{ 
  if ^ ( DPrice_ι_sells_ ^^ empty ( ) || DPrice_ι_buys_ ^^ empty ( ) ) then { || DPrice_ι_buys_ ^^ empty ( ) ) ρ return I } ; 
  [ Л_sells_amount4_ Л_sells4_ Л_buys_amount4_ Л_buys4_ Л_ret4_ ] := ^ Ф_process_queue_impl ( DPrice_ι_tip3cfg_ ^^ root_address , notify_addr_ , price_ , deals_limit_ , tons_cfg_ , 0 , 0 , sells_amount_ , sells_ , buys_amount_ , buys_ ) ; 
@@ -72,7 +72,7 @@
  }} Parameter Л_receive_wallet5 : XString . 
  
  Definition DPrice_Ф_cancelSell 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ : SMLExpression (S:=Ledger) false True uint := 
  {{ 
  Л_receive_wallet5_ := ^ int_sender ( ) ; 
  for ( Л_it5_ := ^ DPrice_ι_sells_ ^^ begin ( ) ; 
@@ -82,7 +82,7 @@
  if ^ ( Л_sell5_ ^^ receive_wallet == receive_wallet ) then { ITONTokenWalletPtr ( Л_sell5_ ^^ tip3_wallet ) ( Grams ( DPrice_ι_tons_cfg_ ^^ return_ownership . 
  
  Definition DPrice_Ф_cancelBuy 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ : SMLExpression (S:=Ledger) false True uint := 
  {{ 
  Л_answer_addr6_ := ^ int_sender ( ) ; 
  for ( Л_it6_ := ^ DPrice_ι_buys_ ^^ begin ( ) ; 
@@ -93,45 +93,45 @@
  IPriceCallbackPtr ( Л_buy6_ ^^ answer_addr ) ( Grams ( Л_buy6_ ^^ account . 
  
  Definition DPrice_Ф_getDetails 
- : SMLExpression (S:=Ledger) false DetailsInfoP XInteger := 
+ : SMLExpression (S:=Ledger) false DetailsInfoP uint := 
  {{ 
  ρ return [ DPrice_Ф_getPrice ( ) , DPrice_Ф_getMinimumAmount ( ) , DPrice_Ф_getSellAmount ( ) , DPrice_Ф_getBuyAmount ( ) ] 
  }} Definition DPrice_Ф_getPrice 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ price_ ; 
  ; 
  
  }} Definition DPrice_Ф_getMinimumAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ min_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getTonsCfg 
- : SMLExpression (S:=Ledger) false TonsConfigP XInteger := 
+ : SMLExpression (S:=Ledger) false TonsConfigP uint := 
  {{ 
  ρ return ^ tons_cfg_ ; 
  ; 
  
  }} Definition DPrice_Ф_getSells 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < SellInfo > ( DPrice_ι_sells_ ^^ begin ( ) , DPrice_ι_sells_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getBuys 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < BuyInfo > ( DPrice_ι_buys_ ^^ begin ( ) , DPrice_ι_buys_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getSellAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ sells_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getBuyAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ buys_amount_ ; 
  ; 
@@ -139,41 +139,41 @@
  }} Parameter Л_msg15 : XString . 
  
  Definition DPrice_Ф_getPrice 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ price_ ; 
  ; 
  
  }} Definition DPrice_Ф_getMinimumAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ min_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getTonsCfg 
- : SMLExpression (S:=Ledger) false TonsConfigP XInteger := 
+ : SMLExpression (S:=Ledger) false TonsConfigP uint := 
  {{ 
  ρ return ^ tons_cfg_ ; 
  ; 
  
  }} Definition DPrice_Ф_getSells 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < SellInfo > ( DPrice_ι_sells_ ^^ begin ( ) , DPrice_ι_sells_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getBuys 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < BuyInfo > ( DPrice_ι_buys_ ^^ begin ( ) , DPrice_ι_buys_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getSellAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ sells_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getBuyAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ buys_amount_ ; 
  ; 
@@ -181,35 +181,35 @@
  }} Parameter Л_msg15 : XString . 
  
  Definition DPrice_Ф_getMinimumAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ min_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getTonsCfg 
- : SMLExpression (S:=Ledger) false TonsConfigP XInteger := 
+ : SMLExpression (S:=Ledger) false TonsConfigP uint := 
  {{ 
  ρ return ^ tons_cfg_ ; 
  ; 
  
  }} Definition DPrice_Ф_getSells 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < SellInfo > ( DPrice_ι_sells_ ^^ begin ( ) , DPrice_ι_sells_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getBuys 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < BuyInfo > ( DPrice_ι_buys_ ^^ begin ( ) , DPrice_ι_buys_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getSellAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ sells_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getBuyAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ buys_amount_ ; 
  ; 
@@ -217,29 +217,29 @@
  }} Parameter Л_msg15 : XString . 
  
  Definition DPrice_Ф_getTonsCfg 
- : SMLExpression (S:=Ledger) false TonsConfigP XInteger := 
+ : SMLExpression (S:=Ledger) false TonsConfigP uint := 
  {{ 
  ρ return ^ tons_cfg_ ; 
  ; 
  
  }} Definition DPrice_Ф_getSells 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < SellInfo > ( DPrice_ι_sells_ ^^ begin ( ) , DPrice_ι_sells_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getBuys 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < BuyInfo > ( DPrice_ι_buys_ ^^ begin ( ) , DPrice_ι_buys_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getSellAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ sells_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getBuyAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ buys_amount_ ; 
  ; 
@@ -247,23 +247,23 @@
  }} Parameter Л_msg15 : XString . 
  
  Definition DPrice_Ф_getSells 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < SellInfo > ( DPrice_ι_sells_ ^^ begin ( ) , DPrice_ι_sells_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getBuys 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < BuyInfo > ( DPrice_ι_buys_ ^^ begin ( ) , DPrice_ι_buys_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getSellAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ sells_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getBuyAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ buys_amount_ ; 
  ; 
@@ -271,18 +271,18 @@
  }} Parameter Л_msg15 : XString . 
  
  Definition DPrice_Ф_getBuys 
- : SMLExpression (S:=Ledger) false ( XDictArray ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( XDictArray ) uint := 
  {{ 
  ρ return ^ dict_array < < BuyInfo > ( DPrice_ι_buys_ ^^ begin ( ) , DPrice_ι_buys_ ^^ end ( ) ) ; 
  
  }} Definition DPrice_Ф_getSellAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ sells_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getBuyAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ buys_amount_ ; 
  ; 
@@ -290,13 +290,13 @@
  }} Parameter Л_msg15 : XString . 
  
  Definition DPrice_Ф_getSellAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ sells_amount_ ; 
  ; 
  
  }} Definition DPrice_Ф_getBuyAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ buys_amount_ ; 
  ; 
@@ -304,7 +304,7 @@
  }} Parameter Л_msg15 : XString . 
  
  Definition DPrice_Ф_getBuyAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ buys_amount_ ; 
  ; 
@@ -312,7 +312,7 @@
  }} Parameter Л_msg15 : XString . 
  
  Definition DPrice_Ф__fallback ( msg : XCell ) ( msg_body : XSlice ) 
- : SMLExpression (S:=Ledger) false XInteger XInteger := 
+ : SMLExpression (S:=Ledger) false uint uint := 
  WeakBinding ( ResultExpression ( init cell Л_msg15 := msg ) ) of 
  WeakBinding ( ResultExpression ( init slice Л_msg_body15 := msg_body ) ) of 
  {{ 
@@ -321,8 +321,8 @@
  
  }} Parameter Л_tip3_wallet16 : XString . 
  
- Definition DPrice_Ф_verify_tip3_addr ( tip3_wallet : XAddress ) ( wallet_pubkey : XInteger256 ) ( internal_owner : XInteger256 ) 
- : SMLExpression (S:=Ledger) false XBool XInteger := 
+ Definition DPrice_Ф_verify_tip3_addr ( tip3_wallet : XAddress ) ( wallet_pubkey : uint256 ) ( internal_owner : uint256 ) 
+ : SMLExpression (S:=Ledger) false XBool uint := 
  WeakBinding ( ResultExpression ( init addr Л_tip3_wallet16 := tip3_wallet ) ) of 
  WeakBinding ( ResultExpression ( init int Л_wallet_pubkey16 := wallet_pubkey ) ) of 
  WeakBinding ( ResultExpression ( init int Л_internal_owner16 := internal_owner ) ) of 
@@ -332,8 +332,8 @@
  
  }} Parameter Л_wallet_pubkey17 : XString . 
  
- Definition DPrice_Ф_expected_wallet_address ( wallet_pubkey : XInteger256 ) ( internal_owner : XInteger256 ) 
- : SMLExpression (S:=Ledger) false XInteger256 XInteger := 
+ Definition DPrice_Ф_expected_wallet_address ( wallet_pubkey : uint256 ) ( internal_owner : uint256 ) 
+ : SMLExpression (S:=Ledger) false uint256 uint := 
  WeakBinding ( ResultExpression ( init int Л_wallet_pubkey17 := wallet_pubkey ) ) of 
  WeakBinding ( ResultExpression ( init int Л_internal_owner17 := internal_owner ) ) of 
  {{ 
@@ -344,16 +344,16 @@
  ) 
  }} Parameter Л_lend_finish_time18 : XString . 
  
- Definition DPrice_Ф_is_active_time ( lend_finish_time : XInteger32 ) 
- : SMLExpression (S:=Ledger) false XBool XInteger := 
+ Definition DPrice_Ф_is_active_time ( lend_finish_time : uint32 ) 
+ : SMLExpression (S:=Ledger) false XBool uint := 
  WeakBinding ( ResultExpression ( init int Л_lend_finish_time18 := lend_finish_time ) ) of 
  {{ 
  ρ return tvm_now ( ) + safe_delay_period < Л_lend_finish_time18_ ^^ int_ι_get ( ) ; 
  
  }} Parameter Л_ec19 : XString . 
  
- Definition DPrice_Ф_on_sell_fail ( ec : XInteger ) ( wallet_in : ITONTokenWalletPtrP ) 
- : SMLExpression (S:=Ledger) false OrderRetP XInteger := 
+ Definition DPrice_Ф_on_sell_fail ( ec : uint ) ( wallet_in : ITONTokenWalletPtrP ) 
+ : SMLExpression (S:=Ledger) false OrderRetP uint := 
  WeakBinding ( ResultExpression ( init int Л_ec19 := ec ) ) of 
  WeakBinding ( ResultExpression ( init ITONTokenWalletPtrP Л_wallet_in19 := wallet_in ) ) of 
  {{ 
@@ -362,8 +362,8 @@
  set_int_return_flag ( SEND_ALL_GAS ) ; 
  Л_wallet_in19_ ( Grams ( DPrice_ι_tons_cfg_ ^^ return_ownership . 
  
- Definition DStock_Ф_constructor ( deployer_pubkey : XInteger256 ) ( transfer_tip3 : XInteger128 ) ( return_ownership : XInteger128 ) ( trading_pair_deploy : XInteger128 ) ( order_answer : XInteger128 ) ( dealer_Ф_process_queue : XInteger128 ) ( send_notify : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( notify_addr : XAddress ) 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ Definition DStock_Ф_constructor ( deployer_pubkey : uint256 ) ( transfer_tip3 : uint128 ) ( return_ownership : uint128 ) ( trading_pair_deploy : uint128 ) ( order_answer : uint128 ) ( dealer_Ф_process_queue : uint128 ) ( send_notify : uint128 ) ( min_amount : uint128 ) ( deals_limit : uint8 ) ( notify_addr : XAddress ) 
+ : SMLExpression (S:=Ledger) false True uint := 
  WeakBinding ( ResultExpression ( init int Л_deployer_pubkey20 := deployer_pubkey ) ) of 
  WeakBinding ( ResultExpression ( init int Л_transfer_tip320 := transfer_tip3 ) ) of 
  WeakBinding ( ResultExpression ( init int Л_return_ownership20 := return_ownership ) ) of 
@@ -384,7 +384,7 @@
  }} Parameter Л_code21 : XString . 
  
  Definition DStock_Ф_setPairCode ( code : XCell ) 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ : SMLExpression (S:=Ledger) false True uint := 
  WeakBinding ( ResultExpression ( init cell Л_code21 := code ) ) of 
  {{ 
  Require ( ! DStock_Ф_isFullyInitialized ( ) , error_code::cant_override_code ) ; 
@@ -401,7 +401,7 @@
  }} Parameter Л_code22 : XString . 
  
  Definition DStock_Ф_setPriceCode ( code : XCell ) 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ : SMLExpression (S:=Ledger) false True uint := 
  WeakBinding ( ResultExpression ( init cell Л_code22 := code ) ) of 
  {{ 
  Require ( ! DStock_Ф_isFullyInitialized ( ) , error_code::cant_override_code ) ; 
@@ -414,18 +414,18 @@
  price_code_ := ^ Л_code22_ ; 
  
  }} Definition DStock_Ф_isFullyInitialized 
- : SMLExpression (S:=Ledger) false XBool XInteger := 
+ : SMLExpression (S:=Ledger) false XBool uint := 
  {{ 
  ρ return bool_t ( pair_code_ && price_code_ ) ; 
  
  }} Definition DStock_Ф_getTonsCfg 
- : SMLExpression (S:=Ledger) false TonsConfigP XInteger := 
+ : SMLExpression (S:=Ledger) false TonsConfigP uint := 
  {{ 
  ρ return ^ tons_cfg_ ; 
  ; 
  
  }} Definition DStock_Ф_getTradingPairCode 
- : SMLExpression (S:=Ledger) false XCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell uint := 
  {{ 
  ρ return ^ *pair_code_ ; 
  ; 
@@ -433,18 +433,18 @@
  }} Parameter Л_tip3_addr26 : XString . 
  
  Definition DStock_Ф_isFullyInitialized 
- : SMLExpression (S:=Ledger) false XBool XInteger := 
+ : SMLExpression (S:=Ledger) false XBool uint := 
  {{ 
  ρ return bool_t ( pair_code_ && price_code_ ) ; 
  
  }} Definition DStock_Ф_getTonsCfg 
- : SMLExpression (S:=Ledger) false TonsConfigP XInteger := 
+ : SMLExpression (S:=Ledger) false TonsConfigP uint := 
  {{ 
  ρ return ^ tons_cfg_ ; 
  ; 
  
  }} Definition DStock_Ф_getTradingPairCode 
- : SMLExpression (S:=Ledger) false XCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell uint := 
  {{ 
  ρ return ^ *pair_code_ ; 
  ; 
@@ -452,13 +452,13 @@
  }} Parameter Л_tip3_addr26 : XString . 
  
  Definition DStock_Ф_getTonsCfg 
- : SMLExpression (S:=Ledger) false TonsConfigP XInteger := 
+ : SMLExpression (S:=Ledger) false TonsConfigP uint := 
  {{ 
  ρ return ^ tons_cfg_ ; 
  ; 
  
  }} Definition DStock_Ф_getTradingPairCode 
- : SMLExpression (S:=Ledger) false XCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell uint := 
  {{ 
  ρ return ^ *pair_code_ ; 
  ; 
@@ -466,7 +466,7 @@
  }} Parameter Л_tip3_addr26 : XString . 
  
  Definition DStock_Ф_getTradingPairCode 
- : SMLExpression (S:=Ledger) false XCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell uint := 
  {{ 
  ρ return ^ *pair_code_ ; 
  ; 
@@ -474,7 +474,7 @@
  }} Parameter Л_tip3_addr26 : XString . 
  
  Definition DStock_Ф_getSellPriceCode ( tip3_addr : XAddress ) 
- : SMLExpression (S:=Ledger) false XCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell uint := 
  WeakBinding ( ResultExpression ( init addr Л_tip3_addr26 := tip3_addr ) ) of 
  {{ 
  Require ( price_code_ - > ctos ( DStock_ι_) ^^ srefs ( ) == 2 , error_code::unexpected_refs_count_in_code ) ; 
@@ -484,7 +484,7 @@
  }} Parameter Л_tip3_addr127 : XString . 
  
  Definition DStock_Ф_getXchgPriceCode ( tip3_addr1 : XAddress ) ( tip3_addr2 : XAddress ) 
- : SMLExpression (S:=Ledger) false XCell XInteger := 
+ : SMLExpression (S:=Ledger) false XCell uint := 
  WeakBinding ( ResultExpression ( init addr Л_tip3_addr127 := tip3_addr1 ) ) of 
  WeakBinding ( ResultExpression ( init addr Л_tip3_addr227 := tip3_addr2 ) ) of 
  {{ 
@@ -495,26 +495,26 @@
  }} Parameter Л_tip3_root28 : XString . 
  
  Definition DStock_Ф_getSellTradingPair ( tip3_root : XAddress ) 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  WeakBinding ( ResultExpression ( init addr Л_tip3_root28 := tip3_root ) ) of 
  {{ 
  Л_myaddr28_ { tvm_myaddr ( ) } ; 
  Л_pair_data28_ { . 
  
  Definition DStock_Ф_getMinAmount 
- : SMLExpression (S:=Ledger) false XInteger128 XInteger := 
+ : SMLExpression (S:=Ledger) false uint128 uint := 
  {{ 
  ρ return ^ min_amount_ ; 
  ; 
  
  }} Definition DStock_Ф_getDealsLimit 
- : SMLExpression (S:=Ledger) false XInteger8 XInteger := 
+ : SMLExpression (S:=Ledger) false uint8 uint := 
  {{ 
  ρ return ^ deals_limit_ ; 
  ; 
  
  }} Definition DStock_Ф_getNotifyAddr 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ notify_addr_ ; 
  ; 
@@ -522,13 +522,13 @@
  }} Parameter Л_msg32 : XString . 
  
  Definition DStock_Ф_getDealsLimit 
- : SMLExpression (S:=Ledger) false XInteger8 XInteger := 
+ : SMLExpression (S:=Ledger) false uint8 uint := 
  {{ 
  ρ return ^ deals_limit_ ; 
  ; 
  
  }} Definition DStock_Ф_getNotifyAddr 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ notify_addr_ ; 
  ; 
@@ -536,7 +536,7 @@
  }} Parameter Л_msg32 : XString . 
  
  Definition DStock_Ф_getNotifyAddr 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ notify_addr_ ; 
  ; 
@@ -544,7 +544,7 @@
  }} Parameter Л_msg32 : XString . 
  
  Definition DStock_Ф__fallback ( msg : XCell ) ( msg_body : XSlice ) 
- : SMLExpression (S:=Ledger) false XInteger XInteger := 
+ : SMLExpression (S:=Ledger) false uint uint := 
  WeakBinding ( ResultExpression ( init cell Л_msg32 := msg ) ) of 
  WeakBinding ( ResultExpression ( init slice Л_msg_body32 := msg_body ) ) of 
  {{ 
@@ -552,7 +552,7 @@
  ; 
  
  }} Definition DTradingPair_Ф_onDeploy 
- : SMLExpression (S:=Ledger) false XBool XInteger := 
+ : SMLExpression (S:=Ledger) false XBool uint := 
  {{ 
  Require ( int_value ( DTradingPair_ι_) ^^ get ( ) > deploy_value_ , error_code::not_enough_tons ) ; 
  tvm_rawreserve ( DTradingPair_ι_deploy_value_ ^^ get ( ) , rawreserve_flag::up_to ) ; 
@@ -561,13 +561,13 @@
  ) ; 
  
  }} Definition DTradingPair_Ф_getStockAddr 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ stock_addr_ ; 
  ; 
  
  }} Definition DTradingPair_Ф_getTip3Root 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ tip3_root_ ; 
  ; 
@@ -575,7 +575,7 @@
  }} Parameter Л_msg36 : XString . 
  
  Definition DTradingPair_Ф_onDeploy 
- : SMLExpression (S:=Ledger) false XBool XInteger := 
+ : SMLExpression (S:=Ledger) false XBool uint := 
  {{ 
  Require ( int_value ( DTradingPair_ι_) ^^ get ( ) > deploy_value_ , error_code::not_enough_tons ) ; 
  tvm_rawreserve ( DTradingPair_ι_deploy_value_ ^^ get ( ) , rawreserve_flag::up_to ) ; 
@@ -584,13 +584,13 @@
  ) ; 
  
  }} Definition DTradingPair_Ф_getStockAddr 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ stock_addr_ ; 
  ; 
  
  }} Definition DTradingPair_Ф_getTip3Root 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ tip3_root_ ; 
  ; 
@@ -598,13 +598,13 @@
  }} Parameter Л_msg36 : XString . 
  
  Definition DTradingPair_Ф_getStockAddr 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ stock_addr_ ; 
  ; 
  
  }} Definition DTradingPair_Ф_getTip3Root 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ tip3_root_ ; 
  ; 
@@ -612,7 +612,7 @@
  }} Parameter Л_msg36 : XString . 
  
  Definition DTradingPair_Ф_getTip3Root 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  {{ 
  ρ return ^ tip3_root_ ; 
  ; 
@@ -620,7 +620,7 @@
  }} Parameter Л_msg36 : XString . 
  
  Definition DTradingPair_Ф__fallback ( msg : XCell ) ( msg_body : XSlice ) 
- : SMLExpression (S:=Ledger) false XInteger XInteger := 
+ : SMLExpression (S:=Ledger) false uint uint := 
  WeakBinding ( ResultExpression ( init cell Л_msg36 := msg ) ) of 
  WeakBinding ( ResultExpression ( init slice Л_msg_body36 := msg_body ) ) of 
  {{ 
@@ -629,8 +629,8 @@
  
  }} Parameter Л_pubkey37 : XString . 
  
- Definition DFLeXClient_Ф_constructor ( pubkey : XInteger256 ) ( trading_pair_code : XCell ) 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ Definition DFLeXClient_Ф_constructor ( pubkey : uint256 ) ( trading_pair_code : XCell ) 
+ : SMLExpression (S:=Ledger) false True uint := 
  WeakBinding ( ResultExpression ( init int Л_pubkey37 := pubkey ) ) of 
  WeakBinding ( ResultExpression ( init cell Л_trading_pair_code37 := trading_pair_code ) ) of 
  {{ 
@@ -639,7 +639,7 @@
  workchain_id_ := ^ std::get < addr_std > ( address { tvm_myaddr ( ) } . 
  
  Definition DFLeXClient_Ф_setStockCfg ( tons_cfg : TonsConfigP ) ( stock : XAddress ) ( notify_addr : XAddress ) 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ : SMLExpression (S:=Ledger) false True uint := 
  WeakBinding ( ResultExpression ( init TonsConfigP Л_tons_cfg38 := tons_cfg ) ) of 
  WeakBinding ( ResultExpression ( init addr Л_stock38 := stock ) ) of 
  WeakBinding ( ResultExpression ( init addr Л_notify_addr38 := notify_addr ) ) of 
@@ -652,8 +652,8 @@
  
  }} Parameter Л_stock_addr39 : XString . 
  
- Definition DFLeXClient_Ф_deployTradingPair ( stock_addr : XAddress ) ( tip3_root : XAddress ) ( deploy_min_value : XInteger128 ) ( deploy_value : XInteger128 ) 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ Definition DFLeXClient_Ф_deployTradingPair ( stock_addr : XAddress ) ( tip3_root : XAddress ) ( deploy_min_value : uint128 ) ( deploy_value : uint128 ) 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  WeakBinding ( ResultExpression ( init addr Л_stock_addr39 := stock_addr ) ) of 
  WeakBinding ( ResultExpression ( init addr Л_tip3_root39 := tip3_root ) ) of 
  WeakBinding ( ResultExpression ( init int Л_deploy_min_value39 := deploy_min_value ) ) of 
@@ -665,7 +665,7 @@
  Л_pair_data39_ { . 
  
  Definition DFLeXClient_Ф_deployPriceWithSell ( args_cl : XCell ) 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  WeakBinding ( ResultExpression ( init cell Л_args_cl40 := args_cl ) ) of 
  {{ 
  Require ( msg_pubkey ( ) == owner_ , error_code::message_sender_is_not_my_owner ) ; 
@@ -678,7 +678,7 @@
  Л_sell_args40_ := ^ { . 
  
  Definition DFLeXClient_Ф_deployPriceWithBuy ( args_cl : XCell ) 
- : SMLExpression (S:=Ledger) false XAddress XInteger := 
+ : SMLExpression (S:=Ledger) false XAddress uint := 
  WeakBinding ( ResultExpression ( init cell Л_args_cl41 := args_cl ) ) of 
  {{ 
  Require ( msg_pubkey ( ) == owner_ , error_code::message_sender_is_not_my_owner ) ; 
@@ -690,7 +690,7 @@
  DFLeXClient_ι_price_addr ^^ deploy ( Л_state_init41_ , Grams ( Л_args41_ ^^ deploy_value . 
  
  Definition DFLeXClient_Ф_cancelSellOrder ( args_cl : XCell ) 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ : SMLExpression (S:=Ledger) false True uint := 
  WeakBinding ( ResultExpression ( init cell Л_args_cl42 := args_cl ) ) of 
  {{ 
  Require ( msg_pubkey ( ) == owner_ , error_code::message_sender_is_not_my_owner ) ; 
@@ -702,7 +702,7 @@
  price_addr ( Grams ( Л_args42_ ^^ value . 
  
  Definition DFLeXClient_Ф_cancelBuyOrder ( args_cl : XCell ) 
- : SMLExpression (S:=Ledger) false True XInteger := 
+ : SMLExpression (S:=Ledger) false True uint := 
  WeakBinding ( ResultExpression ( init cell Л_args_cl43 := args_cl ) ) of 
  {{ 
  Require ( msg_pubkey ( ) == owner_ , error_code::message_sender_is_not_my_owner ) ; 
@@ -714,7 +714,7 @@
  price_addr ( Grams ( Л_args43_ ^^ value . 
  
  Definition DFLeXClient_Ф_getOwner 
- : SMLExpression (S:=Ledger) false XInteger256 XInteger := 
+ : SMLExpression (S:=Ledger) false uint256 uint := 
  {{ 
  ρ return ^ owner_ ; 
  ; 
@@ -722,7 +722,7 @@
  }} Parameter Л_msg45 : XString . 
  
  Definition DFLeXClient_Ф__fallback ( msg : XCell ) ( msg_body : XSlice ) 
- : SMLExpression (S:=Ledger) false XInteger XInteger := 
+ : SMLExpression (S:=Ledger) false uint uint := 
  WeakBinding ( ResultExpression ( init cell Л_msg45 := msg ) ) of 
  WeakBinding ( ResultExpression ( init slice Л_msg_body45 := msg_body ) ) of 
  {{ 
@@ -731,8 +731,8 @@
  
  }} Parameter Л_price46 : XString . 
  
- Definition DFLeXClient_Ф_preparePrice ( price : XInteger128 ) ( min_amount : XInteger128 ) ( deals_limit : XInteger8 ) ( tip3cfg : Tip3ConfigP ) ( price_code : XCell ) 
- : SMLExpression (S:=Ledger) false ( StateInitP # XAddress # XInteger256 ) XInteger := 
+ Definition DFLeXClient_Ф_preparePrice ( price : uint128 ) ( min_amount : uint128 ) ( deals_limit : uint8 ) ( tip3cfg : Tip3ConfigP ) ( price_code : XCell ) 
+ : SMLExpression (S:=Ledger) false ( StateInitP # XAddress # uint256 ) uint := 
  WeakBinding ( ResultExpression ( init int Л_price46 := price ) ) of 
  WeakBinding ( ResultExpression ( init int Л_min_amount46 := min_amount ) ) of 
  WeakBinding ( ResultExpression ( init int Л_deals_limit46 := deals_limit ) ) of 
@@ -742,7 +742,7 @@
  Л_price_data46_ { . 
  
  Definition Ф_prepare_price_state_init_and_addr ( price_data : DPriceP ) ( price_code : XCell ) 
- : SMLExpression (S:=Ledger) false ( StateInitP # XInteger256 ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( StateInitP # uint256 ) uint := 
  WeakBinding ( ResultExpression ( init DPriceP Л_price_data100 := price_data ) ) of 
  WeakBinding ( ResultExpression ( init cell Л_price_code100 := price_code ) ) of 
  {{ 
@@ -753,7 +753,7 @@
  }} Parameter Л_pair_data101 : XString . 
  
  Definition Ф_prepare_trading_pair_state_init_and_addr ( pair_data : DTradingPairP ) ( pair_code : XCell ) 
- : SMLExpression (S:=Ledger) false ( StateInitP # XInteger256 ) XInteger := 
+ : SMLExpression (S:=Ledger) false ( StateInitP # uint256 ) uint := 
  WeakBinding ( ResultExpression ( init DTradingPairP Л_pair_data101 := pair_data ) ) of 
  WeakBinding ( ResultExpression ( init cell Л_pair_code101 := pair_code ) ) of 
  {{ 
@@ -763,8 +763,8 @@
  ρ return [ Л_pair_init101_ , uint256 ( tvm_hash ( Л_pair_init_cl101_ ) ) ] 
  }} Parameter Л_amount102 : XString . 
  
- Definition Ф_calc_cost ( amount : XInteger128 ) ( price : XInteger128 ) 
- : SMLExpression (S:=Ledger) false ( XMaybe XInteger128 ) XInteger := 
+ Definition Ф_calc_cost ( amount : uint128 ) ( price : uint128 ) 
+ : SMLExpression (S:=Ledger) false ( XMaybe uint128 ) uint := 
  WeakBinding ( ResultExpression ( init int Л_amount102 := amount ) ) of 
  WeakBinding ( ResultExpression ( init int Л_price102 := price ) ) of 
  {{ 
@@ -772,8 +772,8 @@
  if ^ ( Л_tons_cost102_ > > 128 ) then { ρ return [ ] 
  }} Parameter Л_tip3root103 : XString . 
  
- Definition Ф_process_queue_impl ( tip3root : XAddress ) ( notify_addr : IStockNotifyPtrP ) ( price : XInteger128 ) ( deals_limit : XInteger8 ) ( tons_cfg : TonsConfigP ) ( sell_idx : XInteger ) ( buy_idx : XInteger ) ( sells_amount : XInteger128 ) ( sells : ( XQueue SellInfoP ) ) ( buys_amount : XInteger128 ) ( buys : ( XQueue BuyInfoP ) ) 
- : SMLExpression (S:=Ledger) false process_retP XInteger := 
+ Definition Ф_process_queue_impl ( tip3root : XAddress ) ( notify_addr : IStockNotifyPtrP ) ( price : uint128 ) ( deals_limit : uint8 ) ( tons_cfg : TonsConfigP ) ( sell_idx : uint ) ( buy_idx : uint ) ( sells_amount : uint128 ) ( sells : ( XQueue SellInfoP ) ) ( buys_amount : uint128 ) ( buys : ( XQueue BuyInfoP ) ) 
+ : SMLExpression (S:=Ledger) false process_retP uint := 
  WeakBinding ( ResultExpression ( init addr Л_tip3root103 := tip3root ) ) of 
  WeakBinding ( ResultExpression ( init IStockNotifyPtrP Л_notify_addr103 := notify_addr ) ) of 
  WeakBinding ( ResultExpression ( init int Л_price103 := price ) ) of 

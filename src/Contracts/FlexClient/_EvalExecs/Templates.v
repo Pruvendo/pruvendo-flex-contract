@@ -6,7 +6,7 @@ Require Import Contracts.Flex.Ledger.
 Require Import Contracts.Flex.Functions.FuncSig.
 Require Import Project.CommonConstSig.
 Require Import Contracts.Flex.Functions.FuncNotations.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import FinProof.Common. 
 Require Import FinProof.ProgrammingWith.
 (* From elpi Require Import elpi. *)

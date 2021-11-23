@@ -1,17 +1,17 @@
-Require Import UMLang.SolidityNotations2. 
+Require Import UMLang.BasicModuleTypes. 
 
 Module flexTypes (xt: XTypesSig).
 
 Import xt.
 
-Definition XTokensType     := XInteger.
-Definition WalletGramsType256 := XInteger.
-Definition WalletGramsType128 := XInteger.
-Definition XGrams := XInteger.
+Definition XTokensType     := uint.
+Definition WalletGramsType256 := uint.
+Definition WalletGramsType128 := uint.
+Definition XGrams := uint.
 Definition XHandle := XMaybe . (*interesting*)
-Definition XBytes := XHMap XInteger XInteger .
-Definition TokenId := XInteger.
-Definition RightId := XInteger.
-Definition RightsType := XInteger .
+Definition XBytes := XHMap uint uint .
+Definition TokenId := uint.
+Definition RightId := uint.
+Definition RightsType := uint .
 
 End flexTypes.

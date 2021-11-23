@@ -8,7 +8,7 @@ Require Import FinProof.StateMonad21.
 Require Import UMLang.ProofEnvironment2.
 Require Import UMLang.SML_NG28.
 
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 Require Import Contracts.PriceXchg.Ledger.
@@ -34,18 +34,18 @@ Local Open Scope xlist_scope.
 
 Locate "constructor_ ( _ )".
 (* 
-Axiom constructor_exec: forall (l: Ledger) (depth: XInteger) , 
+Axiom constructor_exec: forall (l: Ledger) (depth: uint) , 
       exec_state (Uinterpreter {{ constructor_ ( #{depth} ) }} ) l = l.
 
 
-Axiom constructor_eval: forall (l: Ledger) (depth: XInteger) , 
+Axiom constructor_eval: forall (l: Ledger) (depth: uint) , 
       eval_state (sRReader || constructor_ ( #{depth} ) || ) l = ControlValue true PhantomPoint.
 
 
-Axiom deploy_exec: forall (l: Ledger) (value: XInteger) , 
+Axiom deploy_exec: forall (l: Ledger) (value: uint) , 
       exec_state (Uinterpreter {{ deploy_ ( #{value} ) }} ) l = l.
 
-Axiom deploy_eval: forall (l: Ledger) (value: XInteger) , 
+Axiom deploy_eval: forall (l: Ledger) (value: uint) , 
       eval_state (sRReader || deploy_ ( #{value} ) || ) l = ControlValue false default. *)
 
 End PriceXchgEvalExecSig.

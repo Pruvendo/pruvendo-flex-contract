@@ -2,7 +2,7 @@
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
 
-Require Import UMLang.SolidityNotations2.
+Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
 Require Import Project.CommonConstSig.
