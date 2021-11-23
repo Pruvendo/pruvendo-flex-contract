@@ -1,12 +1,12 @@
-Require Import UMLang.SolidityNotations2.
+Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
 Require Import UrsusStdLib.stdFunc.
-Require Import UrsusStdLib.stdNotations.
-Require Import UrsusStdLib.stdFuncNotations.
+Require Import UrsusStdLib.stdNotations_cpp.
+Require Import UrsusStdLib.stdFuncNotations_cpp.
 
-Require Import UrsusTVM.tvmFunc.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.tvmFunc_cpp.
+Require Import UrsusTVM.tvmNotations_cpp.
 Require Import FinProof.ProgrammingWith.  
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
