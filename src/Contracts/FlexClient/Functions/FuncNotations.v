@@ -15,6 +15,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
+Require Import CommonNotations.
 Require Import Contracts.FlexClient.Ledger.
 Require Import Contracts.FlexClient.Functions.FuncSig.
 
@@ -37,7 +38,7 @@ Import xt.
 Import UrsusNotations.
 Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
-
+(* 
 Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'Tip3Config.symbol' " := ( Tip3Config_ι_symbol ) (in custom ULValue at level 0) : ursus_scope. 
@@ -55,7 +56,7 @@ Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at l
  Notation " 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address ) (in custom URValue at level 0) : ursus_scope.  *)
  Notation " 'PayloadArgs.sell' " := ( PayloadArgs_ι_sell ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'PayloadArgs.sell' " := ( PayloadArgs_ι_sell ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'PayloadArgs.amount' " := ( PayloadArgs_ι_amount ) (in custom ULValue at level 0) : ursus_scope. 
@@ -84,7 +85,7 @@ Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at l
  Notation " 'DXchgPair.min_amount_' " := ( DXchgPair_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'DXchgPair.notify_addr_' " := ( DXchgPair_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DXchgPair.notify_addr_' " := ( DXchgPair_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.transfer_tip3' " := ( TonsConfig_ι_transfer_tip3 ) (in custom ULValue at level 0) : ursus_scope. 
+ (* Notation " 'TonsConfig.transfer_tip3' " := ( TonsConfig_ι_transfer_tip3 ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'TonsConfig.transfer_tip3' " := ( TonsConfig_ι_transfer_tip3 ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'TonsConfig.return_ownership' " := ( TonsConfig_ι_return_ownership ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'TonsConfig.return_ownership' " := ( TonsConfig_ι_return_ownership ) (in custom URValue at level 0) : ursus_scope. 
@@ -95,14 +96,14 @@ Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at l
  Notation " 'TonsConfig.process_queue' " := ( TonsConfig_ι_process_queue ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'TonsConfig.process_queue' " := ( TonsConfig_ι_process_queue ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'TonsConfig.send_notify' " := ( TonsConfig_ι_send_notify ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.send_notify' " := ( TonsConfig_ι_send_notify ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DTradingPair.flex_addr_' " := ( DTradingPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'TonsConfig.send_notify' " := ( TonsConfig_ι_send_notify ) (in custom URValue at level 0) : ursus_scope.  *)
+(*  Notation " 'DTradingPair.flex_addr_' " := ( DTradingPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DTradingPair.flex_addr_' " := ( DTradingPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'DTradingPair.tip3_root_' " := ( DTradingPair_ι_tip3_root_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DTradingPair.tip3_root_' " := ( DTradingPair_ι_tip3_root_ ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'DTradingPair.deploy_value_' " := ( DTradingPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'DTradingPair.deploy_value_' " := ( DTradingPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
- 
+  *)
  Definition owner__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType owner_ ) : ULValue uint256 ) . 
  Definition owner__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType owner_ ) : URValue uint256 false ) . 
  Notation " '_owner_' " := ( owner__left ) (in custom ULValue at level 0) : ursus_scope. 
