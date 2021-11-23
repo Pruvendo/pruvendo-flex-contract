@@ -12,6 +12,7 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonTypes. 
 Require Import Contracts.Flex.ClassTypes.
+Require Contracts.TradingPair.ClassTypes.
 Require Import Contracts.Flex.Interface.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
@@ -45,9 +46,10 @@ Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm.
 
 Module FlexPublicInterfaceModule := PublicInterface xt sm.
 
-Module Import BasicTypesClass := BasicTypes xt sm.
+Module Export BasicTypesModule := BasicTypes xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Export TypesModuleForLedger := ClassTypes xt sm .
+Module Export ClassTypesModule := Flex.ClassTypes.ClassTypes xt sm .
+Module TradingPairClassTypesModule := TradingPair.ClassTypes.ClassTypes xt sm .
 Import xt. 
 
 
@@ -117,7 +119,7 @@ Elpi GeneratePruvendoRecord ContractL ContractFields .
  Opaque LocalState000110LRecord . 
  
  Inductive LocalStateFields000111I := | ι0001110 | ι0001111 . 
- Definition LocalState000111L := [ ( XHMap (string*nat) DTradingPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState000111L := [ ( XHMap (string*nat) TradingPairClassTypesModule.DTradingPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState000111L LocalStateFields000111I . 
  Opaque LocalState000111LRecord . 
  

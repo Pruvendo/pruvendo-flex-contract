@@ -77,8 +77,11 @@ Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields .
  ( XUInteger128 ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ; 
  ( addr_std_fixedLRecord ) : Type ] .
+
+Opaque addr_std_fixedLRecord.
 Elpi GeneratePruvendoRecord PayloadArgsL PayloadArgsFields . 
- Opaque PayloadArgsLRecord . 
+
+Opaque PayloadArgsLRecord . 
 
 (* 2 *) Definition OrderInfoXchgL : list Type := 
  [ ( XUInteger128 ) : Type ; 
