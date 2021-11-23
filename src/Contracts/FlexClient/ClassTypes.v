@@ -29,12 +29,12 @@ Locate XBool.
 (* 1 *) Inductive PayloadArgsFields := | PayloadArgs_ι_sell | PayloadArgs_ι_amount | PayloadArgs_ι_receive_tip3_wallet | PayloadArgs_ι_client_addr .
 (* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
 (* 1 *) Inductive DXchgPairFields := | DXchgPair_ι_flex_addr_ | DXchgPair_ι_tip3_major_root_ | DXchgPair_ι_tip3_minor_root_ | DXchgPair_ι_min_amount_ | DXchgPair_ι_notify_addr_ .
-(* 1 *) (* Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify . *)
-(* 1 *) (* Inductive DTradingPairFields := 
+(* 1 *) (* Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .  *)
+(* 1 *) Inductive DTradingPairFields := 
 | DTradingPair_ι_flex_addr_ 
 | DTradingPair_ι_tip3_root_ 
 | DTradingPair_ι_deploy_value_ 
-| DTradingPair_ι_notify_addr_ . *)
+| DTradingPair_ι_notify_addr_ .
 (* 1 *) Inductive DPriceFields := | DPrice_ι_price_ | DPrice_ι_sells_amount_ | DPrice_ι_buys_amount_ | DPrice_ι_flex_ | DPrice_ι_min_amount_ | DPrice_ι_deals_limit_ | DPrice_ι_notify_addr_ | DPrice_ι_workchain_id_ | DPrice_ι_tons_cfg_ | DPrice_ι_tip3_code_ | DPrice_ι_tip3cfg_ | DPrice_ι_sells_ | DPrice_ι_buys_ .
 (* 1 *) Inductive DPriceXchgFields := | DPriceXchg_ι_price_ | DPriceXchg_ι_sells_amount_ | DPriceXchg_ι_buys_amount_ | DPriceXchg_ι_flex_ | DPriceXchg_ι_min_amount_ | DPriceXchg_ι_deals_limit_ | DPriceXchg_ι_notify_addr_ | DPriceXchg_ι_workchain_id_ | DPriceXchg_ι_tons_cfg_ | DPriceXchg_ι_tip3_code_ | DPriceXchg_ι_major_tip3cfg_ | DPriceXchg_ι_minor_tip3cfg_ | DPriceXchg_ι_sells_ | DPriceXchg_ι_buys_ .
 (* 1 *) Inductive OrderInfoFields := | OrderInfo_ι_original_amount | OrderInfo_ι_amount | OrderInfo_ι_account | OrderInfo_ι_tip3_wallet | OrderInfo_ι_client_addr | OrderInfo_ι_order_finish_time .
@@ -64,7 +64,7 @@ Elpi GeneratePruvendoRecord TickTockL TickTockFields .
  ( XUInteger256 ) : Type ] .
 Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
  Opaque addr_std_fixedLRecord .  *)
-
+ Opaque addr_std_fixedLRecord .
 (* 2 *) Definition PayloadArgsL : list Type := 
  [ ( XBool ) : Type ; 
  ( XUInteger128 ) : Type ; 
@@ -101,13 +101,13 @@ Elpi GeneratePruvendoRecord DXchgPairL DXchgPairFields .
 Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
  Opaque TonsConfigLRecord .  *)
 
-(* 2 *) (* Definition DTradingPairL : list Type := 
+(* 2 *) Definition DTradingPairL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XUInteger128 ) : Type ;
  ( XAddress ) :Type ] .
 Elpi GeneratePruvendoRecord DTradingPairL DTradingPairFields . 
- Opaque DTradingPairLRecord . *)
+ Opaque DTradingPairLRecord .
  
 (* 2 *) Definition OrderInfoL : list Type := 
  [ ( XUInteger128 ) : Type ; 
