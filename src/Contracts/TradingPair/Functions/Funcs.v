@@ -14,6 +14,7 @@ Require Import UMLang.ProofEnvironment2.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
+Require Import CommonNotations.
 Require Import Project.CommonConstSig.
 (*Fully qualified name are mandatory in multi-contract environment*)
 Require Import Contracts.TradingPair.Ledger.
@@ -60,7 +61,7 @@ Import ha.
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 
-Export SpecModuleForFuncNotations(* ForFuncs *).tvmNotationsModule.
+Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule.
 
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  

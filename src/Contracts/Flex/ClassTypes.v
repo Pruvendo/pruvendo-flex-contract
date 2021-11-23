@@ -21,18 +21,18 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
+(* 1 *) (* Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock . *)
 (* 1 *) Inductive lend_recordFields := | lend_record_ι_lend_balance | lend_record_ι_lend_finish_time .
-(* 1 *) Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .
+(* 1 *) (* Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address . *)
 (* 1 *) Inductive allowance_infoFields := | allowance_info_ι_spender | allowance_info_ι_remainingTokens .
 (* 1 *) Inductive DWrapperFields := | DWrapper_ι_name_ | DWrapper_ι_symbol_ | DWrapper_ι_decimals_ | DWrapper_ι_workchain_id_ | DWrapper_ι_root_public_key_ | DWrapper_ι_total_granted_ | DWrapper_ι_internal_wallet_code_ | DWrapper_ι_owner_address_ | DWrapper_ι_start_balance_ | DWrapper_ι_external_wallet_ .
 (* 1 *) Inductive DXchgPairFields := | DXchgPair_ι_flex_addr_ | DXchgPair_ι_tip3_major_root_ | DXchgPair_ι_tip3_minor_root_ | DXchgPair_ι_min_amount_ | DXchgPair_ι_notify_addr_ .
 (* 1 *) Inductive DTONTokenWalletExternalFields := | DTONTokenWalletExternal_ι_name_ | DTONTokenWalletExternal_ι_symbol_ | DTONTokenWalletExternal_ι_decimals_ | DTONTokenWalletExternal_ι_balance_ | DTONTokenWalletExternal_ι_root_public_key_ | DTONTokenWalletExternal_ι_wallet_public_key_ | DTONTokenWalletExternal_ι_root_address_ | DTONTokenWalletExternal_ι_owner_address_ | DTONTokenWalletExternal_ι_code_ | DTONTokenWalletExternal_ι_allowance_ | DTONTokenWalletExternal_ι_workchain_id_ .
 (* 1 *) Inductive DTONTokenWalletInternalFields := | DTONTokenWalletInternal_ι_name_ | DTONTokenWalletInternal_ι_symbol_ | DTONTokenWalletInternal_ι_decimals_ | DTONTokenWalletInternal_ι_balance_ | DTONTokenWalletInternal_ι_root_public_key_ | DTONTokenWalletInternal_ι_wallet_public_key_ | DTONTokenWalletInternal_ι_root_address_ | DTONTokenWalletInternal_ι_owner_address_ | DTONTokenWalletInternal_ι_lend_ownership_ | DTONTokenWalletInternal_ι_code_ | DTONTokenWalletInternal_ι_workchain_id_ .
-(* 1 *) Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address .
+(* 1 *) (* Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address . *)
 (* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
-(* 1 *) Inductive DTradingPairFields := | DTradingPair_ι_flex_addr_ | DTradingPair_ι_tip3_root_ | DTradingPair_ι_deploy_value_ | DTradingPair_ι_min_amount_ | DTradingPair_ι_notify_addr_.
-(* 1 *) Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
+(* 1 *) (* Inductive DTradingPairFields := | DTradingPair_ι_flex_addr_ | DTradingPair_ι_tip3_root_ | DTradingPair_ι_deploy_value_ | DTradingPair_ι_min_amount_ | DTradingPair_ι_notify_addr_. *)
+(* 1 *) (* Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify . *)
 (* 1 *) Inductive ListingConfigFields := | ListingConfig_ι_register_wrapper_cost | ListingConfig_ι_reject_wrapper_cost | ListingConfig_ι_wrapper_deploy_value | ListingConfig_ι_wrapper_keep_balance | ListingConfig_ι_ext_wallet_balance | ListingConfig_ι_set_internal_wallet_value | ListingConfig_ι_register_pair_cost | ListingConfig_ι_reject_pair_cost | ListingConfig_ι_pair_deploy_value | ListingConfig_ι_pair_keep_balance | ListingConfig_ι_register_return_value .
 (* 1 *) Inductive WrapperListingRequestFields := | WrapperListingRequest_ι_client_addr | WrapperListingRequest_ι_client_funds | WrapperListingRequest_ι_tip3cfg .
 (* 1 *) Inductive WrapperListingRequestWithPubkeyFields := | WrapperListingRequestWithPubkey_ι_wrapper_pubkey | WrapperListingRequestWithPubkey_ι_request .
@@ -42,17 +42,17 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive XchgPairListingRequestWithPubkeyFields := | XchgPairListingRequestWithPubkey_ι_request_pubkey | XchgPairListingRequestWithPubkey_ι_request .
 (* 1 *) Inductive FlexOwnershipInfoFields := | FlexOwnershipInfo_ι_deployer_pubkey | FlexOwnershipInfo_ι_ownership_description | FlexOwnershipInfo_ι_owner_contract .
 (* 1 *) Inductive FlexDetailsFields := | FlexDetails_ι_initialized | FlexDetails_ι_tons_cfg | FlexDetails_ι_listing_cfg | FlexDetails_ι_trading_pair_code | FlexDetails_ι_xchg_pair_code | FlexDetails_ι_deals_limit | FlexDetails_ι_ownership | FlexDetails_ι_wrapper_listing_requests | FlexDetails_ι_trading_pair_listing_requests | FlexDetails_ι_xchg_pair_listing_requests .
-(* 2 *) Definition addr_std_fixedL : list Type := 
+(* 2 *) (* Definition addr_std_fixedL : list Type := 
  [ ( XUInteger8 ) : Type ; 
  ( XUInteger256 ) : Type ] .
 Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
- Opaque addr_std_fixedLRecord . 
+ Opaque addr_std_fixedLRecord .  *)
 
-(* 2 *) Definition TickTockL : list Type := 
+(* 2 *)(*  Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
  ( XBool ) : Type ] .
 Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
- Opaque TickTockLRecord .
+ Opaque TickTockLRecord . *)
 
 (* 2 *) Definition lend_recordL : list Type := 
  [ ( XUInteger128 ) : Type ; 
@@ -119,14 +119,14 @@ Elpi GeneratePruvendoRecord DTONTokenWalletExternalL DTONTokenWalletExternalFiel
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
  Opaque DTONTokenWalletInternalLRecord . 
 
-(* 2 *) Definition Tip3ConfigL : list Type := 
+(* 2 *) (* Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
  ( XUInteger8 ) : Type ; 
  ( XUInteger256 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
- Opaque Tip3ConfigLRecord . 
+ Opaque Tip3ConfigLRecord .  *)
 
 (* 2 *) Definition StateInitL : list Type := 
  [ ( ( XMaybe XUInteger ) ) : Type ;
@@ -137,16 +137,16 @@ Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields .
 Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
  Opaque StateInitLRecord . 
 
-(* 2 *) Definition DTradingPairL : list Type := 
+(* 2 *) (* Definition DTradingPairL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XUInteger128 ) : Type ;
  ( XUInteger128 ) : Type ;
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord DTradingPairL DTradingPairFields . 
- Opaque DTradingPairLRecord . 
+ Opaque DTradingPairLRecord .  *)
 
-(* 2 *) Definition TonsConfigL : list Type := 
+(* 2 *)(*  Definition TonsConfigL : list Type := 
  [ ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
@@ -154,7 +154,7 @@ Elpi GeneratePruvendoRecord DTradingPairL DTradingPairFields .
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
- Opaque TonsConfigLRecord . 
+ Opaque TonsConfigLRecord .  *)
 
 (* 2 *) Definition ListingConfigL : list Type := 
  [ ( XUInteger128 ) : Type ; 

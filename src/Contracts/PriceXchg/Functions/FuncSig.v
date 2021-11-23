@@ -16,7 +16,7 @@ Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export CommonNotationsModule := CommonNotations xt sm LedgerModuleForFuncSig. 
 (* Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. *)
 Module Type SpecSig.
-Print TonsConfig_ι_transfer_tip3.
+
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 Parameter make_deal : ( (ULValue OrderInfoXchgLRecord ) ) -> ( (ULValue OrderInfoXchgLRecord ) ) -> UExpression ( XBool # (XBool # uint128) ) false . 

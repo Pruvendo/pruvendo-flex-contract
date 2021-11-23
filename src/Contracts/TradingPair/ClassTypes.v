@@ -22,14 +22,14 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
+(* 1 *) (* Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock . *)
 (* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
 
-(* 2 *) Definition TickTockL : list Type := 
+(* 2 *) (* Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
  ( XBool ) : Type ] .
 Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
- Opaque TickTockLRecord . 
+ Opaque TickTockLRecord .  *)
 
 (* 2 *) Definition StateInitL : list Type := 
  [ ( ( XMaybe XUInteger ) ) : Type ; 

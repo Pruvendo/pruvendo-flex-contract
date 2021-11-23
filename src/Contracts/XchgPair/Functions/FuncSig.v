@@ -6,13 +6,14 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import UrsusStdLib.Cpp.stdTypes.
 
+Require Import CommonNotations.
 Require Import Contracts.XchgPair.ClassTypes.
 Require Import Contracts.XchgPair.Ledger.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 Module LedgerModuleForFuncSig := Ledger xt sm .
-Module Export tvmNotationsModule := tvmNotations xt sm LedgerModuleForFuncSig. 
+Module Export CommonNotationsModule := CommonNotations xt sm LedgerModuleForFuncSig. 
 (* Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. *)
 Module Type SpecSig.
 
