@@ -8,6 +8,7 @@ Require Import CommonNotations.
 Require Import Contracts.Flex.ClassTypesNotations.
 Require Import Contracts.Flex.ClassTypes.
 Require Import Contracts.Flex.Ledger.
+Require Contracts.TradingPair.ClassTypes.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
@@ -58,9 +59,9 @@ Parameter constructor : ( uint256 ) -> ( XString ) -> ( XMaybe XAddress ) -> ( T
  Parameter prepare_flex_state_init_and_addr : ( ContractLRecord ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
  Parameter prepare_external_wallet_state_init_and_addr : ( XString ) -> ( XString ) -> ( uint8 ) -> ( uint256 ) -> ( uint256 ) -> ( XAddress ) -> ( XMaybe XAddress ) -> ( XCell ) -> ( uint8 ) -> UExpression ( StateInitLRecord * uint256 ) false . 
  Parameter prepare_internal_wallet_state_init_and_addr : ( XString ) -> ( XString ) -> ( uint8 ) -> ( uint256 ) -> ( uint256 ) -> ( XAddress ) -> ( XMaybe XAddress ) -> ( XCell ) -> ( uint8 ) -> UExpression ( StateInitLRecord * uint256 ) false . 
- Parameter prepare_trading_pair_state_init_and_addr : ( DTradingPairLRecord ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
+ Parameter prepare_trading_pair_state_init_and_addr : ( TradingPairClassTypesModule.DTradingPairLRecord ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
  Parameter prepare_trading_pair : ( XAddress ) -> ( XAddress ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
- Parameter prepare_xchg_pair_state_init_and_addr : ( DXchgPairLRecord ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
+ Parameter prepare_xchg_pair_state_init_and_addr : ( XchgPairClassTypesModule.DXchgPairLRecord ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
  Parameter approveTradingPairImpl : ( uint256 ) -> (XHMap uint256 (uint256 * TradingPairListingRequestLRecord)) -> ( XCell ) -> ( uint8 ) -> ( ListingConfigLRecord ) -> UExpression ( XAddress * (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) ) true .
  Parameter rejectTradingPairImpl : ( uint256 ) -> (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) -> ( ListingConfigLRecord ) -> UExpression ( XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) true . 
  Parameter approveXchgPairImpl : ( uint256 ) -> ( XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) -> ( XCell ) -> ( uint8 ) -> ( ListingConfigLRecord ) -> UExpression ( XAddress * (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) ) true . 

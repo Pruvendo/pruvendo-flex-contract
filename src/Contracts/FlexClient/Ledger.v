@@ -20,6 +20,9 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonTypes. 
 Require Import Contracts.FlexClient.ClassTypes.
+Require Contracts.TradingPair.ClassTypes.
+Require Contracts.XchgPair.ClassTypes.
+Require Contracts.TokenWallet.ClassTypes.
 Require Import Contracts.FlexClient.Interface.
 
 Local Open Scope record. 
@@ -28,40 +31,33 @@ Local Open Scope glist_scope.
 
 
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_SelfDeployer | _EmittedEvents | _MessagesLog.
-(* 1 *) Inductive ContractFields := | owner_ | trading_pair_code_ | xchg_pair_code_ | workchain_id_ | tons_cfg_ | flex_ | ext_wallet_code_ | flex_wallet_code_ | flex_wrapper_code_ .
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 Definition ContractFields := DFlexClientFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
-Module SelfDeployerPublicInterfaceModule := PublicInterface xt sm.
+Module FlexClientPublicInterfaceModule := PublicInterface xt sm.
 
 (* Module Import BasicTypesClass := BasicTypes xt sm. *)
+Module Export BasicTypesModule := BasicTypes xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Export TypesModuleForLedger := ClassTypes xt sm .
-Import xt. 
+Module FlexClientClassTypesModule := FlexClient.ClassTypes.ClassTypes xt sm .
+Module TradingPairClassTypesModule := TradingPair.ClassTypes.ClassTypes xt sm .
+Module XchgPairClassTypesModule := XchgPair.ClassTypes.ClassTypes xt sm .
+Module TokenWalletClassTypesModule := TokenWallet.ClassTypes.ClassTypes xt sm .
+Import xt.
 
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ ( XQueue SelfDeployerPublicInterfaceModule.OutgoingMessage ) : Type ; 
+ [ ( XQueue FlexClientPublicInterfaceModule.OutgoingMessage ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL := DFlexClientLRecord(* : list Type := 
- [ ( XUInteger256 ) : Type ; 
- ( XCell ) : Type ; 
- ( XCell ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( TonsConfigLRecord ) : Type ; 
- ( XAddress ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ] .
-Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord .  *)
- Definition ContractLEmbeddedType := DFlexClientLEmbeddedType.
+(* 2 *) Definition ContractLRecord := FlexClientClassTypesModule.DFlexClientLRecord.
+
+ Definition ContractLEmbeddedType := FlexClientClassTypesModule.DFlexClientLEmbeddedType.
 
 Inductive LocalStateFields00000I := | ι000000 | ι000001 . 
  Definition LocalState00000L := [ ( XHMap (string*nat) XUInteger128 ) : Type ; ( XHMap string nat ) : Type ] . 
@@ -74,7 +70,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState00001LRecord . 
  
  Inductive LocalStateFields00010I := | ι000100 | ι000101 . 
- Definition LocalState00010L := [ ( XHMap (string*nat) DTradingPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00010L := [ ( XHMap (string*nat) TradingPairClassTypesModule.DTradingPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00010L LocalStateFields00010I . 
  Opaque LocalState00010LRecord . 
  

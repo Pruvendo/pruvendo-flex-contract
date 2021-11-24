@@ -19,9 +19,6 @@ Definition IPricePtr := XAddress.
 Definition TokensType := XUInteger256. 
 Definition WalletGramsType := XUInteger128. 
 Definition Grams := XUInteger16 . 
-(*******TODO***************************)
-Definition auto := XUInteger . 
-(**************************************)                            
 Definition addr_std_compact := XAddress . 
 Definition varuint32 := XUInteger32 .
 Definition address_t := XAddress.
