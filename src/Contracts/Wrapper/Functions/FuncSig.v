@@ -7,8 +7,8 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import UrsusStdLib.Cpp.stdTypes.
 
 Require Import CommonNotations.
-Require Import Contracts.Price.ClassTypes.
-Require Import Contracts.Price.Ledger.
+Require Import Contracts.Wrapper.ClassTypes.
+Require Import Contracts.Wrapper.Ledger.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
@@ -20,33 +20,35 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-Parameter make_deal : ( ( OrderInfoLRecord ) ) -> ( ( OrderInfoLRecord ) ) -> UExpression ( XBool # (XBool # uint128) ) false . 
- Parameter extract_active_order : ( XMaybe (uint # OrderInfoLRecord ) ) -> ( ( XQueue OrderInfoLRecord ) ) -> ( ( uint128 ) ) -> ( ( XBool ) ) -> UExpression ( ( XMaybe (uint # OrderInfoLRecord) ) # (( XQueue OrderInfoLRecord ) # uint128) ) false . 
- Parameter process_queue : ( ( uint ) ) -> ( ( uint ) ) -> UExpression PhantomType false . 
- Parameter onTip3LendOwnership : ( ( XAddress ) ) -> ( ( uint128 ) ) -> ( ( uint32 ) ) -> ( ( uint256 ) ) -> ( ( XAddress ) ) -> ( ( XCell ) ) -> UExpression OrderRetLRecord false . 
- Parameter buyTip3 : ( ( uint128 ) ) -> ( ( XAddress ) ) -> ( ( uint32 ) ) -> UExpression OrderRetLRecord true . 
- Parameter processQueue : UExpression PhantomType false . 
- Parameter cancelSell : UExpression PhantomType false . 
- Parameter cancelBuy : UExpression PhantomType false . 
- Parameter getDetails : UExpression DetailsInfoLRecord false . 
- Parameter getPrice : UExpression uint128 false . 
- Parameter getMinimumAmount : UExpression uint128 false . 
- Parameter getTonsCfg : UExpression TonsConfigLRecord false . 
- Parameter getSells : UExpression ( XHMap uint OrderInfoLRecord ) false . 
- Parameter getBuys : UExpression ( XHMap uint OrderInfoLRecord ) false . 
- Parameter getSellAmount : UExpression uint128 false . 
- Parameter getBuyAmount : UExpression uint128 false . 
- Parameter _fallback : XCell -> XSlice -> UExpression uint false . 
- Parameter onTip3LendOwnershipMinValue : UExpression uint128 false . 
- Parameter buyTip3MinValue : ( ( uint128 ) ) -> UExpression uint128 false . 
- Parameter verify_tip3_addr : ( ( XAddress ) ) -> ( ( uint256 ) ) -> ( ( uint256 ) ) -> UExpression XBool false . 
- Parameter expected_wallet_address : ( ( uint256 ) ) -> ( ( uint256 ) ) -> UExpression uint256 false . 
- Parameter on_sell_fail : ( ( uint ) ) -> ( XAddress (*ITONTokenWalletPtr*) ) -> ( ( uint128 ) ) -> UExpression OrderRetLRecord false . 
- Parameter prepare_price_state_init_and_addr : ( ( ContractLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord # uint256 ) false . 
- Parameter is_active_time : ( ( uint32 ) ) -> UExpression XBool false . 
- Parameter calc_cost : ( ( uint128 ) ) -> ( ( uint128 ) ) -> UExpression (XMaybe uint128) false . 
- Parameter process_queue_impl : ( ( XAddress ) ) -> ( XAddress (*IFlexNotifyPtr*) ) -> ( ( uint128 ) ) -> ( ( uint8 ) ) -> ( ( TonsConfigLRecord ) ) -> ( ( uint ) ) -> ( ( uint ) ) -> ( ( uint128 ) ) -> ( ( XQueue OrderInfoLRecord ) ) -> ( ( uint128 ) ) -> ( ( XQueue OrderInfoLRecord ) ) -> UExpression process_retLRecord false . 
- Parameter cancel_order_impl : ( ( XQueue OrderInfoLRecord ) ) -> ( ( addr_std_fixedLRecord ) ) -> ( ( uint128 ) ) -> ( ( XBool ) ) -> ( uint (*Grams*) ) -> ( uint (*Grams*) ) -> ( uint (*Grams*) ) -> UExpression ((XQueue OrderInfoLRecord) # uint128) false . 
+Parameter getStateInit : ( () ) -> UExpression StateInitLRecord false . 
+ Parameter init : ( ( XAddress ) ) -> UExpression XBool true . 
+ Parameter setInternalWalletCode : ( ( XCell ) ) -> UExpression XBool true . 
+ Parameter deployEmptyWallet : ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XInteger128 ) ) -> UExpression XAddress false . 
+ Parameter onTip3Transfer : ( ( XAddress ) ) -> ( ( XInteger128 ) ) -> ( ( XInteger128 ) ) -> ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XCell ) ) -> UExpression WrapperRetLRecord true . 
+ Parameter burn : ( ( XAddress ) ) -> ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XInteger128 ) ) -> UExpression PhantomType true . 
+ Parameter requestTotalGranted : UExpression XInteger128 false . 
+ Parameter getDetails : UExpression wrapper_details_infoLRecord false . 
+ Parameter getName : UExpression XString false . 
+ Parameter getSymbol : UExpression XString false . 
+ Parameter getDecimals : UExpression XInteger8 false . 
+ Parameter getRootKey : UExpression XInteger256 false . 
+ Parameter getTotalGranted : UExpression XInteger128 false . 
+ Parameter hasInternalWalletCode : UExpression XBool false . 
+ Parameter getInternalWalletCode : UExpression XCell false . 
+ Parameter getOwnerAddress : UExpression XAddress false . 
+ Parameter getExternalWallet : UExpression XAddress false . 
+ Parameter getWalletAddress : ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XAddress false . 
+ Parameter _on_bounced : ( XCell ) -> ( ( XSlice ) ) -> UExpression XInteger true . 
+ Parameter getInternalWalletCodeHash : UExpression XInteger256 false . 
+ Parameter _fallback : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression XInteger false . 
+ Parameter optional_owner : ( ( XAddress ) ) -> UExpression XMaybe XAddress false . 
+ Parameter expected_internal_address : ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XAddress false . 
+ Parameter calc_internal_wallet_init : ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord * XAddress ) false . 
+ Parameter is_internal_owner : UExpression XBool false . 
+ Parameter check_internal_owner : UExpression PhantomType true . 
+ Parameter check_external_owner : UExpression PhantomType true . 
+ Parameter check_owner : UExpression PhantomType false . 
+ Parameter prepare_wrapper_state_init_and_addr : ( ( XCell ) ) -> ( ( DWrapperLRecord ) ) -> UExpression ( StateInitLRecord * XInteger256 ) false . 
 
 
 End SpecSig.

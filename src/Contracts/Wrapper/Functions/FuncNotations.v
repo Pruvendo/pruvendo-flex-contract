@@ -14,14 +14,10 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
-Require Import Contracts.Price.Ledger.
-Require Import Contracts.Price.Functions.FuncSig.
+Require Import Contracts.Wrapper.Ledger.
+Require Import Contracts.Wrapper.Functions.FuncSig.
 
 (* здесь инмпортируем все внешние интерфейсы *)
-Require Import Contracts.Price.Interface.
-Require Import Contracts.TONTokenWallet.Interface.
-Require Import Contracts.FlexNotify.Interface.
-Require Import Contracts.PriceCallback.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -29,10 +25,6 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module PricePublicInterface := PublicInterface xt sm.
-Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.PublicInterface xt sm.
-Module FlexNotifyPublicInterface := Contracts.FlexNotify.PublicInterface xt sm.
-Module PriceCallbackPublicInterface := Contracts.PriceCallback.PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
@@ -45,188 +37,82 @@ Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at level 0) : ursus_scope. (* move *)
- Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.symbol' " := ( Tip3Config_ι_symbol ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.symbol' " := ( Tip3Config_ι_symbol ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.decimals' " := ( Tip3Config_ι_decimals ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.decimals' " := ( Tip3Config_ι_decimals ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.root_public_key' " := ( Tip3Config_ι_root_public_key ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.root_public_key' " := ( Tip3Config_ι_root_public_key ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.root_address' " := ( Tip3Config_ι_root_address ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.root_address' " := ( Tip3Config_ι_root_address ) (in custom URValue at level 0) : ursus_scope. 
- (* Notation " 'TonsConfig.transfer_tip3' " := ( TonsConfig_ι_transfer_tip3 ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.transfer_tip3' " := ( TonsConfig_ι_transfer_tip3 ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.return_ownership' " := ( TonsConfig_ι_return_ownership ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.return_ownership' " := ( TonsConfig_ι_return_ownership ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.trading_pair_deploy' " := ( TonsConfig_ι_trading_pair_deploy ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.trading_pair_deploy' " := ( TonsConfig_ι_trading_pair_deploy ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.order_answer' " := ( TonsConfig_ι_order_answer ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.order_answer' " := ( TonsConfig_ι_order_answer ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.process_queue' " := ( TonsConfig_ι_process_queue ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.process_queue' " := ( TonsConfig_ι_process_queue ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.send_notify' " := ( TonsConfig_ι_send_notify ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.send_notify' " := ( TonsConfig_ι_send_notify ) (in custom URValue at level 0) : ursus_scope.  *)
- Notation " 'Tip3Config.workchain_id_ " := ( Tip3Config_ι_workchain_id_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.workchain_id_ " := ( Tip3Config_ι_workchain_id_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.split_depth' " := ( StateInit_ι_split_depth ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.split_depth' " := ( StateInit_ι_split_depth ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.special' " := ( StateInit_ι_special ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.special' " := ( StateInit_ι_special ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.code' " := ( StateInit_ι_code ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.code' " := ( StateInit_ι_code ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.data' " := ( StateInit_ι_data ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.data' " := ( StateInit_ι_data ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.library' " := ( StateInit_ι_library ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.library' " := ( StateInit_ι_library ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'SellArgs.amount' " := ( SellArgs_ι_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'SellArgs.amount' " := ( SellArgs_ι_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'SellArgs.receive_wallet' " := ( SellArgs_ι_receive_wallet ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'SellArgs.receive_wallet' " := ( SellArgs_ι_receive_wallet ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.original_amount' " := ( OrderInfo_ι_original_amount ) (in custom ULValue at level 0) : ursus_scope. (* move *)
- Notation " 'OrderInfo.original_amount' " := ( OrderInfo_ι_original_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.amount' " := ( OrderInfo_ι_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.amount' " := ( OrderInfo_ι_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.account' " := ( OrderInfo_ι_account ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.account' " := ( OrderInfo_ι_account ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.tip3_wallet' " := ( OrderInfo_ι_tip3_wallet ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.tip3_wallet' " := ( OrderInfo_ι_tip3_wallet ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.client_addr' " := ( OrderInfo_ι_client_addr ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.client_addr' " := ( OrderInfo_ι_client_addr ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.order_finish_time' " := ( OrderInfo_ι_order_finish_time ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.order_finish_time' " := ( OrderInfo_ι_order_finish_time ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderRet.err_code' " := ( OrderRet_ι_err_code ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderRet.err_code' " := ( OrderRet_ι_err_code ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderRet.processed' " := ( OrderRet_ι_processed ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderRet.processed' " := ( OrderRet_ι_processed ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderRet.enqueued' " := ( OrderRet_ι_enqueued ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderRet.enqueued' " := ( OrderRet_ι_enqueued ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.price' " := ( DetailsInfo_ι_price ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.price' " := ( DetailsInfo_ι_price ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.min_amount' " := ( DetailsInfo_ι_min_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.min_amount' " := ( DetailsInfo_ι_min_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.sell_amount' " := ( DetailsInfo_ι_sell_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.sell_amount' " := ( DetailsInfo_ι_sell_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.buy_amount' " := ( DetailsInfo_ι_buy_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.buy_amount' " := ( DetailsInfo_ι_buy_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'process_ret.sells_amount' " := ( process_ret_ι_sells_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.sells_amount' " := ( process_ret_ι_sells_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'process_ret.sells_' " := ( process_ret_ι_sells_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.sells_' " := ( process_ret_ι_sells_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'process_ret.buys_amount' " := ( process_ret_ι_buys_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.buys_amount' " := ( process_ret_ι_buys_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'process_ret.buys_' " := ( process_ret_ι_buys_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.buys_' " := ( process_ret_ι_buys_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'process_ret.ret_' " := ( process_ret_ι_ret_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.ret_' " := ( process_ret_ι_ret_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.tip3root_' " := ( dealer_ι_tip3root_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.tip3root_' " := ( dealer_ι_tip3root_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.notify_addr_' " := ( dealer_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.notify_addr_' " := ( dealer_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.price_' " := ( dealer_ι_price_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.price_' " := ( dealer_ι_price_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.deals_limit_' " := ( dealer_ι_deals_limit_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.deals_limit_' " := ( dealer_ι_deals_limit_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.tons_cfg_' " := ( dealer_ι_tons_cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.tons_cfg_' " := ( dealer_ι_tons_cfg_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.sells_amount_' " := ( dealer_ι_sells_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.sells_amount_' " := ( dealer_ι_sells_amount_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.sells_' " := ( dealer_ι_sells_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.sells_' " := ( dealer_ι_sells_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.buys_amount_' " := ( dealer_ι_buys_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.buys_amount_' " := ( dealer_ι_buys_amount_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.buys_' " := ( dealer_ι_buys_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.buys_' " := ( dealer_ι_buys_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'dealer.ret_' " := ( dealer_ι_ret_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'dealer.ret_' " := ( dealer_ι_ret_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.price' " := ( DetailsInfo_ι_price ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.price' " := ( DetailsInfo_ι_price ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.min_amount' " := ( DetailsInfo_ι_min_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.min_amount' " := ( DetailsInfo_ι_min_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.sell_amount' " := ( DetailsInfo_ι_sell_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.sell_amount' " := ( DetailsInfo_ι_sell_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.buy_amount' " := ( DetailsInfo_ι_buy_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DetailsInfo.buy_amount' " := ( DetailsInfo_ι_buy_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address ) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'WrapperRet.err_code' " := ( WrapperRet_ι_err_code ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'WrapperRet.err_code' " := ( WrapperRet_ι_err_code ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'WrapperRet.flex_wallet' " := ( WrapperRet_ι_flex_wallet ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'WrapperRet.flex_wallet' " := ( WrapperRet_ι_flex_wallet ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'FlexDeployWalletArgs.pubkey' " := ( FlexDeployWalletArgs_ι_pubkey ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'FlexDeployWalletArgs.pubkey' " := ( FlexDeployWalletArgs_ι_pubkey ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'FlexDeployWalletArgs.internal_owner' " := ( FlexDeployWalletArgs_ι_internal_owner ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'FlexDeployWalletArgs.internal_owner' " := ( FlexDeployWalletArgs_ι_internal_owner ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'FlexDeployWalletArgs.grams' " := ( FlexDeployWalletArgs_ι_grams ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'FlexDeployWalletArgs.grams' " := ( FlexDeployWalletArgs_ι_grams ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.name' " := ( wrapper_details_info_ι_name ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.name' " := ( wrapper_details_info_ι_name ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.symbol' " := ( wrapper_details_info_ι_symbol ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.symbol' " := ( wrapper_details_info_ι_symbol ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.decimals' " := ( wrapper_details_info_ι_decimals ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.decimals' " := ( wrapper_details_info_ι_decimals ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.root_public_key' " := ( wrapper_details_info_ι_root_public_key ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.root_public_key' " := ( wrapper_details_info_ι_root_public_key ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.total_granted' " := ( wrapper_details_info_ι_total_granted ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.total_granted' " := ( wrapper_details_info_ι_total_granted ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.wallet_code' " := ( wrapper_details_info_ι_wallet_code ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.wallet_code' " := ( wrapper_details_info_ι_wallet_code ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.owner_address' " := ( wrapper_details_info_ι_owner_address ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.owner_address' " := ( wrapper_details_info_ι_owner_address ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.external_wallet' " := ( wrapper_details_info_ι_external_wallet ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " 'wrapper_details_info.external_wallet' " := ( wrapper_details_info_ι_external_wallet ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType price_ ) : ULValue uint128 ) . 
- Definition price__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType price_ ) : URValue uint128 false ) . 
- Notation " '_price_' " := ( price__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_price_' " := ( price__right ) (in custom URValue at level 0) : ursus_scope. 
+ Definition name__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType name_ ) : ULValue XString ) . 
+ Definition name__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType name_ ) : URValue XString false ) . 
+ Notation " '_name_' " := ( name__left ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " '_name_' " := ( name__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition sells_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType sells_amount_ ) : ULValue uint128 ) . 
- Definition sells_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType sells_amount_ ) : URValue uint128 false ) . 
- Notation " '_sells_amount_' " := ( sells_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_sells_amount_' " := ( sells_amount__right ) (in custom URValue at level 0) : ursus_scope. 
+ Definition symbol__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType symbol_ ) : ULValue XString ) . 
+ Definition symbol__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType symbol_ ) : URValue XString false ) . 
+ Notation " '_symbol_' " := ( symbol__left ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " '_symbol_' " := ( symbol__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition buys_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType buys_amount_ ) : ULValue uint128 ) . 
- Definition buys_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType buys_amount_ ) : URValue uint128 false ) . 
- Notation " '_buys_amount_' " := ( buys_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_buys_amount_' " := ( buys_amount__right ) (in custom URValue at level 0) : ursus_scope. 
+ Definition decimals__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType decimals_ ) : ULValue XInteger8 ) . 
+ Definition decimals__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType decimals_ ) : URValue XInteger8 false ) . 
+ Notation " '_decimals_' " := ( decimals__left ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " '_decimals_' " := ( decimals__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition flex__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType flex_ ) : ULValue addr_std_fixedLRecord ) . 
- Definition flex__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType flex_ ) : URValue addr_std_fixedLRecord false ) . 
- Notation " '_flex_' " := ( flex__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_flex_' " := ( flex__right ) (in custom URValue at level 0) : ursus_scope. 
- 
- Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : ULValue uint128 ) . 
- Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : URValue uint128 false ) . 
- Notation " '_min_amount_' " := ( min_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_min_amount_' " := ( min_amount__right ) (in custom URValue at level 0) : ursus_scope. 
- 
- Definition deals_limit__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType deals_limit_ ) : ULValue uint8 ) . 
- Definition deals_limit__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType deals_limit_ ) : URValue uint8 false ) . 
- Notation " '_deals_limit_' " := ( deals_limit__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_deals_limit_' " := ( deals_limit__right ) (in custom URValue at level 0) : ursus_scope. 
- 
- Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType notify_addr_ ) : ULValue XAddress (* IFlexNotifyPtrLRecord *) ) . 
- Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType notify_addr_ ) : URValue XAddress (* IFlexNotifyPtrLRecord *) false ) . 
- Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
- 
- Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : ULValue uint8 ) . 
- Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : URValue uint8 false ) . 
+ Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : ULValue XInteger8 ) . 
+ Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : URValue XInteger8 false ) . 
  Notation " '_workchain_id_' " := ( workchain_id__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_workchain_id_' " := ( workchain_id__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition tons_cfg__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType tons_cfg_ ) : ULValue TonsConfigLRecord ) . 
- Definition tons_cfg__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType tons_cfg_ ) : URValue TonsConfigLRecord false ) . 
- Notation " '_tons_cfg_' " := ( tons_cfg__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_tons_cfg_' " := ( tons_cfg__right ) (in custom URValue at level 0) : ursus_scope. 
+ Definition root_public_key__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType root_public_key_ ) : ULValue XInteger256 ) . 
+ Definition root_public_key__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType root_public_key_ ) : URValue XInteger256 false ) . 
+ Notation " '_root_public_key_' " := ( root_public_key__left ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " '_root_public_key_' " := ( root_public_key__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition tip3_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType tip3_code_ ) : ULValue XCell ) . 
- Definition tip3_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType tip3_code_ ) : URValue XCell false ) . 
- Notation " '_tip3_code_' " := ( tip3_code__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_tip3_code_' " := ( tip3_code__right ) (in custom URValue at level 0) : ursus_scope. 
+ Definition total_granted__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType total_granted_ ) : ULValue XInteger128 ) . 
+ Definition total_granted__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType total_granted_ ) : URValue XInteger128 false ) . 
+ Notation " '_total_granted_' " := ( total_granted__left ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " '_total_granted_' " := ( total_granted__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition tip3cfg__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType tip3cfg_ ) : ULValue Tip3ConfigLRecord ) . 
- Definition tip3cfg__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType tip3cfg_ ) : URValue Tip3ConfigLRecord false ) . 
- Notation " '_tip3cfg_' " := ( tip3cfg__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_tip3cfg_' " := ( tip3cfg__right ) (in custom URValue at level 0) : ursus_scope. 
-
- Definition sells__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType sells_ ) : ULValue ( XQueue OrderInfoLRecord ) ) . 
- Definition sells__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType sells_ ) : URValue ( XQueue OrderInfoLRecord ) false ) . 
- Notation " '_sells_' " := ( sells__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_sells_' " := ( sells__right ) (in custom URValue at level 0) : ursus_scope. 
+ Definition internal_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType internal_wallet_code_ ) : ULValue ( XMaybe XCell ) ) . 
+ Definition internal_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType internal_wallet_code_ ) : URValue ( XMaybe XCell ) false ) . 
+ Notation " '_internal_wallet_code_' " := ( internal_wallet_code__left ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " '_internal_wallet_code_' " := ( internal_wallet_code__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition buys__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType buys_ ) : ULValue ( XQueue OrderInfoLRecord ) ) . 
- Definition buys__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType buys_ ) : URValue ( XQueue OrderInfoLRecord ) false ) . 
- Notation " '_buys_' " := ( buys__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_buys_' " := ( buys__right ) (in custom URValue at level 0) : ursus_scope. 
-
- Notation " 'process_ret.sells_amount' " := ( process_ret_ι_sells_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.sells_amount' " := ( process_ret_ι_sells_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'process_ret.sells_' " := ( process_ret_ι_sells_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.sells_' " := ( process_ret_ι_sells_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'process_ret.buys_amount' " := ( process_ret_ι_buys_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.buys_amount' " := ( process_ret_ι_buys_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'process_ret.buys_' " := ( process_ret_ι_buys_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.buys_' " := ( process_ret_ι_buys_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'process_ret.ret_' " := ( process_ret_ι_ret_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'process_ret.ret_' " := ( process_ret_ι_ret_ ) (in custom URValue at level 0) : ursus_scope. 
+ Definition owner_address__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType owner_address_ ) : ULValue ( XMaybe XAddress ) ) . 
+ Definition owner_address__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType owner_address_ ) : URValue ( XMaybe XAddress ) false ) . 
+ Notation " '_owner_address_' " := ( owner_address__left ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " '_owner_address_' " := ( owner_address__right ) (in custom URValue at level 0) : ursus_scope. 
+ 
+ Definition start_balance__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType start_balance_ ) : ULValue GramsLRecord ) . 
+ Definition start_balance__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType start_balance_ ) : URValue GramsLRecord false ) . 
+ Notation " '_start_balance_' " := ( start_balance__left ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " '_start_balance_' " := ( start_balance__right ) (in custom URValue at level 0) : ursus_scope. 
+ 
+ Definition external_wallet__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType external_wallet_ ) : ULValue ( XMaybe ITONTokenWalletPtrLRecord ) ) . 
+ Definition external_wallet__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType external_wallet_ ) : URValue ( XMaybe ITONTokenWalletPtrLRecord ) false ) . 
+ Notation " '_external_wallet_' " := ( external_wallet__left ) (in custom ULValue at level 0) : ursus_scope. 
+ Notation " '_external_wallet_' " := ( external_wallet__right ) (in custom URValue at level 0) : ursus_scope. 
  
 Module Calls (tc : SpecSig).
 
@@ -235,95 +121,77 @@ Export tc.
 Local Open Scope string_scope.
 
 (**************************************************************************************************)
- Definition make_deal_right { a1 a2 }  ( sell : URValue ( OrderInfoLRecord ) a1 ) ( buy : URValue ( OrderInfoLRecord ) a2 ) : URValue ( XBool # (XBool # uint128) ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) make_deal 
- sell buy ) . 
- 
- Notation " 'make_deal_' '(' sell buy ')' " := 
- ( make_deal_right 
- sell buy ) 
- (in custom URValue at level 0 , sell custom URValue at level 0 
- , buy custom URValue at level 0 ) : ursus_scope .
 
- Definition extract_active_order_right { a1 a2 a3 a4 }  
-( cur_order : URValue ( XMaybe (uint # OrderInfoLRecord) ) a1 ) 
-( orders : URValue ( XQueue OrderInfoLRecord ) a2 ) 
-( all_amount : URValue ( uint128 ) a3 ) 
-( sell : URValue ( XBool ) a4 ) 
-: URValue ( ( XMaybe (uint # OrderInfoLRecord) ) # (( XQueue OrderInfoLRecord ) # uint128) ) 
-( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) extract_active_order 
- cur_order orders all_amount sell ) . 
+ Definition getStateInit_right { a1 }  ( &msg : URValue ( ) : URValue StateInitLRecord a1 := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) getStateInit 
+ &msg ) . 
  
- Notation " 'extract_active_order_' '(' cur_order orders all_amount sell ')' " := 
- ( extract_active_order_right 
- cur_order orders all_amount sell ) 
- (in custom URValue at level 0 , cur_order custom URValue at level 0 
- , orders custom URValue at level 0 
- , all_amount custom URValue at level 0 
- , sell custom URValue at level 0 ) : ursus_scope . 
+ Notation " 'getStateInit_' '(' &msg ')' " := 
+ ( getStateInit_right 
+ &msg ) 
+ (in custom URValue at level 0 , &msg custom URValue at level 0 ) : ursus_scope . 
+ Definition init_right { a1 }  ( external_wallet : URValue ( XAddress ) a1 ) : URValue XBool true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) init 
+ external_wallet ) . 
  
- Definition process_queue_left { R a1 a2 }  ( sell_idx : URValue ( uint ) a1 ) ( buy_idx : URValue ( uint ) a2 ) : UExpression R ( orb a2 a1 ) := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) process_queue 
- sell_idx buy_idx ) . 
+ Notation " 'init_' '(' external_wallet ')' " := 
+ ( init_right 
+ external_wallet ) 
+ (in custom URValue at level 0 , external_wallet custom URValue at level 0 ) : ursus_scope . 
+ Definition setInternalWalletCode_right { a1 }  ( wallet_code : URValue ( XCell ) a1 ) : URValue XBool true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setInternalWalletCode 
+ wallet_code ) . 
  
- Notation " 'process_queue_' '(' sell_idx buy_idx ')' " := 
- ( process_queue_left 
- sell_idx buy_idx ) 
- (in custom ULValue at level 0 , sell_idx custom URValue at level 0 
- , buy_idx custom URValue at level 0 ) : ursus_scope . 
-
- Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( balance : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( pubkey : URValue ( uint256 ) a4 ) ( internal_owner : URValue ( XAddress ) a5 ) ( payload : URValue ( XCell ) a6 ) : URValue OrderRetLRecord ( orb ( orb ( orb ( orb ( orb a6 a5 ) a4 ) a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) onTip3LendOwnership 
- answer_addr balance lend_finish_time pubkey internal_owner payload ) . 
+ Notation " 'setInternalWalletCode_' '(' wallet_code ')' " := 
+ ( setInternalWalletCode_right 
+ wallet_code ) 
+ (in custom URValue at level 0 , wallet_code custom URValue at level 0 ) : ursus_scope . 
+ Definition deployEmptyWallet_right { a1 a2 a3 }  ( pubkey : URValue ( XInteger256 ) a1 ) ( internal_owner : URValue ( XAddress ) a2 ) ( grams : URValue ( XInteger128 ) a3 ) : URValue XAddress ( orb ( orb a3 a2 ) a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) deployEmptyWallet 
+ pubkey internal_owner grams ) . 
  
- Notation " 'onTip3LendOwnership_' '(' answer_addr balance lend_finish_time pubkey internal_owner payload ')' " := 
- ( onTip3LendOwnership_right 
- answer_addr balance lend_finish_time pubkey internal_owner payload ) 
+ Notation " 'deployEmptyWallet_' '(' pubkey internal_owner grams ')' " := 
+ ( deployEmptyWallet_right 
+ pubkey internal_owner grams ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0 
+ , internal_owner custom URValue at level 0 
+ , grams custom URValue at level 0 ) : ursus_scope . 
+ Definition onTip3Transfer_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( balance : URValue ( XInteger128 ) a2 ) ( new_tokens : URValue ( XInteger128 ) a3 ) ( sender_pubkey : URValue ( XInteger256 ) a4 ) ( sender_owner : URValue ( XAddress ) a5 ) ( payload : URValue ( XCell ) a6 ) : URValue WrapperRetLRecord true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) onTip3Transfer 
+ answer_addr balance new_tokens sender_pubkey sender_owner payload ) . 
+ 
+ Notation " 'onTip3Transfer_' '(' answer_addr balance new_tokens sender_pubkey sender_owner payload ')' " := 
+ ( onTip3Transfer_right 
+ answer_addr balance new_tokens sender_pubkey sender_owner payload ) 
  (in custom URValue at level 0 , answer_addr custom URValue at level 0 
  , balance custom URValue at level 0 
- , lend_finish_time custom URValue at level 0 
- , pubkey custom URValue at level 0 
- , internal_owner custom URValue at level 0 
+ , new_tokens custom URValue at level 0 
+ , sender_pubkey custom URValue at level 0 
+ , sender_owner custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
- Definition buyTip3_right { a1 a2 a3 }  ( amount : URValue ( uint128 ) a1 ) ( receive_tip3_wallet : URValue ( XAddress ) a2 ) ( order_finish_time : URValue ( uint32 ) a3 ) : URValue OrderRetLRecord true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) buyTip3 
- amount receive_tip3_wallet order_finish_time ) . 
  
- Notation " 'buyTip3_' '(' amount receive_tip3_wallet order_finish_time ')' " := 
- ( buyTip3_right 
- amount receive_tip3_wallet order_finish_time ) 
- (in custom URValue at level 0 , amount custom URValue at level 0 
- , receive_tip3_wallet custom URValue at level 0 
- , order_finish_time custom URValue at level 0 ) : ursus_scope . 
+ Definition burn_left { R a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( sender_pubkey : URValue ( XInteger256 ) a2 ) ( sender_owner : URValue ( XAddress ) a3 ) ( out_pubkey : URValue ( XInteger256 ) a4 ) ( out_internal_owner : URValue ( XAddress ) a5 ) ( tokens : URValue ( XInteger128 ) a6 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) burn 
+ answer_addr sender_pubkey sender_owner out_pubkey out_internal_owner tokens ) . 
  
- Definition processQueue_left { R }  : UExpression R false := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) processQueue 
+ Notation " 'burn_' '(' answer_addr sender_pubkey sender_owner out_pubkey out_internal_owner tokens ')' " := 
+ ( burn_left 
+ answer_addr sender_pubkey sender_owner out_pubkey out_internal_owner tokens ) 
+ (in custom ULValue at level 0 , answer_addr custom URValue at level 0 
+ , sender_pubkey custom URValue at level 0 
+ , sender_owner custom URValue at level 0 
+ , out_pubkey custom URValue at level 0 
+ , out_internal_owner custom URValue at level 0 
+ , tokens custom URValue at level 0 ) : ursus_scope . 
+ Definition requestTotalGranted_right  : URValue XInteger128 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) requestTotalGranted 
  ) . 
  
- Notation " 'processQueue_' '(' ')' " := 
- ( processQueue_left 
+ Notation " 'requestTotalGranted_' '(' ')' " := 
+ ( requestTotalGranted_right 
  ) 
- (in custom ULValue at level 0 ) : ursus_scope . 
- 
- Definition cancelSell_left { R }  : UExpression R false := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) cancelSell 
- ) . 
- 
- Notation " 'cancelSell_' '(' ')' " := 
- ( cancelSell_left 
- ) 
- (in custom ULValue at level 0 ) : ursus_scope . 
- 
- Definition cancelBuy_left { R }  : UExpression R false := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) cancelBuy 
- ) . 
- 
- Notation " 'cancelBuy_' '(' ')' " := 
- ( cancelBuy_left 
- ) 
- (in custom ULValue at level 0 ) : ursus_scope . 
- Definition getDetails_right  : URValue DetailsInfoLRecord false := 
+ (in custom URValue at level 0 ) : ursus_scope . 
+ Definition getDetails_right  : URValue wrapper_details_infoLRecord false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDetails 
  ) . 
  
@@ -331,199 +199,184 @@ Local Open Scope string_scope.
  ( getDetails_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
-
- Definition getPrice_right  : URValue uint128 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getPrice 
+ Definition getName_right  : URValue XString false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getName 
  ) . 
  
- Notation " 'getPrice_' '(' ')' " := 
- ( getPrice_right 
+ Notation " 'getName_' '(' ')' " := 
+ ( getName_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
-
- Definition getMinimumAmount_right  : URValue uint128 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getMinimumAmount 
+ Definition getSymbol_right  : URValue XString false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSymbol 
  ) . 
  
- Notation " 'getMinimumAmount_' '(' ')' " := 
- ( getMinimumAmount_right 
+ Notation " 'getSymbol_' '(' ')' " := 
+ ( getSymbol_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
-
- Definition getTonsCfg_right  : URValue TonsConfigLRecord false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTonsCfg 
+ Definition getDecimals_right  : URValue XInteger8 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDecimals 
  ) . 
  
- Notation " 'getTonsCfg_' '(' ')' " := 
- ( getTonsCfg_right 
+ Notation " 'getDecimals_' '(' ')' " := 
+ ( getDecimals_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
-
- Definition getSells_right  : URValue ( XHMap uint OrderInfoLRecord ) false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSells 
+ Definition getRootKey_right  : URValue XInteger256 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getRootKey 
  ) . 
  
- Notation " 'getSells_' '(' ')' " := 
- ( getSells_right 
+ Notation " 'getRootKey_' '(' ')' " := 
+ ( getRootKey_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
-
- Definition getBuys_right  : URValue ( XHMap uint OrderInfoLRecord ) false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuys 
+ Definition getTotalGranted_right  : URValue XInteger128 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTotalGranted 
  ) . 
  
- Notation " 'getBuys_' '(' ')' " := 
- ( getBuys_right 
+ Notation " 'getTotalGranted_' '(' ')' " := 
+ ( getTotalGranted_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
-
- Definition getSellAmount_right  : URValue uint128 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSellAmount 
+ Definition hasInternalWalletCode_right  : URValue XBool false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) hasInternalWalletCode 
  ) . 
  
- Notation " 'getSellAmount_' '(' ')' " := 
- ( getSellAmount_right 
+ Notation " 'hasInternalWalletCode_' '(' ')' " := 
+ ( hasInternalWalletCode_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
-
- Definition getBuyAmount_right  : URValue uint128 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuyAmount 
+ Definition getInternalWalletCode_right  : URValue XCell false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getInternalWalletCode 
  ) . 
  
- Notation " 'getBuyAmount_' '(' ')' " := 
- ( getBuyAmount_right 
+ Notation " 'getInternalWalletCode_' '(' ')' " := 
+ ( getInternalWalletCode_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
-
- Definition _fallback_right { a1 a2 }  ( x : URValue XCell a1 ) ( y : URValue XSlice a2 ) : URValue uint (orb a2 a1) := 
+ Definition getOwnerAddress_right  : URValue XAddress false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwnerAddress 
+ ) . 
+ 
+ Notation " 'getOwnerAddress_' '(' ')' " := 
+ ( getOwnerAddress_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
+ Definition getExternalWallet_right  : URValue XAddress false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getExternalWallet 
+ ) . 
+ 
+ Notation " 'getExternalWallet_' '(' ')' " := 
+ ( getExternalWallet_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
+ Definition getWalletAddress_right { a1 a2 }  ( pubkey : URValue ( XInteger256 ) a1 ) ( owner : URValue ( XAddress ) a2 ) : URValue XAddress ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) getWalletAddress 
+ pubkey owner ) . 
+ 
+ Notation " 'getWalletAddress_' '(' pubkey owner ')' " := 
+ ( getWalletAddress_right 
+ pubkey owner ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0 
+ , owner custom URValue at level 0 ) : ursus_scope . 
+ Definition _on_bounced_right { a1 a2 }  ( cell : URValue ( (LRecord ) a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XInteger true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _on_bounced 
+ cell msg_body ) . 
+ 
+ Notation " '_on_bounced_' '(' cell msg_body ')' " := 
+ ( _on_bounced_right 
+ cell msg_body ) 
+ (in custom URValue at level 0 , cell custom URValue at level 0 
+ , msg_body custom URValue at level 0 ) : ursus_scope . 
+ Definition getInternalWalletCodeHash_right  : URValue XInteger256 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getInternalWalletCodeHash 
+ ) . 
+ 
+ Notation " 'getInternalWalletCodeHash_' '(' ')' " := 
+ ( getInternalWalletCodeHash_right 
+ ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
+ Definition _fallback_right { a1 a2 }  ( msg : URValue ( XCell ) a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XInteger ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
- x y ) . 
+ msg msg_body ) . 
  
- Notation " '_fallback_' '(' x ',' y ')' " := 
+ Notation " '_fallback_' '(' msg msg_body ')' " := 
  ( _fallback_right 
- x y ) 
- (in custom URValue at level 0 , x custom URValue at level 0 , y custom URValue at level 0) : ursus_scope . 
-
- Definition onTip3LendOwnershipMinValue_right  : URValue uint128 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) onTip3LendOwnershipMinValue 
+ msg msg_body ) 
+ (in custom URValue at level 0 , msg custom URValue at level 0 
+ , msg_body custom URValue at level 0 ) : ursus_scope . 
+ Definition optional_owner_right { a1 }  ( owner : URValue ( XAddress ) a1 ) : URValue XMaybe XAddress a1 := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner 
+ owner ) . 
+ 
+ Notation " 'optional_owner_' '(' owner ')' " := 
+ ( optional_owner_right 
+ owner ) 
+ (in custom URValue at level 0 , owner custom URValue at level 0 ) : ursus_scope . 
+ Definition expected_internal_address_right { a1 a2 }  ( sender_public_key : URValue ( XInteger256 ) a1 ) ( sender_owner_addr : URValue ( XAddress ) a2 ) : URValue XAddress ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) expected_internal_address 
+ sender_public_key sender_owner_addr ) . 
+ 
+ Notation " 'expected_internal_address_' '(' sender_public_key sender_owner_addr ')' " := 
+ ( expected_internal_address_right 
+ sender_public_key sender_owner_addr ) 
+ (in custom URValue at level 0 , sender_public_key custom URValue at level 0 
+ , sender_owner_addr custom URValue at level 0 ) : ursus_scope . 
+ Definition calc_internal_wallet_init_right { a1 a2 }  ( pubkey : URValue ( XInteger256 ) a1 ) ( owner_addr : URValue ( XAddress ) a2 ) : URValue ( StateInitLRecord * XAddress ) ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_internal_wallet_init 
+ pubkey owner_addr ) . 
+ 
+ Notation " 'calc_internal_wallet_init_' '(' pubkey owner_addr ')' " := 
+ ( calc_internal_wallet_init_right 
+ pubkey owner_addr ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0 
+ , owner_addr custom URValue at level 0 ) : ursus_scope . 
+ Definition is_internal_owner_right  : URValue XBool false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) is_internal_owner 
  ) . 
  
- Notation " 'onTip3LendOwnershipMinValue_' '(' ')' " := 
- ( onTip3LendOwnershipMinValue_right 
+ Notation " 'is_internal_owner_' '(' ')' " := 
+ ( is_internal_owner_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition buyTip3MinValue_right { a1 }  ( buy_cost : URValue ( uint128 ) a1 ) : URValue uint128 a1 := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) buyTip3MinValue 
- buy_cost ) . 
  
- Notation " 'buyTip3MinValue_' '(' buy_cost ')' " := 
- ( buyTip3MinValue_right 
- buy_cost ) 
- (in custom URValue at level 0 , buy_cost custom URValue at level 0 ) : ursus_scope . 
+ Definition check_internal_owner_left { R }  : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) check_internal_owner 
+ ) . 
+ 
+ Notation " 'check_internal_owner_' '(' ')' " := 
+ ( check_internal_owner_left 
+ ) 
+ (in custom ULValue at level 0 ) : ursus_scope . 
+ 
+ Definition check_external_owner_left { R }  : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) check_external_owner 
+ ) . 
+ 
+ Notation " 'check_external_owner_' '(' ')' " := 
+ ( check_external_owner_left 
+ ) 
+ (in custom ULValue at level 0 ) : ursus_scope . 
+ 
+ Definition check_owner_left { R }  : UExpression R := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) check_owner 
+ ) . 
+ 
+ Notation " 'check_owner_' '(' ')' " := 
+ ( check_owner_left 
+ ) 
+ (in custom ULValue at level 0 ) : ursus_scope . 
+ Definition prepare_wrapper_state_init_and_addr_right { a1 a2 }  ( wrapper_code : URValue ( XCell ) a1 ) ( wrapper_data : URValue ( DWrapperLRecord ) a2 ) : URValue ( StateInitLRecord * XInteger256 ) ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_wrapper_state_init_and_addr 
+ wrapper_code wrapper_data ) . 
+ 
+ Notation " 'prepare_wrapper_state_init_and_addr_' '(' wrapper_code wrapper_data ')' " := 
+ ( prepare_wrapper_state_init_and_addr_right 
+ wrapper_code wrapper_data ) 
+ (in custom URValue at level 0 , wrapper_code custom URValue at level 0 
+ , wrapper_data custom URValue at level 0 ) : ursus_scope . 
 
- Definition verify_tip3_addr_right { a1 a2 a3 }  ( tip3_wallet : URValue ( XAddress ) a1 ) ( wallet_pubkey : URValue ( uint256 ) a2 ) ( internal_owner : URValue ( uint256 ) a3 ) : URValue XBool ( orb ( orb a3 a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) verify_tip3_addr 
- tip3_wallet wallet_pubkey internal_owner ) . 
- 
- Notation " 'verify_tip3_addr_' '(' tip3_wallet wallet_pubkey internal_owner ')' " := 
- ( verify_tip3_addr_right 
- tip3_wallet wallet_pubkey internal_owner ) 
- (in custom URValue at level 0 , tip3_wallet custom URValue at level 0 
- , wallet_pubkey custom URValue at level 0 
- , internal_owner custom URValue at level 0 ) : ursus_scope . 
-
- Definition expected_wallet_address_right { a1 a2 }  ( wallet_pubkey : URValue ( uint256 ) a1 ) ( internal_owner : URValue ( uint256 ) a2 ) : URValue uint256 ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) expected_wallet_address 
- wallet_pubkey internal_owner ) . 
- 
- Notation " 'expected_wallet_address_' '(' wallet_pubkey internal_owner ')' " := 
- ( expected_wallet_address_right 
- wallet_pubkey internal_owner ) 
- (in custom URValue at level 0 , wallet_pubkey custom URValue at level 0 
- , internal_owner custom URValue at level 0 ) : ursus_scope .
-
- Definition on_sell_fail_right { a1 a2 a3 }  ( ec : URValue ( uint ) a1 ) ( wallet_in : URValue ( XAddress (* ITONTokenWalletPtrLRecord *) ) a2 ) ( amount : URValue ( uint128 ) a3 ) : URValue OrderRetLRecord ( orb ( orb a3 a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) on_sell_fail 
- ec wallet_in amount ) . 
- 
- Notation " 'on_sell_fail_' '(' ec wallet_in amount ')' " := 
- ( on_sell_fail_right 
- ec wallet_in amount ) 
- (in custom URValue at level 0 , ec custom URValue at level 0 
- , wallet_in custom URValue at level 0 
- , amount custom URValue at level 0 ) : ursus_scope .
-
- Definition prepare_price_state_init_and_addr_right { a1 a2 }  ( price_data : URValue ( ContractLRecord ) a1 ) ( price_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_price_state_init_and_addr 
- price_data price_code ) . 
- 
- Notation " 'prepare_price_state_init_and_addr_' '(' price_data price_code ')' " := 
- ( prepare_price_state_init_and_addr_right 
- price_data price_code ) 
- (in custom URValue at level 0 , price_data custom URValue at level 0 
- , price_code custom URValue at level 0 ) : ursus_scope . 
-
- Definition is_active_time_right { a1 }  ( order_finish_time : URValue ( uint32 ) a1 ) : URValue XBool a1 := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) is_active_time 
- order_finish_time ) . 
- 
- Notation " 'is_active_time_' '(' order_finish_time ')' " := 
- ( is_active_time_right 
- order_finish_time ) 
- (in custom URValue at level 0 , order_finish_time custom URValue at level 0 ) : ursus_scope .
-
- Definition calc_cost_right { a1 a2 }  ( amount : URValue ( uint128 ) a1 ) ( price : URValue ( uint128 ) a2 ) : URValue (XMaybe uint128) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_cost 
- amount price ) . 
- 
- Notation " 'calc_cost_' '(' amount price ')' " := 
- ( calc_cost_right 
- amount price ) 
- (in custom URValue at level 0 , amount custom URValue at level 0 
- , price custom URValue at level 0 ) : ursus_scope . 
-
- Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  ( tip3root : URValue ( XAddress ) a1 ) ( notify_addr : URValue ( XAddress (* IFlexNotifyPtrLRecord *) ) a2 ) ( price : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( tons_cfg : URValue ( TonsConfigLRecord ) a5 ) ( sell_idx : URValue ( uint ) a6 ) ( buy_idx : URValue ( uint ) a7 ) ( sells_amount : URValue ( uint128 ) a8 ) ( sells : URValue ( XQueue OrderInfoLRecord ) a9 ) ( buys_amount : URValue ( uint128 ) a10 ) ( buys : URValue ( XQueue OrderInfoLRecord ) a11 ) : URValue process_retLRecord ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a11 a10 ) a9 ) a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ11 ) process_queue_impl 
- tip3root notify_addr price deals_limit tons_cfg sell_idx buy_idx sells_amount sells buys_amount buys ) . 
- 
- Notation " 'process_queue_impl_' '(' tip3root notify_addr price deals_limit tons_cfg sell_idx buy_idx sells_amount sells buys_amount buys ')' " := 
- ( process_queue_impl_right 
- tip3root notify_addr price deals_limit tons_cfg sell_idx buy_idx sells_amount sells buys_amount buys ) 
- (in custom URValue at level 0 , tip3root custom URValue at level 0 
- , notify_addr custom URValue at level 0 
- , price custom URValue at level 0 
- , deals_limit custom URValue at level 0 
- , tons_cfg custom URValue at level 0 
- , sell_idx custom URValue at level 0 
- , buy_idx custom URValue at level 0 
- , sells_amount custom URValue at level 0 
- , sells custom URValue at level 0 
- , buys_amount custom URValue at level 0 
- , buys custom URValue at level 0 ) : ursus_scope . 
-
- Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
-( orders : URValue ( XQueue OrderInfoLRecord ) a1 ) 
-( client_addr : URValue ( addr_std_fixedLRecord ) a2 ) 
-( all_amount : URValue ( uint128 ) a3 ) 
-( sell : URValue ( XBool ) a4 ) 
-( return_ownership : URValue ( uint (* Grams *) ) a5 ) 
-( process_queue : URValue ( uint (* Grams *) ) a6 ) 
-( incoming_val : URValue ( uint (* Grams *) ) a7 ) 
-: URValue ((XQueue OrderInfoLRecord) # uint128)
- ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancel_order_impl 
- orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
- 
- Notation " 'cancel_order_impl_' '(' orders client_addr all_amount sell return_ownership process_queue incoming_val ')' " := 
- ( cancel_order_impl_right 
- orders client_addr all_amount sell return_ownership process_queue incoming_val ) 
- (in custom URValue at level 0 , orders custom URValue at level 0 
- , client_addr custom URValue at level 0 
- , all_amount custom URValue at level 0 
- , sell custom URValue at level 0 
- , return_ownership custom URValue at level 0 
- , process_queue custom URValue at level 0 
- , incoming_val custom URValue at level 0 ) : ursus_scope . 
 
 
 End Calls. 
