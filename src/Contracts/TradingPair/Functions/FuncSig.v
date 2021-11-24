@@ -6,6 +6,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import UrsusStdLib.Cpp.stdTypes.
 
+Require Import CommonNotations.
 Require Import Contracts.TradingPair.ClassTypes.
 Require Import Contracts.TradingPair.Ledger.
 
@@ -13,7 +14,7 @@ Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 (* Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm. *)
 Module LedgerModuleForFuncSig := Ledger xt sm .
-Module Export tvmNotationsModule := tvmNotations xt sm LedgerModuleForFuncSig. 
+Module Export CommonNotationsModule := CommonNotations xt sm LedgerModuleForFuncSig.
 (* Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. *)
 Module Type SpecSig.
 Local Open Scope ucpp_scope.

@@ -4,6 +4,9 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 
 Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
+Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
+Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .
+Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address | Tip3Config_ι_workchain_id_.
 
 Module Types (xt: XTypesSig) (sm: StateMonadSig).
 Export xt. 
@@ -33,5 +36,27 @@ Local Open Scope glist_scope.
 ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
 Opaque TonsConfigLRecord . 
+
+ Definition TickTockL : list Type := 
+ [ ( XBool ) : Type ; 
+ ( XBool ) : Type ] .
+Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
+ Opaque TickTockLRecord .
+
+ Definition addr_std_fixedL : list Type := 
+ [ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ] .
+Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
+ Opaque addr_std_fixedLRecord .
+
+Definition Tip3ConfigL : list Type := 
+ [ ( XString ) : Type ; 
+ ( XString ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XAddress ) : Type ;
+ ( XUInteger8 ) : Type ] .
+Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
+ Opaque Tip3ConfigLRecord .
 
 End Types.

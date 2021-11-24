@@ -21,59 +21,9 @@ Require Import Contracts.PriceXchg.Functions.FuncSig.
 Require Import Contracts.PriceXchg.Functions.FuncNotations.
 Require Contracts.PriceXchg.Interface.
 
-(*this elpi code move to the Ursus lib afterwards*)
-
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
 
-
-(* Elpi Command AddLocalState.
-
-Elpi Accumulate lp:{{
-
-main [Name , Term, LocalStateFieldT] :-
-  trm TrmInternal = Term,
-  trm LocalStateField = LocalStateFieldT,
-  str NameStr = Name,
-  N is NameStr ^ "_j",
-  coq.env.add-axiom N  (app [LocalStateField , TrmInternal]) _ , 
-  coq.locate  N GR, 
-  coq.TC.declare-instance GR 0,
-  coq.say TrmInternal.
-main _ :- coq.error "usage: AddLocalState <name> <term> <LocalStateField>".
-
-}}.
-
-Elpi Typecheck.
-Elpi Export AddLocalState.
-
-Elpi Command TestDefinitions. 
-Elpi Accumulate lp:{{
-
-pred get_name i:string , o:term.
-get_name NameS NameG :-
-    coq.locate NameS GR ,
-    NameG = global GR . 
-
-pred constructors_names i:string , o:list constructor.
-constructors_names IndName Names :-
-  std.assert! (coq.locate IndName (indt GR)) "not an inductive type",
-  coq.env.indt GR _ _ _ _ Names _.
-
-pred coqlist->list i:term, o: list term.
-coqlist->list {{ [ ]%xlist }} [ ].
-coqlist->list {{ (lp:X::lp:XS)%xlist }} [X | M] :- coqlist->list XS M.
-coqlist->list X _ :- coq.say "error",
-                    coq.say X.
-
-main [ A ] :-
-  coq.say  A. 
-}}. 
-
-Elpi Typecheck. *)
- 
-(* Module trainContractSpecModuleForFuncs := trainContractSpec XTypesModule StateMonadModule.
- *)
 Module Type Has_Internal.
 
 Parameter Internal: bool .
@@ -95,7 +45,6 @@ Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 Local Open Scope struct_scope.
-Local Open Scope Z_scope.
 Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
@@ -104,17 +53,16 @@ Local Notation UE := (UExpression _ _).
 Local Notation UEf := (UExpression _ false).
 Local Notation UEt := (UExpression _ true).
 
-Definition transfer_tip3_right {b} (x: URValue TonsConfigLRecord b): URValue XUInteger b :=
-    || {x} ^^ {TonsConfig_ι_transfer_tip3} || : _.
+
+(*move somewhere*)
+Arguments urgenerate_field {_} {_} {_} _ & .
 
 Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
  
-Arguments urgenerate_field {_} {_} {_} _ & .
-
 Notation " |{ e }| " := e (in custom URValue at level 0, 
                            e custom ULValue ,  only parsing ) : ursus_scope.
 
-Existing Instance xbool_default.
+(************************************************************************************)						   
 
  Definition minor_cost ( amount : ( uint128 ) ) ( price : ( RationalPriceLRecord ) ) : UExpression (XMaybe uint128) false . 
  	 	 refine {{ new 'cost : ( uint ) @ "cost" := {} 
@@ -134,25 +82,6 @@ Defined .
  amount price ) 
  (in custom URValue at level 0 , amount custom URValue at level 0 
  , price custom URValue at level 0 ) : ursus_scope . 
-
-
-Definition account_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfoXchg_ι_account} || : _.
-
-Definition account_left (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfoXchg_ι_account} }} : _.
-
-Notation " a '↑' 'OrderInfoXchg.account' " := ( account_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfoXchg.account' " := ( account_left a ) (in custom ULValue at level 0) : ursus_scope.
-  
-Definition amount_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfoXchg_ι_account} || : _.
-
-Definition amount_left (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfoXchg_ι_account} }} : _.
-
-Notation " a '↑' 'OrderInfoXchg.amount' " := ( amount_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfoXchg.amount' " := ( amount_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 
 Definition make_deal
@@ -222,25 +151,6 @@ false :=
  ( is_active_time_right 
  order_finish_time ) 
  (in custom URValue at level 0 , order_finish_time custom URValue at level 0 ) : ursus_scope .
-
-
-Definition original_amount_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfoXchg_ι_original_amount} || : _.
-
-Definition original_amount_left (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfoXchg_ι_original_amount} }} : _.
-
-Notation " a '↑' 'OrderInfoXchg.original_amount' " := ( original_amount_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfoXchg.original_amount' " := ( original_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition order_finish_time_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfoXchg_ι_order_finish_time} || : _.
-
-Definition order_finish_time_left (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfoXchg_ι_order_finish_time} }} : _.
-
-Notation " a '↑' 'OrderInfoXchg.order_finish_time' " := ( order_finish_time_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfoXchg.order_finish_time' " := ( order_finish_time_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 
 Definition extract_active_order 
@@ -447,6 +357,7 @@ using MsgAddressInt = variant<addr_std, addr_var>;
  void set_int_sender(lazy<MsgAddressInt> val) { 
     int_sender_ = val; } *)             
 Parameter set_int_sender : UExpression OrderRetLRecord false .
+
 Notation " 'set_int_sender_' '(' ')' " := 
  ( set_int_sender ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
@@ -536,50 +447,6 @@ persistent_data_header base ) .
  , code custom URValue at level 0 
  , workchain_id custom URValue at level 0 ) : ursus_scope . 
 
-Definition name_right {b} (x: URValue Tip3ConfigLRecord b): URValue XString b :=
-    || {x} ^^ {Tip3Config_ι_name} || : _ .
-    
-Definition name_left (x: ULValue Tip3ConfigLRecord): ULValue XString :=
-    {{ {x} ^^ {Tip3Config_ι_name} }} : _.
-    
-Notation " a '↑' 'Tip3Config.name' " := ( name_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'Tip3Config.name' " := ( name_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition symbol_right {b} (x: URValue Tip3ConfigLRecord b): URValue XString b :=
-    || {x} ^^ {Tip3Config_ι_symbol} || : _ .
-    
-Definition symbol_left (x: ULValue Tip3ConfigLRecord): ULValue XString :=
-    {{ {x} ^^ {Tip3Config_ι_symbol} }} : _.
-    
-Notation " a '↑' 'Tip3Config.symbol' " := ( symbol_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'Tip3Config.symbol' " := ( symbol_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition decimals_right {b} (x: URValue Tip3ConfigLRecord b): URValue XUInteger8 b :=
-    || {x} ^^ {Tip3Config_ι_decimals} || : _ .
-    
-Definition decimals_left (x: ULValue Tip3ConfigLRecord): ULValue XUInteger8 :=
-    {{ {x} ^^ {Tip3Config_ι_decimals} }} : _.
-    
-Notation " a '↑' 'Tip3Config.decimals' " := ( decimals_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'Tip3Config.decimals' " := ( decimals_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition root_public_key_right {b} (x: URValue Tip3ConfigLRecord b): URValue XUInteger256 b :=
-    || {x} ^^ {Tip3Config_ι_root_public_key} || : _ .
-    
-Definition root_public_key_left (x: ULValue Tip3ConfigLRecord): ULValue XUInteger256 :=
-    {{ {x} ^^ {Tip3Config_ι_root_public_key} }} : _.
-    
-Notation " a '↑' 'Tip3Config.root_public_key' " := ( root_public_key_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'Tip3Config.root_public_key' " := ( root_public_key_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition root_address_right {b} (x: URValue Tip3ConfigLRecord b): URValue XAddress b :=
-    || {x} ^^ {Tip3Config_ι_root_address} || : _ .
-    
-Definition root_address_left (x: ULValue Tip3ConfigLRecord): ULValue XAddress :=
-    {{ {x} ^^ {Tip3Config_ι_root_address} }} : _.
-    
-Notation " a '↑' 'Tip3Config.root_address' " := ( root_address_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'Tip3Config.root_address' " := ( root_address_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 
 Definition expected_wallet_address 
@@ -687,11 +554,11 @@ Defined .
  	 	 	 [ #{tip3root_sell}, #{tip3root_buy}, #{notify_addr}, #{price}, #{deals_limit}, #{tons_cfg},
            #{sells_amount}, #{sells}, #{buys_amount}, #{buys}, {} ] ; { _ } }} . 
 (*  	 	 refine {{ d.process_queue ( sell_idx , buy_idx ) ; { _ } }} .  *)
- 	 	 refine {{ return_ [ (!{d}) ^^ dealer.sells_amount_ , 
-                         (!{d}) ^^ dealer.sells_ , 
-                         (!{d}) ^^ dealer.buys_amount_ , 
-                         (!{d}) ^^ dealer.buys_ , 
-                         (!{d}) ^^ dealer.ret_ ] }} . 
+ 	 	 refine {{ return_ [ (!{d}) ↑ dealer.sells_amount_ , 
+                         (!{d}) ↑ dealer.sells_ , 
+                         (!{d}) ↑ dealer.buys_amount_ , 
+                         (!{d}) ↑ dealer.buys_ , 
+                         (!{d}) ↑ dealer.ret_ ] }} . 
 Defined . 
 
  Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 }  
@@ -728,45 +595,6 @@ Defined .
  , sells custom URValue at level 0 
  , buys_amount custom URValue at level 0 
  , buys custom URValue at level 0 ) : ursus_scope . 
-
-
-Definition sell_right {b} (x: URValue PayloadArgsLRecord b): URValue XBool b :=
-    || {x} ^^ {PayloadArgs_ι_sell} || : _ .
-    
-Definition sell_left (x: ULValue PayloadArgsLRecord): ULValue XBool :=
-    {{ {x} ^^ {PayloadArgs_ι_sell} }} : _.
-    
-Notation " a '↑' 'PayloadArgs.sell' " := ( sell_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.sell' " := ( sell_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition receive_tip3_wallet_right {b} (x: URValue PayloadArgsLRecord b): URValue addr_std_fixedLRecord b :=
-    || {x} ^^ {PayloadArgs_ι_receive_tip3_wallet} || : _ .
-    
-Definition receive_tip3_wallet_left (x: ULValue PayloadArgsLRecord): ULValue addr_std_fixedLRecord :=
-    {{ {x} ^^ {PayloadArgs_ι_receive_tip3_wallet} }} : _.
-    
-Notation " a '↑' 'PayloadArgs.receive_tip3_wallet' " := ( receive_tip3_wallet_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.receive_tip3_wallet' " := ( receive_tip3_wallet_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-
-Definition PayloadArgs_amount_right {b} (x: URValue PayloadArgsLRecord b): URValue uint128 b :=
-    || {x} ^^ {PayloadArgs_ι_amount} || : _ .
-    
-Definition PayloadArgs_amount_left (x: ULValue PayloadArgsLRecord): ULValue uint128 :=
-    {{ {x} ^^ {PayloadArgs_ι_amount} }} : _.
-    
-Notation " a '↑' 'PayloadArgs.amount' " := ( PayloadArgs_amount_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.amount' " := ( PayloadArgs_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition client_addr_right {b} (x: URValue PayloadArgsLRecord b): URValue addr_std_fixedLRecord b :=
-    || {x} ^^ {PayloadArgs_ι_client_addr} || : _ .
-    
-Definition client_addr_left (x: ULValue PayloadArgsLRecord): ULValue addr_std_fixedLRecord :=
-    {{ {x} ^^ {PayloadArgs_ι_client_addr} }} : _.
-    
-Notation " a '↑' 'PayloadArgs.client_addr' " := ( client_addr_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.amount' " := ( client_addr_left a ) (in custom ULValue at level 0) : ursus_scope.
-
 
 
 Definition onTip3LendOwnership 
@@ -875,12 +703,10 @@ Print ClassGenerator.prod_list .
  	 refine {{ (* suicide ( _flex_ ) *) _buys_ := !{buys} }} . 
  refine {{ if ( !{ret} ) then { { _:UEf } } ; { _ } }} . 
  	 refine {{ return_ (!{ret}) -> get_default () }} . 
- refine {{ return_ [ 1 (* ok *) , 0 , (!{ord}) ^^ OrderInfoXchg.amount ] }} . 
+ refine {{ return_ [ 1 (* ok *) , 0 , (!{ord}) ↑ OrderInfoXchg.amount ] }} . 
  Defined . 
  
- 
- 
- 
+
 Definition processQueue : UExpression PhantomType false . 
  	 	 refine {{ if ( (_sells_ -> empty ()) \\ (_buys_ -> empty ()) ) 
                then { { _:UEf } }; { _ } }} . 
@@ -1014,7 +840,7 @@ Definition cancelBuy : UExpression PhantomType false .
 Defined . 
  
  Definition getPriceNum : UExpression uint128 false . 
- 	 	 refine {{ return_ _price_ ^^ RationalPrice.num }} . 
+ 	 	 refine {{ return_ _price_ ↑ RationalPrice.num }} . 
  Defined . 
  
  Definition getPriceNum_right  : URValue uint128 false := 
@@ -1027,7 +853,7 @@ Defined .
  (in custom URValue at level 0 ) : ursus_scope . 
 
 Definition getPriceDenum : UExpression uint128 false . 
- 	 	 refine {{ return_ _price_ ^^ RationalPrice.denum }} . 
+ 	 	 refine {{ return_ _price_ ↑ RationalPrice.denum }} . 
 Defined . 
  
 Definition getPriceDenum_right  : URValue uint128 false := 

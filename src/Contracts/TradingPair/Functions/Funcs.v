@@ -14,6 +14,7 @@ Require Import UMLang.ProofEnvironment2.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
+Require Import CommonNotations.
 Require Import Project.CommonConstSig.
 (*Fully qualified name are mandatory in multi-contract environment*)
 Require Import Contracts.TradingPair.Ledger.
@@ -21,31 +22,8 @@ Require Import Contracts.TradingPair.Functions.FuncSig.
 Require Import Contracts.TradingPair.Functions.FuncNotations.
 Require Contracts.TradingPair.Interface.
 
-(*this elpi code move to the Ursus lib afterwards*)
-
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
-
-
-Elpi Command AddLocalState.
-
-Elpi Accumulate lp:{{
-
-main [Name , Term, LocalStateFieldT] :-
-  trm TrmInternal = Term,
-  trm LocalStateField = LocalStateFieldT,
-  str NameStr = Name,
-  N is NameStr ^ "_j",
-  coq.env.add-axiom N  (app [LocalStateField , TrmInternal]) _ , 
-  coq.locate  N GR, 
-  coq.TC.declare-instance GR 0.
-  /* coq.say TrmInternal. */
-main _ :- coq.error "usage: AddLocalState <name> <term> <LocalStateField>".
-
-}}.
-
-Elpi Typecheck.
-Elpi Export AddLocalState.
 
 Module Type Has_Internal.
 
@@ -60,7 +38,7 @@ Import ha.
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 
-Export SpecModuleForFuncNotations(* ForFuncs *).tvmNotationsModule.
+Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule.
 
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  
@@ -68,9 +46,11 @@ Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 Local Open Scope struct_scope.
-Local Open Scope Z_scope.
+Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
+
+(*move somewhere*)
 
 Local Notation UE := (UExpression _ _)(only parsing).
 Local Notation UEf := (UExpression _ false)(only parsing).
@@ -83,6 +63,9 @@ Arguments urgenerate_field {_} {_} {_} _ & .
 
 Notation " |{ e }| " := e (in custom URValue at level 0, 
                            e custom ULValue ,  only parsing ) : ursus_scope.
+
+(**************************************************************************)
+
 Parameter int_value__ : URValue uint false .
 Notation " 'int_value' '(' ')' " := 
  ( int_value__ ) 
@@ -158,9 +141,6 @@ Definition prepare_trading_pair_state_init_and_addr
  	 	 refine {{ { pair_init_cl } := {} (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
  	 	 refine {{ return_ [ !{ pair_init } , {} (* tvm.hash ( !{pair_sinit_cl} ) *) ] }} . 
  Defined . 
-
-
-
 
 End FuncsInternal.
 End Funcs.

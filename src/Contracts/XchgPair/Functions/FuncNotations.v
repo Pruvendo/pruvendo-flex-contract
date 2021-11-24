@@ -14,6 +14,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
+Require Import CommonNotations.
 Require Import Contracts.XchgPair.Ledger.
 Require Import Contracts.XchgPair.Functions.FuncSig.
 
@@ -41,20 +42,56 @@ Import UrsusNotations.
 Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
 
-Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TickTock.tock' " := ( TickTock_ι_tock ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TickTock.tock' " := ( TickTock_ι_tock ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.split_depth' " := ( StateInit_ι_split_depth ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.split_depth' " := ( StateInit_ι_split_depth ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.special' " := ( StateInit_ι_special ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.special' " := ( StateInit_ι_special ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.code' " := ( StateInit_ι_code ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.code' " := ( StateInit_ι_code ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.data' " := ( StateInit_ι_data ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.data' " := ( StateInit_ι_data ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.library' " := ( StateInit_ι_library ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.library' " := ( StateInit_ι_library ) (in custom URValue at level 0) : ursus_scope. 
+(* Definition StateInitL : list Type := 
+ [ ( ( XMaybe XUInteger ) ) : Type ; 
+ ( ( XMaybe TickTockLRecord ) ) : Type ; 
+ ( ( XMaybe XCell ) ) : Type ; 
+ ( ( XMaybe XCell ) ) : Type ; 
+ ( ( XMaybe XCell ) ) : Type ] . *)
+
+Definition StateInit_split_depth_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XUInteger ) b :=
+    || {x} ^^ {StateInit_ι_split_depth} || : _ .
+
+Definition StateInit_special_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe TickTockLRecord ) b :=
+    || {x} ^^ {StateInit_ι_special} || : _ .
+
+Definition StateInit_code_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XCell ) b :=
+    || {x} ^^ {StateInit_ι_code} || : _ .
+
+Definition StateInit_data_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XCell ) b :=
+    || {x} ^^ {StateInit_ι_data} || : _ .
+
+Definition StateInit_library_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XCell ) b :=
+    || {x} ^^ {StateInit_ι_library} || : _ .        
+
+Definition StateInit_split_depth_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe XUInteger ) :=
+    {{ {x} ^^ {StateInit_ι_split_depth} }} : _ .
+
+Definition StateInit_special_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe TickTockLRecord ) :=
+    {{ {x} ^^ {StateInit_ι_special} }} : _ .
+
+Definition StateInit_code_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe XCell ) :=
+    {{ {x} ^^ {StateInit_ι_code} }} : _ .
+
+Definition StateInit_data_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe XCell ) :=
+    {{ {x} ^^ {StateInit_ι_data} }} : _ .
+
+Definition StateInit_library_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe XCell ) :=
+    {{ {x} ^^ {StateInit_ι_library} }} : _ .      
+
+Notation " a '↑' 'StateInit.split_depth' " := ( StateInit_split_depth_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'StateInit.split_depth' " := ( StateInit_split_depth_right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'StateInit.special' " := ( StateInit_special_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'StateInit.special' " := ( StateInit_special_right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'StateInit.code' " := ( StateInit_code_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'StateInit.code' " := ( StateInit_code_right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'StateInit.data' " := ( StateInit_data_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'StateInit.data' " := ( StateInit_data_right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'StateInit.library' " := ( StateInit_library_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'StateInit.library' " := ( StateInit_library_right a) (in custom URValue at level 0) : ursus_scope. 
+
+(********************************************************************************************************************)
+(*state fields*)
  
  Definition flex_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType flex_addr_ ) : ULValue XAddress ) . 
  Definition flex_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType flex_addr_ ) : URValue XAddress false ) . 

@@ -53,7 +53,7 @@ Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModu
 Import ha.
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
-Export SpecModuleForFuncNotations.tvmNotationsModule.
+Export SpecModuleForFuncNotations.CommonNotationsModule.
 
 Module FuncsInternal <: SpecModuleForFuncNotations.SpecSig. 
  
@@ -134,11 +134,11 @@ Definition constructor_left { R a1 a2 a3 }
  (in custom ULValue at level 0 , pubkey custom URValue at level 0 
  , trading_pair_code custom URValue at level 0 
  , xchg_pair_code custom URValue at level 0 ) : ursus_scope .
- 
+
  Definition setFlexCfg 
 ( tons_cfg : ( TonsConfigLRecord ) ) 
 ( flex : ( XAddress ) ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( int_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _tons_cfg_ := #{ tons_cfg } ; { _ } }} . 
  	 	 refine {{ _flex_ := #{ flex }  }} . 
@@ -157,7 +157,7 @@ Definition constructor_left { R a1 a2 a3 }
  
 
  Definition setExtWalletCode ( ext_wallet_code : ( XCell ) ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( int_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _ext_wallet_code_ ->set ( #{ ext_wallet_code } ) }} . 
  Defined . 
@@ -172,7 +172,7 @@ Definition constructor_left { R a1 a2 a3 }
  (in custom ULValue at level 0 , ext_wallet_code custom URValue at level 0 ) : ursus_scope . 
  
  Definition setFlexWalletCode ( flex_wallet_code : ( XCell ) ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( int_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _flex_wallet_code_ ->set (  #{ flex_wallet_code } ) }} . 
  Defined . 
@@ -186,7 +186,7 @@ Definition constructor_left { R a1 a2 a3 }
  (in custom ULValue at level 0 , flex_wallet_code custom URValue at level 0 ) : ursus_scope . 
   
  Definition setFlexWrapperCode ( flex_wrapper_code : ( XCell ) ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( int_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ _flex_wrapper_code_  ->set (  #{ flex_wrapper_code } ) }} . 
  Defined . 
@@ -216,14 +216,21 @@ Definition prepare_trading_pair_state_init_and_addr ( pair_data : DTradingPairLR
                            : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'pair_data_cl : XCell @ "pair_data_cl" :=  
                        prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} .
- 	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" :=
-                   [$
+                       Check || [$
+                       {} ⇒ { StateInit_ι_split_depth } ;
+                       {} ⇒ { StateInit_ι_special } ;
+                       ( #{pair_code} ) -> set () ⇒ {StateInit_ι_code} ;
+                       ( !{pair_data_cl} ) -> set () ⇒ {StateInit_ι_data} ;
+                       {} ⇒ {StateInit_ι_library}
+                  $] ||.
+ 	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := {}
+                   (* [$
                          {} ⇒ { StateInit_ι_split_depth } ;
                          {} ⇒ { StateInit_ι_special } ;
                          ( #{pair_code} ) -> set () ⇒ {StateInit_ι_code} ;
                          ( !{pair_data_cl} ) -> set () ⇒ {StateInit_ι_data} ;
                          {} ⇒ {StateInit_ι_library}
-                    $] ; { _ } }}.
+                    $] *) ; { _ } }}.
  	 	 refine {{ new 'pair_init_cl : XCell @ "pair_init_cl" := {} (* build(pair_init).make_cell() *) ; { _ } }} .
  	 	 refine {{ return_ [ !{pair_init} , {} (* tvm_hash(pair_init_cl) *) ] }} .
 Defined.
@@ -242,7 +249,7 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
 
  Definition deployTradingPair ( tip3_root : ( XAddress ) ) ( deploy_min_value : ( uint128 ) ) 
 ( deploy_value : ( uint128 ) ) ( min_trade_amount : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression XAddress true . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( int_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} .
  	 	 refine {{ new 'pair_data : (DTradingPairLRecord ) @ "pair_data" :=  
  	 	        [$ _flex_ ⇒ { DTradingPair_ι_flex_addr_ } ; 
