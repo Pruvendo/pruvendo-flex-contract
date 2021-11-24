@@ -11,8 +11,8 @@ Require Import FinProof.ProgrammingWith.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 
-Require Import UrsusTVM.tvmFunc.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 Require Import Contracts.FlexClient.Ledger.
@@ -112,7 +112,7 @@ persistent_data_header base ) .
  , b custom URValue at level 0 ) : ursus_scope . 
 
   
-Definition constructor ( pubkey : ( XInteger256 ) ) ( trading_pair_code : ( XCell ) ) ( xchg_pair_code : ( XCell ) ) : UExpression PhantomType true . 
+Definition constructor ( pubkey : ( uint256 ) ) ( trading_pair_code : ( XCell ) ) ( xchg_pair_code : ( XCell ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( (#{pubkey}) != 0 ) , error_code::zero_owner_pubkey ) ; { _ } }} . 
  	 	 refine {{ _owner_ := #{pubkey} ; { _ } }} . 
  	 	 refine {{ _trading_pair_code_ := #{ trading_pair_code } ; { _ } }} . 
@@ -122,7 +122,7 @@ Definition constructor ( pubkey : ( XInteger256 ) ) ( trading_pair_code : ( XCel
  Defined .
  
 Definition constructor_left { R a1 a2 a3 }  
-( pubkey : URValue ( XInteger256 ) a1 ) 
+( pubkey : URValue ( uint256 ) a1 ) 
 ( trading_pair_code : URValue ( XCell ) a2 ) 
 ( xchg_pair_code : URValue ( XCell ) a3 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) constructor 
@@ -213,7 +213,7 @@ Definition constructor_left { R a1 a2 a3 }
 
 Definition prepare_trading_pair_state_init_and_addr ( pair_data : DTradingPairLRecord ) 
                                                     ( pair_code : XCell  ) 
-                           : UExpression (StateInitLRecord # XInteger256) false .
+                           : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'pair_data_cl : XCell @ "pair_data_cl" :=  
                        prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} .
  	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" :=
@@ -231,7 +231,7 @@ Defined.
 Definition prepare_trading_pair_state_init_and_addr_right {b1 b2} 
 (x0: URValue DTradingPairLRecord b1 ) 
 (x1: URValue XCell b2 ) 
-: URValue (StateInitLRecord # XInteger256) ( orb false (orb b2 b1) ) :=
+: URValue (StateInitLRecord # uint256) ( orb false (orb b2 b1) ) :=
    wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_trading_pair_state_init_and_addr x0 x1).    
 
 Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (prepare_trading_pair_state_init_and_addr_right x0 x1)  
@@ -240,8 +240,8 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
     x1 custom URValue at level 0) : ursus_scope.
 
 
- Definition deployTradingPair ( tip3_root : ( XAddress ) ) ( deploy_min_value : ( XInteger128 ) ) 
-( deploy_value : ( XInteger128 ) ) ( min_trade_amount : ( XInteger128 ) ) ( notify_addr : ( XAddress ) ) : UExpression XAddress true . 
+ Definition deployTradingPair ( tip3_root : ( XAddress ) ) ( deploy_min_value : ( uint128 ) ) 
+( deploy_value : ( uint128 ) ) ( min_trade_amount : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} .
  	 	 refine {{ new 'pair_data : (DTradingPairLRecord ) @ "pair_data" :=  
@@ -249,7 +249,7 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
                (#{ tip3_root }) ⇒ { DTradingPair_ι_tip3_root_ } ; 
                  0 ⇒ { DTradingPair_ι_notify_addr_ }  
                $] ; { _ } }} . 
-      refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : XInteger256 ) @ ("state_init", "std_addr") :=
+      refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
             prepare_trading_pair_state_init_and_addr_ ( !{ pair_data } , _trading_pair_code_ )  ; { _ } }} . 
  	 	 refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} ; { _ } }} . 
  	 	             (*  ITradingPairPtr ( Address :: make_std ( workchain_id_ , std_addr ) )  *) 
@@ -257,7 +257,7 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
  	 	 refine {{ return_  !{trade_pair} }} . 
  Defined . 
 
- Definition deployTradingPair_right { a1 a2 a3 a4 a5 }  ( tip3_root : URValue ( XAddress ) a1 ) ( deploy_min_value : URValue ( XInteger128 ) a2 ) ( deploy_value : URValue ( XInteger128 ) a3 ) ( min_trade_amount : URValue ( XInteger128 ) a4 ) ( notify_addr : URValue ( XAddress ) a5 ) : URValue XAddress true := 
+ Definition deployTradingPair_right { a1 a2 a3 a4 a5 }  ( tip3_root : URValue ( XAddress ) a1 ) ( deploy_min_value : URValue ( uint128 ) a2 ) ( deploy_value : URValue ( uint128 ) a3 ) ( min_trade_amount : URValue ( uint128 ) a4 ) ( notify_addr : URValue ( XAddress ) a5 ) : URValue XAddress true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) deployTradingPair 
  tip3_root deploy_min_value deploy_value min_trade_amount notify_addr ) . 
  
@@ -272,7 +272,7 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
 
 Definition prepare_xchg_pair_state_init_and_addr ( pair_data : DXchgPairLRecord ) 
                                                     ( pair_code : XCell  ) 
-                           : UExpression (StateInitLRecord # XInteger256) false .
+                           : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'pair_data_cl : XCell @ "pair_data_cl" :=  
                       prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} .
  	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" :=
@@ -290,7 +290,7 @@ Defined.
 Definition prepare_xchg_pair_state_init_and_addr_right {b1 b2} 
 (x0: URValue DXchgPairLRecord b1 ) 
 (x1: URValue XCell b2 ) 
-: URValue (StateInitLRecord # XInteger256) ( orb false (orb b2 b1) ) := 
+: URValue (StateInitLRecord # uint256) ( orb false (orb b2 b1) ) := 
    wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_xchg_pair_state_init_and_addr x0 x1).    
 
 Notation " 'prepare_xchg_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (prepare_xchg_pair_state_init_and_addr_right x0 x1)  
@@ -300,9 +300,9 @@ Notation " 'prepare_xchg_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (prep
 
 Definition deployXchgPair ( tip3_major_root : ( address_t ) ) 
                            ( tip3_minor_root : ( address_t ) ) 
-                           ( deploy_min_value : ( XInteger128 ) ) 
-                           ( deploy_value : ( XInteger128 ) ) 
-                           ( min_trade_amount : ( XInteger128 ) ) 
+                           ( deploy_min_value : ( uint128 ) ) 
+                           ( deploy_value : ( uint128 ) ) 
+                           ( min_trade_amount : ( uint128 ) ) 
                            ( notify_addr : ( address_t ) ) 
                             : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
@@ -313,7 +313,7 @@ Definition deployXchgPair ( tip3_major_root : ( address_t ) )
                       (#{ tip3_minor_root }) ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
                       0 ⇒ { DXchgPair_ι_notify_addr_ }
                           $] ; { _ } }} . 
-      refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : XInteger256 ) @ ("state_init", "std_addr") :=
+      refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
            prepare_xchg_pair_state_init_and_addr_ ( !{ pair_data } , _xchg_pair_code_ )  ; { _ } }} .   
  	 	 refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} ; { _ } }} . 
  	 	 refine {{ { trade_pair } := {} (* IXchgPairPtr ( Address :: make_std ( workchain_id_ , std_addr ) ) *) ; { _ } }} . 
@@ -321,7 +321,7 @@ Definition deployXchgPair ( tip3_major_root : ( address_t ) )
  	 	 refine {{ return_ !{trade_pair} }} . 
  Defined .
  
- Definition deployXchgPair_right { a1 a2 a3 a4 a5 a6 }  ( tip3_major_root : URValue ( address_t ) a1 ) ( tip3_minor_root : URValue ( address_t ) a2 ) ( deploy_min_value : URValue ( XInteger128 ) a3 ) ( deploy_value : URValue ( XInteger128 ) a4 ) ( min_trade_amount : URValue ( XInteger128 ) a5 ) ( notify_addr : URValue ( address_t ) a6 ) : URValue XAddress true := 
+ Definition deployXchgPair_right { a1 a2 a3 a4 a5 a6 }  ( tip3_major_root : URValue ( address_t ) a1 ) ( tip3_minor_root : URValue ( address_t ) a2 ) ( deploy_min_value : URValue ( uint128 ) a3 ) ( deploy_value : URValue ( uint128 ) a4 ) ( min_trade_amount : URValue ( uint128 ) a5 ) ( notify_addr : URValue ( address_t ) a6 ) : URValue XAddress true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) deployXchgPair 
  tip3_major_root tip3_minor_root deploy_min_value deploy_value min_trade_amount notify_addr ) . 
  
@@ -347,7 +347,7 @@ Definition deployXchgPair ( tip3_major_root : ( address_t ) )
 
 Definition prepare_price_state_init_and_addr ( price_data : DPriceLRecord ) 
                                              ( price_code : XCell ) 
-                           : UExpression (StateInitLRecord # XInteger256) false .
+                           : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'price_data_cl : XCell @ "price_data_cl" :=  
                        prepare_persistent_data_ ( {}, #{price_data} ) ; { _ } }} .
  	 	 refine {{ new 'price_init : StateInitLRecord @ "pair_init" :=
@@ -365,7 +365,7 @@ Defined.
 Definition prepare_price_state_init_and_addr_right {b1 b2} 
 (x0: URValue DPriceLRecord b1 ) 
 (x1: URValue XCell b2 ) 
-: URValue (StateInitLRecord # XInteger256) ( orb false (orb b2 b1) ) :=
+: URValue (StateInitLRecord # uint256) ( orb false (orb b2 b1) ) :=
    wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_price_state_init_and_addr x0 x1).    
 
 Notation " 'prepare_price_state_init_and_addr_' '(' x0 ',' x1 ')' " := 
@@ -397,11 +397,11 @@ Notation " 'prepare_price_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
     return { state_init, addr, std_addr };
   } *)
 
-Definition preparePrice (price min_amount : XInteger128 ) (deals_limit : XInteger8 )
+Definition preparePrice (price min_amount : uint128 ) (deals_limit : uint8 )
                         (tip3_code: XCell  )
                         (tip3cfg: Tip3ConfigLRecord ) (price_code: XCell  )
                         (notify_addr: XAddress  )
-: UExpression (StateInitLRecord # (XAddress # XInteger256)) false .  
+: UExpression (StateInitLRecord # (XAddress # uint256)) false .  
  	 	 refine {{ new 'price_data : DPriceLRecord @ "price_data" :=
         [$
            (#{price})  ⇒ { DPrice_ι_price_ } ;
@@ -418,21 +418,21 @@ Definition preparePrice (price min_amount : XInteger128 ) (deals_limit : XIntege
            {}  ⇒ { DPrice_ι_sells_ } ;
            {}  ⇒ { DPrice_ι_buys_ }
          $] ; { _ } }} .
-      refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : XInteger256 ) @ ("state_init", "std_addr") :=
+      refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
            prepare_price_state_init_and_addr_ ( !{ price_data } , #{price_code} ) ; { _ } }} .   
  	 	 refine {{ new 'addr : XAddress @ "addr" := {} (* address::make_std(workchain_id_, std_addr) *) ; { _ } }} .
  	 	 refine {{ return_ [ !{state_init} , !{addr} , !{std_addr} ] }} .
 Defined.
 
 Definition preparePrice_right {b1 b2 b3 b4 b5 b6 b7} 
-(x0: URValue XInteger128 b1 ) 
-(x1: URValue XInteger128 b2 ) 
-(x2: URValue XInteger8 b3 ) 
+(x0: URValue uint128 b1 ) 
+(x1: URValue uint128 b2 ) 
+(x2: URValue uint8 b3 ) 
 (x3: URValue XCell b4 ) 
 (x4: URValue Tip3ConfigLRecord b5 ) 
 (x5: URValue XCell b6 ) 
 (x6: URValue XAddress b7)
-: URValue (StateInitLRecord # (XAddress # XInteger256)) (orb(orb(orb(orb(orb(orb b7 b6) b5) b4)b3) b2) b1) :=
+: URValue (StateInitLRecord # (XAddress # uint256)) (orb(orb(orb(orb(orb(orb b7 b6) b5) b4)b3) b2) b1) :=
    wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ7) preparePrice x0 x1 x2 x3 x4 x5 x6 ).    
 
 Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " := 
@@ -447,12 +447,12 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
     x6 custom URValue at level 0 ) : ursus_scope.
 
  Definition deployPriceWithSell 
-( price : ( XInteger128 ) ) 
-( amount : ( XInteger128 ) ) 
-( lend_finish_time : ( XInteger32 ) ) 
-( min_amount : ( XInteger128 ) ) 
-( deals_limit : ( XInteger8 ) ) 
-( tons_value : ( XInteger128 ) ) 
+( price : ( uint128 ) ) 
+( amount : ( uint128 ) ) 
+( lend_finish_time : ( uint32 ) ) 
+( min_amount : ( uint128 ) ) 
+( deals_limit : ( uint8 ) ) 
+( tons_value : ( uint128 ) ) 
 ( price_code : ( XCell ) ) 
 ( my_tip3_addr : ( XAddress ) ) 
 ( receive_wallet : ( XAddress ) ) 
@@ -464,7 +464,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
  	 	 refine {{ tvm.accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
-                      'std_addr : XInteger256 ) @ ("state_init", "addr" , "std_addr") :=
+                      'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
                  preparePrice_ ( #{price} , #{min_amount} , #{deals_limit} , 
                                  _flex_wallet_code_ ->  get () , #{tip3cfg} ,
                                         #{price_code} , #{notify_addr} ) ; { _ } }} .
@@ -483,12 +483,12 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
  Defined .
 
  Definition deployPriceWithSell_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  
-( price : URValue ( XInteger128 ) a1 ) 
-( amount : URValue ( XInteger128 ) a2 ) 
-( lend_finish_time : URValue ( XInteger32 ) a3 ) 
-( min_amount : URValue ( XInteger128 ) a4 ) 
-( deals_limit : URValue ( XInteger8 ) a5 ) 
-( tons_value : URValue ( XInteger128 ) a6 ) 
+( price : URValue ( uint128 ) a1 ) 
+( amount : URValue ( uint128 ) a2 ) 
+( lend_finish_time : URValue ( uint32 ) a3 ) 
+( min_amount : URValue ( uint128 ) a4 ) 
+( deals_limit : URValue ( uint8 ) a5 ) 
+( tons_value : URValue ( uint128 ) a6 ) 
 ( price_code : URValue ( XCell ) a7 ) 
 ( my_tip3_addr : URValue ( XAddress ) a8 ) 
 ( receive_wallet : URValue ( XAddress ) a9 ) 
@@ -513,16 +513,16 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
  , tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition deployPriceWithBuy ( price : ( XInteger128 ) ) ( amount : ( XInteger128 ) ) 
-( order_finish_time : ( XInteger32 ) ) ( min_amount : ( XInteger128 ) ) ( deals_limit : ( XInteger8 ) ) 
-( deploy_value : ( XInteger128 ) ) ( price_code : ( XCell ) ) ( my_tip3_addr : ( address_t ) ) 
+ Definition deployPriceWithBuy ( price : ( uint128 ) ) ( amount : ( uint128 ) ) 
+( order_finish_time : ( uint32 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
+( deploy_value : ( uint128 ) ) ( price_code : ( XCell ) ) ( my_tip3_addr : ( address_t ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
-                      'std_addr : XInteger256 ) @ ("state_init", "addr" , "std_addr") :=
+                      'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
                  preparePrice_ ( #{price} , #{min_amount} , #{deals_limit} , _flex_wallet_code_ -> get () , #{tip3cfg} ,
                        #{price_code} , #{notify_addr} ) ; { _ } }} . 
  	 	 refine {{ new 'price_addr : ( XAddress ) @ "price_addr":= {} ; { _ } }} . 
@@ -530,7 +530,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
  	 	 refine {{ return_ !{price_addr} }} . 
  Defined . 
  
- Definition deployPriceWithBuy_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( price : URValue ( XInteger128 ) a1 ) ( amount : URValue ( XInteger128 ) a2 ) ( order_finish_time : URValue ( XInteger32 ) a3 ) ( min_amount : URValue ( XInteger128 ) a4 ) ( deals_limit : URValue ( XInteger8 ) a5 ) ( deploy_value : URValue ( XInteger128 ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( my_tip3_addr : URValue ( address_t ) a8 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address_t ) a10 ) : URValue XAddress true := 
+ Definition deployPriceWithBuy_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( price : URValue ( uint128 ) a1 ) ( amount : URValue ( uint128 ) a2 ) ( order_finish_time : URValue ( uint32 ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( deals_limit : URValue ( uint8 ) a5 ) ( deploy_value : URValue ( uint128 ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( my_tip3_addr : URValue ( address_t ) a8 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address_t ) a10 ) : URValue XAddress true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ10 ) deployPriceWithBuy 
  price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr ) . 
  
@@ -548,15 +548,15 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
  , tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition cancelSellOrder ( price : ( XInteger128 ) ) ( min_amount : ( XInteger128 ) ) 
-( deals_limit : ( XInteger8 ) ) ( value : ( XInteger128 ) ) ( price_code : ( XCell ) ) 
+ Definition cancelSellOrder ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
+( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( price_code : ( XCell ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
-                      'std_addr : XInteger256 ) @ ("state_init", "addr" , "std_addr") :=
+                      'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
              preparePrice_ ( #{price} , #{min_amount} , #{deals_limit} , _flex_wallet_code_ -> get () , #{tip3cfg} , 
                             #{price_code} , #{notify_addr} ) ; { _ } }} . 
  	 	 refine {{ new 'price_addr : ( XAddress ) @ "price_addr" := {}  ; { _ } }} . 
@@ -564,7 +564,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
 refine {{ {price_addr} := !{price_addr} }} .
  Defined .
 
- Definition cancelSellOrder_left { R a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( XInteger128 ) a1 ) ( min_amount : URValue ( XInteger128 ) a2 ) ( deals_limit : URValue ( XInteger8 ) a3 ) ( value : URValue ( XInteger128 ) a4 ) ( price_code : URValue ( XCell ) a5 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( notify_addr : URValue ( address_t ) a7 ) : UExpression R true := 
+ Definition cancelSellOrder_left { R a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( uint128 ) a1 ) ( min_amount : URValue ( uint128 ) a2 ) ( deals_limit : URValue ( uint8 ) a3 ) ( value : URValue ( uint128 ) a4 ) ( price_code : URValue ( XCell ) a5 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( notify_addr : URValue ( address_t ) a7 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancelSellOrder 
  price min_amount deals_limit value price_code tip3cfg notify_addr ) . 
  
@@ -579,21 +579,21 @@ refine {{ {price_addr} := !{price_addr} }} .
  , tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
  
-Definition cancelBuyOrder ( price : ( XInteger128 ) ) ( min_amount : ( XInteger128 ) ) ( deals_limit : ( XInteger8 ) ) 
-( value : ( XInteger128 ) ) ( price_code : ( XCell ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) : UExpression PhantomType true . 
+Definition cancelBuyOrder ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
+( value : ( uint128 ) ) ( price_code : ( XCell ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
-                      'std_addr : XInteger256 ) @ ("state_init", "addr" , "std_addr") :=
+                      'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
                   preparePrice_ ( #{price} , #{min_amount} , #{deals_limit} , _flex_wallet_code_ -> get () , 
                              #{tip3cfg} , #{price_code} , #{notify_addr} ) ; { _ } }} . 
  	 	 refine {{ new 'price_addr : ( XAddress ) @ "price_addr" := {}; { _ } }} . 
  	 	 refine {{ {price_addr} := !{price_addr} (* price_addr ( Grams ( value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . cancelBuy ( ) *) }} . 
  Defined .
 
-  Definition cancelBuyOrder_left { R a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( XInteger128 ) a1 ) ( min_amount : URValue ( XInteger128 ) a2 ) ( deals_limit : URValue ( XInteger8 ) a3 ) ( value : URValue ( XInteger128 ) a4 ) ( price_code : URValue ( XCell ) a5 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( notify_addr : URValue ( address_t ) a7 ) : UExpression R true := 
+  Definition cancelBuyOrder_left { R a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( uint128 ) a1 ) ( min_amount : URValue ( uint128 ) a2 ) ( deals_limit : URValue ( uint8 ) a3 ) ( value : URValue ( uint128 ) a4 ) ( price_code : URValue ( XCell ) a5 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( notify_addr : URValue ( address_t ) a7 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancelBuyOrder 
  price min_amount deals_limit value price_code tip3cfg notify_addr ) . 
  
@@ -619,7 +619,7 @@ Definition cancelBuyOrder ( price : ( XInteger128 ) ) ( min_amount : ( XInteger1
 } *)
 Definition prepare_price_xchg_state_init_and_addr ( price_data : DPriceXchgLRecord ) 
                                              ( price_code : XCell ) 
-                           : UExpression (StateInitLRecord # XInteger256) false .
+                           : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'price_data_cl : XCell @ "price_data_cl" :=  
                        prepare_persistent_data_ ( {} , #{price_data} )  ; { _ } }} .
  	 	 refine {{ new 'price_init : StateInitLRecord @ "pair_init" :=
@@ -637,7 +637,7 @@ Defined.
 Definition prepare_price_xchg_state_init_and_addr_right {b1 b2} 
 (x0: URValue DPriceXchgLRecord b1 ) 
 (x1: URValue XCell b2 ) 
-: URValue (StateInitLRecord # XInteger256) ( orb false (orb b2 b1) ) :=
+: URValue (StateInitLRecord # uint256) ( orb false (orb b2 b1) ) :=
    wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_price_xchg_state_init_and_addr x0 x1).    
 
 Notation " 'prepare_price_xchg_state_init_and_addr_' '(' x0 ',' x1 ')' " := 
@@ -646,12 +646,12 @@ Notation " 'prepare_price_xchg_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
     x0 custom URValue at level 0,
     x1 custom URValue at level 0) : ursus_scope.
 
- Definition preparePriceXchg ( price_num : ( XInteger128 ) ) 
-( price_denum : ( XInteger128 ) ) ( min_amount : ( XInteger128 ) ) 
-( deals_limit : ( XInteger8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
+ Definition preparePriceXchg ( price_num : ( uint128 ) ) 
+( price_denum : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
+( deals_limit : ( uint8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( XCell ) )
  ( notify_addr : ( address_t ) ) 
-: UExpression ( StateInitLRecord # ( XAddress # XInteger256 ) ) false . 
+: UExpression ( StateInitLRecord # ( XAddress # uint256 ) ) false . 
  	 	 refine {{ new 'price_data : ( DPriceXchgLRecord ) @ "price_data" :=  
                [$
                  [$ (#{price_num}) ⇒ {RationalPrice_ι_num} ; 
@@ -674,13 +674,13 @@ Notation " 'prepare_price_xchg_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
                {} ⇒ { DPriceXchg_ι_buys_ }  
                  $] ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
-                      'std_addr : XInteger256 ) @ ("state_init", "std_addr") :=
+                      'std_addr : uint256 ) @ ("state_init", "std_addr") :=
           prepare_price_xchg_state_init_and_addr_ ( !{price_data} , #{price_code} ) ; { _ } }} . 
  	 	 refine {{ new 'addr : ( XAddress ) @ "addr" := {} (* Address :: make_std ( workchain_id_ , std_addr ) *) ; { _ } }} . 
  	 	 refine {{ return_ [ !{ state_init } , !{ addr } , !{ std_addr } ]  }} . 
  Defined .
 
- Definition preparePriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 }  ( price_num : URValue ( XInteger128 ) a1 ) ( price_denum : URValue ( XInteger128 ) a2 ) ( min_amount : URValue ( XInteger128 ) a3 ) ( deals_limit : URValue ( XInteger8 ) a4 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( notify_addr : URValue ( address_t ) a8 ) : URValue ( StateInitLRecord # (XAddress # XInteger256) ) (orb false ( orb ( orb ( orb ( orb ( orb ( orb ( orb a8 a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) ) := 
+ Definition preparePriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 }  ( price_num : URValue ( uint128 ) a1 ) ( price_denum : URValue ( uint128 ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( notify_addr : URValue ( address_t ) a8 ) : URValue ( StateInitLRecord # (XAddress # uint256) ) (orb false ( orb ( orb ( orb ( orb ( orb ( orb ( orb a8 a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ8 ) preparePriceXchg 
  price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr ) . 
  
@@ -737,9 +737,9 @@ Notation " 'prepare_price_xchg_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
     return price_addr.get();
   } *)
 
-Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( XInteger128 ) ) ( price_denum : ( XInteger128 ) ) 
-( amount : ( XInteger128 ) ) ( lend_amount : ( XInteger128 ) ) ( lend_finish_time : ( XInteger32 ) ) 
-( min_amount : ( XInteger128 ) ) ( deals_limit : ( XInteger8 ) ) ( tons_value : ( XInteger128 ) ) 
+Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
+( amount : ( uint128 ) ) ( lend_amount : ( uint128 ) ) ( lend_finish_time : ( uint32 ) ) 
+( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( tons_value : ( uint128 ) ) 
 ( xchg_price_code : ( XCell ) ) ( my_tip3_addr : ( XAddress ) ) ( receive_wallet : ( XAddress ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( XAddress ) ) : UExpression XAddress true . 
@@ -748,7 +748,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( XInteger128 ) ) 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
-                      'std_addr : XInteger256 ) @ ("state_init", "addr" , "std_addr") 
+                      'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") 
            := preparePriceXchg_ ( #{price_num} , #{price_denum} , 
               #{min_amount} , #{deals_limit} , #{major_tip3cfg} , #{ minor_tip3cfg} , #{xchg_price_code} , #{notify_addr} ) ; { _ } }} . 
  	 	 refine {{ new 'price_addr : ( XAddress ) @ "price_addr" := {} ; { _ } }} . 
@@ -767,7 +767,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( XInteger128 ) ) 
  	 	 refine {{ return_ !{ price_addr } }} . 
  Defined .
 
- Definition deployPriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 }  ( sell : URValue ( XBool ) a1 ) ( price_num : URValue ( XInteger128 ) a2 ) ( price_denum : URValue ( XInteger128 ) a3 ) ( amount : URValue ( XInteger128 ) a4 ) ( lend_amount : URValue ( XInteger128 ) a5 ) ( lend_finish_time : URValue ( XInteger32 ) a6 ) ( min_amount : URValue ( XInteger128 ) a7 ) ( deals_limit : URValue ( XInteger8 ) a8 ) ( tons_value : URValue ( XInteger128 ) a9 ) ( xchg_price_code : URValue ( XCell ) a10 ) ( my_tip3_addr : URValue ( address_t ) a11 ) ( receive_wallet : URValue ( address_t ) a12 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a13 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a14 ) ( notify_addr : URValue ( address_t ) a15 ) : URValue XAddress true := 
+ Definition deployPriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 }  ( sell : URValue ( XBool ) a1 ) ( price_num : URValue ( uint128 ) a2 ) ( price_denum : URValue ( uint128 ) a3 ) ( amount : URValue ( uint128 ) a4 ) ( lend_amount : URValue ( uint128 ) a5 ) ( lend_finish_time : URValue ( uint32 ) a6 ) ( min_amount : URValue ( uint128 ) a7 ) ( deals_limit : URValue ( uint8 ) a8 ) ( tons_value : URValue ( uint128 ) a9 ) ( xchg_price_code : URValue ( XCell ) a10 ) ( my_tip3_addr : URValue ( address_t ) a11 ) ( receive_wallet : URValue ( address_t ) a12 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a13 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a14 ) ( notify_addr : URValue ( address_t ) a15 ) : URValue XAddress true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ15 ) deployPriceXchg 
  sell price_num price_denum amount lend_amount lend_finish_time min_amount deals_limit tons_value xchg_price_code my_tip3_addr receive_wallet major_tip3cfg minor_tip3cfg notify_addr ) . 
  
@@ -790,8 +790,8 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( XInteger128 ) ) 
  , minor_tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
  
- Definition cancelXchgOrder ( sell : ( XBool ) ) ( price_num : ( XInteger128 ) ) ( price_denum : ( XInteger128 ) ) 
-( min_amount : ( XInteger128 ) ) ( deals_limit : ( XInteger8 ) ) ( value : ( XInteger128 ) ) ( xchg_price_code : ( XCell ) ) 
+ Definition cancelXchgOrder ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
+( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( xchg_price_code : ( XCell ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address_t ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
@@ -799,7 +799,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( XInteger128 ) ) 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
-                      'std_addr : XInteger256 ) @ ("state_init", "addr" , "std_addr") :=
+                      'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
            preparePriceXchg_ ( #{price_num} , #{price_denum} , #{min_amount} , #{deals_limit} , #{major_tip3cfg} , #{minor_tip3cfg} ,
                                #{xchg_price_code} , #{notify_addr} ) ; { _ } }} . 
  	 	 refine {{ new 'price_addr : ( XAddress ) @ "price_addr" := {} ; { _ } }} . 
@@ -808,7 +808,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( XInteger128 ) ) 
  	 	 refine {{ {price_addr} := !{price_addr} (* price_addr ( Grams ( value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . cancelBuy ( ) *) }} . 
  Defined . 
  
- Definition cancelXchgOrder_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( sell : URValue ( XBool ) a1 ) ( price_num : URValue ( XInteger128 ) a2 ) ( price_denum : URValue ( XInteger128 ) a3 ) ( min_amount : URValue ( XInteger128 ) a4 ) ( deals_limit : URValue ( XInteger8 ) a5 ) ( value : URValue ( XInteger128 ) a6 ) ( xchg_price_code : URValue ( XCell ) a7 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a8 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address_t ) a10 ) : UExpression R true := 
+ Definition cancelXchgOrder_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( sell : URValue ( XBool ) a1 ) ( price_num : URValue ( uint128 ) a2 ) ( price_denum : URValue ( uint128 ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( deals_limit : URValue ( uint8 ) a5 ) ( value : URValue ( uint128 ) a6 ) ( xchg_price_code : URValue ( XCell ) a7 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a8 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address_t ) a10 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ10 ) cancelXchgOrder 
  sell price_num price_denum min_amount deals_limit value xchg_price_code major_tip3cfg minor_tip3cfg notify_addr ) . 
  
@@ -826,13 +826,13 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( XInteger128 ) ) 
  , minor_tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition transfer ( dest : ( address_t ) ) ( value : ( XInteger128 ) ) ( bounce : ( XBool ) ) : UExpression PhantomType true . 
+ Definition transfer ( dest : ( address_t ) ) ( value : ( uint128 ) ) ( bounce : ( XBool ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () (*;  { _ } }} . 
  	 	 refine {{ tvm_transfer ( dest , value . get ( ) , bounce . get ( ) ) ; { _ } *) }} . 
  Defined . 
  
- Definition transfer_left { R a1 a2 a3 }  ( dest : URValue ( address_t ) a1 ) ( value : URValue ( XInteger128 ) a2 ) ( bounce : URValue ( XBool ) a3 ) : UExpression R true := 
+ Definition transfer_left { R a1 a2 a3 }  ( dest : URValue ( address_t ) a1 ) ( value : URValue ( uint128 ) a2 ) ( bounce : URValue ( XBool ) a3 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) transfer 
  dest value bounce ) . 
  
@@ -860,7 +860,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( XInteger128 ) ) 
   return { wallet_init, uint256(tvm_hash(wallet_init_cl)) };
 } *)
 Definition prepare_wallet_state_init_and_addr (wallet_data : TonsConfigFields )
- : UExpression ( StateInitLRecord # XInteger256 ) false .
+ : UExpression ( StateInitLRecord # uint256 ) false .
    
 (* refine {{ if ( #{TIP3_ENABLE_EXTERNAL} )
                         then  { { _:UEf } } (* wallet_replay_protection_t::init()  *)
@@ -881,7 +881,7 @@ Defined.
 
 Definition prepare_wallet_state_init_and_addr_right {b1} 
 (x0: URValue TonsConfigFields b1 ) 
-: URValue (StateInitLRecord # XInteger256) ( orb false b1 ) :=
+: URValue (StateInitLRecord # uint256) ( orb false b1 ) :=
    wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ1) prepare_wallet_state_init_and_addr x0).    
 
 Notation " 'prepare_wallet_state_init_and_addr_' '(' x0  ')' " := 
@@ -903,7 +903,7 @@ Notation " 'prepare_wallet_state_init_and_addr_' '(' x0  ')' " :=
 
 Definition prepare_wrapper_state_init_and_addr ( wrapper_code : XCell ) 
                                                ( wrapper_data : DWrapperLRecord ) 
-                           : UExpression (StateInitLRecord # XInteger256) false .
+                           : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'wrapper_data_cl : XCell @ "wrapper_data_cl" :=  
                   prepare_persistent_data_ ( {} ,
       (* wrapper_replay_protection_t::init() *) #{wrapper_data} ) ; { _ } }} .
@@ -922,7 +922,7 @@ Defined.
 Definition prepare_wrapper_state_init_and_addr_right {b1 b2} 
 (x0: URValue XCell b1 ) 
 (x1: URValue DWrapperLRecord b2 ) 
-: URValue (StateInitLRecord # XInteger256) ( orb false (orb b2 b1) ) :=
+: URValue (StateInitLRecord # uint256) ( orb false (orb b2 b1) ) :=
    wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_wrapper_state_init_and_addr x0 x1).    
 
 Notation " 'prepare_wrapper_state_init_and_addr_' '(' x0 ',' x1 ')' " := 
@@ -934,14 +934,14 @@ Notation " 'prepare_wrapper_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
  Definition prepare_internal_wallet_state_init_and_addr 
 ( name :  ( XString ) ) 
 ( symbol :  ( XString ) )
- ( decimals :  ( XInteger8 ) )
- ( root_public_key :  ( XInteger256 ) )
- ( wallet_public_key :  ( XInteger256 ) ) 
+ ( decimals :  ( uint8 ) )
+ ( root_public_key :  ( uint256 ) )
+ ( wallet_public_key :  ( uint256 ) ) 
 ( root_address :  ( XAddress ) ) 
 ( owner_address :  ( XMaybe XAddress ) ) 
 ( code :  ( XCell ) ) 
-( workchain_id :  ( XInteger8 ) ) 
-: UExpression ( StateInitLRecord * XInteger256 ) false . 
+( workchain_id :  ( uint8 ) ) 
+: UExpression ( StateInitLRecord * uint256 ) false . 
  	 	 refine {{ new 'wallet_data : ( DTONTokenWalletInternalLRecord ) @ "wallet_data" := 
                  [ #{name} , #{symbol} , #{decimals} , 0 , #{root_public_key} , 
                    #{wallet_public_key} , #{root_address} , #{owner_address} , 
@@ -955,7 +955,7 @@ Notation " 'prepare_wrapper_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
  	 	 refine {{ return_ [ !{ wallet_init } , {} (* tvm_hash ( wallet_init_cl ) *) ] }} . 
  Defined . 
 
- Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( XInteger8 ) a3 ) ( root_public_key : URValue ( XInteger256 ) a4 ) ( wallet_public_key : URValue ( XInteger256 ) a5 ) ( root_address : URValue ( XAddress ) a6 ) ( owner_address : URValue ( XMaybe XAddress ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( XInteger8 ) a9 ) : URValue ( StateInitLRecord * XInteger256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( XAddress ) a6 ) ( owner_address : URValue ( XMaybe XAddress ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( uint8 ) a9 ) : URValue ( StateInitLRecord * uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
@@ -973,12 +973,12 @@ Notation " 'prepare_wrapper_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
  , workchain_id custom URValue at level 0 ) : ursus_scope . 
 
 
-Definition deployEmptyFlexWallet ( pubkey : ( XInteger256 ) ) ( tons_to_wallet : ( XInteger128 ) ) 
+Definition deployEmptyFlexWallet ( pubkey : ( uint256 ) ) ( tons_to_wallet : ( uint128 ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
-     refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : XInteger256 ) @ ("state_init", "std_addr") :=  
+     refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=  
                   prepare_internal_wallet_state_init_and_addr_ 
                      ( (#{tip3cfg}) ^^  Tip3Config.name , 
                        (#{tip3cfg}) ^^  Tip3Config.symbol , 
@@ -995,7 +995,7 @@ Definition deployEmptyFlexWallet ( pubkey : ( XInteger256 ) ) ( tons_to_wallet :
  	 	 refine {{ return_ !{new_wallet} }} . 
  Defined . 
   
- Definition deployEmptyFlexWallet_right { a1 a2 a3 }  ( pubkey : URValue ( XInteger256 ) a1 ) ( tons_to_wallet : URValue ( XInteger128 ) a2 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a3 ) : URValue XAddress true := 
+ Definition deployEmptyFlexWallet_right { a1 a2 a3 }  ( pubkey : URValue ( uint256 ) a1 ) ( tons_to_wallet : URValue ( uint128 ) a2 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a3 ) : URValue XAddress true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) deployEmptyFlexWallet 
  pubkey tons_to_wallet tip3cfg ) . 
  
@@ -1006,7 +1006,7 @@ Definition deployEmptyFlexWallet ( pubkey : ( XInteger256 ) ) ( tons_to_wallet :
  , tons_to_wallet custom URValue at level 0 
  , tip3cfg custom URValue at level 0 ) : ursus_scope . 
 
- Definition burnWallet ( tons_value : ( XInteger128 ) ) ( out_pubkey : ( XInteger256 ) ) 
+ Definition burnWallet ( tons_value : ( uint128 ) ) ( out_pubkey : ( uint256 ) ) 
 ( out_internal_owner : ( address_t ) ) ( my_tip3_addr : ( address_t ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
@@ -1017,7 +1017,7 @@ Definition deployEmptyFlexWallet ( pubkey : ( XInteger256 ) ) ( tons_to_wallet :
 refine {{ {my_tip3} := !{my_tip3} }} .
 Defined . 
  
- Definition burnWallet_left { R a1 a2 a3 a4 }  ( tons_value : URValue ( XInteger128 ) a1 ) ( out_pubkey : URValue ( XInteger256 ) a2 ) ( out_internal_owner : URValue ( address_t ) a3 ) ( my_tip3_addr : URValue ( address_t ) a4 ) : UExpression R true := 
+ Definition burnWallet_left { R a1 a2 a3 a4 }  ( tons_value : URValue ( uint128 ) a1 ) ( out_pubkey : URValue ( uint256 ) a2 ) ( out_internal_owner : URValue ( address_t ) a3 ) ( my_tip3_addr : URValue ( address_t ) a4 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) burnWallet 
  tons_value out_pubkey out_internal_owner my_tip3_addr ) . 
  
@@ -1029,11 +1029,11 @@ Defined .
  , out_internal_owner custom URValue at level 0 
  , my_tip3_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition getOwner : UExpression XInteger256 false . 
+ Definition getOwner : UExpression uint256 false . 
  	 	 refine {{ return_ _owner_ }} . 
  Defined . 
  
- Definition getOwner_right  : URValue XInteger256 false := 
+ Definition getOwner_right  : URValue uint256 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwner 
  ) . 
 
@@ -1093,12 +1093,12 @@ Definition hasFlexWrapperCode : UExpression XBool false .
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getPayloadForDeployInternalWallet ( owner_pubkey : ( XInteger256 ) ) ( owner_addr : ( address_t ) ) 
-( tons : ( XInteger128 ) ) : UExpression XCell false . 
+ Definition getPayloadForDeployInternalWallet ( owner_pubkey : ( uint256 ) ) ( owner_addr : ( address_t ) ) 
+( tons : ( uint128 ) ) : UExpression XCell false . 
  	 	 refine {{ return_ {} (* build ( FlexDeployWalletArgs { { owner_pubkey } , { owner_addr } , { tons } } ) . endc ( ) *) }} . 
  Defined .
  
- Definition getPayloadForDeployInternalWallet_right { a1 a2 a3 }  ( owner_pubkey : URValue ( XInteger256 ) a1 ) ( owner_addr : URValue ( address_t ) a2 ) ( tons : URValue ( XInteger128 ) a3 ) : URValue XCell ( orb ( orb a3 a2 ) a1 ) := 
+ Definition getPayloadForDeployInternalWallet_right { a1 a2 a3 }  ( owner_pubkey : URValue ( uint256 ) a1 ) ( owner_addr : URValue ( address_t ) a2 ) ( tons : URValue ( uint128 ) a3 ) : URValue XCell ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) getPayloadForDeployInternalWallet 
  owner_pubkey owner_addr tons ) . 
  
@@ -1109,11 +1109,11 @@ Definition hasFlexWrapperCode : UExpression XBool false .
  , owner_addr custom URValue at level 0 
  , tons custom URValue at level 0 ) : ursus_scope . 
 
- Definition _fallback ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression XInteger false . 
+ Definition _fallback ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression uint false . 
  	 	 refine {{ return_ 0 }} . 
  Defined . 
  
- Definition _fallback_right { a1 a2 }  ( msg : URValue ( XCell ) a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XInteger ( orb a2 a1 ) := 
+ Definition _fallback_right { a1 a2 }  ( msg : URValue ( XCell ) a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue uint ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  msg msg_body ) . 
  
@@ -1123,19 +1123,19 @@ Definition hasFlexWrapperCode : UExpression XBool false .
  (in custom URValue at level 0 , msg custom URValue at level 0 
  , msg_body custom URValue at level 0 ) : ursus_scope . 
 
- Definition registerWrapper ( wrapper_pubkey : ( XInteger256 ) ) ( value : ( XInteger128 ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) : UExpression PhantomType true . 
+ Definition registerWrapper ( wrapper_pubkey : ( uint256 ) ) ( value : ( uint128 ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) (* ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ IFlexPtr ( flex_ ) ( Grams ( value . get ( ) ) ) . registerWrapper ( wrapper_pubkey , tip3cfg ) *) }} . 
  Defined . 
 
- Definition registerTradingPair ( request_pubkey : ( XInteger256 ) ) ( value : ( XInteger128 ) ) ( tip3_root : ( XAddress ) ) ( min_amount : ( XInteger128 ) ) ( notify_addr : ( XAddress ) ) : UExpression PhantomType true . 
+ Definition registerTradingPair ( request_pubkey : ( uint256 ) ) ( value : ( uint128 ) ) ( tip3_root : ( XAddress ) ) ( min_amount : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () (* ; { _ } }} . 
  	 	 refine {{ IFlexPtr ( flex_ ) ( Grams ( value . get ( ) ) ) . registerTradingPair ( request_pubkey , tip3_root , min_amount , notify_addr ) *) }} . 
  Defined . 
 
- Definition registerXchgPair ( request_pubkey : ( XInteger256 ) ) ( value : ( XInteger128 ) ) ( tip3_major_root : ( XAddress ) ) ( tip3_minor_root : ( XAddress ) ) ( min_amount : ( XInteger128 ) ) ( notify_addr : ( XAddress ) ) : UExpression PhantomType true . 
+ Definition registerXchgPair ( request_pubkey : ( uint256 ) ) ( value : ( uint128 ) ) ( tip3_major_root : ( XAddress ) ) ( tip3_minor_root : ( XAddress ) ) ( min_amount : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () (*; { _ } }} . 
  	 	 refine {{ IFlexPtr ( flex_ ) ( Grams ( value . get ( ) ) ) . registerXchgPair ( request_pubkey , tip3_major_root , tip3_minor_root , min_amount , notify_addr ) *) }} . 

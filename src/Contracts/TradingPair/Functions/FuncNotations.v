@@ -7,11 +7,11 @@ Require Import FinProof.Common.
 Require Import FinProof.ProgrammingWith.
 Require Import FinProof.MonadTransformers21.
 
-Require Import UMLang.SolidityNotations2.
+Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
-Require Import UrsusTVM.tvmFunc.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
@@ -38,7 +38,7 @@ Fail Check OutgoingMessage_default.
 Import UrsusNotations.
 
 Local Open Scope ursus_scope.
-
+Local Open Scope ucpp_scope.
  
 Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom URValue at level 0) : ursus_scope. 
@@ -65,8 +65,8 @@ Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom ULValue at level
  Notation " '_tip3_root_' " := ( tip3_root__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_tip3_root_' " := ( tip3_root__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : ULValue XInteger128 ) . 
- Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : URValue XInteger128 false ) . 
+ Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : ULValue uint128 ) . 
+ Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : URValue uint128 false ) . 
  Notation " '_min_amount_' " := ( min_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_min_amount_' " := ( min_amount__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -84,7 +84,7 @@ Export tc.
 Local Open Scope string_scope.
 
 
-Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( XInteger128 ) a1 ) ( deploy_value : URValue ( XInteger128 ) a2 ) ( notify_addr : URValue ( XAddress ) a3 ) : URValue XBool true := 
+Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) ( deploy_value : URValue ( uint128 ) a2 ) ( notify_addr : URValue ( XAddress ) a3 ) : URValue XBool true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) onDeploy 
  min_amount deploy_value notify_addr ) . 
  
@@ -110,7 +110,7 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( XInteger128 ) a
  ( getTip3Root_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getMinAmount_right  : URValue XInteger128 false := 
+ Definition getMinAmount_right  : URValue uint128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getMinAmount 
  ) . 
  
@@ -126,7 +126,7 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( XInteger128 ) a
  ( getNotifyAddr_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition _fallback_right { a1 a2 }  ( msg : URValue ( XCell ) a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XInteger ( orb a2 a1 ) := 
+ Definition _fallback_right { a1 a2 }  ( msg : URValue ( XCell ) a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue uint ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  msg msg_body ) . 
  
@@ -139,7 +139,7 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( XInteger128 ) a
  Definition prepare_trading_pair_state_init_and_addr_right { a1 a2 }  
 ( pair_data : URValue ( ContractLRecord ) a1 )
  ( pair_code : URValue ( XCell ) a2 ) 
-: URValue ( StateInitLRecord * XInteger256 ) ( orb a2 a1 ) := 
+: URValue ( StateInitLRecord * uint256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_trading_pair_state_init_and_addr 
  pair_data pair_code ) . 
  

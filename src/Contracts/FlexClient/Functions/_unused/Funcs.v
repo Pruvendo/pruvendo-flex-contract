@@ -11,8 +11,8 @@ Require Import FinProof.ProgrammingWith.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 
-Require Import UrsusTVM.tvmFunc.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 Require Import Contracts.FlexClient.Ledger.
@@ -44,7 +44,7 @@ Elpi Export AddLocalState.
 Module Funcs (dc : ConstsTypesSig XTypesModule StateMonadModule) . 
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
-Export SpecModuleForFuncNotations.tvmNotationsModule.
+Export SpecModuleForFuncNotations.Cpp.tvmNotationsModule.
 
 Module FuncsInternal <: SpecModuleForFuncNotations.SpecSig. 
  
@@ -71,19 +71,19 @@ Definition onlyOwner {X b}`{XDefault X} (e:UExpression X b) : UExpression X true
    refine {{ tvm.accept(); {e} }}.
 Defined .
 
-Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 ) 
-( transfer_tip3 : XInteger128 ) ( return_ownership : XInteger128 )
- ( trading_pair_deploy : XInteger128 ) ( order_answer : XInteger128 ) 
-( process_queue : XInteger128 ) ( send_notify : XInteger128 )
- ( deals_limit : XInteger8 ) ( notify_addr : XAddress ) : UExpression PhantomType false . 
-         refine {{ deployer_pubkey : ( XInteger256 ) @ "deployer_pubkey" ; { _ } }} . 
-         refine {{ transfer_tip3 : ( XInteger128 ) @ "transfer_tip3" ; { _ } }} . 
-         refine {{ return_ownership : ( XInteger128 ) @ "return_ownership" ; { _ } }} . 
-         refine {{ trading_pair_deploy : ( XInteger128 ) @ "trading_pair_deploy" ; { _ } }} . 
-         refine {{ order_answer : ( XInteger128 ) @ "order_answer" ; { _ } }} . 
-         refine {{ process_queue : ( XInteger128 ) @ "process_queue" ; { _ } }} . 
-         refine {{ send_notify : ( XInteger128 ) @ "send_notify" ; { _ } }} . 
-         refine {{ deals_limit : ( XInteger8 ) @ "deals_limit" ; { _ } }} . 
+Definition Flex_Ф_constructor ( deployer_pubkey : uint256 ) 
+( transfer_tip3 : uint128 ) ( return_ownership : uint128 )
+ ( trading_pair_deploy : uint128 ) ( order_answer : uint128 ) 
+( process_queue : uint128 ) ( send_notify : uint128 )
+ ( deals_limit : uint8 ) ( notify_addr : XAddress ) : UExpression PhantomType false . 
+         refine {{ deployer_pubkey : ( uint256 ) @ "deployer_pubkey" ; { _ } }} . 
+         refine {{ transfer_tip3 : ( uint128 ) @ "transfer_tip3" ; { _ } }} . 
+         refine {{ return_ownership : ( uint128 ) @ "return_ownership" ; { _ } }} . 
+         refine {{ trading_pair_deploy : ( uint128 ) @ "trading_pair_deploy" ; { _ } }} . 
+         refine {{ order_answer : ( uint128 ) @ "order_answer" ; { _ } }} . 
+         refine {{ process_queue : ( uint128 ) @ "process_queue" ; { _ } }} . 
+         refine {{ send_notify : ( uint128 ) @ "send_notify" ; { _ } }} . 
+         refine {{ deals_limit : ( uint8 ) @ "deals_limit" ; { _ } }} . 
          refine {{ notify_addr : ( XAddress ) @ "notify_addr" ; { _ } }} . 
          refine {{ Flex.deployer_pubkey_ := !{ deployer_pubkey } ; { _ } }} . 
          refine {{ Flex.deals_limit_ := !{ deals_limit } ; { _ } }} . 
@@ -178,9 +178,9 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 )
          refine {{ { myaddr } := (* tvm.myaddr *) tvm.address () ; { _ } }} . 
          refine {{ (* new *) pair_data : ( TradingPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_root_ = tip3_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
-         refine {{ (* new *) std_addr : ( StateInitStateLRecord * XInteger256 ) @ "std_addr" ; { _ } }} . 
+         refine {{ (* new *) std_addr : ( StateInitStateLRecord * uint256 ) @ "std_addr" ; { _ } }} . 
          refine {{ { std_addr } := {} (* prepare_trading_pair_state_init_and_addr ( !{ pair_data } , Flex.pair_code_ ->get ) ->second *) ; { _ } }} . 
-         refine {{ (* new *) workchain_id : ( XInteger (* auto *) ) @ "workchain_id" ; { _ } }} . 
+         refine {{ (* new *) workchain_id : ( uint (* auto *) ) @ "workchain_id" ; { _ } }} . 
          refine {{ { workchain_id } := {} (* Std :: get < addr_std > ( myaddr ^^ address:val ( ) ) . workchain_id *) ; { _ } }} . 
          refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
  Defined . 
@@ -194,16 +194,16 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 )
          refine {{ { myaddr } := (* tvm_myaddr *) tvm.address () ; { _ } }} . 
          refine {{ (* new *) pair_data : ( XchgPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_major_root_ = tip3_major_root , . tip3_minor_root_ = tip3_minor_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
-         refine {{ (* new *) std_addr : ( XInteger (* auto *) ) @ "std_addr" ; { _ } }} . 
+         refine {{ (* new *) std_addr : ( uint (* auto *) ) @ "std_addr" ; { _ } }} . 
          refine {{ { std_addr } := {} (* prepare_xchg_pair_state_init_and_addr ( !{ pair_data } , Flex.xchg_pair_code_ ->get ) ->second *) ; { _ } }} . 
-         refine {{ (* new *) workchain_id : ( XInteger (* auto *) ) @ "workchain_id" ; { _ } }} . 
+         refine {{ (* new *) workchain_id : ( uint (* auto *) ) @ "workchain_id" ; { _ } }} . 
          refine {{ { workchain_id } := {} (* Std :: get < addr_std > ( myaddr ^^ address:val ( ) ) . workchain_id *) ; { _ } }} . 
          refine {{ return_ {} (* Address :: make_std ( !{ workchain_id } , !{ std_addr } ) *) }} . 
  Defined . 
  
  
  
- Definition Flex_Ф_getDealsLimit : UExpression XInteger8 false . 
+ Definition Flex_Ф_getDealsLimit : UExpression uint8 false . 
          refine {{ return_ Flex.deals_limit_ }} . 
  Defined . 
  
@@ -215,7 +215,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : XInteger256 )
  
  
  
- Definition Flex_Ф__fallback ( _ : XCell ) : UExpression XInteger false . 
+ Definition Flex_Ф__fallback ( _ : XCell ) : UExpression uint false . 
          refine {{ return_ 0 }} . 
  Defined . 
 

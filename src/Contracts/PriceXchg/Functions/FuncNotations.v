@@ -6,11 +6,11 @@ Require Import FinProof.Common.
 Require Import FinProof.ProgrammingWith.
 Require Import FinProof.MonadTransformers21.
 
-Require Import UMLang.SolidityNotations2.
+Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
-Require Import UrsusTVM.tvmFunc.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
@@ -19,6 +19,9 @@ Require Import Contracts.PriceXchg.Functions.FuncSig.
 
 (* здесь инмпортируем все внешние интерфейсы *)
 Require Import Contracts.PriceXchg.Interface.
+Require Import Contracts.TONTokenWallet.Interface.
+Require Import Contracts.PriceCallback.Interface.
+Require Import Contracts.Flex.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -26,7 +29,10 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module PriceXchgPublicInterface := PublicInterface xt sm.
+Module PriceXchgPublicInterface := Contracts.PriceXchg.PublicInterface xt sm.
+Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.PublicInterface xt sm.
+Module PriceCallbackPublicInterface := Contracts.PriceCallback.PublicInterface xt sm.
+Module FlexPublicInterface := Contracts.Flex.PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
@@ -35,7 +41,7 @@ Import xt.
 Fail Check OutgoingMessage_default.
 
 Import UrsusNotations.
-
+Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
 
 Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at level 0) : ursus_scope. 
@@ -106,13 +112,13 @@ Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at l
  Notation " '_price_' " := ( price__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_price_' " := ( price__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition sells_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType sells_amount_ ) : ULValue XInteger128 ) . 
- Definition sells_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType sells_amount_ ) : URValue XInteger128 false ) . 
+ Definition sells_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType sells_amount_ ) : ULValue uint128 ) . 
+ Definition sells_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType sells_amount_ ) : URValue uint128 false ) . 
  Notation " '_sells_amount_' " := ( sells_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_sells_amount_' " := ( sells_amount__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition buys_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType buys_amount_ ) : ULValue XInteger128 ) . 
- Definition buys_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType buys_amount_ ) : URValue XInteger128 false ) . 
+ Definition buys_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType buys_amount_ ) : ULValue uint128 ) . 
+ Definition buys_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType buys_amount_ ) : URValue uint128 false ) . 
  Notation " '_buys_amount_' " := ( buys_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_buys_amount_' " := ( buys_amount__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -121,13 +127,13 @@ Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at l
  Notation " '_flex_' " := ( flex__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_' " := ( flex__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : ULValue XInteger128 ) . 
- Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : URValue XInteger128 false ) . 
+ Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : ULValue uint128 ) . 
+ Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : URValue uint128 false ) . 
  Notation " '_min_amount_' " := ( min_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_min_amount_' " := ( min_amount__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition deals_limit__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType deals_limit_ ) : ULValue XInteger8 ) . 
- Definition deals_limit__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType deals_limit_ ) : URValue XInteger8 false ) . 
+ Definition deals_limit__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType deals_limit_ ) : ULValue uint8 ) . 
+ Definition deals_limit__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType deals_limit_ ) : URValue uint8 false ) . 
  Notation " '_deals_limit_' " := ( deals_limit__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_deals_limit_' " := ( deals_limit__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -136,8 +142,8 @@ Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at l
  Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : ULValue XInteger8 ) . 
- Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : URValue XInteger8 false ) . 
+ Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : ULValue uint8 ) . 
+ Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : URValue uint8 false ) . 
  Notation " '_workchain_id_' " := ( workchain_id__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_workchain_id_' " := ( workchain_id__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -221,7 +227,7 @@ Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpres
 Definition make_deal_right  
 ( sell : ULValue ( OrderInfoXchgLRecord ) ) 
 ( buy : ULValue ( OrderInfoXchgLRecord ) ) 
-: URValue ( XBool # (XBool # XInteger128) ) 
+: URValue ( XBool # (XBool # uint128) ) 
 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LL ) make_deal 
  sell buy ) . 
@@ -233,11 +239,11 @@ false :=
  , buy custom URValue at level 0 ) : ursus_scope . 
 
  (* Definition extract_active_order_right { a2 a3 a4 a5 }  
-( cur_order : URValue ( XMaybe (XInteger # OrderInfoXchgLRecord ) ) a2 ) 
+( cur_order : URValue ( XMaybe (uint # OrderInfoXchgLRecord ) ) a2 ) 
 ( orders : URValue ( XQueue OrderInfoXchgLRecord ) a3 ) 
-( all_amount : URValue ( XInteger128 ) a4 ) 
+( all_amount : URValue ( uint128 ) a4 ) 
 ( sell : URValue ( XBool ) a5 ) 
-: URValue ( (XMaybe ( XInteger # OrderInfoXchgLRecord )) # ( (XQueue OrderInfoXchgLRecord) # XInteger128 ) ) false . 
+: URValue ( (XMaybe ( uint # OrderInfoXchgLRecord )) # ( (XQueue OrderInfoXchgLRecord) # uint128 ) ) false . 
  ( orb ( orb ( orb a5 a4 ) a3 ) a2 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) extract_active_order 
  unsigned cur_order orders all_amount sell ) . 
@@ -251,7 +257,7 @@ false :=
  , all_amount custom URValue at level 0 
  , sell custom URValue at level 0 ) : ursus_scope .  *)
  
- Definition process_queue_left { R a1 a2 }  ( sell_idx : URValue ( XInteger ) a1 ) ( buy_idx : URValue ( XInteger ) a2 ) : UExpression R ( orb a2 a1 ) := 
+ Definition process_queue_left { R a1 a2 }  ( sell_idx : URValue ( uint ) a1 ) ( buy_idx : URValue ( uint ) a2 ) : UExpression R ( orb a2 a1 ) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) process_queue 
  sell_idx buy_idx ) . 
  
@@ -260,7 +266,7 @@ false :=
  sell_idx buy_idx ) 
  (in custom ULValue at level 0 , sell_idx custom URValue at level 0 
  , buy_idx custom URValue at level 0 ) : ursus_scope . 
- Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( balance : URValue ( XInteger128 ) a2 ) ( lend_finish_time : URValue ( XInteger32 ) a3 ) ( pubkey : URValue ( XInteger256 ) a4 ) ( internal_owner : URValue ( XAddress ) a5 ) ( payload : URValue ( XCell ) a6 ) : URValue OrderRetLRecord ( orb ( orb ( orb ( orb ( orb a6 a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( balance : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( pubkey : URValue ( uint256 ) a4 ) ( internal_owner : URValue ( XAddress ) a5 ) ( payload : URValue ( XCell ) a6 ) : URValue OrderRetLRecord ( orb ( orb ( orb ( orb ( orb a6 a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) onTip3LendOwnership 
  answer_addr balance lend_finish_time pubkey internal_owner payload ) . 
  
@@ -309,7 +315,7 @@ false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getPriceNum_right  : URValue XInteger128 false := 
+ Definition getPriceNum_right  : URValue uint128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getPriceNum 
  ) . 
  
@@ -318,7 +324,7 @@ false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getPriceDenum_right  : URValue XInteger128 false := 
+ Definition getPriceDenum_right  : URValue uint128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getPriceDenum 
  ) . 
  
@@ -327,7 +333,7 @@ false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getMinimumAmount_right  : URValue XInteger128 false := 
+ Definition getMinimumAmount_right  : URValue uint128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getMinimumAmount 
  ) . 
  
@@ -345,7 +351,7 @@ false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getSells_right  : URValue ( XHMap XInteger OrderInfoXchgLRecord ) false := 
+ Definition getSells_right  : URValue ( XHMap uint OrderInfoXchgLRecord ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSells 
  ) . 
  
@@ -354,7 +360,7 @@ false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope .
  
- Definition getBuys_right  : URValue ( XHMap XInteger OrderInfoXchgLRecord ) false := 
+ Definition getBuys_right  : URValue ( XHMap uint OrderInfoXchgLRecord ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuys 
  ) . 
  
@@ -363,7 +369,7 @@ false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getSellAmount_right  : URValue XInteger128 false := 
+ Definition getSellAmount_right  : URValue uint128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSellAmount 
  ) . 
  
@@ -372,7 +378,7 @@ false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getBuyAmount_right  : URValue XInteger128 false := 
+ Definition getBuyAmount_right  : URValue uint128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBuyAmount 
  ) . 
  
@@ -384,7 +390,7 @@ false :=
  Definition _fallback_right { a1 a2 }  
 ( x : URValue XCell a1 )
 ( y : URValue XSlice a2 ) 
-: URValue XInteger (orb a2 a1) := 
+: URValue uint (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  x y ) . 
  
@@ -392,7 +398,7 @@ false :=
  ( _fallback_right x y ) 
  (in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope . 
 
- Definition onTip3LendOwnershipMinValue_right  : URValue XInteger128 false := 
+ Definition onTip3LendOwnershipMinValue_right  : URValue uint128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) onTip3LendOwnershipMinValue 
  ) . 
  
@@ -401,7 +407,7 @@ false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition verify_tip3_addr_right { a1 a2 a3 a4 }  ( cfg : URValue ( Tip3ConfigLRecord ) a1 ) ( tip3_wallet : URValue ( XAddress ) a2 ) ( wallet_pubkey : URValue ( XInteger256 ) a3 ) ( internal_owner : URValue ( XInteger256 ) a4 ) : URValue XBool ( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
+ Definition verify_tip3_addr_right { a1 a2 a3 a4 }  ( cfg : URValue ( Tip3ConfigLRecord ) a1 ) ( tip3_wallet : URValue ( XAddress ) a2 ) ( wallet_pubkey : URValue ( uint256 ) a3 ) ( internal_owner : URValue ( uint256 ) a4 ) : URValue XBool ( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) verify_tip3_addr 
  cfg tip3_wallet wallet_pubkey internal_owner ) . 
  
@@ -413,7 +419,7 @@ false :=
  , wallet_pubkey custom URValue at level 0 
  , internal_owner custom URValue at level 0 ) : ursus_scope . 
 
- Definition expected_wallet_address_right { a1 a2 a3 }  ( cfg : URValue ( Tip3ConfigLRecord ) a1 ) ( wallet_pubkey : URValue ( XInteger256 ) a2 ) ( internal_owner : URValue ( XInteger256 ) a3 ) : URValue XInteger256 ( orb ( orb a3 a2 ) a1 ) := 
+ Definition expected_wallet_address_right { a1 a2 a3 }  ( cfg : URValue ( Tip3ConfigLRecord ) a1 ) ( wallet_pubkey : URValue ( uint256 ) a2 ) ( internal_owner : URValue ( uint256 ) a3 ) : URValue uint256 ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) expected_wallet_address 
  cfg wallet_pubkey internal_owner ) . 
  
@@ -424,7 +430,7 @@ false :=
  , wallet_pubkey custom URValue at level 0 
  , internal_owner custom URValue at level 0 ) : ursus_scope .
 
- Definition on_ord_fail_right { a1 a2 a3 }  ( ec : URValue ( XInteger ) a1 ) ( wallet_in : URValue ( XAddress (* ITONTokenWalletPtrLRecord *) ) a2 ) ( amount : URValue ( XInteger128 ) a3 ) : URValue OrderRetLRecord ( orb ( orb a3 a2 ) a1 ) := 
+ Definition on_ord_fail_right { a1 a2 a3 }  ( ec : URValue ( uint ) a1 ) ( wallet_in : URValue ( XAddress (* ITONTokenWalletPtrLRecord *) ) a2 ) ( amount : URValue ( uint128 ) a3 ) : URValue OrderRetLRecord ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) on_ord_fail 
  ec wallet_in amount ) . 
  
@@ -435,7 +441,7 @@ false :=
  , wallet_in custom URValue at level 0 
  , amount custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_price_xchg_state_init_and_addr_right { a1 a2 }  ( price_data : URValue ( ContractLRecord ) a1 ) ( price_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord # XInteger256 ) ( orb a2 a1 ) := 
+ Definition prepare_price_xchg_state_init_and_addr_right { a1 a2 }  ( price_data : URValue ( ContractLRecord ) a1 ) ( price_code : URValue ( XCell ) a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_price_xchg_state_init_and_addr 
  price_data price_code ) . 
  
@@ -445,7 +451,7 @@ false :=
  (in custom URValue at level 0 , price_data custom URValue at level 0 
  , price_code custom URValue at level 0 ) : ursus_scope . 
 
- Definition is_active_time_right { a1 }  ( order_finish_time : URValue ( XInteger32 ) a1 ) : URValue XBool a1 := 
+ Definition is_active_time_right { a1 }  ( order_finish_time : URValue ( uint32 ) a1 ) : URValue XBool a1 := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) is_active_time 
  order_finish_time ) . 
  
@@ -454,7 +460,7 @@ false :=
  order_finish_time ) 
  (in custom URValue at level 0 , order_finish_time custom URValue at level 0 ) : ursus_scope .
 
- Definition minor_cost_right { a1 a2 }  ( amount : URValue ( XInteger128 ) a1 ) ( price : URValue ( RationalPriceLRecord ) a2 ) : URValue (XMaybe XInteger128) ( orb a2 a1 ) := 
+ Definition minor_cost_right { a1 a2 }  ( amount : URValue ( uint128 ) a1 ) ( price : URValue ( RationalPriceLRecord ) a2 ) : URValue (XMaybe uint128) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) minor_cost 
  amount price ) . 
  
@@ -469,13 +475,13 @@ false :=
 ( tip3root_buy : URValue ( XAddress ) a2 ) 
 ( notify_addr : URValue ( XAddress (* IFlexNotifyPtrLRecord *) ) a3 ) 
 ( price : URValue ( RationalPriceLRecord ) a4 ) 
-( deals_limit : URValue ( XInteger8 ) a5 ) 
+( deals_limit : URValue ( uint8 ) a5 ) 
 ( tons_cfg : URValue ( TonsConfigLRecord ) a6 ) 
-( sell_idx : URValue ( XInteger ) a7 ) 
-( buy_idx : URValue ( XInteger ) a8 ) 
-( sells_amount : URValue ( XInteger128 ) a9 ) 
+( sell_idx : URValue ( uint ) a7 ) 
+( buy_idx : URValue ( uint ) a8 ) 
+( sells_amount : URValue ( uint128 ) a9 ) 
 ( sells : URValue ( XQueue OrderInfoXchgLRecord ) a10 ) 
-( buys_amount : URValue ( XInteger128 ) a11 ) 
+( buys_amount : URValue ( uint128 ) a11 ) 
 ( buys : URValue ( XQueue OrderInfoXchgLRecord ) a12 ) 
 : URValue process_retLRecord 
 ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a12 a11 ) a10 ) a9 ) a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) 
@@ -502,12 +508,12 @@ false :=
  Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
 ( orders : URValue ( XQueue OrderInfoXchgLRecord ) a1 ) 
 ( client_addr : URValue ( addr_std_fixedLRecord ) a2 ) 
-( all_amount : URValue ( XInteger128 ) a3 ) 
+( all_amount : URValue ( uint128 ) a3 ) 
 ( sell : URValue ( XBool ) a4 ) 
-( return_ownership : URValue ( XInteger (* Grams *) ) a5 ) 
-( process_queue : URValue ( XInteger (* Grams *) ) a6 ) 
-( incoming_val : URValue ( XInteger (* Grams *) ) a7 ) 
-: URValue ((XQueue OrderInfoXchgLRecord) # XInteger128) 
+( return_ownership : URValue ( uint (* Grams *) ) a5 ) 
+( process_queue : URValue ( uint (* Grams *) ) a6 ) 
+( incoming_val : URValue ( uint (* Grams *) ) a7 ) 
+: URValue ((XQueue OrderInfoXchgLRecord) # uint128) 
 ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancel_order_impl 
  orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
@@ -523,7 +529,7 @@ false :=
  , process_queue custom URValue at level 0 
  , incoming_val custom URValue at level 0 ) : ursus_scope .
  
- Definition int_sender_and_value_right  : URValue ( XAddress # XInteger (* Grams *) ) false := 
+ Definition int_sender_and_value_right  : URValue ( XAddress # uint (* Grams *) ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) int_sender_and_value 
  ) . 
  

@@ -1,6 +1,0 @@
-(coq.theory
- (name flexContract)
- (package pruvendo-flex-contract) 
-)
-
-(include_subdirs qualified)

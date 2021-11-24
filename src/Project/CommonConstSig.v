@@ -1,31 +1,31 @@
 
-Require Import UMLang.SolidityNotations2. 
-
+Require Import UMLang.BasicModuleTypes. 
+Require Import CommonTypes. 
  
 Module Type ConstsTypesSig (xt: XTypesSig) (sm: StateMonadSig). 
-Module Import SolidityNotations := SolidityNotations xt sm .   
+Module Export CommonTypes := Types xt sm .   
  
 Import xt. (* Import sm.  *)
 
-Parameter FLEX_TIMESTAMP_DELAY : XInteger . 
- Parameter sender_is_not_deployer : XInteger . 
- Parameter unexpected_refs_count_in_code : XInteger . 
- Parameter cant_override_code : XInteger . 
- Parameter sender_is_not_my_owner : XInteger . 
- Parameter not_enough_funds : XInteger . 
- Parameter wrapper_not_requested : XInteger . 
- Parameter trading_pair_not_requested : XInteger . 
- Parameter xchg_pair_not_requested : XInteger . 
- Parameter costs_inconsistency : XInteger . 
- Parameter wrapper_with_such_pubkey_already_requested : XInteger . 
- Parameter trading_pair_with_such_pubkey_already_requested : XInteger . 
- Parameter xchg_pair_with_such_pubkey_already_requested : XInteger . 
+Parameter FLEX_TIMESTAMP_DELAY : XUInteger . 
+ Parameter sender_is_not_deployer : XUInteger . 
+ Parameter unexpected_refs_count_in_code : XUInteger . 
+ Parameter cant_override_code : XUInteger . 
+ Parameter sender_is_not_my_owner : XUInteger . 
+ Parameter not_enough_funds : XUInteger . 
+ Parameter wrapper_not_requested : XUInteger . 
+ Parameter trading_pair_not_requested : XUInteger . 
+ Parameter xchg_pair_not_requested : XUInteger . 
+ Parameter costs_inconsistency : XUInteger . 
+ Parameter wrapper_with_such_pubkey_already_requested : XUInteger . 
+ Parameter trading_pair_with_such_pubkey_already_requested : XUInteger . 
+ Parameter xchg_pair_with_such_pubkey_already_requested : XUInteger . 
 
-Parameter TIMESTAMP_DELAY : XInteger . 
- Parameter message_sender_is_not_my_owner : XInteger . 
- Parameter missed_ext_wallet_code : XInteger . 
- Parameter missed_flex_wallet_code : XInteger . 
- Parameter missed_flex_wrapper_code : XInteger . 
- Parameter zero_owner_pubkey : XInteger . 
+Parameter TIMESTAMP_DELAY : XUInteger . 
+ Parameter message_sender_is_not_my_owner : XUInteger . 
+ Parameter missed_ext_wallet_code : XUInteger . 
+ Parameter missed_flex_wallet_code : XUInteger . 
+ Parameter missed_flex_wrapper_code : XUInteger . 
+ Parameter zero_owner_pubkey : XUInteger . 
 
 End ConstsTypesSig.

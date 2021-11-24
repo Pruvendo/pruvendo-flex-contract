@@ -1,6 +1,6 @@
-Require Import UMLang.SolidityNotations2.
+Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.SML_NG28.
-Require Import UrsusTVM.tvmNotations.
+Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Contracts.Flex.ClassTypes.
 Require Import Contracts.Flex.Ledger .

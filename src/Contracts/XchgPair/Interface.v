@@ -7,13 +7,15 @@ Require Import FinProof.MonadTransformers21.
 
 (* Require Import FinProof.ProgrammingWith.   *)
 Require Import UMLang.UrsusLib. 
-Require Import UMLang.SolidityNotations2. 
+Require Import UMLang.BasicModuleTypes. 
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
-Require Import UrsusTVM.tvmFunc. 
+Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require Import Project.CommonTypes. 
 Require Import Contracts.XchgPair.ClassTypes.
-
+(* 
+Require Import UrsusStdLib.Cpp.stdTypes.
+ *)
 (* Local Open Scope record.  *)
 Local Open Scope program_scope.
 Local Open Scope glist_scope. 
@@ -21,17 +23,18 @@ Local Open Scope glist_scope.
 Section InterfaceDef.
 
 
-Variables XInteger XAddress InternalMessageParamsLRecord XCell: Type.
+Variables XUInteger XAddress InternalMessageParamsLRecord XCell XUInteger128 : Type.
 
-Inductive VarInitFields      := | VarInit_ι_value | VarInit_ι_parent | VarInit_ι_pubkey. 
+Inductive VarInitFields      := | VarInit_ι_DXchgPair | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
 
 Variable InitialState : Type.
 
 Inductive PublicInterfaceP :=
+| IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> PublicInterfaceP
+
 | _Icreate : InitialState -> PublicInterfaceP
-| Iconstructor : XInteger -> PublicInterfaceP
-| Ideploy : XInteger -> PublicInterfaceP.
+| _Itransfer : PublicInterfaceP .
 
 Inductive OutgoingMessageP :=
 | EmptyMessage : OutgoingMessageP
@@ -41,35 +44,35 @@ End InterfaceDef.
 
 Module PublicInterface (xt: XTypesSig) (sm: StateMonadSig).
 Module Import VMStateModuleForInterface := VMStateModule xt sm.
-Module Import SolidityNotationsForInterface := SolidityNotations xt sm.
 Module Import ClassTypesForInterface := ClassTypes xt sm.
-
+(* Module Export stdTypesNotationsModule := stdTypesNotations xt sm. *)
 Local Open Scope xlist_scope.
-
-Definition VarInitL := [XInteger : Type; XAddress : Type; XInteger256: Type].
+(* Local Open Scope ucpp_scope. *)
+Definition VarInitL := [XUInteger : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
-Definition InitialStateL := [XCell ; VarInitLRecord ; XInteger128: Type].
+Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Check (InitState_ι_code _). *)
 
 (* Print PublicInterfaceP. *)
-Definition PublicInterface : Type := PublicInterfaceP XInteger InitialStateLRecord.
+
+Definition PublicInterface : Type := PublicInterfaceP XAddress XUInteger128 InitialStateLRecord .
 
 (* Print OutgoingMessageP. *)
-Definition OutgoingMessage : Type := OutgoingMessageP XInteger XAddress InternalMessageParamsLRecord InitialStateLRecord.
+Definition OutgoingMessage : Type := OutgoingMessageP XAddress XUInteger128 InternalMessageParamsLRecord InitialStateLRecord.
 
 (* Print Iconstructor. *)
 Arguments _Icreate {_} {_}.
-Arguments Iconstructor {_} {_}.
-Arguments Ideploy {_} {_}.
+(* Arguments Iconstructor {_} {_}. *)
+Arguments IonDeploy {_} {_}.
 Arguments OutgoingInternalMessage {_} {_} {_} {_}.
 (* About OutgoingInternalMessage. *)
 
 Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
 {
-    default := EmptyMessage XInteger XAddress InternalMessageParamsLRecord InitialStateLRecord
+    default := EmptyMessage XAddress XUInteger128 InternalMessageParamsLRecord InitialStateLRecord
 }.
 
 
