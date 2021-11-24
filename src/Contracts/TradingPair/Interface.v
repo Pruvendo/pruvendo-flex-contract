@@ -20,7 +20,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XUInteger XAddress InternalMessageParamsLRecord XCell: Type.
+Variables XUInteger128 XAddress InternalMessageParamsLRecord XCell: Type.
 
 Inductive VarInitFields      := | VarInit_ι_DTradingPair | VarInit_ι_pubkey. (* = DFlex *)
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
@@ -29,7 +29,6 @@ Variable InitialState : Type.
 
 Inductive PublicInterfaceP :=
 | IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> PublicInterfaceP
-
 | _Icreate : InitialState -> PublicInterfaceP
 | _Itransfer : PublicInterfaceP .
 
@@ -40,36 +39,35 @@ Inductive OutgoingMessageP :=
 End InterfaceDef.
 
 Module PublicInterface (xt: XTypesSig) (sm: StateMonadSig).
+
 Module Import VMStateModuleForInterface := VMStateModule xt sm.
 Module Import BasicTypesForInterface := BasicTypes xt sm.
 Module Import ClassTypesForInterface := ClassTypes xt sm.
 
 Local Open Scope xlist_scope.
 
-Definition VarInitL := [XUInteger : Type; XUInteger256: Type].
+Definition VarInitL := [DTradingPairLRecord : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
 Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
-(* Check (InitState_ι_code _). *)
-
 (* Print PublicInterfaceP. *)
-Definition PublicInterface : Type := PublicInterfaceP XAddress XUInteger128 InitialStateLRecord.
+Definition PublicInterface : Type := PublicInterfaceP XUInteger128 XAddress InitialStateLRecord.
 
-(* Print OutgoingMessageP. *)
-Definition OutgoingMessage : Type := OutgoingMessageP XAddress XUInteger128 InternalMessageParamsLRecord InitialStateLRecord.
+Print OutgoingMessageP.
+Definition OutgoingMessage : Type := OutgoingMessageP XUInteger128 XAddress InternalMessageParamsLRecord InitialStateLRecord.
 
 (* Print Iconstructor. *)
-Arguments _Icreate {_} {_}.
-Arguments Iconstructor {_} {_}.
-Arguments Ideploy {_} {_}.
+Arguments _Icreate {_} {_} {_}.
+Arguments IonDeploy {_} {_} {_}.
+Arguments _Itransfer {_} {_} {_}.
+
 Arguments OutgoingInternalMessage {_} {_} {_} {_}.
-(* About OutgoingInternalMessage. *)
 
 Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
 {
-    default := EmptyMessage XAddress XUInteger128 InternalMessageParamsLRecord InitialStateLRecord
+    default := EmptyMessage XUInteger128 XAddress InternalMessageParamsLRecord InitialStateLRecord
 }.
 
 

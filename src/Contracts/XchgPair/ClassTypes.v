@@ -14,7 +14,6 @@ Require Import Project.CommonTypes.
 
 Inductive DXchgPairFields := | DXchgPair_ι_flex_addr_ | DXchgPair_ι_tip3_major_root_ | DXchgPair_ι_tip3_minor_root_ | DXchgPair_ι_min_amount_ | DXchgPair_ι_notify_addr_ .
 
-
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
 Module Export CommonTypes := Types xt sm.
 

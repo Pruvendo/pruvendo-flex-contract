@@ -21,7 +21,6 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-
 Parameter onDeploy :  uint128 -> uint128 -> raw_address -> UExpression boolean true . 
 Parameter getFlexAddr : UExpression raw_address false . 
 Parameter getTip3MajorRoot : UExpression raw_address false . 
@@ -30,9 +29,8 @@ Parameter getMinAmount : UExpression uint128 false .
 Parameter getNotifyAddr : UExpression raw_address false . 
 Parameter _fallback : TvmCell -> TvmSlice -> UExpression uint false . 
 
-(**********************************************************************)
+(*********pure*************************************************************)
 Parameter prepare_xchg_pair_state_init_and_addr: ContractLRecord -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
-
 
 End SpecSig.
 
