@@ -9,15 +9,19 @@ Require Import UrsusStdLib.Cpp.stdTypes.
 Require Import CommonNotations.
 Require Import Contracts.TradingPair.ClassTypes.
 Require Import Contracts.TradingPair.Ledger.
+Require Import Contracts.TradingPair.ClassTypesNotations.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 (* Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm. *)
 Module LedgerModuleForFuncSig := Ledger xt sm .
-Module Export CommonNotationsModule := CommonNotations xt sm LedgerModuleForFuncSig.
+Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig.
 (* Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. *)
 Module Type SpecSig.
+
+Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
+
  Parameter onDeploy : ( ( uint128 ) ) -> ( ( uint128 ) ) -> ( ( XAddress ) ) -> UExpression XBool true . 
  Parameter getFlexAddr : UExpression XAddress false . 
  Parameter getTip3Root : UExpression XAddress false . 

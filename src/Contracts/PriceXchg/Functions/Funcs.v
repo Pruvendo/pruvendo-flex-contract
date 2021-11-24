@@ -15,6 +15,8 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
+Require Import Project.CommonNotations.
+
 (*Fully qualified name are mandatory in multi-contract environment*)
 Require Import Contracts.PriceXchg.Ledger.
 Require Import Contracts.PriceXchg.Functions.FuncSig.
@@ -37,7 +39,7 @@ Import ha.
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 
-Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule.
+(* Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule. *)
 
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  

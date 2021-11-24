@@ -14,6 +14,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
+Require Import CommonNotations.
 Require Import Contracts.Price.Ledger.
 Require Import Contracts.Price.Functions.FuncSig.
 
@@ -38,7 +39,7 @@ Import UrsusNotations.
 
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
-
+(* 
 (*OrderInfo*)
 
 Definition OrderInfo_amount_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
@@ -137,7 +138,7 @@ Definition SellArgs_amount_left (x: ULValue SellArgsLRecord): ULValue XUInteger1
 
 Notation " a '↑' 'SellArgs.amount' " := (SellArgs_amount_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'SellArgs.amount' " := (SellArgs_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
- 
+  *)
 
 (*  Notation " 'process_ret.sells_amount' " := ( process_ret_ι_sells_amount ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'process_ret.sells_amount' " := ( process_ret_ι_sells_amount ) (in custom URValue at level 0) : ursus_scope. 

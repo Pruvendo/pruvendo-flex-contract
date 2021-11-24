@@ -13,7 +13,7 @@ Require Import Contracts.XchgPair.Ledger.
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 Module LedgerModuleForFuncSig := Ledger xt sm .
-Module Export CommonNotationsModule := CommonNotations xt sm LedgerModuleForFuncSig. 
+Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig.
 (* Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. *)
 Module Type SpecSig.
 

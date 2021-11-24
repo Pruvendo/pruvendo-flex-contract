@@ -7,12 +7,13 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import CommonNotations.
 Require Import Contracts.FlexClient.ClassTypes.
 Require Import Contracts.FlexClient.Ledger.
+Require Import Contracts.FlexClient.ClassTypesNotations.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 (* Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm. *)
 Module  LedgerModuleForFuncSig := Ledger xt sm .
-Module Export CommonNotationsModule := CommonNotations xt sm LedgerModuleForFuncSig. 
+Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
 
 Module Type SpecSig.
 Local Open Scope ursus_scope.

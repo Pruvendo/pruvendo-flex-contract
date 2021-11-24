@@ -12,18 +12,8 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
-
-Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
-Module Export CommonTypes := Types xt sm.
-
-Local Open Scope xlist_scope.
-Local Open Scope record. 
-Local Open Scope program_scope.
-Local Open Scope glist_scope.
-
-
 (* 1 *) (* Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock . *)
-(* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
+(* 1 *) (* Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library . *)
 (* 1 *) (* Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address . *)
 (* 1 *) Inductive RationalPriceFields := | RationalPrice_ι_num | RationalPrice_ι_denum .
 (* 1 *) (* Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address . *)
@@ -35,7 +25,18 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive OrderRetFields := | OrderRet_ι_err_code | OrderRet_ι_processed | OrderRet_ι_enqueued .
 (* 1 *) Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_sells_ | process_ret_ι_buys_amount | process_ret_ι_buys_ | process_ret_ι_ret_ .
 (* 1 *) Inductive lend_recordFields := | lend_record_ι_lend_balance | lend_record_ι_lend_finish_time .
-(* 1 *) Inductive DTONTokenWalletInternalFields := | DTONTokenWalletInternal_ι_name_ | DTONTokenWalletInternal_ι_symbol_ | DTONTokenWalletInternal_ι_decimals_ | DTONTokenWalletInternal_ι_balance_ | DTONTokenWalletInternal_ι_root_public_key_ | DTONTokenWalletInternal_ι_wallet_public_key_ | DTONTokenWalletInternal_ι_root_address_ | DTONTokenWalletInternal_ι_owner_address_ | DTONTokenWalletInternal_ι_lend_ownership_ | DTONTokenWalletInternal_ι_code_ | DTONTokenWalletInternal_ι_workchain_id_ .
+(* 1 Должно быть в токен валете, просто его пока нет*) Inductive DTONTokenWalletInternalFields := | DTONTokenWalletInternal_ι_name_ | DTONTokenWalletInternal_ι_symbol_ | DTONTokenWalletInternal_ι_decimals_ | DTONTokenWalletInternal_ι_balance_ | DTONTokenWalletInternal_ι_root_public_key_ | DTONTokenWalletInternal_ι_wallet_public_key_ | DTONTokenWalletInternal_ι_root_address_ | DTONTokenWalletInternal_ι_owner_address_ | DTONTokenWalletInternal_ι_lend_ownership_ | DTONTokenWalletInternal_ι_code_ | DTONTokenWalletInternal_ι_workchain_id_ . 
+Inductive DPriceXchgFields := | DPriceXchg_ι_price_ | DPriceXchg_ι_sells_amount_ | DPriceXchg_ι_buys_amount_ | DPriceXchg_ι_flex_ | DPriceXchg_ι_min_amount_ | DPriceXchg_ι_deals_limit_ | DPriceXchg_ι_notify_addr_ | DPriceXchg_ι_workchain_id_ | DPriceXchg_ι_tons_cfg_ | DPriceXchg_ι_tip3_code_ | DPriceXchg_ι_major_tip3cfg_ | DPriceXchg_ι_minor_tip3cfg_ | DPriceXchg_ι_sells_ | DPriceXchg_ι_buys_ .
+
+Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
+Module Export CommonTypes := Types xt sm.
+
+Local Open Scope xlist_scope.
+Local Open Scope record. 
+Local Open Scope program_scope.
+Local Open Scope glist_scope.
+
+
 
 (* 2 *) (* Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
@@ -43,14 +44,14 @@ Local Open Scope glist_scope.
 Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
  Opaque TickTockLRecord . *)
 
-(* 2 *) Definition StateInitL : list Type := 
+(* 2 *) (* Definition StateInitL : list Type := 
  [ ( XMaybe XUInteger ) : Type ; 
  ( XMaybe TickTockLRecord ) : Type ; 
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ] .
 Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
- Opaque StateInitLRecord . 
+ Opaque StateInitLRecord .  *)
 (* 2 *) (* Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
@@ -166,4 +167,22 @@ Elpi GeneratePruvendoRecord lend_recordL lend_recordFields .
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
  Opaque DTONTokenWalletInternalLRecord . 
 
+Definition DPriceXchgL : list Type := 
+ [ ( RationalPriceLRecord ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( addr_std_fixedLRecord ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XAddress (* IFlexNotifyPtr *) ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( TonsConfigLRecord ) : Type ; 
+ ( XCell ) : Type ; 
+ ( Tip3ConfigLRecord ) : Type ; 
+ ( Tip3ConfigLRecord ) : Type ; 
+ ( ( XQueue OrderInfoXchgLRecord ) ) : Type ; 
+ ( ( XQueue OrderInfoXchgLRecord ) ) : Type ] .
+Elpi GeneratePruvendoRecord DPriceXchgL DPriceXchgFields . 
+ Opaque DPriceXchgLRecord . 
+ 
 End ClassTypes .

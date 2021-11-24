@@ -7,6 +7,7 @@ Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_retu
 Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
 Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .
 Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address | Tip3Config_ι_workchain_id_.
+Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
 
 Module Types (xt: XTypesSig) (sm: StateMonadSig).
 Export xt. 
@@ -59,4 +60,13 @@ Definition Tip3ConfigL : list Type :=
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
  Opaque Tip3ConfigLRecord .
 
+Definition StateInitL : list Type := 
+ [ ( XMaybe XUInteger ) : Type ; 
+ ( XMaybe TickTockLRecord ) : Type ; 
+ ( XMaybe XCell ) : Type ; 
+ ( XMaybe XCell ) : Type ; 
+ ( XMaybe XCell ) : Type ] .
+Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
+ Opaque StateInitLRecord . 
+ 
 End Types.

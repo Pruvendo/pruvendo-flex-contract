@@ -37,7 +37,7 @@ Import ha.
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 
-Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule.
+(* Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule. *)
 
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  

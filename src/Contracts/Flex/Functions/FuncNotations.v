@@ -38,7 +38,7 @@ Fail Check OutgoingMessage_default.
 Import UrsusNotations.
 Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
-
+(* 
 Notation " 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_finish_time ) (in custom ULValue at level 0) : ursus_scope. 
@@ -257,7 +257,7 @@ Notation " 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance ) (in c
  Notation " 'FlexDetails.trading_pair_listing_requests' " := ( FlexDetails_ι_trading_pair_listing_requests ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'FlexDetails.xchg_pair_listing_requests' " := ( FlexDetails_ι_xchg_pair_listing_requests ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'FlexDetails.xchg_pair_listing_requests' " := ( FlexDetails_ι_xchg_pair_listing_requests ) (in custom URValue at level 0) : ursus_scope. 
- 
+  *)
  Definition deployer_pubkey__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType deployer_pubkey_ ) : ULValue uint256 ) . 
  Definition deployer_pubkey__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType deployer_pubkey_ ) : URValue uint256 false ) . 
  Notation " '_deployer_pubkey_' " := ( deployer_pubkey__left ) (in custom ULValue at level 0) : ursus_scope. 

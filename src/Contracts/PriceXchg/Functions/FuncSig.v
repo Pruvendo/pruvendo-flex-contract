@@ -9,11 +9,12 @@ Require Import UrsusStdLib.Cpp.stdTypes.
 Require Import CommonNotations.
 Require Import Contracts.PriceXchg.ClassTypes.
 Require Import Contracts.PriceXchg.Ledger.
+Require Import Contracts.PriceXchg.ClassTypesNotations.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 Module LedgerModuleForFuncSig := Ledger xt sm .
-Module Export CommonNotationsModule := CommonNotations xt sm LedgerModuleForFuncSig. 
+Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
 (* Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. *)
 Module Type SpecSig.
 

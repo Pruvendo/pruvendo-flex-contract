@@ -45,7 +45,7 @@ Local Open Scope ursus_scope.
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ] . *)
-
+(* 
 Definition StateInit_split_depth_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XUInteger ) b :=
     || {x} ^^ {StateInit_ι_split_depth} || : _ .
 
@@ -86,7 +86,7 @@ Notation " a '↑' 'StateInit.data' " := ( StateInit_data_left a) (in custom ULV
 Notation " a '↑' 'StateInit.data' " := ( StateInit_data_right a) (in custom URValue at level 0) : ursus_scope. 
 Notation " a '↑' 'StateInit.library' " := ( StateInit_library_left a) (in custom ULValue at level 0) : ursus_scope. 
 Notation " a '↑' 'StateInit.library' " := ( StateInit_library_right a) (in custom URValue at level 0) : ursus_scope. 
-
+ *)
 (********************************************************************************************************************)
 (*state fields*)
  

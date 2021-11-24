@@ -60,8 +60,8 @@ Import ha.
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 
-Export SpecModuleForFuncNotations(* ForFuncs *).tvmNotationsModule.
-
+(* Export SpecModuleForFuncNotations(* ForFuncs *).tvmNotationsModule.
+ *)
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  
 Import UrsusNotations.

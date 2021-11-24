@@ -41,7 +41,7 @@ Local Open Scope ursus_scope.
 (**********************************************************************************************************************)
 (*RationalPrice*)
 
-Definition RationalPrice_num_right {b} (x: URValue RationalPriceLRecord b): URValue XUInteger128 b :=
+(* Definition RationalPrice_num_right {b} (x: URValue RationalPriceLRecord b): URValue XUInteger128 b :=
     || {x} ^^ {RationalPrice_ι_num} || : _ .
 
 Definition RationalPrice_denum_right {b} (x: URValue RationalPriceLRecord b): URValue XUInteger128 b :=
@@ -405,7 +405,7 @@ Notation " a '↑' 'process_ret.buys_' " := ( process_ret_buys__left a) (in cust
 Notation " a '↑' 'process_ret.buys_' " := ( process_ret_buys__right a) (in custom URValue at level 0) : ursus_scope. 
 Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__left a) (in custom ULValue at level 0) : ursus_scope. 
 Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__right a) (in custom URValue at level 0) : ursus_scope. 
-
+ *)
 
 (**********************************************************************************************************************)
 (*State fields*)

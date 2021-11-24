@@ -30,7 +30,7 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive DTONTokenWalletExternalFields := | DTONTokenWalletExternal_ι_name_ | DTONTokenWalletExternal_ι_symbol_ | DTONTokenWalletExternal_ι_decimals_ | DTONTokenWalletExternal_ι_balance_ | DTONTokenWalletExternal_ι_root_public_key_ | DTONTokenWalletExternal_ι_wallet_public_key_ | DTONTokenWalletExternal_ι_root_address_ | DTONTokenWalletExternal_ι_owner_address_ | DTONTokenWalletExternal_ι_code_ | DTONTokenWalletExternal_ι_allowance_ | DTONTokenWalletExternal_ι_workchain_id_ .
 (* 1 *) Inductive DTONTokenWalletInternalFields := | DTONTokenWalletInternal_ι_name_ | DTONTokenWalletInternal_ι_symbol_ | DTONTokenWalletInternal_ι_decimals_ | DTONTokenWalletInternal_ι_balance_ | DTONTokenWalletInternal_ι_root_public_key_ | DTONTokenWalletInternal_ι_wallet_public_key_ | DTONTokenWalletInternal_ι_root_address_ | DTONTokenWalletInternal_ι_owner_address_ | DTONTokenWalletInternal_ι_lend_ownership_ | DTONTokenWalletInternal_ι_code_ | DTONTokenWalletInternal_ι_workchain_id_ .
 (* 1 *) (* Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address . *)
-(* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
+(* 1 *) (* Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library . *)
 (* 1 *) (* Inductive DTradingPairFields := | DTradingPair_ι_flex_addr_ | DTradingPair_ι_tip3_root_ | DTradingPair_ι_deploy_value_ | DTradingPair_ι_min_amount_ | DTradingPair_ι_notify_addr_. *)
 (* 1 *) (* Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify . *)
 (* 1 *) Inductive ListingConfigFields := | ListingConfig_ι_register_wrapper_cost | ListingConfig_ι_reject_wrapper_cost | ListingConfig_ι_wrapper_deploy_value | ListingConfig_ι_wrapper_keep_balance | ListingConfig_ι_ext_wallet_balance | ListingConfig_ι_set_internal_wallet_value | ListingConfig_ι_register_pair_cost | ListingConfig_ι_reject_pair_cost | ListingConfig_ι_pair_deploy_value | ListingConfig_ι_pair_keep_balance | ListingConfig_ι_register_return_value .
@@ -121,14 +121,14 @@ Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFiel
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
  Opaque Tip3ConfigLRecord .  *)
 
-(* 2 *) Definition StateInitL : list Type := 
+(* 2 *) (* Definition StateInitL : list Type := 
  [ ( ( XMaybe XUInteger ) ) : Type ;
  ( ( XMaybe TickTockLRecord ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ] .
 Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
- Opaque StateInitLRecord . 
+ Opaque StateInitLRecord .  *)
 
 (* 2 *) (* Definition DTradingPairL : list Type := 
  [ ( XAddress ) : Type ; 
