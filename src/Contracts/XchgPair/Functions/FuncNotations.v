@@ -14,7 +14,6 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
-Require Import CommonNotations.
 Require Import Contracts.XchgPair.Ledger.
 Require Import Contracts.XchgPair.Functions.FuncSig.
 

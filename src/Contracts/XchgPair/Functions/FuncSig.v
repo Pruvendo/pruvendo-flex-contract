@@ -10,6 +10,7 @@ Require Import CommonNotations.
 Require Import Contracts.XchgPair.ClassTypes.
 Require Import Contracts.XchgPair.ClassTypesNotations.
 Require Import Contracts.XchgPair.Ledger.
+Require Import Contracts.XchgPair.ClassTypesNotations.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
