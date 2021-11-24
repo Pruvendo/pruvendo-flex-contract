@@ -1,8 +1,6 @@
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
-
-
 Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
 Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
 Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .
@@ -15,17 +13,19 @@ Export xt.
 Module Export BasicTypesModule := BasicTypes xt sm.
 Local Open Scope glist_scope.
 
- Definition IFlexNotifyPtr := XAddress. 
- Definition ITONTokenWalletPtr := XAddress. 
- Definition IPricePtr := XAddress. 
- Definition TokensType := XUInteger256. 
- Definition WalletGramsType := XUInteger128. 
- Definition Grams := XUInteger16 . 
-                            Definition auto := XUInteger . 
- Definition addr_std_compact := XAddress . 
- Definition varuint32 := XUInteger32 .
- Definition address_t := XAddress.
- Definition IWrapperPtr := XAddress .
+Definition IFlexNotifyPtr := XAddress. 
+Definition ITONTokenWalletPtr := XAddress. 
+Definition IPricePtr := XAddress. 
+Definition TokensType := XUInteger256. 
+Definition WalletGramsType := XUInteger128. 
+Definition Grams := XUInteger16 . 
+(*******TODO***************************)
+Definition auto := XUInteger . 
+(**************************************)                            
+Definition addr_std_compact := XAddress . 
+Definition varuint32 := XUInteger32 .
+Definition address_t := XAddress.
+Definition IWrapperPtr := XAddress .
 
 
 (* 2 *) Definition TonsConfigL : list Type := 
@@ -36,20 +36,17 @@ Local Open Scope glist_scope.
 ( XUInteger128 ) : Type ; 
 ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
-Opaque TonsConfigLRecord . 
 
  Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
  ( XBool ) : Type ] .
 Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
- Opaque TickTockLRecord .
-
+ 
  Definition addr_std_fixedL : list Type := 
  [ ( XUInteger8 ) : Type ; 
  ( XUInteger256 ) : Type ] .
 Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
- Opaque addr_std_fixedLRecord .
-
+ 
 Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
@@ -58,7 +55,6 @@ Definition Tip3ConfigL : list Type :=
  ( XAddress ) : Type ;
  ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
- Opaque Tip3ConfigLRecord .
 
 Definition StateInitL : list Type := 
  [ ( XMaybe XUInteger ) : Type ; 
@@ -67,6 +63,5 @@ Definition StateInitL : list Type :=
  ( XMaybe XCell ) : Type ; 
  ( XMaybe XCell ) : Type ] .
 Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
- Opaque StateInitLRecord . 
- 
+  
 End Types.
