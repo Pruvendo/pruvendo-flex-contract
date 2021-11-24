@@ -41,6 +41,7 @@ Local Open Scope glist_scope.
 | xchg_pair_listing_requests_ .
 
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
+Definition ContractFields := DFlexFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
@@ -60,7 +61,7 @@ Import xt.
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL : list Type := 
+(* 2 *) Definition ContractL := DFlexLRecord .(* : list Type := 
  [ ( XUInteger256 ) : Type ; 
  ( XUInteger8 ) : Type ; 
  ( XString ) : Type ; 
@@ -80,7 +81,8 @@ GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
  ( (XHMap XUInteger256 (XUInteger256 * XchgPairListingRequestLRecord)) ) : Type ] .
 
 Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord . 
+ Opaque ContractLRecord .  *)
+ Definition ContractLEmbeddedType := DFlexLEmbeddedType.
 
 
  Inductive LocalStateFields000000I := | ι0000000 | ι0000001 . 

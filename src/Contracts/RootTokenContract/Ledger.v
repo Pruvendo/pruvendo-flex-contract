@@ -22,6 +22,7 @@ Local Open Scope glist_scope.
 
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
+Definition ContractFields := DRootTokenContractFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
@@ -40,6 +41,8 @@ Import xt.
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
+Definition ContractLRecord := DRootTokenContractLRecord .
+Definition ContractLEmbeddedType := DRootTokenContractEmbeddedType.
 
 Inductive LocalStateFields00000I := | ι000000 | ι000001 . 
  Definition LocalState00000L := [ ( XHMap (string*nat) ( StateInitLRecord * XInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 

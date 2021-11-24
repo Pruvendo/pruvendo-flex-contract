@@ -30,6 +30,7 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_SelfDeployer | _EmittedEvents | _MessagesLog.
 (* 1 *) Inductive ContractFields := | owner_ | trading_pair_code_ | xchg_pair_code_ | workchain_id_ | tons_cfg_ | flex_ | ext_wallet_code_ | flex_wallet_code_ | flex_wrapper_code_ .
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
+Definition ContractFields := DFlexClientFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
@@ -48,7 +49,7 @@ Import xt.
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL : list Type := 
+(* 2 *) Definition ContractL := DFlexClientLRecord(* : list Type := 
  [ ( XUInteger256 ) : Type ; 
  ( XCell ) : Type ; 
  ( XCell ) : Type ; 
@@ -59,8 +60,9 @@ GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ] .
 Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord . 
- 
+ Opaque ContractLRecord .  *)
+ Definition ContractLEmbeddedType := DFlexClientLEmbeddedType.
+
 Inductive LocalStateFields00000I := | ι000000 | ι000001 . 
  Definition LocalState00000L := [ ( XHMap (string*nat) XUInteger128 ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00000L LocalStateFields00000I . 

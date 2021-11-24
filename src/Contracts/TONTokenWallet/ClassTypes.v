@@ -33,6 +33,22 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive DRootTokenContractFields := | DRootTokenContract_ι_name_ | DRootTokenContract_ι_symbol_ | DRootTokenContract_ι_decimals_ | DRootTokenContract_ι_root_public_key_ | DRootTokenContract_ι_total_supply_ | DRootTokenContract_ι_total_granted_ | DRootTokenContract_ι_wallet_code_ | DRootTokenContract_ι_owner_address_ | DRootTokenContract_ι_start_balance_ .
 (* 1 *) Inductive lend_array_recordFields := | lend_array_record_ι_lend_addr | lend_array_record_ι_lend_balance | lend_array_record_ι_lend_finish_time .
 (* 1 *) Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .
+(* 1 *) Inductive DTONTokenWalletFields := | name_ | symbol_ | decimals_ | balance_ | root_public_key_ | wallet_public_key_ | root_address_ | owner_address_ | code_ | allowance_ | workchain_id_ .
+
+(* 2 *) Definition ContractL : list Type := 
+[ ( XString ) : Type ; 
+( XString ) : Type ; 
+( XInteger8 ) : Type ; 
+( XInteger128 ) : Type ; 
+( XInteger256 ) : Type ; 
+( XInteger256 ) : Type ; 
+( XAddress ) : Type ; 
+( ( XMaybe XAddress ) ) : Type ; 
+( XCell ) : Type ; 
+( ( XMaybe allowance_infoLRecord ) ) : Type ; 
+( XInteger8 ) : Type ] .
+Elpi GeneratePruvendoRecord ContractL ContractFields . 
+Opaque ContractLRecord .
 
 (* 2 *) Definition allowance_infoL : list Type := 
  [ ( XAddress ) : Type ; 

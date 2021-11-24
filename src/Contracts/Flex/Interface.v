@@ -20,7 +20,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XUInteger XAddress InternalMessageParamsLRecord XCell: Type.
+Variables XUInteger XAddress InternalMessageParamsLRecord XCell XUInteger256 XUInteger128 XBool : Type.
 
 Inductive VarInitFields      := | VarInit_ι_DFlex | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
@@ -50,7 +50,7 @@ Inductive PublicInterfaceP :=
 | Iconstructor : XInteger256 -> XString -> XMaybe XAddress -> TonsConfig -> 
                                           XInteger8 -> ListingConfig -> PublicInterfaceP
 | IsetSpecificCode : XInteger8 -> XCell -> PublicInterfaceP
-| Itransfer XAddress -> XInteger128 -> PublicInterfaceP
+| Itransfer : XAddress -> XInteger128 -> PublicInterfaceP
 | IregisterTradingPair : XInteger256 -> XAddress -> XInteger128 -> XAddress -> PublicInterfaceP
 | IregisterXchgPair : XInteger256 -> XAddress -> XAddress -> XInteger128 -> XAddress -> PublicInterfaceP
 | IregisterWrapper : XInteger256 -> Tip3Config -> PublicInterfaceP

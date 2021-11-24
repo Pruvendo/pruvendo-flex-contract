@@ -22,6 +22,7 @@ Local Open Scope glist_scope.
 
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
+Definition ContractFields := DWrapperFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
@@ -40,7 +41,7 @@ Import xt.
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL : list Type := 
+(* 2 *) Definition ContractL := DWrapperLRecord.(* 
  [ ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
@@ -55,7 +56,8 @@ GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
  ( ( XQueue OrderInfoLRecord ) ) : Type ; 
  ( ( XQueue OrderInfoLRecord ) ) : Type ] .
 Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord . 
+ Opaque ContractLRecord .  *)
+Definition ContractLEmbeddedType := DWrapperLEmbeddedType.
 
 
  Inductive LocalStateFields00000I := | ι000000 | ι000001 . 

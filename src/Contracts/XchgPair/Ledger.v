@@ -48,6 +48,7 @@ Opaque MessagesAndEventsLRecord .
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord ContractL ContractFields . 
  Opaque ContractLRecord .  *)
+ Definition ContractLEmbeddedType := DXchgPairLEmbeddedType.
 
 Inductive LocalStateFields0000I := | ι00000 | ι00001 . 
  Definition LocalState0000L := [ ( XHMap (string*nat) ( StateInitLRecord * XUInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 

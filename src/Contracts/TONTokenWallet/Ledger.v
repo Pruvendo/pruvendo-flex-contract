@@ -22,7 +22,7 @@ Local Open Scope glist_scope.
 
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
-
+Definition ContractFields := DTONTokenWalletFields.
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
 Module PricePublicInterfaceModule := PublicInterface xt sm.
@@ -39,7 +39,8 @@ Import xt.
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
- 
+Definition ContractLRecord := DTONTokenWalletLRecord .
+Definition ContractLEmbeddedType := DTONTokenWalletLEmbeddedType.
 
 (* 1 *) Inductive LedgerFieldsI := | Ledger_ι_Contract | Ledger_ι_ContractCopy | Ledger_ι_VMState | Ledger_ι_MessagesAndEvents | Ledger_ι_MessagesAndEventsCopy | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
 
