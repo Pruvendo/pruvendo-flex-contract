@@ -139,7 +139,7 @@ public:
     if (notify_receiver && owner_address_) {
       // performing `tail call` - requesting dest to answer to our caller
       temporary_data::setglob(global_id::answer_id, return_func_id()->get());
-      ITONTokenWalletNotifyPtr(*owner_address_)(Grams(0), SEND_ALL_GAS).
+      ITONTokenWalletNotifyPtr( *owner_address_)(Grams(0), SEND_ALL_GAS).
         onTip3Transfer(answer_addr, balance_, tokens, sender_pubkey, sender_owner, payload);
     } else {
       // In some cases (allowance request, for example) answer_addr may be this contract
@@ -601,7 +601,7 @@ private:
     if (actual_lend_balance > 0) {
       if (allowed_for_original_owner_in_lend_state) {
         require(is_internal_owner(), error_code::internal_owner_disabled);
-        if (*owner_address_ == int_sender())
+        if ( *owner_address_ == int_sender())
           return balance_ - actual_lend_balance;
       }
       require(!original_owner_only, error_code::only_original_owner_allowed);
@@ -610,7 +610,7 @@ private:
       return std::min(balance_, elem->lend_balance);
     } else {
       require(is_internal_owner(), error_code::internal_owner_disabled);
-      require(*owner_address_ == int_sender(),
+      require( *owner_address_ == int_sender(),
               error_code::message_sender_is_not_my_owner);
       return balance_;
     }

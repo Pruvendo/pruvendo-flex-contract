@@ -20,6 +20,9 @@ Require Import Contracts.Price.Functions.FuncSig.
 
 (* здесь инмпортируем все внешние интерфейсы *)
 Require Import Contracts.Price.Interface.
+Require Import Contracts.TONTokenWallet.Interface.
+Require Import Contracts.FlexNotify.Interface.
+Require Import Contracts.PriceCallback.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -28,6 +31,9 @@ Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
 Module PricePublicInterface := PublicInterface xt sm.
+Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.PublicInterface xt sm.
+Module FlexNotifyPublicInterface := Contracts.FlexNotify.PublicInterface xt sm.
+Module PriceCallbackPublicInterface := Contracts.PriceCallback.PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 

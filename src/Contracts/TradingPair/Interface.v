@@ -22,15 +22,16 @@ Section InterfaceDef.
 
 Variables XUInteger XAddress InternalMessageParamsLRecord XCell: Type.
 
-Inductive VarInitFields      := | VarInit_ι_value | VarInit_ι_parent | VarInit_ι_pubkey. (* = DFlex *)
+Inductive VarInitFields      := | VarInit_ι_DTradingPair | VarInit_ι_pubkey. (* = DFlex *)
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
 
 Variable InitialState : Type.
 
 Inductive PublicInterfaceP :=
+| IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> PublicInterfaceP
+
 | _Icreate : InitialState -> PublicInterfaceP
-| Iconstructor : XUInteger -> PublicInterfaceP
-| Ideploy : XUInteger -> PublicInterfaceP.
+| _Itransfer : PublicInterfaceP .
 
 Inductive OutgoingMessageP :=
 | EmptyMessage : OutgoingMessageP
@@ -45,7 +46,7 @@ Module Import ClassTypesForInterface := ClassTypes xt sm.
 
 Local Open Scope xlist_scope.
 
-Definition VarInitL := [XUInteger : Type; XAddress : Type; XUInteger256: Type].
+Definition VarInitL := [XUInteger : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
 Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
@@ -54,10 +55,10 @@ GeneratePruvendoRecord InitialStateL InitialStateFields.
 (* Check (InitState_ι_code _). *)
 
 (* Print PublicInterfaceP. *)
-Definition PublicInterface : Type := PublicInterfaceP XUInteger InitialStateLRecord.
+Definition PublicInterface : Type := PublicInterfaceP XAddress XUInteger128 InitialStateLRecord.
 
 (* Print OutgoingMessageP. *)
-Definition OutgoingMessage : Type := OutgoingMessageP XUInteger XAddress InternalMessageParamsLRecord InitialStateLRecord.
+Definition OutgoingMessage : Type := OutgoingMessageP XAddress XUInteger128 InternalMessageParamsLRecord InitialStateLRecord.
 
 (* Print Iconstructor. *)
 Arguments _Icreate {_} {_}.
@@ -68,7 +69,7 @@ Arguments OutgoingInternalMessage {_} {_} {_} {_}.
 
 Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
 {
-    default := EmptyMessage XUInteger XAddress InternalMessageParamsLRecord InitialStateLRecord
+    default := EmptyMessage XAddress XUInteger128 InternalMessageParamsLRecord InitialStateLRecord
 }.
 
 

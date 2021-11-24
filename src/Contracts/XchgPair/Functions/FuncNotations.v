@@ -28,6 +28,9 @@ Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
 Module XchgPairPublicInterface := XchgPair.Interface.PublicInterface xt sm.
+(* обращения к внешним интерфейсам нет *)
+
+
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 

@@ -22,15 +22,47 @@ Section InterfaceDef.
 
 Variables XUInteger XAddress InternalMessageParamsLRecord XCell: Type.
 
-Inductive VarInitFields      := | VarInit_ι_value | VarInit_ι_parent | VarInit_ι_pubkey. (* = DFlex *)
+Inductive VarInitFields      := | VarInit_ι_DFlex | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
 
 Variable InitialState : Type.
 
 Inductive PublicInterfaceP :=
+(* __interface IListingAnswer *)
+| onWrapperApproved : XUInteger256 -> XAddress -> PublicInterfaceP
+| onWrapperRejected : XUInteger256 -> PublicInterfaceP
+| onTradingPairApproved : XUInteger256 -> XAddress -> PublicInterfaceP
+| onTradingPairRejected : XUInteger256 -> PublicInterfaceP
+| onXchgPairApproved : XUInteger256 -> XAddress -> PublicInterfaceP
+| onXchgPairRejected : XUInteger256 -> PublicInterfaceP
+
+(* __interface IFlexNotify *)
+| IonDealCompleted : XAddress -> XUInteger128 -> XUInteger128 -> PublicInterfaceP
+| IonXchgDealCompleted: XAddress -> XAddress ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> PublicInterfaceP
+| IonOrderAdded : XBool -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> PublicInterfaceP
+| IonOrderCanceled : XBool -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> PublicInterfaceP
+| IonXchgOrderAdded : XBool -> XAddress -> XAddress -> 
+                     XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> PublicInterfaceP
+| IonXchgOrderCanceled : XBool -> XAddress -> XAddress -> 
+                     XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> PublicInterfaceP
+
+(* __interface IFlex *)
+| Iconstructor : XInteger256 -> XString -> XMaybe XAddress -> TonsConfig -> 
+                                          XInteger8 -> ListingConfig -> PublicInterfaceP
+| IsetSpecificCode : XInteger8 -> XCell -> PublicInterfaceP
+| Itransfer XAddress -> XInteger128 -> PublicInterfaceP
+| IregisterTradingPair : XInteger256 -> XAddress -> XInteger128 -> XAddress -> PublicInterfaceP
+| IregisterXchgPair : XInteger256 -> XAddress -> XAddress -> XInteger128 -> XAddress -> PublicInterfaceP
+| IregisterWrapper : XInteger256 -> Tip3Config -> PublicInterfaceP
+| IapproveTradingPair : XInteger256 -> PublicInterfaceP
+| IrejectTradingPair : XInteger256 -> PublicInterfaceP
+| IapproveXchgPair : XInteger256 -> PublicInterfaceP
+| IrejectXchgPair : XInteger256 -> PublicInterfaceP
+| IapproveWrapper : XInteger256 -> PublicInterfaceP
+| IrejectWrapper : XInteger256 -> PublicInterfaceP 
+
 | _Icreate : InitialState -> PublicInterfaceP
-| Iconstructor : XUInteger -> PublicInterfaceP
-| Ideploy : XUInteger -> PublicInterfaceP.
+| _Itransfer : PublicInterfaceP .
 
 Inductive OutgoingMessageP :=
 | EmptyMessage : OutgoingMessageP
@@ -45,7 +77,7 @@ Module Import ClassTypesForInterface := ClassTypes xt sm.
 
 Local Open Scope xlist_scope.
 
-Definition VarInitL := [XUInteger : Type; XAddress : Type; XUInteger256: Type].
+Definition VarInitL := [DFlex : Type; XInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
 Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
@@ -54,10 +86,10 @@ GeneratePruvendoRecord InitialStateL InitialStateFields.
 (* Check (InitState_ι_code _). *)
 
 (* Print PublicInterfaceP. *)
-Definition PublicInterface : Type := PublicInterfaceP XUInteger InitialStateLRecord.
+Definition PublicInterface : Type := PublicInterfaceP XUInteger8 XUInteger128 XUInteger256 XBool XAddress InitialStateLRecord.
 
 (* Print OutgoingMessageP. *)
-Definition OutgoingMessage : Type := OutgoingMessageP XUInteger XAddress InternalMessageParamsLRecord InitialStateLRecord.
+Definition OutgoingMessage : Type := OutgoingMessageP XUInteger8 XUInteger128 XUInteger256 XBool XAddress InternalMessageParamsLRecord InitialStateLRecord.
 
 (* Print Iconstructor. *)
 Arguments _Icreate {_} {_}.
@@ -68,7 +100,7 @@ Arguments OutgoingInternalMessage {_} {_} {_} {_}.
 
 Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
 {
-    default := EmptyMessage XUInteger XAddress InternalMessageParamsLRecord InitialStateLRecord
+    default := EmptyMessage XUInteger8 XUInteger128 XUInteger256 XBool XAddress InternalMessageParamsLRecord InitialStateLRecord
 }.
 
 

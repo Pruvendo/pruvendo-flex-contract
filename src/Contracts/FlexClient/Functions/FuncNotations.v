@@ -20,7 +20,12 @@ Require Import Contracts.FlexClient.Ledger.
 Require Import Contracts.FlexClient.Functions.FuncSig.
 
 (* здесь инмпортируем все внешние интерфейсы *)
-Require Import Contracts.FlexClient.Interface.
+Require Import Contracts.TradingPair.Interface.
+Require Import Contracts.XchgPair.Interface.
+Require Import Contracts.Price.Interface.
+Require Import Contracts.TokenWallet.Interface.
+Require Import Contracts.PriceXchg.Interface.
+Require Import Contracts.Flex.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -28,7 +33,12 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module FlexPublicInterface := PublicInterface xt sm.
+Module TradingPairPublicInterface := Contracts.TradingPair.PublicInterface xt sm.
+Module XchgPairPublicInterface    := Contracts.XchgPair.PublicInterface xt sm.
+Module PricePublicInterface       := Contracts.Price.PublicInterface xt sm.
+Module TokenWalletPublicInterface := Contracts.TokenWallet.PublicInterface xt sm.
+Module PriceXchgPublicInterface   := Contracts.PriceXchg.PublicInterface xt sm.
+Module FlexPublicInterface        := Contracts.Flex.PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 

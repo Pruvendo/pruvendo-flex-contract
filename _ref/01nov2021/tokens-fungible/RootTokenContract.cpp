@@ -277,7 +277,7 @@ private:
   __always_inline
   void check_internal_owner() {
     require(is_internal_owner(), error_code::internal_owner_disabled);
-    require(*owner_address_ == int_sender(),
+    require( *owner_address_ == int_sender(),
             error_code::message_sender_is_not_my_owner);
   }
 
