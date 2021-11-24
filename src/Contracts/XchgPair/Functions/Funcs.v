@@ -13,13 +13,13 @@ Require Import UMLang.ProofEnvironment2.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
-Require Import CommonNotations.
+Require Import Project.CommonNotations.
 Require Import Project.CommonConstSig.
 (*Fully qualified name are mandatory in multi-contract environment*)
 Require Import Contracts.XchgPair.Ledger.
 Require Import Contracts.XchgPair.Functions.FuncSig.
 Require Import Contracts.XchgPair.Functions.FuncNotations.
-Require Contracts.XchgPair.Interface.
+(* Require Contracts.XchgPair.Interface. *)
 
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
@@ -70,16 +70,14 @@ Notation " 'set_int_return_flag_' '(' ')' " :=
  ( set_int_return_flag ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
 
-Definition onDeploy 
-( min_amount : ( uint128 ) ) 
-( deploy_value : ( uint128 ) ) 
-( notify_addr : ( raw_address ) ) : UExpression boolean true . 
+
+Definition onDeploy (min_amount: uint128) (deploy_value: uint128) (notify_addr: raw_address) : UExpression boolean true . 
  	 	 refine {{ require_ ( ( ( int_value ( ) ) > #{ deploy_value } ) , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
-(*  	 	 refine {{ require_ ( ( _min_amount_ ) , 1 (* error_code::double_deploy *) ) ; { _ } }} .  *)
+  	 	 refine {{ require_ ( ( _min_amount_ ) , 1 (* error_code::double_deploy *) ) ; { _ } }} .  
  	 	 refine {{ require_ ( ( #{ min_amount } ) > 0  , 1 (* error_code::zero_min_amount *) ) ; { _ } }} . 
  	 	 refine {{ _min_amount_ := #{ min_amount } ; { _ } }} . 
  	 	 refine {{ _notify_addr_ := #{ notify_addr } ; { _ } }} . 
-(*  	 	 refine {{ tvm.rawreserve ( #{deploy_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .  *)
+  	 	 refine {{ tvm.rawreserve ( #{deploy_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .  
  	 	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
  	 	 refine {{ return_ TRUE  }} . 
  Defined . 
@@ -104,7 +102,7 @@ Definition getNotifyAddr : UExpression raw_address false .
     refine {{ return_ _notify_addr_ }} . 
 Defined . 
  
-Definition _fallback ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression uint false . 
+Definition _fallback ( msg : TvmCell ) ( msg_body : TvmSlice ) : UExpression uint false . 
  	 refine {{ return_ 0 }} . 
 Defined . 
  

@@ -12,7 +12,6 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
-(* Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library . *)
 Inductive DTradingPairFields := | DTradingPair_ι_flex_addr_ | DTradingPair_ι_tip3_root_ | DTradingPair_ι_deploy_value_ | DTradingPair_ι_min_amount_ | DTradingPair_ι_notify_addr_.
 
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
@@ -23,21 +22,27 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-(* Definition StateInitL : list Type := 
- [ ( ( XMaybe XUInteger ) ) : Type ; 
- ( ( XMaybe TickTockLRecord ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ] .
-Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
- *)
 Definition DTradingPairL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XUInteger128 ) : Type ;
  ( XUInteger128 ) : Type ;
  ( XAddress ) : Type ] .
+
 Elpi GeneratePruvendoRecord DTradingPairL DTradingPairFields . 
+
+Lemma DTradingPairFields_noeq : forall (f1 f2:  DTradingPairFields ) 
+         (v2: field_type f2) (r :  DTradingPairLRecord  ) ,  
+f1 <> f2 -> 
+f1 {$$ r with f2 := v2 $$} = f1 r.
+Proof.
+  intros. 
+  destruct f1; destruct f2;
+  (revert r;     
+               apply (countable_prop_proof (T:= DTradingPairLRecord ));
+               cbv;
+               first [reflexivity| contradiction]).
+Qed .
  
 End ClassTypes .
  
