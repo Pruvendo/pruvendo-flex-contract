@@ -60,21 +60,21 @@ GeneratePruvendoRecord InitialStateL InitialStateFields.
 (* Check (InitState_ι_code _). *)
 
 (* Print PublicInterfaceP. *)
-Definition PublicInterface : Type := PublicInterfaceP XUInteger32 XUInteger128 XUInteger256 XAddress XCells InitialStateLRecord.
+Definition PublicInterface : Type := PublicInterfaceP XUInteger32 XUInteger128 XUInteger256 XAddress XCell InitialStateLRecord.
 
 (* Print OutgoingMessageP. *)
-Definition OutgoingMessage : Type := OutgoingMessageP XUInteger32 XUInteger128 XUInteger256 XAddress XCells InternalMessageParamsLRecord InitialStateLRecord.
+Definition OutgoingMessage : Type := OutgoingMessageP XUInteger32 XUInteger128 XUInteger256 XAddress XCell InternalMessageParamsLRecord InitialStateLRecord.
 
 (* Print Iconstructor. *)
 Arguments _Icreate {_} {_}.
-Arguments Iconstructor {_} {_}.
-Arguments Ideploy {_} {_}.
+(* Arguments Iconstructor {_} {_}.
+Arguments Ideploy {_} {_}. *)
 Arguments OutgoingInternalMessage {_} {_} {_} {_}.
 (* About OutgoingInternalMessage. *)
 
 Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
 {
-    default := EmptyMessage XUInteger32 XUInteger128 XUInteger256 XAddress XCells InternalMessageParamsLRecord InitialStateLRecord
+    default := EmptyMessage XUInteger32 XUInteger128 XUInteger256 XAddress XCell InternalMessageParamsLRecord InitialStateLRecord
 }.
 
 
