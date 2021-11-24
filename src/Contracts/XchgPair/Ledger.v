@@ -15,42 +15,40 @@ Require Import Contracts.XchgPair.ClassTypes.
 Require Import Contracts.XchgPair.Interface.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
-(* Require Import UrsusStdLib.Cpp.stdTypes. *)
-
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
-(* 1 *) Inductive ContractFields := | flex_addr_ | tip3_major_root_ | tip3_minor_root_ | min_amount_ | notify_addr_ .
+(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_XchgPair | _EmittedEvents | _MessagesLog.
+Definition ContractFields := DXchgPairFields.
+
+(* 1 *) (* Inductive ContractFields := | flex_addr_ | tip3_major_root_ | tip3_minor_root_ | min_amount_ | notify_addr_ . *)
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
 Module XchgPairPublicInterfaceModule := PublicInterface xt sm.
 
-(* Module Import BasicTypesClass := BasicTypes xt sm. *)
 Module Export TypesModuleForLedger := ClassTypes xt sm .
 Module Export VMStateModule := VMStateModule xt sm. 
 Import xt.
-(* Module Export stdTypesNotationsModule := stdTypesNotations xt sm. *)
-(* Local Open Scope ursus_scope. *)
-(* Local Open Scope ucpp_scope. *)
+
 (* 2 *) Definition MessagesAndEventsL : list Type := 
  [ ( XQueue XchgPairPublicInterfaceModule.OutgoingMessage ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
-  Opaque MessagesAndEventsLRecord .
+Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL : list Type := 
+(* 2 *) Definition ContractLRecord := DXchgPairLRecord . (* : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord . 
+ Opaque ContractLRecord .  *)
+ Definition ContractLEmbeddedType := DXchgPairLEmbeddedType.
 
 Inductive LocalStateFields0000I := | ι00000 | ι00001 . 
  Definition LocalState0000L := [ ( XHMap (string*nat) ( StateInitLRecord * XUInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 
@@ -457,18 +455,18 @@ Proof.
                first [reflexivity| contradiction]).
 Qed .
 
-Lemma SelfDeployerFields_noeq : forall (f1 f2:  ContractFields ) 
-         (v2: field_type f2) (r :  ContractLRecord  ) ,  
+(* Lemma ContractFields_noeq : forall (f1 f2:  DXchgPairFields ) 
+         (v2: field_type f2) (r :  DXchgPairLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
 Proof.
-  intros.
-  destruct f1; destruct f2; 
+  intros. 
+  destruct f1; destruct f2;
   (revert r;     
-               apply (countable_prop_proof (T:= ContractLRecord ));
+               apply (countable_prop_proof (T:= DXchgPairLRecord ));
                cbv;
                first [reflexivity| contradiction]).
-Qed .
+Qed . *)
 
 (* Lemma LocalFields_noeq : forall (f1 f2:  LocalFieldsI ) 
          (v2: field_type f2) (r :  LocalStateLRecord  ) ,  

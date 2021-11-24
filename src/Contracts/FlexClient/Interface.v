@@ -20,19 +20,19 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XUInteger XAddress InternalMessageParamsLRecord XCell: Type.
+Variables XUInteger XAddress XUInteger256 InternalMessageParamsLRecord XCell TonsConfigLRecord: Type.
 
-Inductive VarInitFields      := | VarInit_ι_value  | VarInit_ι_pubkey. 
+Inductive VarInitFields      := | VarInit_ι_DFlexClient  | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
 
 Variable InitialState : Type.
 
 Inductive PublicInterfaceP :=
 | Iconstructor : XUInteger256 -> XCell -> XCell -> PublicInterfaceP
-| IsetFlexCfg   : TonsConfig -> XAddress -> PublicInterfaceP
-| IsetExtWalletCode : XCells -> PublicInterfaceP
-| IsetFlexWalletCode : XCells -> PublicInterfaceP
-| IsetFlexWrapperCode : XCells -> PublicInterfaceP
+| IsetFlexCfg   : TonsConfigLRecord -> XAddress -> PublicInterfaceP
+| IsetExtWalletCode : XCell -> PublicInterfaceP
+| IsetFlexWalletCode : XCell -> PublicInterfaceP
+| IsetFlexWrapperCode : XCell -> PublicInterfaceP
 
 | _Icreate : InitialState -> PublicInterfaceP
 | _Itransfer : PublicInterfaceP .
@@ -46,11 +46,11 @@ End InterfaceDef.
 Module PublicInterface (xt: XTypesSig) (sm: StateMonadSig).
 Module Import VMStateModuleForInterface := VMStateModule xt sm.
 (* Module Import BasicTypesForInterface := BasicTypes xt sm. *)
-Module Import ClassTypesForInterface := ClassTypes xt sm.
+Module Import ClassTypesForInterface := Contracts.FlexClient.ClassTypes.ClassTypes xt sm.
 
 Local Open Scope xlist_scope.
 
-Definition VarInitL := [XUInteger : Type; XUInteger256: Type].
+Definition VarInitL := [DFlexClientLRecord : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
 Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
@@ -66,8 +66,12 @@ Definition OutgoingMessage : Type := OutgoingMessageP XUInteger128 XUInteger256 
 
 (* Print Iconstructor. *)
 Arguments _Icreate {_} {_}.
-Arguments Iconstructor {_} {_}.
-Arguments Ideploy {_} {_}.
+Arguments Iconstructor {_} {_} {_}.
+Arguments IsetFlexCfg  {_} {_}.
+Arguments IsetExtWalletCode {_}.
+Arguments IsetFlexWalletCode {_}.
+Arguments IsetFlexWrapperCode {_}.
+
 Arguments OutgoingInternalMessage {_} {_} {_} {_}.
 (* About OutgoingInternalMessage. *)
 

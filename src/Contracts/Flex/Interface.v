@@ -20,14 +20,12 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XUInteger XAddress InternalMessageParamsLRecord TonsConfig XUInteger8
-           XCell XUInteger256 XUInteger128 XBool XString ListingConfig Tip3Config : Type.
+Variables XUInteger XAddress InternalMessageParamsLRecord TonsConfigLRecord XUInteger8 InitialState
+           XCell XUInteger256 XUInteger128 XBool XString ListingConfigLRecord Tip3ConfigLRecord : Type.
 Variable XMaybe : Type -> Type .
 
 Inductive VarInitFields      := | VarInit_ι_DFlex | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
-
-Variable InitialState : Type.
 
 Inductive PublicInterfaceP :=
 (* __interface IListingAnswer *)
@@ -49,13 +47,13 @@ Inductive PublicInterfaceP :=
                      XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> PublicInterfaceP
 
 (* __interface IFlex *)
-| Iconstructor : XUInteger256 -> XString -> (XMaybe XAddress) -> TonsConfig -> 
-                                          XUInteger8 -> ListingConfig -> PublicInterfaceP
+| Iconstructor : XUInteger256 -> XString -> XMaybe XAddress -> TonsConfigLRecord -> 
+                                          XUInteger8 -> ListingConfigLRecord -> PublicInterfaceP
 | IsetSpecificCode : XUInteger8 -> XCell -> PublicInterfaceP
 | Itransfer : XAddress -> XUInteger128 -> PublicInterfaceP
 | IregisterTradingPair : XUInteger256 -> XAddress -> XUInteger128 -> XAddress -> PublicInterfaceP
 | IregisterXchgPair : XUInteger256 -> XAddress -> XAddress -> XUInteger128 -> XAddress -> PublicInterfaceP
-| IregisterWrapper : XUInteger256 -> Tip3Config -> PublicInterfaceP
+| IregisterWrapper : XUInteger256 -> Tip3ConfigLRecord -> PublicInterfaceP
 | IapproveTradingPair : XUInteger256 -> PublicInterfaceP
 | IrejectTradingPair : XUInteger256 -> PublicInterfaceP
 | IapproveXchgPair : XUInteger256 -> PublicInterfaceP
@@ -79,30 +77,68 @@ Module Import ClassTypesForInterface := ClassTypes xt sm.
   
 Local Open Scope xlist_scope.
 
-Definition VarInitL := [  : Type; XUInteger256: Type].
+Definition VarInitL := [ DFlexLRecord : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
 Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
-(* Check (InitState_ι_code _). *)
+(* Check (InitState_ι_code _). *)  
 
-(* Print PublicInterfaceP. *)
-Definition PublicInterface : Type := PublicInterfaceP XUInteger8 XUInteger128 XUInteger256 XBool XAddress InitialStateLRecord.
+Print PublicInterfaceP.
+Definition PublicInterface : Type
+:= PublicInterfaceP XAddress TonsConfigLRecord
+     XUInteger8
+     InitialStateLRecord XCell
+     XUInteger256
+     XUInteger128 XBool
+     XString ListingConfigLRecord
+     Tip3ConfigLRecord XMaybe  .
 
-(* Print OutgoingMessageP. *)
-Definition OutgoingMessage : Type := OutgoingMessageP XUInteger8 XUInteger128 XUInteger256 XBool XAddress InternalMessageParamsLRecord InitialStateLRecord.
+Print OutgoingMessageP.
+Definition OutgoingMessage : Type := OutgoingMessageP XAddress InternalMessageParamsLRecord 
+ TonsConfigLRecord XUInteger8 InitialStateLRecord XCell XUInteger256 XUInteger128 XBool XString
+     ListingConfigLRecord Tip3ConfigLRecord XMaybe.
 
 (* Print Iconstructor. *)
+Arguments onWrapperApproved {_} {_} .
+Arguments onWrapperRejected {_}.
+Arguments onTradingPairApproved {_} {_}.
+Arguments onTradingPairRejected {_} .
+Arguments onXchgPairApproved {_} {_} .
+Arguments onXchgPairRejected {_} .
+
+(* __interface IFlexNotify *)
+Arguments IonDealCompleted {_} {_} {_} .
+Arguments IonXchgDealCompleted {_} {_} {_} {_} {_} .
+Arguments IonOrderAdded {_} {_} {_} {_} {_} .
+Arguments IonOrderCanceled {_} {_} {_} {_} {_} .
+Arguments IonXchgOrderAdded {_} {_} {_} {_} {_} {_} {_} .
+Arguments IonXchgOrderCanceled {_} {_} {_} {_} {_} {_} {_} .
+
+(* __interface IFlex *)
+Arguments Iconstructor {_} {_} {_} {_} {_} {_} .
+Arguments IsetSpecificCode {_} {_} .
+Arguments Itransfer {_} {_} .
+Arguments IregisterTradingPair {_} {_} {_} {_} .
+Arguments IregisterXchgPair {_} {_} {_} {_} {_} .
+Arguments IregisterWrapper {_} {_} .
+Arguments IapproveTradingPair {_} .
+Arguments IrejectTradingPair {_} .
+Arguments IapproveXchgPair {_} .
+Arguments IrejectXchgPair {_} .
+Arguments IapproveWrapper {_} .
+Arguments IrejectWrapper {_} .
+
 Arguments _Icreate {_} {_}.
-Arguments Iconstructor {_} {_}.
-Arguments Ideploy {_} {_}.
 Arguments OutgoingInternalMessage {_} {_} {_} {_}.
 (* About OutgoingInternalMessage. *)
 
 Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
 {
-    default := EmptyMessage XUInteger8 XUInteger128 XUInteger256 XBool XAddress InternalMessageParamsLRecord InitialStateLRecord
+    default := EmptyMessage XAddress InternalMessageParamsLRecord 
+ TonsConfigLRecord XUInteger8 InitialStateLRecord XCell XUInteger256 XUInteger128 XBool XString
+     ListingConfigLRecord Tip3ConfigLRecord XMaybe
 }.
 
 

@@ -67,8 +67,8 @@ Definition OutgoingMessage : Type := OutgoingMessageP XUInteger32 XUInteger128 X
 
 (* Print Iconstructor. *)
 Arguments _Icreate {_} {_}.
-(* Arguments Iconstructor {_} {_}.
-Arguments Ideploy {_} {_}. *)
+Arguments IonTip3LendOwnership {_} {_} {_} {_} {_} {_} .
+Arguments IbuyTip3 {_} {_} {_} .
 Arguments OutgoingInternalMessage {_} {_} {_} {_}.
 (* About OutgoingInternalMessage. *)
 
