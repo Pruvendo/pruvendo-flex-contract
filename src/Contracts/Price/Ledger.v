@@ -11,8 +11,10 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require Import Project.CommonTypes. 
+Require Import Contracts.TONTokenWallet.ClassTypes.
 Require Import Contracts.Price.ClassTypes.
 Require Import Contracts.Price.Interface.
+
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
 Local Open Scope record. 
@@ -21,7 +23,7 @@ Local Open Scope glist_scope.
 
 
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
-(* 1 *) Inductive ContractFields := 
+(* (* 1 *) Inductive ContractFields := 
 | price_ 
 | sells_amount_ 
 | buys_amount_ 
@@ -35,7 +37,7 @@ Local Open Scope glist_scope.
 | tip3cfg_ 
 | sells_
 | buys_
-.
+. *)
 
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 Definition ContractFields := DPriceFields.
@@ -48,7 +50,8 @@ Module PricePublicInterfaceModule := PublicInterface xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
 Module Export TypesModuleForLedger := ClassTypes xt sm .
 Import xt.
-
+Require Contracts.TONTokenWallet.ClassTypes.
+Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
  [ ( XQueue PricePublicInterfaceModule.OutgoingMessage ) : Type ; 
@@ -57,7 +60,7 @@ Import xt.
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL := DPriceLRecord.(* : list Type := 
+(* 2 *) Definition ContractL := DPriceLRecord. (* : list Type := 
  [ ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
@@ -201,7 +204,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState11000LRecord . 
  
  Inductive LocalStateFields11001I := | ι110010 | ι110011 . 
- Definition LocalState11001L := [ ( XHMap (string*nat) DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState11001L := [ ( XHMap (string*nat) TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState11001L LocalStateFields11001I . 
  Opaque LocalState11001LRecord . 
  
@@ -363,8 +366,8 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  
   
 (* 2 *) Definition LedgerL : list Type := 
- [ ( ContractLRecord ) : Type ; 
- ( ContractLRecord ) : Type ; 
+ [ ( DPriceLRecord ) : Type ; 
+ ( DPriceLRecord ) : Type ; 
  ( VMStateLRecord ) : Type ; 
  ( MessagesAndEventsLRecord ) : Type ; 
  ( MessagesAndEventsLRecord ) : Type ; 
@@ -377,7 +380,7 @@ Elpi GeneratePruvendoRecord LedgerL LedgerFieldsI .
  Transparent LocalState00000LRecord LocalState00001LRecord LocalState00010LRecord LocalState00011LRecord LocalState00100LRecord LocalState00101LRecord LocalState00110LRecord LocalState00111LRecord LocalState01000LRecord LocalState01001LRecord LocalState01010LRecord LocalState01011LRecord LocalState01100LRecord LocalState01101LRecord LocalState01110LRecord LocalState01111LRecord LocalState10000LRecord LocalState10001LRecord LocalState10010LRecord LocalState10011LRecord LocalState10100LRecord LocalState10101LRecord LocalState10110LRecord LocalState10111LRecord LocalState11000LRecord LocalState11001LRecord LocalState11010LRecord LocalState11011LRecord LocalState0000LRecord LocalState0001LRecord LocalState0010LRecord LocalState0011LRecord LocalState0100LRecord LocalState0101LRecord LocalState0110LRecord LocalState0111LRecord LocalState1000LRecord LocalState1001LRecord LocalState1010LRecord LocalState1011LRecord LocalState1100LRecord LocalState1101LRecord LocalState000LRecord LocalState001LRecord LocalState010LRecord LocalState011LRecord LocalState100LRecord LocalState101LRecord LocalState110LRecord LocalState00LRecord LocalState01LRecord LocalState10LRecord LocalState0LRecord LocalState1LRecord LocalStateLRecord  .
 
 Transparent MessagesAndEventsLRecord .
-Transparent ContractLRecord .
+Transparent DPriceLRecord .
 Transparent LocalStateLRecord .
 Transparent LedgerLRecord .
 
@@ -941,7 +944,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField11000 : typeclass_instances. 
- #[global, program] Instance LocalStateField11001 : LocalStateField DTONTokenWalletInternalLRecord.
+ #[global, program] Instance LocalStateField11001 : LocalStateField TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι11). 
@@ -1014,18 +1017,18 @@ Proof.
                first [reflexivity| contradiction]).
 Qed .
 
-Lemma SelfDeployerFields_noeq : forall (f1 f2:  ContractFields ) 
-         (v2: field_type f2) (r :  ContractLRecord  ) ,  
+(* Lemma SelfDeployerFields_noeq : forall (f1 f2:  ContractFields ) 
+         (v2: field_type f2) (r :  DPriceLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
 Proof.
   intros.
   destruct f1; destruct f2; 
   (revert r;     
-               apply (countable_prop_proof (T:= ContractLRecord ));
+               apply (countable_prop_proof (T:= DPriceLRecord ));
                cbv;
                first [reflexivity| contradiction]).
-Qed .
+Qed . *)
 
 (* Lemma LocalFields_noeq : forall (f1 f2:  LocalFieldsI ) 
          (v2: field_type f2) (r :  LocalStateLRecord  ) ,  

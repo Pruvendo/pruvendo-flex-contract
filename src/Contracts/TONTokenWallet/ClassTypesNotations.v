@@ -17,49 +17,6 @@ Local Open Scope ursus_scope.
 
 
 
-
-Definition allowance_info_ι_spender_right {b} (x: URValue allowance_infoLRecord b): URValue XAddress b :=
-    || {x} ^^ {allowance_info_ι_spender} || : _.
-    
-Definition allowance_info_ι_spender_left (x: ULValue allowance_infoLRecord): ULValue XAddress :=
-    {{ {x} ^^ {allowance_info_ι_spender} }} : _.
-    
-Notation " a '↑' 'allowance_info.spender' " := ( allowance_info_ι_spender_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'allowance_info.spender' " := ( allowance_info_ι_spender_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition allowance_info_ι_remainingTokens_right {b} (x: URValue allowance_infoLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {allowance_info_ι_remainingTokens} || : _.
-    
-Definition allowance_info_ι_remainingTokens_left (x: ULValue allowance_infoLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {allowance_info_ι_remainingTokens} }} : _.
-    
-Notation " a '↑' 'allowance_info.remainingTokens' " := ( allowance_info_ι_remainingTokens_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'allowance_info.remainingTokens' " := ( allowance_info_ι_remainingTokens_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-
-Definition lend_record_ι_lend_balance_right {b} (x: URValue lend_recordLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {lend_record_ι_lend_balance} || : _.
-    
-Definition lend_record_ι_lend_balance_left (x: ULValue lend_recordLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {lend_record_ι_lend_balance} }} : _.
-    
-Notation " a '↑' 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition lend_record_ι_lend_finish_time_right {b} (x: URValue lend_recordLRecord b): URValue XUInteger32 b :=
-    || {x} ^^ {lend_record_ι_lend_finish_time} || : _.
-    
-Definition lend_record_ι_lend_finish_time_left (x: ULValue lend_recordLRecord): ULValue XUInteger32 :=
-    {{ {x} ^^ {lend_record_ι_lend_finish_time} }} : _.
-    
-Notation " a '↑' 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_finish_time_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_finish_time_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-
-
-
-
-
 Definition lend_array_record_ι_lend_addr_right {b} (x: URValue lend_array_recordLRecord b): URValue XAddress b :=
     || {x} ^^ {lend_array_record_ι_lend_addr} || : _.
     
@@ -89,123 +46,104 @@ Notation " a '↑' 'lend_array_record.lend_finish_time' " := ( lend_array_record
 
 
 
+Definition DTONTokenWallet_ι_name__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XString b :=
+    || {x} ^^ {DTONTokenWallet_ι_name_} || : _.
+    
+Definition DTONTokenWallet_ι_name__left (x: ULValue DTONTokenWalletLRecord): ULValue XString :=
+    {{ {x} ^^ {DTONTokenWallet_ι_name_} }} : _.
+    
+Notation " a '↑' 'DTONTokenWallet.name_' " := ( DTONTokenWallet_ι_name__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.name_' " := ( DTONTokenWallet_ι_name__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_name_right {b} (x: URValue details_infoLRecord b): URValue XString b :=
-    || {x} ^^ {details_info_ι_name} || : _.
+Definition DTONTokenWallet_ι_symbol__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XString b :=
+    || {x} ^^ {DTONTokenWallet_ι_symbol_} || : _.
     
-Definition details_info_ι_name_left (x: ULValue details_infodLRecord): ULValue XString :=
-    {{ {x} ^^ {details_info_ι_name} }} : _.
+Definition DTONTokenWallet_ι_symbol__left (x: ULValue DTONTokenWalletLRecord): ULValue XString :=
+    {{ {x} ^^ {DTONTokenWallet_ι_symbol_} }} : _.
     
-Notation " a '↑' 'details_info.name' " := ( details_info_ι_name_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.name' " := ( details_info_ι_name_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.symbol_' " := ( DTONTokenWallet_ι_symbol__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.symbol_' " := ( DTONTokenWallet_ι_symbol__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_symbol_right {b} (x: URValue details_infoLRecord b): URValue XString b :=
-    || {x} ^^ {details_info_ι_symbol} || : _.
+Definition DTONTokenWallet_ι_decimals__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger8 b :=
+    || {x} ^^ {DTONTokenWallet_ι_decimals_} || : _.
     
-Definition details_info_ι_symbol_left (x: ULValue details_infodLRecord): ULValue XString :=
-    {{ {x} ^^ {details_info_ι_symbol} }} : _.
+Definition DTONTokenWallet_ι_decimals__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger8 :=
+    {{ {x} ^^ {DTONTokenWallet_ι_decimals_} }} : _.
     
-Notation " a '↑' 'details_info.symbol' " := ( details_info_ι_symbol_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.symbol' " := ( details_info_ι_symbol_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.decimals_' " := ( DTONTokenWallet_ι_decimals__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.decimals_' " := ( DTONTokenWallet_ι_decimals__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_decimals_right {b} (x: URValue details_infoLRecord b): URValue XUInteger8 b :=
-    || {x} ^^ {details_info_ι_decimals} || : _.
+Definition DTONTokenWallet_ι_balance__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {DTONTokenWallet_ι_balance_} || : _.
     
-Definition details_info_ι_decimals_left (x: ULValue details_infodLRecord): ULValue XUInteger8 :=
-    {{ {x} ^^ {details_info_ι_decimals} }} : _.
+Definition DTONTokenWallet_ι_balance__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {DTONTokenWallet_ι_balance_} }} : _.
     
-Notation " a '↑' 'details_info.decimals' " := ( details_info_ι_decimals_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.decimals' " := ( details_info_ι_decimals_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.balance_' " := ( DTONTokenWallet_ι_balance__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.balance_' " := ( DTONTokenWallet_ι_balance__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_balance_right {b} (x: URValue details_infoLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {details_info_ι_balance} || : _.
+Definition DTONTokenWallet_ι_root_public_key__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger256 b :=
+    || {x} ^^ {DTONTokenWallet_ι_root_public_key_} || : _.
     
-Definition details_info_ι_balance_left (x: ULValue details_infodLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {details_info_ι_balance} }} : _.
+Definition DTONTokenWallet_ι_root_public_key__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger256 :=
+    {{ {x} ^^ {DTONTokenWallet_ι_root_public_key_} }} : _.
     
-Notation " a '↑' 'details_info.balance' " := ( details_info_ι_balance_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.balance' " := ( details_info_ι_balance_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.root_public_key_' " := ( DTONTokenWallet_ι_root_public_key__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.root_public_key_' " := ( DTONTokenWallet_ι_root_public_key__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_root_public_key_right {b} (x: URValue details_infoLRecord b): URValue XUInteger256 b :=
-    || {x} ^^ {details_info_ι_root_public_key} || : _.
+Definition DTONTokenWallet_ι_wallet_public_key__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger256 b :=
+    || {x} ^^ {DTONTokenWallet_ι_wallet_public_key_} || : _.
     
-Definition details_info_ι_root_public_key_left (x: ULValue details_infodLRecord): ULValue XUInteger256 :=
-    {{ {x} ^^ {details_info_ι_root_public_key} }} : _.
+Definition DTONTokenWallet_ι_wallet_public_key__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger256 :=
+    {{ {x} ^^ {DTONTokenWallet_ι_wallet_public_key_} }} : _.
     
-Notation " a '↑' 'details_info.root_public_key' " := ( details_info_ι_root_public_key_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.root_public_key' " := ( details_info_ι_root_public_key_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.wallet_public_key_' " := ( DTONTokenWallet_ι_wallet_public_key__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.wallet_public_key_' " := ( DTONTokenWallet_ι_wallet_public_key__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_wallet_public_key_right {b} (x: URValue details_infoLRecord b): URValue XUInteger256 b :=
-    || {x} ^^ {details_info_ι_wallet_public_key} || : _.
+Definition DTONTokenWallet_ι_root_address__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XAddress b :=
+    || {x} ^^ {DTONTokenWallet_ι_root_address_} || : _.
     
-Definition details_info_ι_wallet_public_key_left (x: ULValue details_infodLRecord): ULValue XUInteger256 :=
-    {{ {x} ^^ {details_info_ι_wallet_public_key} }} : _.
+Definition DTONTokenWallet_ι_root_address__left (x: ULValue DTONTokenWalletLRecord): ULValue XAddress :=
+    {{ {x} ^^ {DTONTokenWallet_ι_root_address_} }} : _.
     
-Notation " a '↑' 'details_info.wallet_public_key' " := ( details_info_ι_wallet_public_key_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.wallet_public_key' " := ( details_info_ι_wallet_public_key_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.root_address_' " := ( DTONTokenWallet_ι_root_address__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.root_address_' " := ( DTONTokenWallet_ι_root_address__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_root_address_right {b} (x: URValue details_infoLRecord b): URValue XAddress b :=
-    || {x} ^^ {details_info_ι_root_address} || : _.
+Definition DTONTokenWallet_ι_owner_address__right {b} (x: URValue DTONTokenWalletLRecord b): URValue ( XMaybe XAddress ) b :=
+    || {x} ^^ {DTONTokenWallet_ι_owner_address_} || : _.
     
-Definition details_info_ι_root_address_left (x: ULValue details_infodLRecord): ULValue XAddress :=
-    {{ {x} ^^ {details_info_ι_root_address} }} : _.
+Definition DTONTokenWallet_ι_owner_address__left (x: ULValue DTONTokenWalletLRecord): ULValue ( XMaybe XAddress ) :=
+    {{ {x} ^^ {DTONTokenWallet_ι_owner_address_} }} : _.
     
-Notation " a '↑' 'details_info.root_address' " := ( details_info_ι_root_address_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.root_address' " := ( details_info_ι_root_address_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.owner_address_' " := ( DTONTokenWallet_ι_owner_address__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.owner_address_' " := ( DTONTokenWallet_ι_owner_address__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_owner_address_right {b} (x: URValue details_infoLRecord b): URValue XAddress b :=
-    || {x} ^^ {details_info_ι_owner_address} || : _.
+Definition DTONTokenWallet_ι_code__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XCell b :=
+    || {x} ^^ {DTONTokenWallet_ι_code_} || : _.
     
-Definition details_info_ι_owner_address_left (x: ULValue details_infodLRecord): ULValue XAddress :=
-    {{ {x} ^^ {details_info_ι_owner_address} }} : _.
+Definition DTONTokenWallet_ι_code__left (x: ULValue DTONTokenWalletLRecord): ULValue XCell :=
+    {{ {x} ^^ {DTONTokenWallet_ι_code_} }} : _.
     
-Notation " a '↑' 'details_info.owner_address' " := ( details_info_ι_owner_address_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.owner_address' " := ( details_info_ι_owner_address_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.code_' " := ( DTONTokenWallet_ι_code__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.code_' " := ( DTONTokenWallet_ι_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_lend_ownership_right {b} (x: URValue details_infoLRecord b): URValue ( XHMap XUInteger lend_array_recordLRecord ) b :=
-    || {x} ^^ {details_info_ι_lend_ownership} || : _.
+Definition DTONTokenWallet_ι_allowance__right {b} (x: URValue DTONTokenWalletLRecord b): URValue ( XMaybe allowance_infoLRecord ) b :=
+    || {x} ^^ {DTONTokenWallet_ι_allowance_} || : _.
     
-Definition details_info_ι_lend_ownership_left (x: ULValue details_infodLRecord): ULValue ( XHMap XUInteger lend_array_recordLRecord ) :=
-    {{ {x} ^^ {details_info_ι_lend_ownership} }} : _.
+Definition DTONTokenWallet_ι_allowance__left (x: ULValue DTONTokenWalletLRecord): ULValue ( XMaybe allowance_infoLRecord ) :=
+    {{ {x} ^^ {DTONTokenWallet_ι_allowance_} }} : _.
     
-Notation " a '↑' 'details_info.lend_ownership' " := ( details_info_ι_lend_ownership_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.lend_ownership' " := ( details_info_ι_lend_ownership_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.allowance_' " := ( DTONTokenWallet_ι_allowance__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.allowance_' " := ( DTONTokenWallet_ι_allowance__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_lend_balance_right {b} (x: URValue details_infoLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {details_info_ι_lend_balance} || : _.
+Definition DTONTokenWallet_ι_workchain_id__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger8 b :=
+    || {x} ^^ {DTONTokenWallet_ι_workchain_id_} || : _.
     
-Definition details_info_ι_lend_balance_left (x: ULValue details_infodLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {details_info_ι_lend_balance} }} : _.
+Definition DTONTokenWallet_ι_workchain_id__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger8 :=
+    {{ {x} ^^ {DTONTokenWallet_ι_workchain_id_} }} : _.
     
-Notation " a '↑' 'details_info.lend_balance' " := ( details_info_ι_lend_balance_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.lend_balance' " := ( details_info_ι_lend_balance_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition details_info_ι_code_right {b} (x: URValue details_infoLRecord b): URValue XCell b :=
-    || {x} ^^ {details_info_ι_code} || : _.
-    
-Definition details_info_ι_code_left (x: ULValue details_infodLRecord): ULValue XCell :=
-    {{ {x} ^^ {details_info_ι_code} }} : _.
-    
-Notation " a '↑' 'details_info.code' " := ( details_info_ι_code_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.code' " := ( details_info_ι_code_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition details_info_ι_allowance_right {b} (x: URValue details_infoLRecord b): URValue allowance_infoLRecord b :=
-    || {x} ^^ {details_info_ι_allowance} || : _.
-    
-Definition details_info_ι_allowance_left (x: ULValue details_infodLRecord): ULValue allowance_infoLRecord :=
-    {{ {x} ^^ {details_info_ι_allowance} }} : _.
-    
-Notation " a '↑' 'details_info.allowance' " := ( details_info_ι_allowance_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.allowance' " := ( details_info_ι_allowance_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition details_info_ι_workchain_id_right {b} (x: URValue details_infoLRecord b): URValue XUInteger8 b :=
-    || {x} ^^ {details_info_ι_workchain_id} || : _.
-    
-Definition details_info_ι_workchain_id_left (x: ULValue details_infodLRecord): ULValue XUInteger8 :=
-    {{ {x} ^^ {details_info_ι_workchain_id} }} : _.
-    
-Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.workchain_id_' " := ( DTONTokenWallet_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.workchain_id_' " := ( DTONTokenWallet_ι_workchain_id__left a ) (in custom ULValue at level 0) : ursus_scope.
 
 Definition DTONTokenWalletExternal_ι_name__right {b} (x: URValue DTONTokenWalletExternalLRecord b): URValue XString b :=
     || {x} ^^ {DTONTokenWalletExternal_ι_name_} || : _.
@@ -407,184 +345,121 @@ Definition DTONTokenWalletInternal_ι_workchain_id__left (x: ULValue DTONTokenWa
 Notation " a '↑' 'DTONTokenWalletInternal.workchain_id_' " := ( DTONTokenWalletInternal_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWalletInternal.workchain_id_' " := ( DTONTokenWalletInternal_ι_workchain_id__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_name__right {b} (x: URValue DRootTokenContractLRecord b): URValue XString b :=
-    || {x} ^^ {DRootTokenContract_ι_name_} || : _.
+Definition details_info_ι_name_right {b} (x: URValue details_infoLRecord b): URValue XString b :=
+    || {x} ^^ {details_info_ι_name} || : _.
     
-Definition DRootTokenContract_ι_name__left (x: ULValue DRootTokenContractLRecord): ULValue XString :=
-    {{ {x} ^^ {DRootTokenContract_ι_name_} }} : _.
+Definition details_info_ι_name_left (x: ULValue details_infodLRecord): ULValue XString :=
+    {{ {x} ^^ {details_info_ι_name} }} : _.
     
-Notation " a '↑' 'DRootTokenContract.name_' " := ( DRootTokenContract_ι_name__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DRootTokenContract.name_' " := ( DRootTokenContract_ι_name__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.name' " := ( details_info_ι_name_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.name' " := ( details_info_ι_name_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_symbol__right {b} (x: URValue DRootTokenContractLRecord b): URValue XString b :=
-    || {x} ^^ {DRootTokenContract_ι_symbol_} || : _.
+Definition details_info_ι_symbol_right {b} (x: URValue details_infoLRecord b): URValue XString b :=
+    || {x} ^^ {details_info_ι_symbol} || : _.
     
-Definition DRootTokenContract_ι_symbol__left (x: ULValue DRootTokenContractLRecord): ULValue XString :=
-    {{ {x} ^^ {DRootTokenContract_ι_symbol_} }} : _.
+Definition details_info_ι_symbol_left (x: ULValue details_infodLRecord): ULValue XString :=
+    {{ {x} ^^ {details_info_ι_symbol} }} : _.
     
-Notation " a '↑' 'DRootTokenContract.symbol_' " := ( DRootTokenContract_ι_symbol__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DRootTokenContract.symbol_' " := ( DRootTokenContract_ι_symbol__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.symbol' " := ( details_info_ι_symbol_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.symbol' " := ( details_info_ι_symbol_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_decimals__right {b} (x: URValue DRootTokenContractLRecord b): URValue XUInteger8 b :=
-    || {x} ^^ {DRootTokenContract_ι_decimals_} || : _.
+Definition details_info_ι_decimals_right {b} (x: URValue details_infoLRecord b): URValue XUInteger8 b :=
+    || {x} ^^ {details_info_ι_decimals} || : _.
     
-Definition DRootTokenContract_ι_decimals__left (x: ULValue DRootTokenContractLRecord): ULValue XUInteger8 :=
-    {{ {x} ^^ {DRootTokenContract_ι_decimals_} }} : _.
+Definition details_info_ι_decimals_left (x: ULValue details_infodLRecord): ULValue XUInteger8 :=
+    {{ {x} ^^ {details_info_ι_decimals} }} : _.
     
-Notation " a '↑' 'DRootTokenContract.decimals_' " := ( DRootTokenContract_ι_decimals__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DRootTokenContract.decimals_' " := ( DRootTokenContract_ι_decimals__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.decimals' " := ( details_info_ι_decimals_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.decimals' " := ( details_info_ι_decimals_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_root_public_key__right {b} (x: URValue DRootTokenContractLRecord b): URValue XUInteger256 b :=
-    || {x} ^^ {DRootTokenContract_ι_root_public_key_} || : _.
+Definition details_info_ι_balance_right {b} (x: URValue details_infoLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {details_info_ι_balance} || : _.
     
-Definition DRootTokenContract_ι_root_public_key__left (x: ULValue DRootTokenContractLRecord): ULValue XUInteger256 :=
-    {{ {x} ^^ {DRootTokenContract_ι_root_public_key_} }} : _.
+Definition details_info_ι_balance_left (x: ULValue details_infodLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {details_info_ι_balance} }} : _.
     
-Notation " a '↑' 'DRootTokenContract.root_public_key_' " := ( DRootTokenContract_ι_root_public_key__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DRootTokenContract.root_public_key_' " := ( DRootTokenContract_ι_root_public_key__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.balance' " := ( details_info_ι_balance_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.balance' " := ( details_info_ι_balance_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_total_supply__right {b} (x: URValue DRootTokenContractLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {DRootTokenContract_ι_total_supply_} || : _.
+Definition details_info_ι_root_public_key_right {b} (x: URValue details_infoLRecord b): URValue XUInteger256 b :=
+    || {x} ^^ {details_info_ι_root_public_key} || : _.
     
-Definition DRootTokenContract_ι_total_supply__left (x: ULValue DRootTokenContractLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {DRootTokenContract_ι_total_supply_} }} : _.
+Definition details_info_ι_root_public_key_left (x: ULValue details_infodLRecord): ULValue XUInteger256 :=
+    {{ {x} ^^ {details_info_ι_root_public_key} }} : _.
     
-Notation " a '↑' 'DRootTokenContract.total_supply_' " := ( DRootTokenContract_ι_total_supply__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DRootTokenContract.total_supply_' " := ( DRootTokenContract_ι_total_supply__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.root_public_key' " := ( details_info_ι_root_public_key_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.root_public_key' " := ( details_info_ι_root_public_key_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_total_granted__right {b} (x: URValue DRootTokenContractLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {DRootTokenContract_ι_total_granted_} || : _.
+Definition details_info_ι_wallet_public_key_right {b} (x: URValue details_infoLRecord b): URValue XUInteger256 b :=
+    || {x} ^^ {details_info_ι_wallet_public_key} || : _.
     
-Definition DRootTokenContract_ι_total_granted__left (x: ULValue DRootTokenContractLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {DRootTokenContract_ι_total_granted_} }} : _.
+Definition details_info_ι_wallet_public_key_left (x: ULValue details_infodLRecord): ULValue XUInteger256 :=
+    {{ {x} ^^ {details_info_ι_wallet_public_key} }} : _.
     
-Notation " a '↑' 'DRootTokenContract.total_granted_' " := ( DRootTokenContract_ι_total_granted__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DRootTokenContract.total_granted_' " := ( DRootTokenContract_ι_total_granted__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.wallet_public_key' " := ( details_info_ι_wallet_public_key_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.wallet_public_key' " := ( details_info_ι_wallet_public_key_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_wallet_code__right {b} (x: URValue DRootTokenContractLRecord b): URValue ( XMaybe XCell ) b :=
-    || {x} ^^ {DRootTokenContract_ι_wallet_code_} || : _.
+Definition details_info_ι_root_address_right {b} (x: URValue details_infoLRecord b): URValue XAddress b :=
+    || {x} ^^ {details_info_ι_root_address} || : _.
     
-Definition DRootTokenContract_ι_wallet_code__left (x: ULValue DRootTokenContractLRecord): ULValue ( XMaybe XCell ) :=
-    {{ {x} ^^ {DRootTokenContract_ι_wallet_code_} }} : _.
+Definition details_info_ι_root_address_left (x: ULValue details_infodLRecord): ULValue XAddress :=
+    {{ {x} ^^ {details_info_ι_root_address} }} : _.
     
-Notation " a '↑' 'DRootTokenContract.wallet_code_' " := ( DRootTokenContract_ι_wallet_code__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DRootTokenContract.wallet_code_' " := ( DRootTokenContract_ι_wallet_code__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.root_address' " := ( details_info_ι_root_address_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.root_address' " := ( details_info_ι_root_address_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_owner_address__right {b} (x: URValue DRootTokenContractLRecord b): URValue ( XMaybe XAddress ) b :=
-    || {x} ^^ {DRootTokenContract_ι_owner_address_} || : _.
+Definition details_info_ι_owner_address_right {b} (x: URValue details_infoLRecord b): URValue XAddress b :=
+    || {x} ^^ {details_info_ι_owner_address} || : _.
     
-Definition DRootTokenContract_ι_owner_address__left (x: ULValue DRootTokenContractLRecord): ULValue ( XMaybe XAddress ) :=
-    {{ {x} ^^ {DRootTokenContract_ι_owner_address_} }} : _.
+Definition details_info_ι_owner_address_left (x: ULValue details_infodLRecord): ULValue XAddress :=
+    {{ {x} ^^ {details_info_ι_owner_address} }} : _.
     
-Notation " a '↑' 'DRootTokenContract.owner_address_' " := ( DRootTokenContract_ι_owner_address__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DRootTokenContract.owner_address_' " := ( DRootTokenContract_ι_owner_address__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.owner_address' " := ( details_info_ι_owner_address_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.owner_address' " := ( details_info_ι_owner_address_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_start_balance__right {b} (x: URValue DRootTokenContractLRecord b): URValue GramsLRecord b :=
-    || {x} ^^ {DRootTokenContract_ι_start_balance_} || : _.
+Definition details_info_ι_lend_ownership_right {b} (x: URValue details_infoLRecord b): URValue ( XHMap XUInteger lend_array_recordLRecord ) b :=
+    || {x} ^^ {details_info_ι_lend_ownership} || : _.
     
-Definition DRootTokenContract_ι_start_balance__left (x: ULValue DRootTokenContractLRecord): ULValue GramsLRecord :=
-    {{ {x} ^^ {DRootTokenContract_ι_start_balance_} }} : _.
+Definition details_info_ι_lend_ownership_left (x: ULValue details_infodLRecord): ULValue ( XHMap XUInteger lend_array_recordLRecord ) :=
+    {{ {x} ^^ {details_info_ι_lend_ownership} }} : _.
     
-Notation " a '↑' 'DRootTokenContract.start_balance_' " := ( DRootTokenContract_ι_start_balance__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DRootTokenContract.start_balance_' " := ( DRootTokenContract_ι_start_balance__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.lend_ownership' " := ( details_info_ι_lend_ownership_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.lend_ownership' " := ( details_info_ι_lend_ownership_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWallet_ι_name__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XString b :=
-    || {x} ^^ {DTONTokenWallet_ι_name_} || : _.
+Definition details_info_ι_lend_balance_right {b} (x: URValue details_infoLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {details_info_ι_lend_balance} || : _.
     
-Definition DTONTokenWallet_ι_name__left (x: ULValue DTONTokenWalletLRecord): ULValue XString :=
-    {{ {x} ^^ {DTONTokenWallet_ι_name_} }} : _.
+Definition details_info_ι_lend_balance_left (x: ULValue details_infodLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {details_info_ι_lend_balance} }} : _.
     
-Notation " a '↑' 'DTONTokenWallet.name_' " := ( DTONTokenWallet_ι_name__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.name_' " := ( DTONTokenWallet_ι_name__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.lend_balance' " := ( details_info_ι_lend_balance_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.lend_balance' " := ( details_info_ι_lend_balance_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWallet_ι_symbol__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XString b :=
-    || {x} ^^ {DTONTokenWallet_ι_symbol_} || : _.
+Definition details_info_ι_code_right {b} (x: URValue details_infoLRecord b): URValue XCell b :=
+    || {x} ^^ {details_info_ι_code} || : _.
     
-Definition DTONTokenWallet_ι_symbol__left (x: ULValue DTONTokenWalletLRecord): ULValue XString :=
-    {{ {x} ^^ {DTONTokenWallet_ι_symbol_} }} : _.
+Definition details_info_ι_code_left (x: ULValue details_infodLRecord): ULValue XCell :=
+    {{ {x} ^^ {details_info_ι_code} }} : _.
     
-Notation " a '↑' 'DTONTokenWallet.symbol_' " := ( DTONTokenWallet_ι_symbol__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.symbol_' " := ( DTONTokenWallet_ι_symbol__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.code' " := ( details_info_ι_code_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.code' " := ( details_info_ι_code_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWallet_ι_decimals__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger8 b :=
-    || {x} ^^ {DTONTokenWallet_ι_decimals_} || : _.
+Definition details_info_ι_allowance_right {b} (x: URValue details_infoLRecord b): URValue allowance_infoLRecord b :=
+    || {x} ^^ {details_info_ι_allowance} || : _.
     
-Definition DTONTokenWallet_ι_decimals__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger8 :=
-    {{ {x} ^^ {DTONTokenWallet_ι_decimals_} }} : _.
+Definition details_info_ι_allowance_left (x: ULValue details_infodLRecord): ULValue allowance_infoLRecord :=
+    {{ {x} ^^ {details_info_ι_allowance} }} : _.
     
-Notation " a '↑' 'DTONTokenWallet.decimals_' " := ( DTONTokenWallet_ι_decimals__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.decimals_' " := ( DTONTokenWallet_ι_decimals__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.allowance' " := ( details_info_ι_allowance_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.allowance' " := ( details_info_ι_allowance_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWallet_ι_balance__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {DTONTokenWallet_ι_balance_} || : _.
+Definition details_info_ι_workchain_id_right {b} (x: URValue details_infoLRecord b): URValue XUInteger8 b :=
+    || {x} ^^ {details_info_ι_workchain_id} || : _.
     
-Definition DTONTokenWallet_ι_balance__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {DTONTokenWallet_ι_balance_} }} : _.
+Definition details_info_ι_workchain_id_left (x: ULValue details_infodLRecord): ULValue XUInteger8 :=
+    {{ {x} ^^ {details_info_ι_workchain_id} }} : _.
     
-Notation " a '↑' 'DTONTokenWallet.balance_' " := ( DTONTokenWallet_ι_balance__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.balance_' " := ( DTONTokenWallet_ι_balance__left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition DTONTokenWallet_ι_root_public_key__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger256 b :=
-    || {x} ^^ {DTONTokenWallet_ι_root_public_key_} || : _.
-    
-Definition DTONTokenWallet_ι_root_public_key__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger256 :=
-    {{ {x} ^^ {DTONTokenWallet_ι_root_public_key_} }} : _.
-    
-Notation " a '↑' 'DTONTokenWallet.root_public_key_' " := ( DTONTokenWallet_ι_root_public_key__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.root_public_key_' " := ( DTONTokenWallet_ι_root_public_key__left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition DTONTokenWallet_ι_wallet_public_key__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger256 b :=
-    || {x} ^^ {DTONTokenWallet_ι_wallet_public_key_} || : _.
-    
-Definition DTONTokenWallet_ι_wallet_public_key__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger256 :=
-    {{ {x} ^^ {DTONTokenWallet_ι_wallet_public_key_} }} : _.
-    
-Notation " a '↑' 'DTONTokenWallet.wallet_public_key_' " := ( DTONTokenWallet_ι_wallet_public_key__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.wallet_public_key_' " := ( DTONTokenWallet_ι_wallet_public_key__left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition DTONTokenWallet_ι_root_address__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XAddress b :=
-    || {x} ^^ {DTONTokenWallet_ι_root_address_} || : _.
-    
-Definition DTONTokenWallet_ι_root_address__left (x: ULValue DTONTokenWalletLRecord): ULValue XAddress :=
-    {{ {x} ^^ {DTONTokenWallet_ι_root_address_} }} : _.
-    
-Notation " a '↑' 'DTONTokenWallet.root_address_' " := ( DTONTokenWallet_ι_root_address__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.root_address_' " := ( DTONTokenWallet_ι_root_address__left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition DTONTokenWallet_ι_owner_address__right {b} (x: URValue DTONTokenWalletLRecord b): URValue ( XMaybe XAddress ) b :=
-    || {x} ^^ {DTONTokenWallet_ι_owner_address_} || : _.
-    
-Definition DTONTokenWallet_ι_owner_address__left (x: ULValue DTONTokenWalletLRecord): ULValue ( XMaybe XAddress ) :=
-    {{ {x} ^^ {DTONTokenWallet_ι_owner_address_} }} : _.
-    
-Notation " a '↑' 'DTONTokenWallet.owner_address_' " := ( DTONTokenWallet_ι_owner_address__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.owner_address_' " := ( DTONTokenWallet_ι_owner_address__left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition DTONTokenWallet_ι_code__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XCell b :=
-    || {x} ^^ {DTONTokenWallet_ι_code_} || : _.
-    
-Definition DTONTokenWallet_ι_code__left (x: ULValue DTONTokenWalletLRecord): ULValue XCell :=
-    {{ {x} ^^ {DTONTokenWallet_ι_code_} }} : _.
-    
-Notation " a '↑' 'DTONTokenWallet.code_' " := ( DTONTokenWallet_ι_code__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.code_' " := ( DTONTokenWallet_ι_code__left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition DTONTokenWallet_ι_allowance__right {b} (x: URValue DTONTokenWalletLRecord b): URValue ( XMaybe allowance_infoLRecord ) b :=
-    || {x} ^^ {DTONTokenWallet_ι_allowance_} || : _.
-    
-Definition DTONTokenWallet_ι_allowance__left (x: ULValue DTONTokenWalletLRecord): ULValue ( XMaybe allowance_infoLRecord ) :=
-    {{ {x} ^^ {DTONTokenWallet_ι_allowance_} }} : _.
-    
-Notation " a '↑' 'DTONTokenWallet.allowance_' " := ( DTONTokenWallet_ι_allowance__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.allowance_' " := ( DTONTokenWallet_ι_allowance__left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition DTONTokenWallet_ι_workchain_id__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger8 b :=
-    || {x} ^^ {DTONTokenWallet_ι_workchain_id_} || : _.
-    
-Definition DTONTokenWallet_ι_workchain_id__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger8 :=
-    {{ {x} ^^ {DTONTokenWallet_ι_workchain_id_} }} : _.
-    
-Notation " a '↑' 'DTONTokenWallet.workchain_id_' " := ( DTONTokenWallet_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'DTONTokenWallet.workchain_id_' " := ( DTONTokenWallet_ι_workchain_id__left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 End ClassTypesNotations.

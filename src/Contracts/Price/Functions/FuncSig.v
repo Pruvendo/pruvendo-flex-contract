@@ -43,7 +43,7 @@ Parameter make_deal : ( ( OrderInfoLRecord ) ) -> ( ( OrderInfoLRecord ) ) -> UE
  Parameter verify_tip3_addr : ( ( XAddress ) ) -> ( ( uint256 ) ) -> ( ( uint256 ) ) -> UExpression XBool false . 
  Parameter expected_wallet_address : ( ( uint256 ) ) -> ( ( uint256 ) ) -> UExpression uint256 false . 
  Parameter on_sell_fail : ( ( uint ) ) -> ( XAddress (*ITONTokenWalletPtr*) ) -> ( ( uint128 ) ) -> UExpression OrderRetLRecord false . 
- Parameter prepare_price_state_init_and_addr : ( ( ContractLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord # uint256 ) false . 
+ Parameter prepare_price_state_init_and_addr : ( ( DPriceLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord # uint256 ) false . 
  Parameter is_active_time : ( ( uint32 ) ) -> UExpression XBool false . 
  Parameter calc_cost : ( ( uint128 ) ) -> ( ( uint128 ) ) -> UExpression (XMaybe uint128) false . 
  Parameter process_queue_impl : ( ( XAddress ) ) -> ( XAddress (*IFlexNotifyPtr*) ) -> ( ( uint128 ) ) -> ( ( uint8 ) ) -> ( ( TonsConfigLRecord ) ) -> ( ( uint ) ) -> ( ( uint ) ) -> ( ( uint128 ) ) -> ( ( XQueue OrderInfoLRecord ) ) -> ( ( uint128 ) ) -> ( ( XQueue OrderInfoLRecord ) ) -> UExpression process_retLRecord false . 
