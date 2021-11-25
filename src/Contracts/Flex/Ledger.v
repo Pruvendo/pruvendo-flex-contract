@@ -13,6 +13,7 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import Project.CommonTypes. 
 Require Import Contracts.Flex.ClassTypes.
 Require Contracts.TradingPair.ClassTypes.
+Require Contracts.XchgPair.ClassTypes.
 Require Import Contracts.Flex.Interface.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
@@ -21,27 +22,9 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_SelfDeployer | _EmittedEvents | _MessagesLog.
-(* 1 *) Inductive ContractFields := 
-| deployer_pubkey_ 
-| workchain_id_ 
-| ownership_description_ 
-| owner_address_ 
-| tons_cfg_ 
-| listing_cfg_ 
-| pair_code_ 
-| xchg_pair_code_ 
-| price_code_ 
-| xchg_price_code_ 
-| ext_wallet_code_ 
-| flex_wallet_code_ 
-| wrapper_code_ 
-| deals_limit_ 
-| wrapper_listing_requests_
-| trading_pair_listing_requests_
-| xchg_pair_listing_requests_ .
 
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
-Definition ContractFields := DFlexFields.
+Definition ContractFields := DFlexFields.  
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
@@ -51,6 +34,7 @@ Module Export BasicTypesModule := BasicTypes xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
 Module Export ClassTypesModule := Flex.ClassTypes.ClassTypes xt sm .
 Module TradingPairClassTypesModule := TradingPair.ClassTypes.ClassTypes xt sm .
+Module XchgPairClassTypesModule := XchgPair.ClassTypes.ClassTypes xt sm .
 Import xt. 
 
 
@@ -61,27 +45,7 @@ Import xt.
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL := DFlexLRecord .(* : list Type := 
- [ ( XUInteger256 ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( XString ) : Type ; 
- ( ( XMaybe XAddress ) ) : Type ; 
- ( TonsConfigLRecord ) : Type ; 
- ( ListingConfigLRecord ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
-  ( XUInteger8 ) : Type ;
- ( (XHMap XUInteger256 (XUInteger256 * WrapperListingRequestLRecord)) ) : Type ; 
- ( (XHMap XUInteger256 (XUInteger256 * TradingPairListingRequestLRecord)) ) : Type ; 
- ( (XHMap XUInteger256 (XUInteger256 * XchgPairListingRequestLRecord)) ) : Type ] .
-
-Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord .  *)
+(* 2 *) Definition ContractLRecord := DFlexLRecord . 
  Definition ContractLEmbeddedType := DFlexLEmbeddedType.
 
 
@@ -170,8 +134,8 @@ Elpi GeneratePruvendoRecord ContractL ContractFields .
  GeneratePruvendoRecord LocalState010000L LocalStateFields010000I . 
  Opaque LocalState010000LRecord . 
  
- Inductive LocalStateFields010001I := | ι0100010 | ι0100011 . 
- Definition LocalState010001L := [ ( XHMap (string*nat) DXchgPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Inductive LocalStateFields010001I := | ι0100010 | ι0100011 .
+ Definition LocalState010001L := [ ( XHMap (string*nat) XchgPairClassTypesModule.DXchgPairLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState010001L LocalStateFields010001I . 
  Opaque LocalState010001LRecord . 
  
@@ -752,7 +716,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField000110 : typeclass_instances. 
- #[global, program] Instance LocalStateField000111 : LocalStateField DTradingPairLRecord.
+ #[global, program] Instance LocalStateField000111 : LocalStateField TradingPairClassTypesModule.DTradingPairLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -972,7 +936,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField010000 : typeclass_instances. 
- #[global, program] Instance LocalStateField010001 : LocalStateField DXchgPairLRecord.
+ #[global, program] Instance LocalStateField010001 : LocalStateField  XchgPairClassTypesModule.DXchgPairLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -1526,7 +1490,7 @@ Definition LocalStateField_XCell := LocalStateField000001 .
 
 
 (***************************************)
-Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
+(*Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
          (v2: field_type f2) (r :  MessagesAndEventsLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
@@ -1576,7 +1540,7 @@ Proof.
                apply (countable_prop_proof (T:= LedgerLRecord ));
                cbv;
                first [reflexivity| contradiction]).
-Qed .
+Qed . *)
 
 End Ledger .
 

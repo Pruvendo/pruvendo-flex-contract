@@ -10,7 +10,7 @@ Require Import Contracts.Flex.Ledger.
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
-Module Export ClassTypesModule := ClassTypes xt sm.
+Module Export ClassTypesModule := Contracts.Flex.ClassTypes.ClassTypes xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
