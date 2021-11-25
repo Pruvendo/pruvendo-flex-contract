@@ -21,7 +21,7 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-Parameter onDeploy :  uint128 -> uint128 -> raw_address -> UExpression boolean true . 
+Parameter onDeploy :  uint128 -> uint128 -> raw_address -> UExpression XBool true . 
 Parameter getFlexAddr : UExpression raw_address false . 
 Parameter getTip3MajorRoot : UExpression raw_address false . 
 Parameter getTip3MinorRoot : UExpression raw_address false . 

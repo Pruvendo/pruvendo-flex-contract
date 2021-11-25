@@ -30,7 +30,7 @@ Module PricePublicInterfaceModule := PublicInterface xt sm.
 
 (* Module Import BasicTypesClass := BasicTypes xt sm. *)
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Export TypesModuleForLedger := ClassTypes xt sm .
+Module Export TypesModuleForLedger := Contracts.Wrapper.ClassTypes.ClassTypes xt sm .
 Import xt.
 
 
@@ -41,22 +41,7 @@ Import xt.
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL := DWrapperLRecord.(* 
- [ ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( XAddress (* IFlexNotifyPtrLRecord *) ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( TonsConfigLRecord ) : Type ; 
- ( XCell ) : Type ; 
- ( Tip3ConfigLRecord ) : Type ; 
- ( ( XQueue OrderInfoLRecord ) ) : Type ; 
- ( ( XQueue OrderInfoLRecord ) ) : Type ] .
-Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord .  *)
+(* 2 *) Definition ContractL := TypesModuleForLedger.DWrapperLRecord.
 Definition ContractLEmbeddedType := DWrapperLEmbeddedType.
 
 

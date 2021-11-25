@@ -40,12 +40,6 @@ GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
 (* 2 *) Definition ContractL := DTradingPairLRecord.
- (* [ ( XAddress ) : Type ; 
- ( XAddress ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XAddress ) : Type ] .
-Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord .  *)
  Definition ContractLEmbeddedType := DTradingPairLEmbeddedType.
 
 Inductive LocalStateFields0000I := | ι00000 | ι00001 . 

@@ -6,7 +6,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import UrsusStdLib.Cpp.stdTypes.
 
-Require Import CommonNotations.
+Require Import Project.CommonNotations.
 Require Import Contracts.Price.ClassTypes.
 Require Import Contracts.Price.Ledger.
 Require Import Contracts.Price.ClassTypesNotations.

@@ -23,24 +23,9 @@ Local Open Scope glist_scope.
 
 
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
-(* (* 1 *) Inductive ContractFields := 
-| price_ 
-| sells_amount_ 
-| buys_amount_ 
-| flex_ 
-| min_amount_ 
-| deals_limit_ 
-| notify_addr_ 
-| workchain_id_ 
-| tons_cfg_ 
-| tip3_code_ 
-| tip3cfg_ 
-| sells_
-| buys_
-. *)
 
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
-Definition ContractFields := DPriceFields.
+Definition ContractFields := DPriceFields. 
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
@@ -60,23 +45,9 @@ Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.Clas
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL := DPriceLRecord. (* : list Type := 
- [ ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( XAddress (* IFlexNotifyPtrLRecord *) ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( TonsConfigLRecord ) : Type ; 
- ( XCell ) : Type ; 
- ( Tip3ConfigLRecord ) : Type ; 
- ( ( XQueue OrderInfoLRecord ) ) : Type ; 
- ( ( XQueue OrderInfoLRecord ) ) : Type ] .
-Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord .  *)
- Definition ContractLEmbeddedType := DPriceLEmbeddedType.
+(* 2 *) Definition ContractL := DPriceLRecord.
+
+ Definition ContractLEmbeddedType := DPriceLEmbeddedType. 
 
 Inductive LocalStateFields00000I := | ι000000 | ι000001 . 
  Definition LocalState00000L := [ ( XHMap (string*nat) ( StateInitLRecord * XUInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 
@@ -361,8 +332,6 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Definition LocalStateL := [ LocalState0LRecord ; LocalState1LRecord ] . 
  GeneratePruvendoRecord LocalStateL LocalStateFieldsI . 
  Opaque LocalStateLRecord . 
- 
-
  
   
 (* 2 *) Definition LedgerL : list Type := 
@@ -1043,7 +1012,7 @@ Proof.
                first [reflexivity| contradiction]).
 Qed . *)
 
-Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
+(* Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
          (v2: field_type f2) (r :  LedgerLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
@@ -1054,6 +1023,6 @@ Proof.
                apply (countable_prop_proof (T:= LedgerLRecord ));
                cbv;
                first [reflexivity| contradiction]).
-Qed .
+Qed . *)
 
 End Ledger .

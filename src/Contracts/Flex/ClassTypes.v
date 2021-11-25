@@ -52,7 +52,6 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-
 (* 2 *) Definition DWrapperL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 

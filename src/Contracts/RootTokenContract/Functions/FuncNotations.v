@@ -16,6 +16,7 @@ Require Import Project.CommonConstSig.
 
 Require Import Contracts.RootTokenContract.Ledger.
 Require Import Contracts.RootTokenContract.Functions.FuncSig.
+Require Import Contracts.TONTokenWallet.ClassTypes.
 
 (* здесь инмпортируем все внешние интерфейсы *)
 Require Import Contracts.TONTokenWallet.Interface.
@@ -26,7 +27,7 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.PublicInterface xt sm.
+Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 

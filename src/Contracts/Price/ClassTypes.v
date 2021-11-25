@@ -48,7 +48,6 @@ Elpi GeneratePruvendoRecord SellArgsL SellArgsFields .
 Elpi GeneratePruvendoRecord DetailsInfoL DetailsInfoFields . 
  Opaque DetailsInfoLRecord . 
 
-
 (* 2 *) Definition dealerL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress (* IFlexNotifyPtr *) ) : Type ; 
