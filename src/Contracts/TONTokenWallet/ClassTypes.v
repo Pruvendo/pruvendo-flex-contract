@@ -25,15 +25,13 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive lend_recordFields := | lend_record_ι_lend_balance | lend_record_ι_lend_finish_time .
 (* 1 *) Inductive lend_array_recordFields := | lend_array_record_ι_lend_addr | lend_array_record_ι_lend_balance | lend_array_record_ι_lend_finish_time .
 (* 1 *) Inductive details_infoFields := | details_info_ι_name | details_info_ι_symbol | details_info_ι_decimals | details_info_ι_balance | details_info_ι_root_public_key | details_info_ι_wallet_public_key | details_info_ι_root_address | details_info_ι_owner_address | details_info_ι_lend_ownership | details_info_ι_lend_balance | details_info_ι_code | details_info_ι_allowance | details_info_ι_workchain_id .
-(* 1 *) Inductive ContractFields := | name_ | symbol_ | decimals_ | balance_ | root_public_key_ | wallet_public_key_ | root_address_ | owner_address_ | code_ | allowance_ | workchain_id_ .
 (* 1 *) Inductive DTONTokenWalletExternalFields := | DTONTokenWalletExternal_ι_name_ | DTONTokenWalletExternal_ι_symbol_ | DTONTokenWalletExternal_ι_decimals_ | DTONTokenWalletExternal_ι_balance_ | DTONTokenWalletExternal_ι_root_public_key_ | DTONTokenWalletExternal_ι_wallet_public_key_ | DTONTokenWalletExternal_ι_root_address_ | DTONTokenWalletExternal_ι_owner_address_ | DTONTokenWalletExternal_ι_code_ | DTONTokenWalletExternal_ι_allowance_ | DTONTokenWalletExternal_ι_workchain_id_ .
-(* 1 *) Inductive DTONTokenWalletInternalFields := | DTONTokenWalletInternal_ι_name_ | DTONTokenWalletInternal_ι_symbol_ | DTONTokenWalletInternal_ι_decimals_ | DTONTokenWalletInternal_ι_balance_ | DTONTokenWalletInternal_ι_root_public_key_ | DTONTokenWalletInternal_ι_wallet_public_key_ | DTONTokenWalletInternal_ι_root_address_ | DTONTokenWalletInternal_ι_owner_address_ | DTONTokenWalletInternal_ι_code_ | DTONTokenWalletInternal_ι_workchain_id_ .
-(* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
-(* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
+(* 1 *) Inductive DTONTokenWalletInternalFields := | DTONTokenWalletInternal_ι_name_ | DTONTokenWalletInternal_ι_symbol_ | DTONTokenWalletInternal_ι_decimals_ | DTONTokenWalletInternal_ι_balance_ | DTONTokenWalletInternal_ι_root_public_key_ | DTONTokenWalletInternal_ι_wallet_public_key_ | DTONTokenWalletInternal_ι_root_address_ | DTONTokenWalletInternal_ι_owner_address_ | DTONTokenWalletExternal_ι_lend_ownership_map | DTONTokenWalletInternal_ι_code_ | DTONTokenWalletInternal_ι_workchain_id_ .
+(* 1 *) (* Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
+(* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library . *)
 (* 1 *) Inductive DRootTokenContractFields := | DRootTokenContract_ι_name_ | DRootTokenContract_ι_symbol_ | DRootTokenContract_ι_decimals_ | DRootTokenContract_ι_root_public_key_ | DRootTokenContract_ι_total_supply_ | DRootTokenContract_ι_total_granted_ | DRootTokenContract_ι_wallet_code_ | DRootTokenContract_ι_owner_address_ | DRootTokenContract_ι_start_balance_ .
-(* 1 *) Inductive lend_array_recordFields := | lend_array_record_ι_lend_addr | lend_array_record_ι_lend_balance | lend_array_record_ι_lend_finish_time .
-(* 1 *) Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .
-(* 1 *) Inductive DTONTokenWalletFields := | name_ | symbol_ | decimals_ | balance_ | root_public_key_ | wallet_public_key_ | root_address_ | owner_address_ | code_ | allowance_ | workchain_id_ .
+(* 1 *) (* Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address . *)
+(* 1 *) Inductive DTONTokenWalletFields := | DTONTokenWallet_ι_name_ | DTONTokenWallet_ι_symbol_ | DTONTokenWallet_ι_decimals_ | DTONTokenWallet_ι_balance_ | DTONTokenWallet_ι_root_public_key_ | DTONTokenWallet_ι_wallet_public_key_ | DTONTokenWallet_ι_root_address_ | DTONTokenWallet_ι_owner_address_ | DTONTokenWallet_ι_code_ | DTONTokenWallet_ι_allowance_ | DTONTokenWallet_ι_workchain_id_ .
 
 (* 2 *) Definition ContractL : list Type := 
 [ ( XString ) : Type ; 
@@ -69,11 +67,11 @@ Elpi GeneratePruvendoRecord lend_recordL lend_recordFields .
 Elpi GeneratePruvendoRecord lend_array_recordL lend_array_recordFields . 
  Opaque lend_array_recordLRecord . 
 
-(* 2 *) Definition addr_std_fixedL : list Type := 
+(* (* 2 *) Definition addr_std_fixedL : list Type := 
  [ ( XUInteger8 ) : Type ; 
  ( XUInteger256 ) : Type ] .
 Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
- Opaque addr_std_fixedLRecord . 
+ Opaque addr_std_fixedLRecord .  *)
 
 (* 2 *) Definition details_infoL : list Type := 
  [ ( XString ) : Type ; 
@@ -116,8 +114,8 @@ Elpi GeneratePruvendoRecord ContractL ContractFields .
  ( XInteger256 ) : Type ; 
  ( XAddress ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
+ ( ( XHMap addr_std_fixedLRecord lend_recordLRecord ) ) : Type ;
  ( XCell ) : Type ; 
- ( ( XMaybe allowance_infoLRecord ) ) : Type ; 
  ( XInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletExternalL DTONTokenWalletExternalFields . 
  Opaque DTONTokenWalletExternalLRecord . 
@@ -135,7 +133,7 @@ Elpi GeneratePruvendoRecord DTONTokenWalletExternalL DTONTokenWalletExternalFiel
  ( XInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
  Opaque DTONTokenWalletInternalLRecord . 
-
+(* 
 (* 2 *) Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
  ( XBool ) : Type ] .
@@ -149,7 +147,7 @@ Elpi GeneratePruvendoRecord ETONTokenWalletL ETONTokenWalletFields .
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ] .
 Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
- Opaque TickTockLRecord . 
+ Opaque TickTockLRecord .  *)
 
 (* 2 *) Definition DRootTokenContractL : list Type := 
  [ ( XString ) : Type ; 
@@ -164,12 +162,7 @@ Elpi GeneratePruvendoRecord TickTockL TickTockFields .
 Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
  Opaque StateInitLRecord . 
 
-(* 2 *) Definition lend_array_recordL : list Type := 
- [ ( XAddress ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger32 ) : Type ] .
-Elpi GeneratePruvendoRecord DRootTokenContractL DRootTokenContractFields . 
- Opaque DRootTokenContractLRecord . 
+
 
 End ClassTypes .
  
