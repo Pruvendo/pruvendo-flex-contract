@@ -12,15 +12,6 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
-
-Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
-Module Export CommonTypes := Types xt sm.
-
-Local Open Scope xlist_scope.
-Local Open Scope record. 
-Local Open Scope program_scope.
-Local Open Scope glist_scope.
-
 (* 1 *) Inductive DRootTokenContractFields := | name_ | symbol_ | decimals_ | root_public_key_ | total_supply_ | total_granted_ | wallet_code_ | owner_address_ | start_balance_ .
 (* 1 *) Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
 (* 1 *) Inductive lend_recordFields := | lend_record_ι_lend_balance | lend_record_ι_lend_finish_time .
@@ -32,6 +23,16 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive DTONTokenWalletInternalFields := | DTONTokenWalletInternal_ι_name_ | DTONTokenWalletInternal_ι_symbol_ | DTONTokenWalletInternal_ι_decimals_ | DTONTokenWalletInternal_ι_balance_ | DTONTokenWalletInternal_ι_root_public_key_ | DTONTokenWalletInternal_ι_wallet_public_key_ | DTONTokenWalletInternal_ι_root_address_ | DTONTokenWalletInternal_ι_owner_address_ | DTONTokenWalletInternal_ι_lend_ownership_ | DTONTokenWalletInternal_ι_code_ | DTONTokenWalletInternal_ι_workchain_id_ .
 (* 1 *) Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address .
 (* 1 *) Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
+
+
+Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
+Module Export CommonTypes := Types xt sm.
+
+Local Open Scope xlist_scope.
+Local Open Scope record. 
+Local Open Scope program_scope.
+Local Open Scope glist_scope.
+
 
 (* 2 *) Definition DRootTokenContractL : list Type := 
  [ ( XString ) : Type ; 

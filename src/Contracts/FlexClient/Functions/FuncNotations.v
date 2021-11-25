@@ -18,12 +18,14 @@ Require Import Project.CommonConstSig.
 Require Import CommonNotations.
 Require Import Contracts.FlexClient.Ledger.
 Require Import Contracts.FlexClient.Functions.FuncSig.
+Require Import Contracts.FlexClient.ClassTypes.
+(* Require Import Contracts.Wrapper.ClassTypes. *)
 
 (* здесь инмпортируем все внешние интерфейсы *)
 Require Import Contracts.TradingPair.Interface.
 Require Import Contracts.XchgPair.Interface.
 Require Import Contracts.Price.Interface.
-Require Import Contracts.TokenWallet.Interface.
+Require Import Contracts.TONTokenWallet.Interface.
 Require Import Contracts.PriceXchg.Interface.
 Require Import Contracts.Flex.Interface.
 
@@ -33,14 +35,17 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module TradingPairPublicInterface := Contracts.TradingPair.PublicInterface xt sm.
-Module XchgPairPublicInterface    := Contracts.XchgPair.PublicInterface xt sm.
-Module PricePublicInterface       := Contracts.Price.PublicInterface xt sm.
-Module TokenWalletPublicInterface := Contracts.TokenWallet.PublicInterface xt sm.
-Module PriceXchgPublicInterface   := Contracts.PriceXchg.PublicInterface xt sm.
-Module FlexPublicInterface        := Contracts.Flex.PublicInterface xt sm.
+Module TradingPairPublicInterface := Contracts.TradingPair.Interface.PublicInterface xt sm.
+Module XchgPairPublicInterface    := Contracts.XchgPair.Interface.PublicInterface xt sm.
+Module PricePublicInterface       := Contracts.Price.Interface.PublicInterface xt sm.
+Module TokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
+Module PriceXchgPublicInterface   := Contracts.PriceXchg.Interface.PublicInterface xt sm.
+Module FlexPublicInterface        := Contracts.Flex.Interface.PublicInterface xt sm.
+Module FlexClientPublicInterface  := Contracts.FlexClient.Interface.PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
+
+Module FlexClientClassModule      := Contracts.FlexClient.ClassTypes.ClassTypes xt sm. 
 
 
 Import xt.
@@ -48,72 +53,6 @@ Import xt.
 Import UrsusNotations.
 Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
-(* 
-Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.symbol' " := ( Tip3Config_ι_symbol ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.symbol' " := ( Tip3Config_ι_symbol ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.decimals' " := ( Tip3Config_ι_decimals ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.decimals' " := ( Tip3Config_ι_decimals ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.root_public_key' " := ( Tip3Config_ι_root_public_key ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.root_public_key' " := ( Tip3Config_ι_root_public_key ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.root_address' " := ( Tip3Config_ι_root_address ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'Tip3Config.root_address' " := ( Tip3Config_ι_root_address ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TickTock.tick' " := ( TickTock_ι_tick ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TickTock.tock' " := ( TickTock_ι_tock ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TickTock.tock' " := ( TickTock_ι_tock ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address ) (in custom URValue at level 0) : ursus_scope.  *)
- (* Notation " 'PayloadArgs.sell' " := ( PayloadArgs_ι_sell ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'PayloadArgs.sell' " := ( PayloadArgs_ι_sell ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'PayloadArgs.amount' " := ( PayloadArgs_ι_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'PayloadArgs.amount' " := ( PayloadArgs_ι_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'PayloadArgs.receive_tip3_wallet' " := ( PayloadArgs_ι_receive_tip3_wallet ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'PayloadArgs.receive_tip3_wallet' " := ( PayloadArgs_ι_receive_tip3_wallet ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'PayloadArgs.client_addr' " := ( PayloadArgs_ι_client_addr ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'PayloadArgs.client_addr' " := ( PayloadArgs_ι_client_addr ) (in custom URValue at level 0) : ursus_scope.  *)
- (* Notation " 'StateInit.split_depth' " := ( StateInit_ι_split_depth ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.split_depth' " := ( StateInit_ι_split_depth ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.special' " := ( StateInit_ι_special ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.special' " := ( StateInit_ι_special ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.code' " := ( StateInit_ι_code ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.code' " := ( StateInit_ι_code ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.data' " := ( StateInit_ι_data ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.data' " := ( StateInit_ι_data ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'StateInit.library' " := ( StateInit_ι_library ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'StateInit.library' " := ( StateInit_ι_library ) (in custom URValue at level 0) : ursus_scope.  *)
- (* Notation " 'DXchgPair.flex_addr_' " := ( DXchgPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.flex_addr_' " := ( DXchgPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.tip3_major_root_' " := ( DXchgPair_ι_tip3_major_root_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.tip3_major_root_' " := ( DXchgPair_ι_tip3_major_root_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.tip3_minor_root_' " := ( DXchgPair_ι_tip3_minor_root_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.tip3_minor_root_' " := ( DXchgPair_ι_tip3_minor_root_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.min_amount_' " := ( DXchgPair_ι_min_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.min_amount_' " := ( DXchgPair_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.notify_addr_' " := ( DXchgPair_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DXchgPair.notify_addr_' " := ( DXchgPair_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope.  *)
- (* Notation " 'TonsConfig.transfer_tip3' " := ( TonsConfig_ι_transfer_tip3 ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.transfer_tip3' " := ( TonsConfig_ι_transfer_tip3 ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.return_ownership' " := ( TonsConfig_ι_return_ownership ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.return_ownership' " := ( TonsConfig_ι_return_ownership ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.trading_pair_deploy' " := ( TonsConfig_ι_trading_pair_deploy ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.trading_pair_deploy' " := ( TonsConfig_ι_trading_pair_deploy ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.order_answer' " := ( TonsConfig_ι_order_answer ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.order_answer' " := ( TonsConfig_ι_order_answer ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.process_queue' " := ( TonsConfig_ι_process_queue ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.process_queue' " := ( TonsConfig_ι_process_queue ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.send_notify' " := ( TonsConfig_ι_send_notify ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'TonsConfig.send_notify' " := ( TonsConfig_ι_send_notify ) (in custom URValue at level 0) : ursus_scope.  *)
-(*  Notation " 'DTradingPair.flex_addr_' " := ( DTradingPair_ι_flex_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DTradingPair.flex_addr_' " := ( DTradingPair_ι_flex_addr_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DTradingPair.tip3_root_' " := ( DTradingPair_ι_tip3_root_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DTradingPair.tip3_root_' " := ( DTradingPair_ι_tip3_root_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DTradingPair.deploy_value_' " := ( DTradingPair_ι_deploy_value_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DTradingPair.deploy_value_' " := ( DTradingPair_ι_deploy_value_ ) (in custom URValue at level 0) : ursus_scope. 
-  *)
  Definition owner__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType owner_ ) : ULValue uint256 ) . 
  Definition owner__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType owner_ ) : URValue uint256 false ) . 
  Notation " '_owner_' " := ( owner__left ) (in custom ULValue at level 0) : ursus_scope. 
@@ -128,7 +67,7 @@ Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at l
  Definition xchg_pair_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType xchg_pair_code_ ) : URValue XCell false ) . 
  Notation " '_xchg_pair_code_' " := ( xchg_pair_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_xchg_pair_code_' " := ( xchg_pair_code__right ) (in custom URValue at level 0) : ursus_scope. 
- 
+
  Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : ULValue uint8 ) . 
  Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : URValue uint8 false ) . 
  Notation " '_workchain_id_' " := ( workchain_id__left ) (in custom ULValue at level 0) : ursus_scope. 
@@ -158,95 +97,7 @@ Notation " 'Tip3Config.name' " := ( Tip3Config_ι_name ) (in custom ULValue at l
  Definition flex_wrapper_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType flex_wrapper_code_ ) : URValue ( XMaybe XCell ) false ) . 
  Notation " '_flex_wrapper_code_' " := ( flex_wrapper_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_wrapper_code_' " := ( flex_wrapper_code__right ) (in custom URValue at level 0) : ursus_scope. 
- (* Notation " 'OrderInfo.original_amount' " := ( OrderInfo_ι_original_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.original_amount' " := ( OrderInfo_ι_original_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.amount' " := ( OrderInfo_ι_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.amount' " := ( OrderInfo_ι_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.account' " := ( OrderInfo_ι_account ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.account' " := ( OrderInfo_ι_account ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.tip3_wallet' " := ( OrderInfo_ι_tip3_wallet ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.tip3_wallet' " := ( OrderInfo_ι_tip3_wallet ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.client_addr' " := ( OrderInfo_ι_client_addr ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.client_addr' " := ( OrderInfo_ι_client_addr ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.order_finish_time' " := ( OrderInfo_ι_order_finish_time ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfo.order_finish_time' " := ( OrderInfo_ι_order_finish_time ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.original_amount' " := ( OrderInfoXchg_ι_original_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.original_amount' " := ( OrderInfoXchg_ι_original_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.amount' " := ( OrderInfoXchg_ι_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.amount' " := ( OrderInfoXchg_ι_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.account' " := ( OrderInfoXchg_ι_account ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.account' " := ( OrderInfoXchg_ι_account ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.tip3_wallet_provide' " := ( OrderInfoXchg_ι_tip3_wallet_provide ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.tip3_wallet_provide' " := ( OrderInfoXchg_ι_tip3_wallet_provide ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.tip3_wallet_receive' " := ( OrderInfoXchg_ι_tip3_wallet_receive ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.tip3_wallet_receive' " := ( OrderInfoXchg_ι_tip3_wallet_receive ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.client_addr' " := ( OrderInfoXchg_ι_client_addr ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.client_addr' " := ( OrderInfoXchg_ι_client_addr ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.order_finish_time' " := ( OrderInfoXchg_ι_order_finish_time ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'OrderInfoXchg.order_finish_time' " := ( OrderInfoXchg_ι_order_finish_time ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.price_' " := ( DPrice_ι_price_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.price_' " := ( DPrice_ι_price_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.sells_amount_' " := ( DPrice_ι_sells_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.sells_amount_' " := ( DPrice_ι_sells_amount_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.buys_amount_' " := ( DPrice_ι_buys_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.buys_amount_' " := ( DPrice_ι_buys_amount_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.flex_' " := ( DPrice_ι_flex_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.flex_' " := ( DPrice_ι_flex_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.min_amount_' " := ( DPrice_ι_min_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.min_amount_' " := ( DPrice_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.deals_limit_' " := ( DPrice_ι_deals_limit_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.deals_limit_' " := ( DPrice_ι_deals_limit_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.notify_addr_' " := ( DPrice_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.notify_addr_' " := ( DPrice_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.workchain_id_' " := ( DPrice_ι_workchain_id_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.workchain_id_' " := ( DPrice_ι_workchain_id_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.tons_cfg_' " := ( DPrice_ι_tons_cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.tons_cfg_' " := ( DPrice_ι_tons_cfg_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.tip3_code_' " := ( DPrice_ι_tip3_code_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.tip3_code_' " := ( DPrice_ι_tip3_code_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.tip3cfg_' " := ( DPrice_ι_tip3cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.tip3cfg_' " := ( DPrice_ι_tip3cfg_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.sells_' " := ( DPrice_ι_sells_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.sells_' " := ( DPrice_ι_sells_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPrice.buys_' " := ( DPrice_ι_buys_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPrice.buys_' " := ( DPrice_ι_buys_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'SellArgs.amount' " := ( SellArgs_ι_amount ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'SellArgs.amount' " := ( SellArgs_ι_amount ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'SellArgs.receive_wallet' " := ( SellArgs_ι_receive_wallet ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'SellArgs.receive_wallet' " := ( SellArgs_ι_receive_wallet ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'RationalPrice.num' " := ( RationalPrice_ι_num ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'RationalPrice.num' " := ( RationalPrice_ι_num ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'RationalPrice.denum' " := ( RationalPrice_ι_denum ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'RationalPrice.denum' " := ( RationalPrice_ι_denum ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.price_' " := ( DPriceXchg_ι_price_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.price_' " := ( DPriceXchg_ι_price_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.sells_amount_' " := ( DPriceXchg_ι_sells_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.sells_amount_' " := ( DPriceXchg_ι_sells_amount_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.buys_amount_' " := ( DPriceXchg_ι_buys_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.buys_amount_' " := ( DPriceXchg_ι_buys_amount_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.flex_' " := ( DPriceXchg_ι_flex_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.flex_' " := ( DPriceXchg_ι_flex_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.min_amount_' " := ( DPriceXchg_ι_min_amount_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.min_amount_' " := ( DPriceXchg_ι_min_amount_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.deals_limit_' " := ( DPriceXchg_ι_deals_limit_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.deals_limit_' " := ( DPriceXchg_ι_deals_limit_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.notify_addr_' " := ( DPriceXchg_ι_notify_addr_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.notify_addr_' " := ( DPriceXchg_ι_notify_addr_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.workchain_id_' " := ( DPriceXchg_ι_workchain_id_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.workchain_id_' " := ( DPriceXchg_ι_workchain_id_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.tons_cfg_' " := ( DPriceXchg_ι_tons_cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.tons_cfg_' " := ( DPriceXchg_ι_tons_cfg_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.tip3_code_' " := ( DPriceXchg_ι_tip3_code_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.tip3_code_' " := ( DPriceXchg_ι_tip3_code_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.major_tip3cfg_' " := ( DPriceXchg_ι_major_tip3cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.major_tip3cfg_' " := ( DPriceXchg_ι_major_tip3cfg_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.minor_tip3cfg_' " := ( DPriceXchg_ι_minor_tip3cfg_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.minor_tip3cfg_' " := ( DPriceXchg_ι_minor_tip3cfg_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.sells_' " := ( DPriceXchg_ι_sells_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.sells_' " := ( DPriceXchg_ι_sells_ ) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.buys_' " := ( DPriceXchg_ι_buys_ ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " 'DPriceXchg.buys_' " := ( DPriceXchg_ι_buys_ ) (in custom URValue at level 0) : ursus_scope. 
-  *) 
+
 Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject missed_flex_wrapper_code) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::missed_ext_wallet_code' " := (sInject missed_ext_wallet_code) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::missed_flex_wallet_code' " := (sInject missed_flex_wallet_code) (in custom URValue at level 0) : ursus_scope. 

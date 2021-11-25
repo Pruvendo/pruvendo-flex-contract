@@ -54,19 +54,6 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-
-(* 2 *) (* Definition addr_std_fixedL : list Type := 
- [ ( XUInteger8 ) : Type ; 
- ( XUInteger256 ) : Type ] .
-Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
- Opaque addr_std_fixedLRecord .  *)
-
-(* 2 *)(*  Definition TickTockL : list Type := 
- [ ( XBool ) : Type ; 
- ( XBool ) : Type ] .
-Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
- Opaque TickTockLRecord . *)
-
 (* 2 *) Definition lend_recordL : list Type := 
  [ ( XUInteger128 ) : Type ; 
  ( XUInteger32 ) : Type ] .
@@ -125,42 +112,6 @@ Elpi GeneratePruvendoRecord DTONTokenWalletExternalL DTONTokenWalletExternalFiel
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
  Opaque DTONTokenWalletInternalLRecord . 
 
-(* 2 *) (* Definition Tip3ConfigL : list Type := 
- [ ( XString ) : Type ; 
- ( XString ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( XUInteger256 ) : Type ; 
- ( XAddress ) : Type ] .
-Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
- Opaque Tip3ConfigLRecord .  *)
-
-(* 2 *) (* Definition StateInitL : list Type := 
- [ ( ( XMaybe XUInteger ) ) : Type ;
- ( ( XMaybe TickTockLRecord ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ] .
-Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
- Opaque StateInitLRecord .  *)
-
-(* 2 *) (* Definition DTradingPairL : list Type := 
- [ ( XAddress ) : Type ; 
- ( XAddress ) : Type ; 
- ( XUInteger128 ) : Type ;
- ( XUInteger128 ) : Type ;
- ( XAddress ) : Type ] .
-Elpi GeneratePruvendoRecord DTradingPairL DTradingPairFields . 
- Opaque DTradingPairLRecord .  *)
-
-(* 2 *)(*  Definition TonsConfigL : list Type := 
- [ ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ] .
-Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
- Opaque TonsConfigLRecord .  *)
 
 (* 2 *) Definition ListingConfigL : list Type := 
  [ ( XUInteger128 ) : Type ; 

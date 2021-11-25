@@ -20,7 +20,6 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 (* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
-(* 1 *) Inductive ContractFields := | price_ | sells_amount_ | buys_amount_ | flex_ | min_amount_ | deals_limit_ | notify_addr_ | workchain_id_ | tons_cfg_ | tip3_code_ | major_tip3cfg_ | minor_tip3cfg_ | sells_ | buys_ .
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 Definition ContractFields := DPriceXchgFields.
 
@@ -42,24 +41,7 @@ Local Open Scope ursus_scope.
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL := DPriceXchgLRecord .
-(* : list Type := 
- [ ( RationalPriceLRecord ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( XAddress (* IFlexNotifyPtrLRecord *) ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( TonsConfigLRecord ) : Type ; 
- ( XCell ) : Type ; 
- ( Tip3ConfigLRecord ) : Type ; 
- ( Tip3ConfigLRecord ) : Type ; 
- ( ( XQueue OrderInfoXchgLRecord ) ) : Type ; 
- ( ( XQueue OrderInfoXchgLRecord ) ) : Type ] .
-Elpi GeneratePruvendoRecord ContractL ContractFields . 
- Opaque ContractLRecord .  *)
+(* 2 *) Definition ContractLRecord := DPriceXchgLRecord .
  Definition ContractLEmbeddedType := DPriceXchgLEmbeddedType.
 
 Inductive LocalStateFields00000I := | ι000000 | ι000001 . 

@@ -21,12 +21,12 @@ Local Open Scope glist_scope.
 Section InterfaceDef.
 
 
-Variables XAddress XUInteger128 XUInteger32 XUInteger256 XCells InternalMessageParamsLRecord XCell: Type.
+Variables XAddress XUInteger128 XUInteger32 XUInteger256 XCells InternalMessageParamsLRecord XCell XBool: Type.
 
 Inductive VarInitFields      := | VarInit_ι_DPrice | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
 
-Variable InitialState : Type.
+Variable InitialState : Type. 
 
 Inductive PublicInterfaceP :=
 (* __interface ITONTokenWalletNotify *)
@@ -66,22 +66,28 @@ GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Check (InitState_ι_code _). *)
 
-(* Print PublicInterfaceP. *)
-Definition PublicInterface : Type := PublicInterfaceP XUInteger32 XUInteger128 XUInteger256 XAddress XCell InitialStateLRecord.
+Print PublicInterfaceP.
+Definition PublicInterface : Type := PublicInterfaceP XAddress XUInteger128 XUInteger32 XUInteger256 XCell XCell XBool InitialStateLRecord.
 
-(* Print OutgoingMessageP. *)
-Definition OutgoingMessage : Type := OutgoingMessageP XUInteger32 XUInteger128 XUInteger256 XAddress XCell InternalMessageParamsLRecord InitialStateLRecord.
+Print OutgoingMessageP.
+Definition OutgoingMessage : Type := OutgoingMessageP XAddress XUInteger128 XUInteger32 XUInteger256 XCell InternalMessageParamsLRecord XCell XBool InitialStateLRecord.
 
 (* Print Iconstructor. *)
 Arguments _Icreate {_} {_}.
-Arguments Iconstructor {_} {_}.
-Arguments Ideploy {_} {_}.
+Arguments IonTip3LendOwnership {_} {_} {_} {_} {_} {_}.
+Arguments IonTip3Transfer {_} {_} {_} {_} {_} {_}.
+
+(* __interface ITONTokenWallet *)
+Arguments ItransferWithNotify {_} {_} {_} {_} {_} {_}.
+Arguments ItransferToRecipient {_} {_} {_} {_} {_} {_} {_}. 
+Arguments ItransferToRecipientWithNotify {_} {_} {_} {_} {_} {_} {_} {_}. 
+Arguments IlendOwnership {_} {_} {_} {_} {_} {_} {_} .
 Arguments OutgoingInternalMessage {_} {_} {_} {_}.
 (* About OutgoingInternalMessage. *)
 
 Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
 {
-    default := EmptyMessage XUInteger32 XUInteger128 XUInteger256 XAddress XCell InternalMessageParamsLRecord InitialStateLRecord
+    default := EmptyMessage XAddress XUInteger128 XUInteger32 XUInteger256 XCell InternalMessageParamsLRecord XCell XBool InitialStateLRecord
 }.
 
 

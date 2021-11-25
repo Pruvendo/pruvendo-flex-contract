@@ -956,7 +956,7 @@ Definition getDetails : UExpression DetailsInfoLRecord false .
  	 	 refine {{ return_ [ getPrice_ ( ) , getMinimumAmount_ ( ) , getSellAmount_ ( ) , getBuyAmount_ ( ) ] }} . 
  Defined . 
  
-Definition prepare_price_state_init_and_addr ( price_data : ( ContractLRecord ) ) ( price_code : ( XCell ) ) : UExpression ( StateInitLRecord * uint256 ) false . 
+Definition prepare_price_state_init_and_addr ( price_data : ( DPriceLRecord ) ) ( price_code : ( XCell ) ) : UExpression ( StateInitLRecord * uint256 ) false . 
 		refine {{ new 'price_data_cl : ( XCell ) @ "price_data_cl" := 
 				prepare_persistent_data_ ( {} , #{price_data} ) ; { _ } }} . 
 		refine {{ new 'price_init : ( StateInitLRecord ) @ "price_init" := 	 	 

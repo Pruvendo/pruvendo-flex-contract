@@ -19,7 +19,9 @@ Require Import Contracts.FlexClient.Ledger.
 Require Import Contracts.FlexClient.Functions.FuncSig.
 Require Import Contracts.FlexClient.Functions.FuncNotations.
 Require Import Contracts.FlexClient.Interface.
-
+Require Import Contracts.TradingPair.ClassTypes.
+Require Import Contracts.XchgPair.ClassTypes.
+Require Import Project.CommonTypes.
 
 Elpi Command AddLocalState.
 
@@ -48,15 +50,17 @@ Parameter TIP3_ENABLE_EXTERNAL : bool .
 
 End Has_Internal.
 
-
 Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModule) . 
 Import ha.
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
-Export SpecModuleForFuncNotations.CommonNotationsModule.
+(* Export SpecModuleForFuncNotations.CommonNotationsModule. *)
 
 Module FuncsInternal <: SpecModuleForFuncNotations.SpecSig. 
  
+Module TradingPairClassTypes := TradingPair.ClassTypes.ClassTypes XTypesModule StateMonadModule.
+Module XchgPairClassTypes := XchgPair.ClassTypes.ClassTypes XTypesModule StateMonadModule.
+
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope struct_scope.
@@ -211,32 +215,27 @@ Definition constructor_left { R a1 a2 a3 }
   return { pair_init, uint256(tvm_hash(pair_init_cl)) };
 } *)
 
-Definition prepare_trading_pair_state_init_and_addr ( pair_data : DTradingPairLRecord ) 
+Definition prepare_trading_pair_state_init_and_addr ( pair_data : TradingPairClassTypes.DTradingPairLRecord ) 
                                                     ( pair_code : XCell  ) 
                            : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'pair_data_cl : XCell @ "pair_data_cl" :=  
                        prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} .
-                       Check || [$
-                       {} ⇒ { StateInit_ι_split_depth } ;
-                       {} ⇒ { StateInit_ι_special } ;
-                       ( #{pair_code} ) -> set () ⇒ {StateInit_ι_code} ;
-                       ( !{pair_data_cl} ) -> set () ⇒ {StateInit_ι_data} ;
-                       {} ⇒ {StateInit_ι_library}
-                  $] ||.
- 	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := {}
-                   (* [$
+ 
+     refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := {}
+                   (*  [$
                          {} ⇒ { StateInit_ι_split_depth } ;
                          {} ⇒ { StateInit_ι_special } ;
                          ( #{pair_code} ) -> set () ⇒ {StateInit_ι_code} ;
                          ( !{pair_data_cl} ) -> set () ⇒ {StateInit_ι_data} ;
                          {} ⇒ {StateInit_ι_library}
-                    $] *) ; { _ } }}.
+                    $] *)  ; { _ } }}.
+
  	 	 refine {{ new 'pair_init_cl : XCell @ "pair_init_cl" := {} (* build(pair_init).make_cell() *) ; { _ } }} .
  	 	 refine {{ return_ [ !{pair_init} , {} (* tvm_hash(pair_init_cl) *) ] }} .
 Defined.
-
+ 
 Definition prepare_trading_pair_state_init_and_addr_right {b1 b2} 
-(x0: URValue DTradingPairLRecord b1 ) 
+(x0: URValue TradingPairClassTypes.DTradingPairLRecord b1 ) 
 (x1: URValue XCell b2 ) 
 : URValue (StateInitLRecord # uint256) ( orb false (orb b2 b1) ) :=
    wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_trading_pair_state_init_and_addr x0 x1).    
@@ -250,12 +249,12 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
  Definition deployTradingPair ( tip3_root : ( XAddress ) ) ( deploy_min_value : ( uint128 ) ) 
 ( deploy_value : ( uint128 ) ) ( min_trade_amount : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( int_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} .
- 	 	 refine {{ new 'pair_data : (DTradingPairLRecord ) @ "pair_data" :=  
- 	 	        [$ _flex_ ⇒ { DTradingPair_ι_flex_addr_ } ; 
+ 	 	 refine {{ tvm.accept () ; { _ } }} .  
+ 	 	 refine {{ new 'pair_data : (TradingPairClassTypes.DTradingPairLRecord ) @ "pair_data" := {} 
+ 	 	        (* [$ _flex_ ⇒ { DTradingPair_ι_flex_addr_ } ; 
                (#{ tip3_root }) ⇒ { DTradingPair_ι_tip3_root_ } ; 
                  0 ⇒ { DTradingPair_ι_notify_addr_ }  
-               $] ; { _ } }} . 
+               $]  *); { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
             prepare_trading_pair_state_init_and_addr_ ( !{ pair_data } , _trading_pair_code_ )  ; { _ } }} . 
  	 	 refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} ; { _ } }} . 
@@ -277,12 +276,12 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
  , min_trade_amount custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
-Definition prepare_xchg_pair_state_init_and_addr ( pair_data : DXchgPairLRecord ) 
+Definition prepare_xchg_pair_state_init_and_addr ( pair_data : XchgPairClassTypes.DXchgPairLRecord ) 
                                                     ( pair_code : XCell  ) 
                            : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'pair_data_cl : XCell @ "pair_data_cl" :=  
                       prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} .
- 	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" :=
+ 	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := 
                    [$
                          {} ⇒ { StateInit_ι_split_depth } ;
                          {} ⇒ { StateInit_ι_special } ;
@@ -295,7 +294,7 @@ Definition prepare_xchg_pair_state_init_and_addr ( pair_data : DXchgPairLRecord 
 Defined.
 
 Definition prepare_xchg_pair_state_init_and_addr_right {b1 b2} 
-(x0: URValue DXchgPairLRecord b1 ) 
+(x0: URValue XchgPairClassTypes.DXchgPairLRecord b1 ) 
 (x1: URValue XCell b2 ) 
 : URValue (StateInitLRecord # uint256) ( orb false (orb b2 b1) ) := 
    wrapURExpression (ursus_call_with_args (LedgerableWithArgs:=λ2) prepare_xchg_pair_state_init_and_addr x0 x1).    
@@ -314,7 +313,7 @@ Definition deployXchgPair ( tip3_major_root : ( address_t ) )
                             : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} .
- 	 	 refine {{ new 'pair_data : ( DXchgPairLRecord ) @ "pair_data" :=  
+ 	 	 refine {{ new 'pair_data : ( XchgPairClassTypes.DXchgPairLRecord ) @ "pair_data" :=  
                	 	 [$  (* _flex_  ⇒ { DXchgPair_ι_flex_addr_ } ; *) 
                       (#{ tip3_major_root }) ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
                       (#{ tip3_minor_root }) ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 

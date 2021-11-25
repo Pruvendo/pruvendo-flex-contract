@@ -14,14 +14,12 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
-Require Import Contracts.Price.Ledger.
-Require Import Contracts.Price.Functions.FuncSig.
+Require Import Contracts.RootTokenContract.Ledger.
+Require Import Contracts.RootTokenContract.Functions.FuncSig.
+Require Import Contracts.TONTokenWallet.ClassTypes.
 
 (* здесь инмпортируем все внешние интерфейсы *)
-Require Import Contracts.Price.Interface.
 Require Import Contracts.TONTokenWallet.Interface.
-Require Import Contracts.FlexNotify.Interface.
-Require Import Contracts.PriceCallback.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -29,10 +27,7 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module PricePublicInterface := PublicInterface xt sm.
-Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.PublicInterface xt sm.
-Module FlexNotifyPublicInterface := Contracts.FlexNotify.PublicInterface xt sm.
-Module PriceCallbackPublicInterface := Contracts.PriceCallback.PublicInterface xt sm.
+Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
@@ -44,6 +39,7 @@ Import UrsusNotations.
 
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
+
 
 Notation " 'allowance_info.spender' " := ( allowance_info_ι_spender ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'allowance_info.spender' " := ( allowance_info_ι_spender ) (in custom URValue at level 0) : ursus_scope. 
@@ -221,6 +217,9 @@ Notation " 'allowance_info.spender' " := ( allowance_info_ι_spender ) (in custo
  Notation " 'lend_array_record.lend_finish_time' " := ( lend_array_record_ι_lend_finish_time ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'lend_array_record.lend_finish_time' " := ( lend_array_record_ι_lend_finish_time ) (in custom URValue at level 0) : ursus_scope. 
  
+
+
+ 
 Module Calls (tc : SpecSig).
 
 Export tc.
@@ -229,7 +228,7 @@ Local Open Scope string_scope.
 
 (**************************************************************************************************)
 
- Definition transfer_left { R a1 a2 a3 a4 a5 }  ( answer_addr : URValue ( XAddress ) a1 ) ( to : URValue ( XAddress ) a2 ) ( tokens : URValue ( XInteger128 ) a3 ) ( grams : URValue ( XInteger128 ) a4 ) ( return_ownership : URValue ( XBool ) a5 ) : UExpression R ( orb ( orb ( orb ( orb a5 a4 ) a3 ) a2 ) a1 ) := 
+Definition transfer_left { R a1 a2 a3 a4 a5 }  ( answer_addr : URValue ( XAddress ) a1 ) ( to : URValue ( XAddress ) a2 ) ( tokens : URValue ( XInteger128 ) a3 ) ( grams : URValue ( XInteger128 ) a4 ) ( return_ownership : URValue ( XBool ) a5 ) : UExpression R ( orb ( orb ( orb ( orb a5 a4 ) a3 ) a2 ) a1 ) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) transfer 
  answer_addr to tokens grams return_ownership ) . 
  
@@ -711,6 +710,8 @@ Local Open Scope string_scope.
  root_code root_data ) 
  (in custom URValue at level 0 , root_code custom URValue at level 0 
  , root_data custom URValue at level 0 ) : ursus_scope . 
+
+
 
 
 End Calls. 

@@ -12,15 +12,6 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
-
-Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
-Module Export CommonTypes := Types xt sm.
-
-Local Open Scope xlist_scope.
-Local Open Scope record. 
-Local Open Scope program_scope.
-Local Open Scope glist_scope.
-
 (* 1 *) Inductive allowance_infoFields := | allowance_info_ι_spender | allowance_info_ι_remainingTokens .
 (* 1 *) Inductive lend_recordFields := | lend_record_ι_lend_balance | lend_record_ι_lend_finish_time .
 (* 1 *) Inductive lend_array_recordFields := | lend_array_record_ι_lend_addr | lend_array_record_ι_lend_balance | lend_array_record_ι_lend_finish_time .
@@ -32,6 +23,14 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive DRootTokenContractFields := | DRootTokenContract_ι_name_ | DRootTokenContract_ι_symbol_ | DRootTokenContract_ι_decimals_ | DRootTokenContract_ι_root_public_key_ | DRootTokenContract_ι_total_supply_ | DRootTokenContract_ι_total_granted_ | DRootTokenContract_ι_wallet_code_ | DRootTokenContract_ι_owner_address_ | DRootTokenContract_ι_start_balance_ .
 (* 1 *) Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .
 (* 1 *) Inductive DTONTokenWalletFields := | name_ | symbol_ | decimals_ | balance_ | root_public_key_ | wallet_public_key_ | root_address_ | owner_address_ | code_ | allowance_ | workchain_id_ .
+
+Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
+Module Export CommonTypes := Types xt sm.
+
+Local Open Scope xlist_scope.
+Local Open Scope record. 
+Local Open Scope program_scope.
+Local Open Scope glist_scope.
 
 (* 2 *) Definition allowance_infoL : list Type := 
  [ ( XAddress ) : Type ; 
