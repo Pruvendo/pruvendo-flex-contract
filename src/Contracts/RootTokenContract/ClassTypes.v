@@ -12,7 +12,7 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
-Inductive DRootTokenContractFields := | DRootTokenContract_ι_name_ | DRootTokenContract_ι_name_symbol_ | DRootTokenContract_ι_name_decimals_ | DRootTokenContract_ι_name_root_public_key_ | DRootTokenContract_ι_name_total_supply_ | DRootTokenContract_ι_name_total_granted_ | DRootTokenContract_ι_name_wallet_code_ | DRootTokenContract_ι_name_owner_address_ | DRootTokenContract_ι_name_start_balance_ .
+Inductive DRootTokenContractFields := | DRootTokenContract_ι_name_ | DRootTokenContract_ι_symbol_ | DRootTokenContract_ι_decimals_ | DRootTokenContract_ι_root_public_key_ | DRootTokenContract_ι_total_supply_ | DRootTokenContract_ι_total_granted_ | DRootTokenContract_ι_wallet_code_ | DRootTokenContract_ι_owner_address_ | DRootTokenContract_ι_start_balance_ .
 
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
 Module Export CommonTypes := Types xt sm.
