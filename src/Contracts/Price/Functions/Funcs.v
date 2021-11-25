@@ -35,7 +35,7 @@ Import ha.
 
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
-
+Module Import TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
 (* Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule. *)
 
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
@@ -420,7 +420,7 @@ persistent_data_header base ) .
  (in custom URValue at level 0 , 
    a custom URValue at level 0 
  , b custom URValue at level 0 ) : ursus_scope . 
-
+ 
  Definition prepare_internal_wallet_state_init_and_addr 
 ( name :  ( XString ) ) 
 ( symbol :  ( XString ) )

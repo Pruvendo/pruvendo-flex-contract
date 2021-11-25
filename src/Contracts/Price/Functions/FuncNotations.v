@@ -46,68 +46,68 @@ Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
- Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType price_ ) : ULValue uint128 ) . 
- Definition price__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType price_ ) : URValue uint128 false ) . 
+ Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_price_ ) : ULValue uint128 ) . 
+ Definition price__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_price_ ) : URValue uint128 false ) . 
  Notation " '_price_' " := ( price__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_price_' " := ( price__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition sells_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType sells_amount_ ) : ULValue uint128 ) . 
- Definition sells_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType sells_amount_ ) : URValue uint128 false ) . 
+ Definition sells_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_sells_amount_ ) : ULValue uint128 ) . 
+ Definition sells_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_sells_amount_ ) : URValue uint128 false ) . 
  Notation " '_sells_amount_' " := ( sells_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_sells_amount_' " := ( sells_amount__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition buys_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType buys_amount_ ) : ULValue uint128 ) . 
- Definition buys_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType buys_amount_ ) : URValue uint128 false ) . 
+ Definition buys_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_buys_amount_ ) : ULValue uint128 ) . 
+ Definition buys_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_buys_amount_ ) : URValue uint128 false ) . 
  Notation " '_buys_amount_' " := ( buys_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_buys_amount_' " := ( buys_amount__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition flex__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType flex_ ) : ULValue addr_std_fixedLRecord ) . 
- Definition flex__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType flex_ ) : URValue addr_std_fixedLRecord false ) . 
+ Definition flex__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_flex_ ) : ULValue addr_std_fixedLRecord ) . 
+ Definition flex__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_flex_ ) : URValue addr_std_fixedLRecord false ) . 
  Notation " '_flex_' " := ( flex__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_' " := ( flex__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : ULValue uint128 ) . 
- Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : URValue uint128 false ) . 
+ Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_min_amount_ ) : ULValue uint128 ) . 
+ Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_min_amount_ ) : URValue uint128 false ) . 
  Notation " '_min_amount_' " := ( min_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_min_amount_' " := ( min_amount__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition deals_limit__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType deals_limit_ ) : ULValue uint8 ) . 
- Definition deals_limit__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType deals_limit_ ) : URValue uint8 false ) . 
+ Definition deals_limit__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_deals_limit_ ) : ULValue uint8 ) . 
+ Definition deals_limit__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_deals_limit_ ) : URValue uint8 false ) . 
  Notation " '_deals_limit_' " := ( deals_limit__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_deals_limit_' " := ( deals_limit__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType notify_addr_ ) : ULValue XAddress (* IFlexNotifyPtrLRecord *) ) . 
- Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType notify_addr_ ) : URValue XAddress (* IFlexNotifyPtrLRecord *) false ) . 
+ Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_notify_addr_ ) : ULValue XAddress (* IFlexNotifyPtrLRecord *) ) . 
+ Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_notify_addr_ ) : URValue XAddress (* IFlexNotifyPtrLRecord *) false ) . 
  Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : ULValue uint8 ) . 
- Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : URValue uint8 false ) . 
+ Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_workchain_id_ ) : ULValue uint8 ) . 
+ Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_workchain_id_ ) : URValue uint8 false ) . 
  Notation " '_workchain_id_' " := ( workchain_id__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_workchain_id_' " := ( workchain_id__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition tons_cfg__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType tons_cfg_ ) : ULValue TonsConfigLRecord ) . 
- Definition tons_cfg__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType tons_cfg_ ) : URValue TonsConfigLRecord false ) . 
+ Definition tons_cfg__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_tons_cfg_ ) : ULValue TonsConfigLRecord ) . 
+ Definition tons_cfg__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_tons_cfg_ ) : URValue TonsConfigLRecord false ) . 
  Notation " '_tons_cfg_' " := ( tons_cfg__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_tons_cfg_' " := ( tons_cfg__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition tip3_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType tip3_code_ ) : ULValue XCell ) . 
- Definition tip3_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType tip3_code_ ) : URValue XCell false ) . 
+ Definition tip3_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_tip3_code_ ) : ULValue XCell ) . 
+ Definition tip3_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_tip3_code_ ) : URValue XCell false ) . 
  Notation " '_tip3_code_' " := ( tip3_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_tip3_code_' " := ( tip3_code__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition tip3cfg__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType tip3cfg_ ) : ULValue Tip3ConfigLRecord ) . 
- Definition tip3cfg__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType tip3cfg_ ) : URValue Tip3ConfigLRecord false ) . 
+ Definition tip3cfg__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_tip3cfg_ ) : ULValue Tip3ConfigLRecord ) . 
+ Definition tip3cfg__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_tip3cfg_ ) : URValue Tip3ConfigLRecord false ) . 
  Notation " '_tip3cfg_' " := ( tip3cfg__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_tip3cfg_' " := ( tip3cfg__right ) (in custom URValue at level 0) : ursus_scope. 
 
- Definition sells__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType sells_ ) : ULValue ( XQueue OrderInfoLRecord ) ) . 
- Definition sells__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType sells_ ) : URValue ( XQueue OrderInfoLRecord ) false ) . 
+ Definition sells__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_sells_ ) : ULValue ( XQueue OrderInfoLRecord ) ) . 
+ Definition sells__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_sells_ ) : URValue ( XQueue OrderInfoLRecord ) false ) . 
  Notation " '_sells_' " := ( sells__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_sells_' " := ( sells__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition buys__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType buys_ ) : ULValue ( XQueue OrderInfoLRecord ) ) . 
- Definition buys__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType buys_ ) : URValue ( XQueue OrderInfoLRecord ) false ) . 
+ Definition buys__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_buys_ ) : ULValue ( XQueue OrderInfoLRecord ) ) . 
+ Definition buys__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_buys_ ) : URValue ( XQueue OrderInfoLRecord ) false ) . 
  Notation " '_buys_' " := ( buys__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_buys_' " := ( buys__right ) (in custom URValue at level 0) : ursus_scope. 
 
