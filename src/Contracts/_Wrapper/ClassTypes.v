@@ -27,24 +27,24 @@ Local Open Scope glist_scope.
 (* 1 *) Inductive DWrapperFields := | DWrapper_ι_name_ | DWrapper_ι_symbol_ | DWrapper_ι_decimals_ | DWrapper_ι_workchain_id_ | DWrapper_ι_root_public_key_ | DWrapper_ι_total_granted_ | DWrapper_ι_internal_wallet_code_ | DWrapper_ι_owner_address_ | DWrapper_ι_start_balance_ | DWrapper_ι_external_wallet_  .
 
 (* 2 *) Definition WrapperRetL : list Type := 
- [ ( XInteger32 ) : Type ; 
+ [ ( XUInteger32 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord WrapperRetL WrapperRetFields . 
  Opaque WrapperRetLRecord . 
 
 (* 2 *) Definition FlexDeployWalletArgsL : list Type := 
- [ ( XInteger256 ) : Type ; 
+ [ ( XUInteger256 ) : Type ; 
  ( XAddress ) : Type ; 
- ( XInteger128 ) : Type ] .
+ ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord FlexDeployWalletArgsL FlexDeployWalletArgsFields . 
  Opaque FlexDeployWalletArgsLRecord . 
 
 (* 2 *) Definition wrapper_details_infoL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( XCell ) : Type ; 
  ( XAddress ) : Type ; 
  ( XAddress ) : Type ] .
@@ -54,10 +54,10 @@ Elpi GeneratePruvendoRecord wrapper_details_infoL wrapper_details_infoFields .
 (* 2 *) Definition ContractL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
  ( GramsLRecord ) : Type ; 
