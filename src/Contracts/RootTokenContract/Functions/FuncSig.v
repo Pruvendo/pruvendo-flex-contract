@@ -37,19 +37,6 @@ Parameter constructor : ( ( XString ) ) -> ( ( XString ) ) -> ( ( XUInteger8 ) )
  Parameter hasWalletCode : UExpression XBool false . 
  Parameter getWalletCode : UExpression XCell false . 
  Parameter getWalletAddress : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XAddress false . 
-<<<<<<< HEAD
- Parameter _on_bounced : ( ( (LRecord ) ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
- Parameter getWalletCodeHash : UExpression XUInteger256 false . 
- Parameter _fallback : XCell -> XSlice -> UExpression XUInteger false . 
- Parameter optional_owner : ( ( XAddress ) ) -> UExpression XMaybe XAddress false . 
- Parameter workchain_id : UExpression XUInteger8 false . 
- Parameter calc_wallet_init : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord * XAddress ) false . 
- Parameter is_internal_owner : UExpression XBool false . 
- Parameter check_internal_owner : UExpression PhantomType true . 
- Parameter check_external_owner : ( ( XBool ) ) -> UExpression PhantomType true . 
- Parameter check_owner : ( ( =LRecord ) ) -> UExpression PhantomType false . 
- Parameter prepare_root_state_init_and_addr : ( ( XCell ) ) -> ( ( DRootTokenContractLRecord ) ) -> UExpression ( StateInitLRecord * XUInteger256 ) false . 
-=======
  Parameter _on_bounced : ( XCell ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
  Parameter getWalletCodeHash : UExpression XUInteger256 false . 
  Parameter _fallback : XCell -> XSlice -> UExpression XUInteger false . 
@@ -61,7 +48,6 @@ Parameter constructor : ( ( XString ) ) -> ( ( XString ) ) -> ( ( XUInteger8 ) )
  Parameter check_external_owner : ( ( XBool ) ) -> UExpression PhantomType true . 
  Parameter check_owner : ( XBool ) -> UExpression PhantomType false . 
  Parameter prepare_root_state_init_and_addr : ( ( XCell ) ) -> ( ( DRootTokenContractLRecord ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false . 
->>>>>>> 20938538b25997563003ad830140e7ac55c0ea33
 
 
 End SpecSig.
