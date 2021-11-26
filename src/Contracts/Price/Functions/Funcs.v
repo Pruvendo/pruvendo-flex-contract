@@ -201,9 +201,9 @@ Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
  Notation " 'extract_active_order_' '(' cur_order ',' orders ',' all_amount ',' sell ')' " := 
  ( extract_active_order_right 
  cur_order orders all_amount sell ) 
- (in custom URValue at level 0 , cur_order custom URValue at level 0 
- , orders custom URValue at level 0 
- , all_amount custom URValue at level 0 
+ (in custom URValue at level 0 , cur_order custom ULValue at level 0 
+ , orders custom ULValue at level 0 
+ , all_amount custom ULValue at level 0 
  , sell custom URValue at level 0 ) : ursus_scope .
  
 Definition process_queue 
@@ -215,7 +215,7 @@ Definition process_queue
  	 	 refine {{ new 'deals_count : ( uint ) @ "deals_count" := 0 ; { _ } }} . 
  	 	 refine {{ while ( TRUE ) do { { _ : UEf} } ; { _ } }} . 
  	 	 	 refine {{ [ {sell_opt} , _sells_ , _sells_amount_ ] := 
-             extract_active_order_ ( {sell_opt} , {} (* _sells_ *) , _sells_amount_ , TRUE ) ; { _ } }} . 
+             extract_active_order_ ( {sell_opt} ,  _sells_ , _sells_amount_ , TRUE ) ; { _ } }} . 
  	 	 	 refine {{ [ {buy_opt} , _buys_ , _buys_amount_ ] := 
              extract_active_order_ ( !{buy_opt} , _buys_ , _buys_amount_ , FALSE ) ; { _ } }} . 
  	 	 	 refine {{ if ( (~ (!{ sell_opt })) \\ (~ (!{ buy_opt })) ) 

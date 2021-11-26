@@ -13,7 +13,6 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 Require Import Project.CommonTypes.
 
 (* 1 *) 
-(* 1 *) Inductive DWrapperFields := | DWrapper_ι_name_ | DWrapper_ι_symbol_ | DWrapper_ι_decimals_ | DWrapper_ι_workchain_id_ | DWrapper_ι_root_public_key_ | DWrapper_ι_total_granted_ | DWrapper_ι_internal_wallet_code_ | DWrapper_ι_owner_address_ | DWrapper_ι_start_balance_ | DWrapper_ι_external_wallet_ .
 (* 1 *) Inductive ListingConfigFields := | ListingConfig_ι_register_wrapper_cost | ListingConfig_ι_reject_wrapper_cost | ListingConfig_ι_wrapper_deploy_value | ListingConfig_ι_wrapper_keep_balance | ListingConfig_ι_ext_wallet_balance | ListingConfig_ι_set_internal_wallet_value | ListingConfig_ι_register_pair_cost | ListingConfig_ι_reject_pair_cost | ListingConfig_ι_pair_deploy_value | ListingConfig_ι_pair_keep_balance | ListingConfig_ι_register_return_value .
 (* 1 *) Inductive WrapperListingRequestFields := | WrapperListingRequest_ι_client_addr | WrapperListingRequest_ι_client_funds | WrapperListingRequest_ι_tip3cfg .
 (* 1 *) Inductive WrapperListingRequestWithPubkeyFields := | WrapperListingRequestWithPubkey_ι_wrapper_pubkey | WrapperListingRequestWithPubkey_ι_request .
@@ -52,19 +51,6 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-(* 2 *) Definition DWrapperL : list Type := 
- [ ( XString ) : Type ; 
- ( XString ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( XUInteger256 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XAddress ) ) : Type ; 
- ( Grams ) : Type ; 
- ( ( XMaybe XAddress (* ITONTokenWalletPtrLRecord *) ) ) : Type ] .
-Elpi GeneratePruvendoRecord DWrapperL DWrapperFields . 
- Opaque DWrapperLRecord . 
 
 (* 2 *) Definition ListingConfigL : list Type := 
  [ ( XUInteger128 ) : Type ; 

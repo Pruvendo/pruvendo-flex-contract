@@ -205,43 +205,6 @@ Definition StateInit_ι_library_left (x: ULValue StateInitLRecord): ULValue ( XM
 Notation " a '↑' 'StateInit.library' " := ( StateInit_ι_library_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'StateInit.library' " := ( StateInit_ι_library_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition allowance_info_ι_spender_right {b} (x: URValue allowance_infoLRecord b): URValue XAddress b :=
-    || {x} ^^ {allowance_info_ι_spender} || : _.
-    
-Definition allowance_info_ι_spender_left (x: ULValue allowance_infoLRecord): ULValue XAddress :=
-    {{ {x} ^^ {allowance_info_ι_spender} }} : _.
-    
-Notation " a '↑' 'allowance_info.spender' " := ( allowance_info_ι_spender_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'allowance_info.spender' " := ( allowance_info_ι_spender_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition allowance_info_ι_remainingTokens_right {b} (x: URValue allowance_infoLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {allowance_info_ι_remainingTokens} || : _.
-    
-Definition allowance_info_ι_remainingTokens_left (x: ULValue allowance_infoLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {allowance_info_ι_remainingTokens} }} : _.
-    
-Notation " a '↑' 'allowance_info.remainingTokens' " := ( allowance_info_ι_remainingTokens_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'allowance_info.remainingTokens' " := ( allowance_info_ι_remainingTokens_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition lend_record_ι_lend_balance_right {b} (x: URValue lend_recordLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {lend_record_ι_lend_balance} || : _.
-    
-Definition lend_record_ι_lend_balance_left (x: ULValue lend_recordLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {lend_record_ι_lend_balance} }} : _.
-    
-Notation " a '↑' 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition lend_record_ι_lend_finish_time_right {b} (x: URValue lend_recordLRecord b): URValue XUInteger32 b :=
-    || {x} ^^ {lend_record_ι_lend_finish_time} || : _.
-    
-Definition lend_record_ι_lend_finish_time_left (x: ULValue lend_recordLRecord): ULValue XUInteger32 :=
-    {{ {x} ^^ {lend_record_ι_lend_finish_time} }} : _.
-    
-Notation " a '↑' 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_finish_time_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_finish_time_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-
 
 Definition PayloadArgs_sell_right {b} (x: URValue PayloadArgsLRecord b): URValue XBool b :=
     || {x} ^^ {PayloadArgs_ι_sell} || : _ .
@@ -277,64 +240,7 @@ Notation " a '↑' 'PayloadArgs.receive_tip3_wallet' " := ( PayloadArgs_receive_
 Notation " a '↑' 'PayloadArgs.client_addr' " := ( PayloadArgs_client_addr_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'PayloadArgs.client_addr' " := ( PayloadArgs_client_addr_left a ) (in custom ULValue at level 0) : ursus_scope.   
 
-Definition OrderInfoXchg_original_amount_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {OrderInfoXchg_ι_original_amount} || : _ .
 
-Definition OrderInfoXchg_amount_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {OrderInfoXchg_ι_amount} || : _ .
-
-Definition OrderInfoXchg_account_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {OrderInfoXchg_ι_account} || : _ .
-
-Definition OrderInfoXchg_tip3_wallet_provide_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixedLRecord b :=
-    || {x} ^^ {OrderInfoXchg_ι_tip3_wallet_provide} || : _ .  
-
-Definition OrderInfoXchg_tip3_wallet_receive_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixedLRecord b :=
-    || {x} ^^ {OrderInfoXchg_ι_tip3_wallet_receive} || : _ .
-
-Definition OrderInfoXchg_client_addr_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixedLRecord b :=
-    || {x} ^^ {OrderInfoXchg_ι_client_addr} || : _ .
-
-Definition OrderInfoXchg_order_finish_time_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger32 b :=
-    || {x} ^^ {OrderInfoXchg_ι_order_finish_time} || : _ .  
-
-Definition OrderInfoXchg_original_amount_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {OrderInfoXchg_ι_original_amount} }} : _ .
-
-Definition OrderInfoXchg_amount_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {OrderInfoXchg_ι_amount} }} : _ .
-
-Definition OrderInfoXchg_account_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {OrderInfoXchg_ι_account} }} : _ .
-
-Definition OrderInfoXchg_tip3_wallet_provide_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixedLRecord :=
-    {{ {x} ^^ {OrderInfoXchg_ι_tip3_wallet_provide} }} : _ .  
-
-Definition OrderInfoXchg_tip3_wallet_receive_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixedLRecord :=
-    {{ {x} ^^ {OrderInfoXchg_ι_tip3_wallet_receive} }} : _ .
-
-Definition OrderInfoXchg_client_addr_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixedLRecord :=
-    {{ {x} ^^ {OrderInfoXchg_ι_client_addr} }} : _ .
-
-Definition OrderInfoXchg_order_finish_time_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger32 :=
-    {{ {x} ^^ {OrderInfoXchg_ι_order_finish_time} }} : _ .     
-
- 
- Notation "  a '↑' 'OrderInfoXchg.original_amount' " := ( OrderInfoXchg_original_amount_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.original_amount' " := ( OrderInfoXchg_original_amount_right a) (in custom URValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.amount' " := ( OrderInfoXchg_amount_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.amount' " := ( OrderInfoXchg_amount_right a) (in custom URValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.account' " := ( OrderInfoXchg_account_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.account' " := ( OrderInfoXchg_account_right a) (in custom URValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.tip3_wallet_provide' " := ( OrderInfoXchg_tip3_wallet_provide_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.tip3_wallet_provide' " := ( OrderInfoXchg_tip3_wallet_provide_right a) (in custom URValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.tip3_wallet_receive' " := ( OrderInfoXchg_tip3_wallet_receive_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.tip3_wallet_receive' " := ( OrderInfoXchg_tip3_wallet_receive_right a) (in custom URValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.client_addr' " := ( OrderInfoXchg_client_addr_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.client_addr' " := ( OrderInfoXchg_client_addr_right a) (in custom URValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.order_finish_time' " := ( OrderInfoXchg_order_finish_time_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation "  a '↑' 'OrderInfoXchg.order_finish_time' " := ( OrderInfoXchg_order_finish_time_right a) (in custom URValue at level 0) : ursus_scope. 
- 
  Definition OrderRet_err_code_right {b} (x: URValue OrderRetLRecord b): URValue XUInteger32 b :=
     || {x} ^^ {OrderRet_ι_err_code} || : _ .
 
@@ -359,43 +265,6 @@ Definition OrderRet_enqueued_left  (x: ULValue OrderRetLRecord): ULValue XUInteg
  Notation " a '↑' 'OrderRet.processed' " := ( OrderRet_processed_right a) (in custom URValue at level 0) : ursus_scope. 
  Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_left a) (in custom ULValue at level 0) : ursus_scope. 
  Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_right a) (in custom URValue at level 0) : ursus_scope. 
-
- Definition OrderInfo_amount_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
-	|| {x} ^^ {OrderInfo_ι_amount} || : _.
-	
-Definition OrderInfo_amount_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfo_ι_amount} }} : _.
-	
-Notation " a '↑' 'OrderInfo.amount' " := ( OrderInfo_amount_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfo.amount' " := ( OrderInfo_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
-	
-Definition OrderInfo_account_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfo_ι_account} || : _.
-
-Definition OrderInfo_account_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfo_ι_account} }} : _.
-
-Notation " a '↑' 'OrderInfo.account' " := ( OrderInfo_account_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfo.account' " := ( OrderInfo_account_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-
-Definition OrderInfo_order_finish_time_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfo_ι_order_finish_time} || : _.
-
-Definition OrderInfo_order_finish_time_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfo_ι_order_finish_time} }} : _.
-
-Notation " a '↑' 'OrderInfo.order_finish_time' " := ( OrderInfo_order_finish_time_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfo.order_finish_time' " := ( OrderInfo_order_finish_time_left a ) (in custom ULValue at level 0) : ursus_scope.
-	
-Definition OrderInfo_original_amount_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfo_ι_original_amount} || : _.
-
-Definition OrderInfo_original_amount_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfo_ι_original_amount} }} : _.
-
-Notation " a '↑' 'OrderInfo.original_amount' " := ( OrderInfo_original_amount_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfo.original_amount' " := ( OrderInfo_original_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 Definition process_ret_sells_amount_right {b} (x: URValue process_retLRecord b): URValue XUInteger128 b :=
     || {x} ^^ {process_ret_ι_sells_amount} || : _ .
@@ -438,6 +307,24 @@ Notation " a '↑' 'process_ret.buys_' " := ( process_ret_buys__right a) (in cus
 Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__left a) (in custom ULValue at level 0) : ursus_scope. 
 Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__right a) (in custom URValue at level 0) : ursus_scope. 
  
+Definition RationalPrice_num_right {b} (x: URValue RationalPriceLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {RationalPrice_ι_num} || : _ .
+
+Definition RationalPrice_denum_right {b} (x: URValue RationalPriceLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {RationalPrice_ι_denum} || : _ .
+    
+Definition RationalPrice_num_left (x: ULValue RationalPriceLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {RationalPrice_ι_num} }} : _ .
+
+Definition RationalPrice_denum_left (x: ULValue RationalPriceLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {RationalPrice_ι_denum} }} : _ .    
+
+
+Notation " a '↑' 'RationalPrice.num' " := ( RationalPrice_num_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'RationalPrice.num' " := ( RationalPrice_num_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'RationalPrice.denum' " := ( RationalPrice_denum_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'RationalPrice.denum' " := ( RationalPrice_denum_left a ) (in custom ULValue at level 0) : ursus_scope.
+
 
 End CommonNotations.
 
