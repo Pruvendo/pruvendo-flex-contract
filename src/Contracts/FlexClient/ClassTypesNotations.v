@@ -97,22 +97,22 @@ Notation " a '↑' 'DFlexClient.flex_wrapper_code_' " := ( DFlexClient_ι_flex_w
 Notation " a '↑' 'DFlexClient.flex_wrapper_code_' " := ( DFlexClient_ι_flex_wrapper_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
 
-Definition SellArgs_ι_amount _right {b} (x: URValue SellArgsLRecord b): URValue ( XMaybe XCell ) b :=
+Definition SellArgs_ι_amount_right {b} (x: URValue SellArgsLRecord b): URValue ( XMaybe XCell ) b :=
     || {x} ^^ {SellArgs_ι_amount} || : _.
     
 Definition SellArgs_ι_amount _left (x: ULValue SellArgsLRecord): ULValue ( XMaybe XCell ) :=
     {{ {x} ^^ {SellArgs_ι_amount} }} : _.
     
-Notation " a '↑' 'SellArgs.amount' " := ( SellArgs_ι_amount _right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'SellArgs.amount' " := ( SellArgs_ι_amount_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'SellArgs.amount' " := ( SellArgs_ι_amount _left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition SellArgs_ι_receive_wallet _right {b} (x: URValue SellArgsLRecord b): URValue ( XMaybe XCell ) b :=
+Definition SellArgs_ι_receive_wallet_right {b} (x: URValue SellArgsLRecord b): URValue ( XMaybe XCell ) b :=
     || {x} ^^ {SellArgs_ι_receive_wallet} || : _.
     
 Definition SellArgs_ι_receive_wallet _left (x: ULValue SellArgsLRecord): ULValue ( XMaybe XCell ) :=
     {{ {x} ^^ {SellArgs_ι_receive_wallet} }} : _.
     
-Notation " a '↑' 'SellArgs.receive_wallet' " := ( SellArgs_ι_receive_wallet _right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'SellArgs.receive_wallet' " := ( SellArgs_ι_receive_wallet_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'SellArgs.receive_wallet' " := ( SellArgs_ι_receive_wallet _left a ) (in custom ULValue at level 0) : ursus_scope.
 
 End ClassTypesNotations.
