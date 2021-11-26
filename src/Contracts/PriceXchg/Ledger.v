@@ -33,7 +33,8 @@ Module PriceXchgPublicInterfaceModule := PublicInterface xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
 Module Export TypesModuleForLedger := ClassTypes xt sm .
 Import xt.
-
+Require Contracts.TONTokenWallet.ClassTypes.
+Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
 Local Open Scope ursus_scope.
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
@@ -177,7 +178,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState11001LRecord . 
  
  Inductive LocalStateFields11010I := | ι110100 | ι110101 . 
- Definition LocalState11010L := [ ( XHMap (string*nat) DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState11010L := [ ( XHMap (string*nat) TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState11010L LocalStateFields11010I . 
  Opaque LocalState11010LRecord . 
  
@@ -917,7 +918,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField11001 : typeclass_instances. 
- #[global, program] Instance LocalStateField11010 : LocalStateField DTONTokenWalletInternalLRecord.
+ #[global, program] Instance LocalStateField11010 : LocalStateField TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι11). 
@@ -952,7 +953,7 @@ Proof.
                first [reflexivity| contradiction]).
 Qed .
 
-Lemma SelfDeployerFields_noeq : forall (f1 f2:  ContractFields ) 
+(* Lemma SelfDeployerFields_noeq : forall (f1 f2:  ContractFields ) 
          (v2: field_type f2) (r :  ContractLRecord  ) ,  
 f1 <> f2 -> 
 f1 {$$ r with f2 := v2 $$} = f1 r.
@@ -963,7 +964,7 @@ Proof.
                apply (countable_prop_proof (T:= ContractLRecord ));
                cbv;
                first [reflexivity| contradiction]).
-Qed .
+Qed . *)
 
 (* Lemma LocalFields_noeq : forall (f1 f2:  LocalFieldsI ) 
          (v2: field_type f2) (r :  LocalStateLRecord  ) ,  
@@ -992,31 +993,6 @@ Proof.
 Qed .
 
 End Ledger .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

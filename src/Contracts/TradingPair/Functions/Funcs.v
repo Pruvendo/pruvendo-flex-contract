@@ -66,24 +66,19 @@ Notation " |{ e }| " := e (in custom URValue at level 0,
 
 (**************************************************************************)
 
-Parameter int_value__ : URValue uint false .
-Notation " 'int_value' '(' ')' " := 
- ( int_value__ ) 
- (in custom URValue at level 0 ) : ursus_scope .
- 
 Parameter set_int_return_flag : UExpression XBool false .
 Notation " 'set_int_return_flag_' '(' ')' " := 
  ( set_int_return_flag ) 
  (in custom ULValue at level 0 ) : ursus_scope .
 
 Definition onDeploy ( min_amount : ( uint128 ) ) ( deploy_value : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression XBool true . 
- 	 	 refine {{ require_ ( ( int_value ( ) ) > #{ deploy_value }  , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( int_value () ) > #{ deploy_value }  , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
  	 	 refine {{ require_ ( ~ 1 (* _min_amount_ *) , 1 (* error_code::double_deploy *) ) ; { _ } }} .
 
  	 	 refine {{ require_ ( ( #{ min_amount } ) > 0 , 1 (* error_code::zero_min_amount *) ) ; { _ } }} . 
  	 	 refine {{ _min_amount_ := (#{ min_amount }) ; { _ } }} . 
  	 	 refine {{ _notify_addr_ := (#{ notify_addr }) ; { _ } }} . 
-(*  	 	 refine {{ tvm.rawreserve ( #{deploy_value} ) , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .  *)
+  	 	 refine {{ tvm.rawreserve ( #{deploy_value} , 1 ) ; (* (* rawreserve_flag::up_to *) ) ; *) { _ } }} .  
  	 	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
  	 	 refine {{ return_ TRUE }} .
 Defined.
@@ -139,7 +134,7 @@ Definition prepare_trading_pair_state_init_and_addr
                        (!{pair_data_cl}) -> set () , {} ] ; { _ } }} . 
  	 	 refine {{ new 'pair_init_cl : ( XCell ) @ "pair_init_cl" := {} ; { _ } }} . 
  	 	 refine {{ { pair_init_cl } := {} (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
- 	 	 refine {{ return_ [ !{ pair_init } , {} (* tvm.hash ( !{pair_sinit_cl} ) *) ] }} . 
+ 	 	 refine {{ return_ [ !{ pair_init } , tvm.hash ( !{pair_init_cl} ) ] }} . 
  Defined . 
 
 End FuncsInternal.
