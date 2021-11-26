@@ -73,7 +73,7 @@ Notation " 'set_int_return_flag_' '(' ')' " :=
 
 Definition onDeploy ( min_amount : ( uint128 ) ) ( deploy_value : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression XBool true . 
  	 	 refine {{ require_ ( ( int_value () ) > #{ deploy_value }  , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ~ 1 (* _min_amount_ *) , 1 (* error_code::double_deploy *) ) ; { _ } }} .
+ 	 	 refine {{ require_ ( ~  _min_amount_  , 1 (* error_code::double_deploy *) ) ; { _ } }} .
 
  	 	 refine {{ require_ ( ( #{ min_amount } ) > 0 , 1 (* error_code::zero_min_amount *) ) ; { _ } }} . 
  	 	 refine {{ _min_amount_ := (#{ min_amount }) ; { _ } }} . 
