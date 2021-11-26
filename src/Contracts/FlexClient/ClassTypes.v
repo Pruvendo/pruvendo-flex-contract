@@ -12,7 +12,7 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
-(* 1 *) Inductive SellArgsFields := | SellArgs_ι_amount | SellArgs_ι_receive_wallet .
+(* MOVE TO PRICE *) Inductive SellArgsFields := | SellArgs_ι_amount | SellArgs_ι_receive_wallet .
 (* 1 *) Inductive DFlexClientFields := | DFlexClient_ι_owner_ | DFlexClient_ι_trading_pair_code_ | DFlexClient_ι_xchg_pair_code_ | DFlexClient_ι_workchain_id_ | DFlexClient_ι_tons_cfg_ | DFlexClient_ι_flex_ | DFlexClient_ι_ext_wallet_code_ | DFlexClient_ι_flex_wallet_code_ | DFlexClient_ι_flex_wrapper_code_ .
 
 

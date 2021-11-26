@@ -23,23 +23,23 @@ Require Import Project.CommonTypes.
 (* 1 *) Inductive FlexOwnershipInfoFields := | FlexOwnershipInfo_ι_deployer_pubkey | FlexOwnershipInfo_ι_ownership_description | FlexOwnershipInfo_ι_owner_contract .
 (* 1 *) Inductive FlexDetailsFields := | FlexDetails_ι_initialized | FlexDetails_ι_tons_cfg | FlexDetails_ι_listing_cfg | FlexDetails_ι_trading_pair_code | FlexDetails_ι_xchg_pair_code | FlexDetails_ι_deals_limit | FlexDetails_ι_ownership | FlexDetails_ι_wrapper_listing_requests | FlexDetails_ι_trading_pair_listing_requests | FlexDetails_ι_xchg_pair_listing_requests .
 (* 1 *) Inductive DFlexFields := 
-| deployer_pubkey_ 
-| workchain_id_ 
-| ownership_description_ 
-| owner_address_ 
-| tons_cfg_ 
-| listing_cfg_ 
-| pair_code_ 
-| xchg_pair_code_ 
-| price_code_ 
-| xchg_price_code_ 
-| ext_wallet_code_ 
-| flex_wallet_code_ 
-| wrapper_code_ 
-| deals_limit_ 
-| wrapper_listing_requests_
-| trading_pair_listing_requests_
-| xchg_pair_listing_requests_ .
+| DFlex_ι_deployer_pubkey_ 
+| DFlex_ι_workchain_id_ 
+| DFlex_ι_ownership_description_ 
+| DFlex_ι_owner_address_ 
+| DFlex_ι_tons_cfg_ 
+| DFlex_ι_listing_cfg_ 
+| DFlex_ι_pair_code_ 
+| DFlex_ι_xchg_pair_code_ 
+| DFlex_ι_price_code_ 
+| DFlex_ι_xchg_price_code_ 
+| DFlex_ι_ext_wallet_code_ 
+| DFlex_ι_flex_wallet_code_ 
+| DFlex_ι_wrapper_code_ 
+| DFlex_ι_deals_limit_ 
+| DFlex_ι_wrapper_listing_requests_
+| DFlex_ι_trading_pair_listing_requests_
+| DFlex_ι_xchg_pair_listing_requests_ .
 
 
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
