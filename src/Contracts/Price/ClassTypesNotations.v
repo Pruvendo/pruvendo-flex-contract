@@ -4,9 +4,7 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
-Require Import Contracts.Price.ClassTypes.
-(* Require Import Contracts.Price.Ledger. *)
-
+Require Import Price.ClassTypes.
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
@@ -14,9 +12,6 @@ Module Export ClassTypesModule := ClassTypes xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
-
-(*OrderInfo*)
-
 
 (********************************************************************)
 (*dealer*)
@@ -83,6 +78,9 @@ Definition OrderInfo_amount_right {b} (x: URValue OrderInfoLRecord b): URValue X
 	
 Definition OrderInfo_amount_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
 {{ {x} ^^ {OrderInfo_ι_amount} }} : _.
+
+(**************************************************************************************************************)
+(*OrderInfo*)
 	
 Notation " a '↑' 'OrderInfo.amount' " := ( OrderInfo_amount_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'OrderInfo.amount' " := ( OrderInfo_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
@@ -95,7 +93,6 @@ Definition OrderInfo_account_left (x: ULValue OrderInfoLRecord): ULValue XUInteg
 
 Notation " a '↑' 'OrderInfo.account' " := ( OrderInfo_account_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'OrderInfo.account' " := ( OrderInfo_account_left a ) (in custom ULValue at level 0) : ursus_scope.
-
 
 Definition OrderInfo_order_finish_time_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
 || {x} ^^ {OrderInfo_ι_order_finish_time} || : _.
@@ -115,6 +112,9 @@ Definition OrderInfo_original_amount_left (x: ULValue OrderInfoLRecord): ULValue
 Notation " a '↑' 'OrderInfo.original_amount' " := ( OrderInfo_original_amount_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'OrderInfo.original_amount' " := ( OrderInfo_original_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
 
+
+(**************************************************************************************************************)
+(*process_ret*)
 
 Definition process_ret_sells_amount_right {b} (x: URValue process_retLRecord b): URValue XUInteger128 b :=
     || {x} ^^ {process_ret_ι_sells_amount} || : _ .

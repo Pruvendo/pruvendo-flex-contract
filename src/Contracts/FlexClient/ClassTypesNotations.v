@@ -4,8 +4,8 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
-Require Import Contracts.FlexClient.ClassTypes.
-Require Import Contracts.FlexClient.Ledger.
+Require Import FlexClient.ClassTypes.
+Require Import FlexClient.Ledger.
 
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
@@ -95,25 +95,6 @@ Definition DFlexClient_ι_flex_wrapper_code__left (x: ULValue DFlexClientLRecord
     
 Notation " a '↑' 'DFlexClient.flex_wrapper_code_' " := ( DFlexClient_ι_flex_wrapper_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlexClient.flex_wrapper_code_' " := ( DFlexClient_ι_flex_wrapper_code__left a ) (in custom ULValue at level 0) : ursus_scope.
-
-
-Definition SellArgs_ι_amount_right {b} (x: URValue SellArgsLRecord b): URValue ( XMaybe XCell ) b :=
-    || {x} ^^ {SellArgs_ι_amount} || : _.
-    
-Definition SellArgs_ι_amount _left (x: ULValue SellArgsLRecord): ULValue ( XMaybe XCell ) :=
-    {{ {x} ^^ {SellArgs_ι_amount} }} : _.
-    
-Notation " a '↑' 'SellArgs.amount' " := ( SellArgs_ι_amount_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'SellArgs.amount' " := ( SellArgs_ι_amount _left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition SellArgs_ι_receive_wallet_right {b} (x: URValue SellArgsLRecord b): URValue ( XMaybe XCell ) b :=
-    || {x} ^^ {SellArgs_ι_receive_wallet} || : _.
-    
-Definition SellArgs_ι_receive_wallet _left (x: ULValue SellArgsLRecord): ULValue ( XMaybe XCell ) :=
-    {{ {x} ^^ {SellArgs_ι_receive_wallet} }} : _.
-    
-Notation " a '↑' 'SellArgs.receive_wallet' " := ( SellArgs_ι_receive_wallet_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'SellArgs.receive_wallet' " := ( SellArgs_ι_receive_wallet _left a ) (in custom ULValue at level 0) : ursus_scope.
 
 End ClassTypesNotations.
 

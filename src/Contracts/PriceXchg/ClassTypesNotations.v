@@ -15,11 +15,8 @@ Module Export ClassTypesModule := Contracts.PriceXchg.ClassTypes.ClassTypes xt s
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 
-
-
 (**********************************************************************************************************************)
 (* DetailsInfoXchg *)
-
 
 Definition DetailsInfoXchg_price_num_right {b} (x: URValue DetailsInfoXchgLRecord b): URValue XUInteger128 b :=
     || {x} ^^ {DetailsInfoXchg_ι_price_num} || : _ .
