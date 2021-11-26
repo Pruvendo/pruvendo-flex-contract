@@ -428,7 +428,7 @@ persistent_data_header base ) .
               [ {} , {} , (#{code}) -> set () , (!{wallet_data_cl}) -> set () , {} ] ; { _ } }} . 
  	 	 refine {{ new 'wallet_init_cl : ( XCell ) @ "wallet_init_cl" := {}  
  	 	            (*  build ( !{ wallet_init } ) . make_cell ( ) *) ; { _ } }} . 
- 	 	 refine {{ return_ [ !{ wallet_init } , tvm.hash ( !{wallet_init_cl} ) ] }} . 
+ 	 	 refine {{ return_ [ !{ wallet_init } , tvm_hash ( !{wallet_init_cl} ) ] }} . 
  Defined . 
 
  Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( XAddress ) a6 ) ( owner_address : URValue ( XMaybe XAddress ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( uint8 ) a9 ) : URValue ( StateInitLRecord * uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
@@ -957,7 +957,7 @@ Definition prepare_price_xchg_state_init_and_addr
               (!{price_data_cl}) -> set () , {} ] ; { _ } }} . 
  	 	 refine {{ new 'price_init_cl : ( XCell ) @ "price_init_cl" := {} ; { _ } }} . 
  	 	 refine {{ {price_init_cl} := {} (* build ( !{ price_init } ) . make_cell ( ) *) ; { _ } }} . 
- 	 	 refine {{ return_ [ !{price_init} , tvm.hash ( !{price_init_cl} ) ] }} . 
+ 	 	 refine {{ return_ [ !{price_init} , tvm_hash ( !{price_init_cl} ) ] }} . 
  Defined . 
 
 Definition getDetails : UExpression DetailsInfoXchgLRecord false . 

@@ -43,8 +43,8 @@ Opaque MessagesAndEventsLRecord .
 Definition ContractLRecord := DTONTokenWalletLRecord .
 Definition ContractLEmbeddedType := DTONTokenWalletLEmbeddedType.
 
-Inductive LedgerFields := | Ledger_ι_Contract | Ledger_ι_ContractCopy | Ledger_ι_VMState | Ledger_ι_MessagesAndEvents | Ledger_ι_MessagesAndEventsCopy | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
-
+(* Inductive LedgerFields := | Ledger_ι_Contract | Ledger_ι_ContractCopy | Ledger_ι_VMState | Ledger_ι_MessagesAndEvents | Ledger_ι_MessagesAndEventsCopy | Ledger_ι_LocalState | Ledger_ι_LocalStateCopy .
+ *)
 Inductive LocalStateFields00000I := | ι000000 | ι000001 . 
 Definition LocalState00000L := [ ( XHMap (string*nat) ContractLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState00000L LocalStateFields00000I . 
@@ -353,7 +353,20 @@ Transparent LedgerLRecord .
 (***************************************)
 Definition LedgerEmbedded := LedgerLEmbeddedType.
 Definition LedgerLocalState := LocalStateLRecord .
-Definition LocalDefault : LedgerLocalState -> LedgerLocalState := fun _ => default.
+
+Unset Typeclasses Iterative Deepening.
+Set Typeclasses Depth 100.
+
+Definition def11100 := xxprod_default: XDefault LocalState11100LRecord.
+Existing Instance def11100.
+Definition def11 := xxprod_default: XDefault LocalState11LRecord.
+Existing Instance def11.
+Definition def1 := xxprod_default: XDefault LocalState1LRecord.
+Existing Instance def1.
+Definition defLocal := xxprod_default: XDefault LedgerLocalState.
+Existing Instance defLocal.
+
+Definition LocalDefault : LedgerLocalState -> LedgerLocalState := fun _ => default .
 Definition LedgerPruvendoRecord := LedgerLPruvendoRecord . 
 Definition LedgerLocalFields := LocalStateFieldsI.
 Definition Ledger_LocalState := _LocalState.
@@ -613,7 +626,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01001 : typeclass_instances. 
- #[global, program] Instance LocalStateField01010 : LocalStateField IWrapperPtrLRecord.
+ #[global, program] Instance LocalStateField01010 : LocalStateField XAddress(* IWrapperPtrLRecord *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -653,7 +666,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01011 : typeclass_instances. 
- #[global, program] Instance LocalStateField01100 : LocalStateField auto.
+ #[global, program] Instance LocalStateField01100 : LocalStateField XUInteger(* auto *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -773,7 +786,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10001 : typeclass_instances. 
- #[global, program] Instance LocalStateField10010 : LocalStateField ITONTokenWalletPtrLRecord.
+ #[global, program] Instance LocalStateField10010 : LocalStateField XAddress(* ITONTokenWalletPtrLRecord *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι10). 

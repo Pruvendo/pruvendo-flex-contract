@@ -328,7 +328,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  Definition getWalletCodeHash : UExpression XUInteger256 FALSE . 
- 	 	 	 refine {{ return uint256 { __builtin_tvm.hashcu ( _wallet_code_ . get () ) } }} . 
+ 	 	 	 refine {{ return uint256 { __builtin_tvm_hashcu ( _wallet_code_ . get () ) } }} . 
  Defined . 
  
  
@@ -410,7 +410,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  	 	 	 [ {} , {} , (#{ root_code }) , (!{ root_data_cl }) , {} ] ; _ }} . 
  	 	 refine {{ new 'root_init_cl : ( XCell ) @ "root_init_cl" := {} ; _ }} . 
  	 	 refine {{ { root_init_cl } := build ( (!{ root_init }) ) . make_cell () ; _ }} . 
- 	 	 refine {{ return_ [ (!{ root_init }) , tvm.hash ( (!{ root_init_cl }) ) ] }} . 
+ 	 	 refine {{ return_ [ (!{ root_init }) , tvm_hash ( (!{ root_init_cl }) ) ] }} . 
  Defined . 
  
  

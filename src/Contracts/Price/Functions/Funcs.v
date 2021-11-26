@@ -994,7 +994,7 @@ Definition prepare_price_state_init_and_addr ( price_data : ( DPriceLRecord ) ) 
 						(!{price_data_cl}) -> set () , {} ] ; { _ } }} . 
 		refine {{ new 'price_init_cl : ( XCell ) @ "price_init_cl" := {}
 				(*  build ( !{ price_init } ) . make_cell ( ) *) ; { _ } }} . 
-		refine {{ return_ [ !{ price_init } , {} (* tvm.hash ( !{price_init_cl} ) *) ] }} . 
+		refine {{ return_ [ !{ price_init } , {} (* tvm_hash ( !{price_init_cl} ) *) ] }} . 
 Defined . 
  
 End FuncsInternal.
