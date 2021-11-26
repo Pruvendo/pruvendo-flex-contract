@@ -1,13 +1,7 @@
+Require Import FinProof.ProgrammingWith. 
+
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
-
-Require Import UrsusStdLib.Cpp.stdFunc.
-Require Import UrsusStdLib.Cpp.stdNotations.
-Require Import UrsusStdLib.Cpp.stdFuncNotations.
-
-Require Import UrsusTVM.Cpp.tvmFunc.
-Require Import UrsusTVM.Cpp.tvmNotations.
-Require Import FinProof.ProgrammingWith.  
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.

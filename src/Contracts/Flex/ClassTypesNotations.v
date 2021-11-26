@@ -214,10 +214,10 @@ Notation " a '↑' 'TradingPairListingRequestWithPubkey.wrapper_pubkey' " := ( T
 Notation " a '↑' 'TradingPairListingRequestWithPubkey.wrapper_pubkey' " := ( TradingPairListingRequestWithPubkey_ι_wrapper_pubkey_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 Definition TradingPairListingRequestWithPubkey_ι_request_right {b} (x: URValue TradingPairListingRequestWithPubkeyLRecord b): URValue TradingPairListingRequestLRecord b :=
-    || {x} ^^ {DXchgPair_ι_flex_addr_} || : _.
+    || {x} ^^ {TradingPairListingRequestWithPubkey_ι_request} || : _.
     
 Definition TradingPairListingRequestWithPubkey_ι_request_left (x: ULValue TradingPairListingRequestWithPubkeyLRecord): ULValue TradingPairListingRequestLRecord :=
-    {{ {x} ^^ {DXchgPair_ι_flex_addr_} }} : _.
+    {{ {x} ^^ {TradingPairListingRequestWithPubkey_ι_request} }} : _.
     
 Notation " a '↑' 'TradingPairListingRequestWithPubkey.request' " := ( TradingPairListingRequestWithPubkey_ι_request_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'TradingPairListingRequestWithPubkey.request' " := ( TradingPairListingRequestWithPubkey_ι_request_left a ) (in custom ULValue at level 0) : ursus_scope.

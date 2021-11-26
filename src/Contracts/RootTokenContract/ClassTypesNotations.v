@@ -4,13 +4,12 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
-Require Import Contracts.RootTokenContract.ClassTypes.
-Require Import Contracts.RootTokenContract.Ledger.
-
+Require Import RootTokenContract.ClassTypes.
+Require Import RootTokenContract.Ledger.
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
-Module Export ClassTypesModule := Contracts.RootTokenContract.ClassTypes.ClassTypes xt sm.
+Module Export ClassTypesModule := RootTokenContract.ClassTypes.ClassTypes xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -96,9 +95,6 @@ Definition DRootTokenContract_ι_start_balance__left (x: ULValue DRootTokenContr
     
 Notation " a '↑' 'DRootTokenContract.start_balance_' " := ( DRootTokenContract_ι_start_balance__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DRootTokenContract.start_balance_' " := ( DRootTokenContract_ι_start_balance__left a ) (in custom ULValue at level 0) : ursus_scope.
-
-
-
 
 
 End ClassTypesNotations.

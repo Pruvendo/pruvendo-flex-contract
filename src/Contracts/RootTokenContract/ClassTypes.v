@@ -1,13 +1,7 @@
+Require Import FinProof.ProgrammingWith. 
+
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
-
-Require Import UrsusStdLib.Cpp.stdFunc.
-Require Import UrsusStdLib.Cpp.stdNotations.
-Require Import UrsusStdLib.Cpp.stdFuncNotations.
-
-Require Import UrsusTVM.Cpp.tvmFunc.
-Require Import UrsusTVM.Cpp.tvmNotations.
-Require Import FinProof.ProgrammingWith.  
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
@@ -22,7 +16,7 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-(* 2 *) Definition DRootTokenContractL : list Type := 
+Definition DRootTokenContractL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
  ( XUInteger8 ) : Type ; 
@@ -33,7 +27,6 @@ Local Open Scope glist_scope.
  ( ( XMaybe XAddress ) ) : Type ; 
  ( XUInteger (* Grams *) ) : Type ] .
 Elpi GeneratePruvendoRecord DRootTokenContractL DRootTokenContractFields . 
- Opaque DRootTokenContractLRecord . 
 
 End ClassTypes .
  

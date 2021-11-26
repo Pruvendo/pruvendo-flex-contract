@@ -1,26 +1,28 @@
- Require Import Coq.Program.Basics. 
-
+Require Import Coq.Program.Basics. 
 Require Import String. 
+
 Require Import FinProof.Types.IsoTypes. 
 Require Import FinProof.Common. 
 Require Import FinProof.MonadTransformers21. 
-
 Require Import FinProof.ProgrammingWith.  
+
 Require Import UMLang.UrsusLib. 
 Require Import UMLang.BasicModuleTypes. 
+Require Import UMLang.GlobalClassGenerator.ClassGenerator.
+
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require Import Project.CommonTypes. 
-Require Import Contracts.PriceXchg.ClassTypes.
-Require Import Contracts.PriceXchg.Interface.
-Require Import UMLang.GlobalClassGenerator.ClassGenerator.
+Require Import PriceXchg.ClassTypes.
+Require Import PriceXchg.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
-(* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
+(* TONTokenWallet, *)
+Inductive MessagesAndEventsFields := | _OutgoingMessages_PriceXchg | _EmittedEvents | _MessagesLog.
+Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 Definition ContractFields := DPriceXchgFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
@@ -35,289 +37,281 @@ Require Contracts.TONTokenWallet.ClassTypes.
 Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
 Local Open Scope ursus_scope.
 
-(* 2 *) Definition MessagesAndEventsL : list Type := 
+Definition MessagesAndEventsL : list Type := 
  [ ( XQueue PriceXchgPublicInterfaceModule.OutgoingMessage ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
-  Opaque MessagesAndEventsLRecord .
+Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractLRecord := DPriceXchgLRecord .
- Definition ContractLEmbeddedType := DPriceXchgLEmbeddedType.
+Definition ContractLRecord := DPriceXchgLRecord .
+Definition ContractLEmbeddedType := DPriceXchgLEmbeddedType.
 
 Inductive LocalStateFields00000I := | ι000000 | ι000001 . 
- Definition LocalState00000L := [ ( XHMap (string*nat) ( StateInitLRecord * XUInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState00000L LocalStateFields00000I . 
- Opaque LocalState00000LRecord . 
- 
- Inductive LocalStateFields00001I := | ι000010 | ι000011 . 
- Definition LocalState00001L := [ ( XHMap (string*nat) XCell ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState00001L LocalStateFields00001I . 
- Opaque LocalState00001LRecord . 
- 
- Inductive LocalStateFields00010I := | ι000100 | ι000101 . 
- Definition LocalState00010L := [ ( XHMap (string*nat) StateInitLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState00010L LocalStateFields00010I . 
- Opaque LocalState00010LRecord . 
- 
- Inductive LocalStateFields00011I := | ι000110 | ι000111 . 
- Definition LocalState00011L := [ ( XHMap (string*nat) XBool ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState00011L LocalStateFields00011I . 
- Opaque LocalState00011LRecord . 
- 
- Inductive LocalStateFields00100I := | ι001000 | ι001001 . 
- Definition LocalState00100L := [ ( XHMap (string*nat) ( XMaybe XUInteger128 ) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState00100L LocalStateFields00100I . 
- Opaque LocalState00100LRecord . 
- 
- Inductive LocalStateFields00101I := | ι001010 | ι001011 . 
- Definition LocalState00101L := [ ( XHMap (string*nat) XUInteger ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState00101L LocalStateFields00101I . 
- Opaque LocalState00101LRecord . 
- 
- Inductive LocalStateFields00110I := | ι001100 | ι001101 . 
- Definition LocalState00110L := [ ( XHMap (string*nat) ( XBool * XBool * XUInteger128 ) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState00110L LocalStateFields00110I . 
- Opaque LocalState00110LRecord . 
- 
- Inductive LocalStateFields00111I := | ι001110 | ι001111 . 
- Definition LocalState00111L := [ ( XHMap (string*nat) XUInteger128 ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState00111L LocalStateFields00111I . 
- Opaque LocalState00111LRecord . 
- 
- Inductive LocalStateFields01000I := | ι010000 | ι010001 . 
- Definition LocalState01000L := [ ( XHMap (string*nat) ( XUInteger * OrderInfoXchgLRecord ) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState01000L LocalStateFields01000I . 
- Opaque LocalState01000LRecord . 
- 
- Inductive LocalStateFields01001I := | ι010010 | ι010011 . 
- Definition LocalState01001L := [ ( XHMap (string*nat) OrderRetLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState01001L LocalStateFields01001I . 
- Opaque LocalState01001LRecord . 
- 
- Inductive LocalStateFields01010I := | ι010100 | ι010101 . 
- Definition LocalState01010L := [ ( XHMap (string*nat) process_retLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState01010L LocalStateFields01010I . 
- Opaque LocalState01010LRecord . 
- 
- Inductive LocalStateFields01011I := | ι010110 | ι010111 . 
- Definition LocalState01011L := [ ( XHMap (string*nat) dealerLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState01011L LocalStateFields01011I . 
- Opaque LocalState01011LRecord . 
- 
- Inductive LocalStateFields01100I := | ι011000 | ι011001 . 
- Definition LocalState01100L := [ ( XHMap (string*nat) ( XAddress * XUInteger (* Grams *) ) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState01100L LocalStateFields01100I . 
- Opaque LocalState01100LRecord . 
- 
- Inductive LocalStateFields01101I := | ι011010 | ι011011 . 
- Definition LocalState01101L := [ ( XHMap (string*nat) XAddress ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState01101L LocalStateFields01101I . 
- Opaque LocalState01101LRecord . 
- 
- Inductive LocalStateFields01110I := | ι011100 | ι011101 . 
- Definition LocalState01110L := [ ( XHMap (string*nat) (XMaybe OrderRetLRecord) (* XAddress *) (* ITONTokenWalletPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState01110L LocalStateFields01110I . 
- Opaque LocalState01110LRecord . 
- 
- Inductive LocalStateFields01111I := | ι011110 | ι011111 . 
- Definition LocalState01111L := [ ( XHMap (string*nat) (XQueue OrderInfoXchgLRecord) (* XUInteger *) (* Grams *) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState01111L LocalStateFields01111I . 
- Opaque LocalState01111LRecord . 
- 
- Inductive LocalStateFields10000I := | ι100000 | ι100001 . 
- Definition LocalState10000L := [ ( XHMap (string*nat) OrderInfoXchgLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10000L LocalStateFields10000I . 
- Opaque LocalState10000LRecord . 
- 
- Inductive LocalStateFields10001I := | ι100010 | ι100011 . 
- Definition LocalState10001L := [ ( XHMap (string*nat) addr_std_fixedLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10001L LocalStateFields10001I . 
- Opaque LocalState10001LRecord . 
- 
- Inductive LocalStateFields10010I := | ι100100 | ι100101 . 
- Definition LocalState10010L := [ ( XHMap (string*nat) DetailsInfoXchgLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10010L LocalStateFields10010I . 
- Opaque LocalState10010LRecord . 
- 
- Inductive LocalStateFields10011I := | ι100110 | ι100111 . 
- Definition LocalState10011L := [ ( XHMap (string*nat) TonsConfigLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10011L LocalStateFields10011I . 
- Opaque LocalState10011LRecord . 
- 
- Inductive LocalStateFields10100I := | ι101000 | ι101001 . 
- Definition LocalState10100L := [ ( XHMap (string*nat) ( XHMap XUInteger OrderInfoXchgLRecord ) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10100L LocalStateFields10100I . 
- Opaque LocalState10100LRecord . 
- 
- Inductive LocalStateFields10101I := | ι101010 | ι101011 . 
- Definition LocalState10101L := [ ( XHMap (string*nat) XUInteger ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10101L LocalStateFields10101I . 
- Opaque LocalState10101LRecord . 
- 
- Inductive LocalStateFields10110I := | ι101100 | ι101101 . 
- Definition LocalState10110L := [ ( XHMap (string*nat) XUInteger256 ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10110L LocalStateFields10110I . 
- Opaque LocalState10110LRecord . 
- 
- Inductive LocalStateFields10111I := | ι101110 | ι101111 . 
- Definition LocalState10111L := [ ( XHMap (string*nat) ( XMaybe XAddress ) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState10111L LocalStateFields10111I . 
- Opaque LocalState10111LRecord . 
- 
- Inductive LocalStateFields11000I := | ι110000 | ι110001 .
- Definition LocalState11000L := [ ( XHMap (string*nat) ( XMaybe (XUInteger # OrderInfoXchgLRecord) ) ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState11000L LocalStateFields11000I . 
- Opaque LocalState11000LRecord . 
- 
- Inductive LocalStateFields11001I := | ι110010 | ι110011 . 
- Definition LocalState11001L := [ ( XHMap (string*nat) PayloadArgsLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState11001L LocalStateFields11001I . 
- Opaque LocalState11001LRecord . 
- 
- Inductive LocalStateFields11010I := | ι110100 | ι110101 . 
- Definition LocalState11010L := [ ( XHMap (string*nat) TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
- GeneratePruvendoRecord LocalState11010L LocalStateFields11010I . 
- Opaque LocalState11010LRecord . 
- 
- 
- Inductive LocalStateFields0000I := | ι00000 | ι00001 . 
- Definition LocalState0000L := [ LocalState00000LRecord ; LocalState00001LRecord ] . 
- GeneratePruvendoRecord LocalState0000L LocalStateFields0000I . 
- Opaque LocalState0000LRecord . 
- 
- Inductive LocalStateFields0001I := | ι00010 | ι00011 . 
- Definition LocalState0001L := [ LocalState00010LRecord ; LocalState00011LRecord ] . 
- GeneratePruvendoRecord LocalState0001L LocalStateFields0001I . 
- Opaque LocalState0001LRecord . 
- 
- Inductive LocalStateFields0010I := | ι00100 | ι00101 . 
- Definition LocalState0010L := [ LocalState00100LRecord ; LocalState00101LRecord ] . 
- GeneratePruvendoRecord LocalState0010L LocalStateFields0010I . 
- Opaque LocalState0010LRecord . 
- 
- Inductive LocalStateFields0011I := | ι00110 | ι00111 . 
- Definition LocalState0011L := [ LocalState00110LRecord ; LocalState00111LRecord ] . 
- GeneratePruvendoRecord LocalState0011L LocalStateFields0011I . 
- Opaque LocalState0011LRecord . 
- 
- Inductive LocalStateFields0100I := | ι01000 | ι01001 . 
- Definition LocalState0100L := [ LocalState01000LRecord ; LocalState01001LRecord ] . 
- GeneratePruvendoRecord LocalState0100L LocalStateFields0100I . 
- Opaque LocalState0100LRecord . 
- 
- Inductive LocalStateFields0101I := | ι01010 | ι01011 . 
- Definition LocalState0101L := [ LocalState01010LRecord ; LocalState01011LRecord ] . 
- GeneratePruvendoRecord LocalState0101L LocalStateFields0101I . 
- Opaque LocalState0101LRecord . 
- 
- Inductive LocalStateFields0110I := | ι01100 | ι01101 . 
- Definition LocalState0110L := [ LocalState01100LRecord ; LocalState01101LRecord ] . 
- GeneratePruvendoRecord LocalState0110L LocalStateFields0110I . 
- Opaque LocalState0110LRecord . 
- 
- Inductive LocalStateFields0111I := | ι01110 | ι01111 . 
- Definition LocalState0111L := [ LocalState01110LRecord ; LocalState01111LRecord ] . 
- GeneratePruvendoRecord LocalState0111L LocalStateFields0111I . 
- Opaque LocalState0111LRecord . 
- 
- Inductive LocalStateFields1000I := | ι10000 | ι10001 . 
- Definition LocalState1000L := [ LocalState10000LRecord ; LocalState10001LRecord ] . 
- GeneratePruvendoRecord LocalState1000L LocalStateFields1000I . 
- Opaque LocalState1000LRecord . 
- 
- Inductive LocalStateFields1001I := | ι10010 | ι10011 . 
- Definition LocalState1001L := [ LocalState10010LRecord ; LocalState10011LRecord ] . 
- GeneratePruvendoRecord LocalState1001L LocalStateFields1001I . 
- Opaque LocalState1001LRecord . 
- 
- Inductive LocalStateFields1010I := | ι10100 | ι10101 . 
- Definition LocalState1010L := [ LocalState10100LRecord ; LocalState10101LRecord ] . 
- GeneratePruvendoRecord LocalState1010L LocalStateFields1010I . 
- Opaque LocalState1010LRecord . 
- 
- Inductive LocalStateFields1011I := | ι10110 | ι10111 . 
- Definition LocalState1011L := [ LocalState10110LRecord ; LocalState10111LRecord ] . 
- GeneratePruvendoRecord LocalState1011L LocalStateFields1011I . 
- Opaque LocalState1011LRecord . 
- 
- Inductive LocalStateFields1100I := | ι11000 | ι11001 . 
- Definition LocalState1100L := [ LocalState11000LRecord ; LocalState11001LRecord ] . 
- GeneratePruvendoRecord LocalState1100L LocalStateFields1100I . 
- Opaque LocalState1100LRecord . 
- 
- 
- 
- Inductive LocalStateFields000I := | ι0000 | ι0001 . 
- Definition LocalState000L := [ LocalState0000LRecord ; LocalState0001LRecord ] . 
- GeneratePruvendoRecord LocalState000L LocalStateFields000I . 
- Opaque LocalState000LRecord . 
- 
- Inductive LocalStateFields001I := | ι0010 | ι0011 . 
- Definition LocalState001L := [ LocalState0010LRecord ; LocalState0011LRecord ] . 
- GeneratePruvendoRecord LocalState001L LocalStateFields001I . 
- Opaque LocalState001LRecord . 
- 
- Inductive LocalStateFields010I := | ι0100 | ι0101 . 
- Definition LocalState010L := [ LocalState0100LRecord ; LocalState0101LRecord ] . 
- GeneratePruvendoRecord LocalState010L LocalStateFields010I . 
- Opaque LocalState010LRecord . 
- 
- Inductive LocalStateFields011I := | ι0110 | ι0111 . 
- Definition LocalState011L := [ LocalState0110LRecord ; LocalState0111LRecord ] . 
- GeneratePruvendoRecord LocalState011L LocalStateFields011I . 
- Opaque LocalState011LRecord . 
- 
- Inductive LocalStateFields100I := | ι1000 | ι1001 . 
- Definition LocalState100L := [ LocalState1000LRecord ; LocalState1001LRecord ] . 
- GeneratePruvendoRecord LocalState100L LocalStateFields100I . 
- Opaque LocalState100LRecord . 
- 
- Inductive LocalStateFields101I := | ι1010 | ι1011 . 
- Definition LocalState101L := [ LocalState1010LRecord ; LocalState1011LRecord ] . 
- GeneratePruvendoRecord LocalState101L LocalStateFields101I . 
- Opaque LocalState101LRecord . 
- 
- Inductive LocalStateFields110I := | ι1100 | ι1101 . 
- Definition LocalState110L := [ LocalState1100LRecord ; LocalState11010LRecord ] . 
- GeneratePruvendoRecord LocalState110L LocalStateFields110I . 
- Opaque LocalState110LRecord . 
- 
- 
- 
- Inductive LocalStateFields00I := | ι000 | ι001 . 
- Definition LocalState00L := [ LocalState000LRecord ; LocalState001LRecord ] . 
- GeneratePruvendoRecord LocalState00L LocalStateFields00I . 
- Opaque LocalState00LRecord . 
- 
- Inductive LocalStateFields01I := | ι010 | ι011 . 
- Definition LocalState01L := [ LocalState010LRecord ; LocalState011LRecord ] . 
- GeneratePruvendoRecord LocalState01L LocalStateFields01I . 
- Opaque LocalState01LRecord . 
- 
- Inductive LocalStateFields10I := | ι100 | ι101 . 
- Definition LocalState10L := [ LocalState100LRecord ; LocalState101LRecord ] . 
- GeneratePruvendoRecord LocalState10L LocalStateFields10I . 
- Opaque LocalState10LRecord . 
- 
- 
- 
- Inductive LocalStateFields0I := | ι00 | ι01 . 
- Definition LocalState0L := [ LocalState00LRecord ; LocalState01LRecord ] . 
- GeneratePruvendoRecord LocalState0L LocalStateFields0I . 
- Opaque LocalState0LRecord . 
- 
- Inductive LocalStateFields1I := | ι10 | ι11 . 
- Definition LocalState1L := [ LocalState10LRecord ; LocalState110LRecord ] . 
- GeneratePruvendoRecord LocalState1L LocalStateFields1I . 
- Opaque LocalState1LRecord . 
- 
- 
- 
- Inductive LocalStateFieldsI := | ι0 | ι1 . 
- Definition LocalStateL := [ LocalState0LRecord ; LocalState1LRecord ] . 
- GeneratePruvendoRecord LocalStateL LocalStateFieldsI . 
- Opaque LocalStateLRecord . 
+Definition LocalState00000L := [ ( XHMap (string*nat) ( StateInitLRecord * XUInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState00000L LocalStateFields00000I . 
+Opaque LocalState00000LRecord . 
+
+Inductive LocalStateFields00001I := | ι000010 | ι000011 . 
+Definition LocalState00001L := [ ( XHMap (string*nat) XCell ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState00001L LocalStateFields00001I . 
+Opaque LocalState00001LRecord . 
+
+Inductive LocalStateFields00010I := | ι000100 | ι000101 . 
+Definition LocalState00010L := [ ( XHMap (string*nat) StateInitLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState00010L LocalStateFields00010I . 
+Opaque LocalState00010LRecord . 
+
+Inductive LocalStateFields00011I := | ι000110 | ι000111 . 
+Definition LocalState00011L := [ ( XHMap (string*nat) XBool ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState00011L LocalStateFields00011I . 
+Opaque LocalState00011LRecord . 
+
+Inductive LocalStateFields00100I := | ι001000 | ι001001 . 
+Definition LocalState00100L := [ ( XHMap (string*nat) ( XMaybe XUInteger128 ) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState00100L LocalStateFields00100I . 
+Opaque LocalState00100LRecord . 
+
+Inductive LocalStateFields00101I := | ι001010 | ι001011 . 
+Definition LocalState00101L := [ ( XHMap (string*nat) XUInteger ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState00101L LocalStateFields00101I . 
+Opaque LocalState00101LRecord . 
+
+Inductive LocalStateFields00110I := | ι001100 | ι001101 . 
+Definition LocalState00110L := [ ( XHMap (string*nat) ( XBool * XBool * XUInteger128 ) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState00110L LocalStateFields00110I . 
+Opaque LocalState00110LRecord . 
+
+Inductive LocalStateFields00111I := | ι001110 | ι001111 . 
+Definition LocalState00111L := [ ( XHMap (string*nat) XUInteger128 ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState00111L LocalStateFields00111I . 
+Opaque LocalState00111LRecord . 
+
+Inductive LocalStateFields01000I := | ι010000 | ι010001 . 
+Definition LocalState01000L := [ ( XHMap (string*nat) ( XUInteger * OrderInfoXchgLRecord ) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState01000L LocalStateFields01000I . 
+Opaque LocalState01000LRecord . 
+
+Inductive LocalStateFields01001I := | ι010010 | ι010011 . 
+Definition LocalState01001L := [ ( XHMap (string*nat) OrderRetLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState01001L LocalStateFields01001I . 
+Opaque LocalState01001LRecord . 
+
+Inductive LocalStateFields01010I := | ι010100 | ι010101 . 
+Definition LocalState01010L := [ ( XHMap (string*nat) process_retLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState01010L LocalStateFields01010I . 
+Opaque LocalState01010LRecord . 
+
+Inductive LocalStateFields01011I := | ι010110 | ι010111 . 
+Definition LocalState01011L := [ ( XHMap (string*nat) dealerLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState01011L LocalStateFields01011I . 
+Opaque LocalState01011LRecord . 
+
+Inductive LocalStateFields01100I := | ι011000 | ι011001 . 
+Definition LocalState01100L := [ ( XHMap (string*nat) ( XAddress * XUInteger (* Grams *) ) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState01100L LocalStateFields01100I . 
+Opaque LocalState01100LRecord . 
+
+Inductive LocalStateFields01101I := | ι011010 | ι011011 . 
+Definition LocalState01101L := [ ( XHMap (string*nat) XAddress ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState01101L LocalStateFields01101I . 
+Opaque LocalState01101LRecord . 
+
+Inductive LocalStateFields01110I := | ι011100 | ι011101 . 
+Definition LocalState01110L := [ ( XHMap (string*nat) (XMaybe OrderRetLRecord) (* XAddress *) (* ITONTokenWalletPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState01110L LocalStateFields01110I . 
+Opaque LocalState01110LRecord . 
+
+Inductive LocalStateFields01111I := | ι011110 | ι011111 . 
+Definition LocalState01111L := [ ( XHMap (string*nat) (XQueue OrderInfoXchgLRecord) (* XUInteger *) (* Grams *) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState01111L LocalStateFields01111I . 
+Opaque LocalState01111LRecord . 
+
+Inductive LocalStateFields10000I := | ι100000 | ι100001 . 
+Definition LocalState10000L := [ ( XHMap (string*nat) OrderInfoXchgLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState10000L LocalStateFields10000I . 
+Opaque LocalState10000LRecord . 
+
+Inductive LocalStateFields10001I := | ι100010 | ι100011 . 
+Definition LocalState10001L := [ ( XHMap (string*nat) addr_std_fixedLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState10001L LocalStateFields10001I . 
+Opaque LocalState10001LRecord . 
+
+Inductive LocalStateFields10010I := | ι100100 | ι100101 . 
+Definition LocalState10010L := [ ( XHMap (string*nat) DetailsInfoXchgLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState10010L LocalStateFields10010I . 
+Opaque LocalState10010LRecord . 
+
+Inductive LocalStateFields10011I := | ι100110 | ι100111 . 
+Definition LocalState10011L := [ ( XHMap (string*nat) TonsConfigLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState10011L LocalStateFields10011I . 
+Opaque LocalState10011LRecord . 
+
+Inductive LocalStateFields10100I := | ι101000 | ι101001 . 
+Definition LocalState10100L := [ ( XHMap (string*nat) ( XHMap XUInteger OrderInfoXchgLRecord ) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState10100L LocalStateFields10100I . 
+Opaque LocalState10100LRecord . 
+
+Inductive LocalStateFields10101I := | ι101010 | ι101011 . 
+Definition LocalState10101L := [ ( XHMap (string*nat) XUInteger ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState10101L LocalStateFields10101I . 
+Opaque LocalState10101LRecord . 
+
+Inductive LocalStateFields10110I := | ι101100 | ι101101 . 
+Definition LocalState10110L := [ ( XHMap (string*nat) XUInteger256 ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState10110L LocalStateFields10110I . 
+Opaque LocalState10110LRecord . 
+
+Inductive LocalStateFields10111I := | ι101110 | ι101111 . 
+Definition LocalState10111L := [ ( XHMap (string*nat) ( XMaybe XAddress ) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState10111L LocalStateFields10111I . 
+Opaque LocalState10111LRecord . 
+
+Inductive LocalStateFields11000I := | ι110000 | ι110001 .
+Definition LocalState11000L := [ ( XHMap (string*nat) ( XMaybe (XUInteger # OrderInfoXchgLRecord) ) ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState11000L LocalStateFields11000I . 
+Opaque LocalState11000LRecord . 
+
+Inductive LocalStateFields11001I := | ι110010 | ι110011 . 
+Definition LocalState11001L := [ ( XHMap (string*nat) PayloadArgsLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState11001L LocalStateFields11001I . 
+Opaque LocalState11001LRecord . 
+
+Inductive LocalStateFields11010I := | ι110100 | ι110101 . 
+Definition LocalState11010L := [ ( XHMap (string*nat) TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+GeneratePruvendoRecord LocalState11010L LocalStateFields11010I . 
+Opaque LocalState11010LRecord . 
+
+Inductive LocalStateFields0000I := | ι00000 | ι00001 . 
+Definition LocalState0000L := [ LocalState00000LRecord ; LocalState00001LRecord ] . 
+GeneratePruvendoRecord LocalState0000L LocalStateFields0000I . 
+Opaque LocalState0000LRecord . 
+
+Inductive LocalStateFields0001I := | ι00010 | ι00011 . 
+Definition LocalState0001L := [ LocalState00010LRecord ; LocalState00011LRecord ] . 
+GeneratePruvendoRecord LocalState0001L LocalStateFields0001I . 
+Opaque LocalState0001LRecord . 
+
+Inductive LocalStateFields0010I := | ι00100 | ι00101 . 
+Definition LocalState0010L := [ LocalState00100LRecord ; LocalState00101LRecord ] . 
+GeneratePruvendoRecord LocalState0010L LocalStateFields0010I . 
+Opaque LocalState0010LRecord . 
+
+Inductive LocalStateFields0011I := | ι00110 | ι00111 . 
+Definition LocalState0011L := [ LocalState00110LRecord ; LocalState00111LRecord ] . 
+GeneratePruvendoRecord LocalState0011L LocalStateFields0011I . 
+Opaque LocalState0011LRecord . 
+
+Inductive LocalStateFields0100I := | ι01000 | ι01001 . 
+Definition LocalState0100L := [ LocalState01000LRecord ; LocalState01001LRecord ] . 
+GeneratePruvendoRecord LocalState0100L LocalStateFields0100I . 
+Opaque LocalState0100LRecord . 
+
+Inductive LocalStateFields0101I := | ι01010 | ι01011 . 
+Definition LocalState0101L := [ LocalState01010LRecord ; LocalState01011LRecord ] . 
+GeneratePruvendoRecord LocalState0101L LocalStateFields0101I . 
+Opaque LocalState0101LRecord . 
+
+Inductive LocalStateFields0110I := | ι01100 | ι01101 . 
+Definition LocalState0110L := [ LocalState01100LRecord ; LocalState01101LRecord ] . 
+GeneratePruvendoRecord LocalState0110L LocalStateFields0110I . 
+Opaque LocalState0110LRecord . 
+
+Inductive LocalStateFields0111I := | ι01110 | ι01111 . 
+Definition LocalState0111L := [ LocalState01110LRecord ; LocalState01111LRecord ] . 
+GeneratePruvendoRecord LocalState0111L LocalStateFields0111I . 
+Opaque LocalState0111LRecord . 
+
+Inductive LocalStateFields1000I := | ι10000 | ι10001 . 
+Definition LocalState1000L := [ LocalState10000LRecord ; LocalState10001LRecord ] . 
+GeneratePruvendoRecord LocalState1000L LocalStateFields1000I . 
+Opaque LocalState1000LRecord . 
+
+Inductive LocalStateFields1001I := | ι10010 | ι10011 . 
+Definition LocalState1001L := [ LocalState10010LRecord ; LocalState10011LRecord ] . 
+GeneratePruvendoRecord LocalState1001L LocalStateFields1001I . 
+Opaque LocalState1001LRecord . 
+
+Inductive LocalStateFields1010I := | ι10100 | ι10101 . 
+Definition LocalState1010L := [ LocalState10100LRecord ; LocalState10101LRecord ] . 
+GeneratePruvendoRecord LocalState1010L LocalStateFields1010I . 
+Opaque LocalState1010LRecord . 
+
+Inductive LocalStateFields1011I := | ι10110 | ι10111 . 
+Definition LocalState1011L := [ LocalState10110LRecord ; LocalState10111LRecord ] . 
+GeneratePruvendoRecord LocalState1011L LocalStateFields1011I . 
+Opaque LocalState1011LRecord . 
+
+Inductive LocalStateFields1100I := | ι11000 | ι11001 . 
+Definition LocalState1100L := [ LocalState11000LRecord ; LocalState11001LRecord ] . 
+GeneratePruvendoRecord LocalState1100L LocalStateFields1100I . 
+Opaque LocalState1100LRecord . 
+
+Inductive LocalStateFields000I := | ι0000 | ι0001 . 
+Definition LocalState000L := [ LocalState0000LRecord ; LocalState0001LRecord ] . 
+GeneratePruvendoRecord LocalState000L LocalStateFields000I . 
+Opaque LocalState000LRecord . 
+
+Inductive LocalStateFields001I := | ι0010 | ι0011 . 
+Definition LocalState001L := [ LocalState0010LRecord ; LocalState0011LRecord ] . 
+GeneratePruvendoRecord LocalState001L LocalStateFields001I . 
+Opaque LocalState001LRecord . 
+
+Inductive LocalStateFields010I := | ι0100 | ι0101 . 
+Definition LocalState010L := [ LocalState0100LRecord ; LocalState0101LRecord ] . 
+GeneratePruvendoRecord LocalState010L LocalStateFields010I . 
+Opaque LocalState010LRecord . 
+
+Inductive LocalStateFields011I := | ι0110 | ι0111 . 
+Definition LocalState011L := [ LocalState0110LRecord ; LocalState0111LRecord ] . 
+GeneratePruvendoRecord LocalState011L LocalStateFields011I . 
+Opaque LocalState011LRecord . 
+
+Inductive LocalStateFields100I := | ι1000 | ι1001 . 
+Definition LocalState100L := [ LocalState1000LRecord ; LocalState1001LRecord ] . 
+GeneratePruvendoRecord LocalState100L LocalStateFields100I . 
+Opaque LocalState100LRecord . 
+
+Inductive LocalStateFields101I := | ι1010 | ι1011 . 
+Definition LocalState101L := [ LocalState1010LRecord ; LocalState1011LRecord ] . 
+GeneratePruvendoRecord LocalState101L LocalStateFields101I . 
+Opaque LocalState101LRecord . 
+
+Inductive LocalStateFields110I := | ι1100 | ι1101 . 
+Definition LocalState110L := [ LocalState1100LRecord ; LocalState11010LRecord ] . 
+GeneratePruvendoRecord LocalState110L LocalStateFields110I . 
+Opaque LocalState110LRecord . 
+
+
+Inductive LocalStateFields00I := | ι000 | ι001 . 
+Definition LocalState00L := [ LocalState000LRecord ; LocalState001LRecord ] . 
+GeneratePruvendoRecord LocalState00L LocalStateFields00I . 
+Opaque LocalState00LRecord . 
+
+Inductive LocalStateFields01I := | ι010 | ι011 . 
+Definition LocalState01L := [ LocalState010LRecord ; LocalState011LRecord ] . 
+GeneratePruvendoRecord LocalState01L LocalStateFields01I . 
+Opaque LocalState01LRecord . 
+
+Inductive LocalStateFields10I := | ι100 | ι101 . 
+Definition LocalState10L := [ LocalState100LRecord ; LocalState101LRecord ] . 
+GeneratePruvendoRecord LocalState10L LocalStateFields10I . 
+Opaque LocalState10LRecord . 
+
+Inductive LocalStateFields0I := | ι00 | ι01 . 
+Definition LocalState0L := [ LocalState00LRecord ; LocalState01LRecord ] . 
+GeneratePruvendoRecord LocalState0L LocalStateFields0I . 
+Opaque LocalState0LRecord . 
+
+Inductive LocalStateFields1I := | ι10 | ι11 . 
+Definition LocalState1L := [ LocalState10LRecord ; LocalState110LRecord ] . 
+GeneratePruvendoRecord LocalState1L LocalStateFields1I . 
+Opaque LocalState1LRecord . 
+
+Inductive LocalStateFieldsI := | ι0 | ι1 . 
+Definition LocalStateL := [ LocalState0LRecord ; LocalState1LRecord ] . 
+GeneratePruvendoRecord LocalStateL LocalStateFieldsI . 
+Opaque LocalStateLRecord . 
  
 
 (* 2 *) Definition LedgerL : list Type := 
@@ -393,7 +387,7 @@ Definition isoMessages : MessagesAndEvents = (field_type (PruvendoRecord:=Ledger
 Definition Ledger_MainState := _Contract .
 Definition Ledger_MainStateCopy := _ContractCopy.
 
-Definition  VMState_IsCommittedEmbedded := VMStateLEmbeddedType VMState_ι_IsCommitted.
+Definition VMState_IsCommittedEmbedded := VMStateLEmbeddedType VMState_ι_IsCommitted.
 Definition MainCopySameType : field_type  Ledger_MainState = field_type Ledger_MainStateCopy := eq_refl.
 Definition MessagesCopySameType : field_type  Ledger_MessagesState = field_type Ledger_MessagesStateCopy := eq_refl.
 
@@ -936,59 +930,6 @@ Remove Hints LocalStateField11010 : typeclass_instances.
 Definition LocalStateField_XUInteger := LocalStateField01110 .
 Definition LocalStateField_XBool := LocalStateField00011 .
 Definition LocalStateField_XCell := LocalStateField00000 .
-
-
-Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
-         (v2: field_type f2) (r :  MessagesAndEventsLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= MessagesAndEventsLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
-
-(* Lemma SelfDeployerFields_noeq : forall (f1 f2:  ContractFields ) 
-         (v2: field_type f2) (r :  ContractLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= ContractLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed . *)
-
-(* Lemma LocalFields_noeq : forall (f1 f2:  LocalFieldsI ) 
-         (v2: field_type f2) (r :  LocalStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= LocalStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed . *)
-
-Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
-         (v2: field_type f2) (r :  LedgerLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= LedgerLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
 
 End Ledger .
 
