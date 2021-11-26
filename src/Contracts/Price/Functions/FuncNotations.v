@@ -111,6 +111,7 @@ Local Open Scope ucpp_scope.
  Notation " '_buys_' " := ( buys__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_buys_' " := ( buys__right ) (in custom URValue at level 0) : ursus_scope. 
 
+Locate ContractLEmbeddedType.
 
 Module Calls (tc : SpecSig).
 

@@ -14,9 +14,13 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
+Require Import CommonNotations.
 Require Import Contracts.RootTokenContract.Ledger.
 Require Import Contracts.RootTokenContract.Functions.FuncSig.
+Require Import Contracts.RootTokenContract.ClassTypes.
 Require Import Contracts.TONTokenWallet.ClassTypes.
+Require Import Project.CommonTypes.
+
 
 (* здесь инмпортируем все внешние интерфейсы *)
 Require Import Contracts.TONTokenWallet.Interface.
@@ -25,9 +29,6 @@ Module FuncNotations (xt: XTypesSig)
                      (sm: StateMonadSig) 
                      (dc : ConstsTypesSig xt sm ).
 Export dc. Export xt. Export sm.
-
-(* здесь модули из каждого внешнего интерфейса *)
-Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
@@ -81,9 +82,9 @@ Notation " 'allowance_info.spender' " := ( allowance_info_ι_spender ) (in custo
  Notation " 'details_info.allowance' " := ( details_info_ι_allowance ) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'details_info.workchain_id' " := ( details_info_ι_workchain_id ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'details_info.workchain_id' " := ( details_info_ι_workchain_id ) (in custom URValue at level 0) : ursus_scope. 
- 
- Definition name__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType name_ ) : ULValue XString ) . 
- Definition name__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType name_ ) : URValue XString false ) . 
+
+ Definition name__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DRootTokenContract_ι_name_ ) : ULValue XString ) . 
+ Definition name__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DRootTokenContract_ι_name_ ) : URValue XString false ) . 
  Notation " '_name_' " := ( name__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_name_' " := ( name__right ) (in custom URValue at level 0) : ursus_scope. 
  

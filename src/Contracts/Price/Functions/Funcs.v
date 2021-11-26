@@ -81,13 +81,17 @@ Defined .
  (in custom URValue at level 0 , amount custom URValue at level 0 
  , price custom URValue at level 0 ) : ursus_scope . 
 
-Definition make_deal ( sell : ( OrderInfoLRecord ) ) ( buy : ( OrderInfoLRecord ) ) : UExpression ( XBool * (XBool * uint128) ) false . 
+Definition make_deal 
+( sell : ULValue( OrderInfoLRecord ) ) 
+( buy : ULValue ( OrderInfoLRecord ) ) 
+: UExpression ( XBool # (XBool # uint128) ) false . 
+
  	 	 refine {{ new 'deal_amount : ( uint ) @ "deal_amount" := {}  
  	 	        (* std::min ( (#{sell}) ^^ OrderInfoLRecord.amount , (#{buy}) ^^ OrderInfoLRecord.amount ) *) ; { _ } }} . 
  	 	 refine {{ new 'last_tip3_sell : ( XBool ) @ "last_tip3_sell" := 	 	 
-                   ( !{deal_amount} == ( ( #{sell} ) ↑ OrderInfo.amount ) ) ; { _ } }} .
-(*  	 	 refine {{ ( ( #{sell} ) ^^ OrderInfo.amount ) -= !{deal_amount} ; { _ } }} . 
- 	 	 refine {{ ( ( #{buy} ) ^^ OrderInfo.amount ) -= !{deal_amount} ; { _ } }} . *)
+                   ( !{deal_amount} == ( ( !{sell} ) ↑ OrderInfo.amount ) ) ; { _ } }} .
+  	 refine {{ ( {sell} ↑ OrderInfo.amount ) -= !{deal_amount} ; { _ } }} . 
+ 	 	 refine {{ ( {buy} ↑ OrderInfo.amount ) -= !{deal_amount} ; { _ } }} . 
 
  	 	 refine {{ new 'cost : ( XMaybe uint ) @ "cost" := calc_cost_ ( !{deal_amount} , _price_ ) ; { _ } }} .
  
@@ -103,33 +107,36 @@ Definition make_deal ( sell : ( OrderInfoLRecord ) ) ( buy : ( OrderInfoLRecord 
                                 (_tons_cfg_ ↑ TonsConfig.send_notify) ) }} . 
 
  	 	 refine {{ new 'sell_out_of_tons : ( XBool ) @ "sell_out_of_tons" := 
-                  ( ((#{sell}) ↑ OrderInfo.account) < !{sell_costs} ) ; { _ } }} . 
+                  ( ((!{sell}) ↑ OrderInfo.account) < !{sell_costs} ) ; { _ } }} . 
  	 	 refine {{ new 'buy_out_of_tons : ( XBool ) @ "buy_out_of_tons" := 
-                 ( ((#{buy}) ↑ OrderInfo.account) < !{buy_costs} ) ; { _ } }} . 
+                 ( ((!{buy}) ↑ OrderInfo.account) < !{buy_costs} ) ; { _ } }} . 
 
  	 	 refine {{ if ( !{sell_out_of_tons} \\ !{buy_out_of_tons} ) 
                   then { { _ :UExpressionP (XBool * (XBool * uint128)) false} } ; { _ } }} . 
  	 	 	 refine {{ return_ [ !{ sell_out_of_tons } , !{ buy_out_of_tons } , 0 ] }} . 
- 	 	 (* refine {{ ((#{sell}) ^^ OrderInfo.account) -= !{sell_costs} ; { _ } }} . 
- 	 	 refine {{ ((#{buy})  ^^ OrderInfo.account) - = !{buy_costs} ; { _ } }} . *) 
+ 	 	  refine {{ (({sell}) ↑ OrderInfo.account) -= !{sell_costs} ; { _ } }} . 
+ 	 	 refine {{ (({buy})  ↑ OrderInfo.account) -= !{buy_costs} ; { _ } }} .
 (*  	 	 refine {{ ITONTokenWalletPtr ( sell . tip3_wallet ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer ( sell . tip3_wallet , buy . tip3_wallet , deal_amount , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
 (*  	 	 refine {{ tvm.transfer ( sell . client_addr , cost - > get ( ) , true , SENDER_WANTS_TO_PAY_FEES_SEPARATELY ) ; { _ } }} .  *)
 (*  	 	 refine {{ notify_addr_ ( Grams ( _tons_cfg_ ^^ TonsConfig.send_notify ) ) . onDealCompleted ( _tip3root_ , _price_ , !{deal_amount} ) ; { _ } }} .  *)
  	 	 refine {{ return_ [ FALSE , FALSE , !{ deal_amount } ] }} . 
 Defined .
 
- Definition make_deal_right { a1 a2 }  
-( sell : URValue ( OrderInfoLRecord ) a1 ) 
-( buy : URValue ( OrderInfoLRecord ) a2 ) 
-: URValue ( XBool * (XBool * uint128) ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) make_deal 
+Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
+
+Definition make_deal_right  
+( sell : ULValue ( OrderInfoLRecord ) ) 
+( buy : ULValue ( OrderInfoLRecord ) ) 
+: URValue ( XBool # (XBool # uint128) ) 
+false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LL ) make_deal 
  sell buy ) . 
  
- Notation " 'make_deal_' '(' sell ',' buy ')' " := 
+ Notation " 'make_deal_' '(' sell buy ')' " := 
  ( make_deal_right 
  sell buy ) 
  (in custom URValue at level 0 , sell custom URValue at level 0 
- , buy custom URValue at level 0 ) : ursus_scope .
+ , buy custom URValue at level 0 ) : ursus_scope . 
 
 Parameter safe_delay_period : uint.
 Definition is_active_time ( order_finish_time : ( uint32 ) ) : UExpression XBool false . 
@@ -149,42 +156,46 @@ Definition is_active_time ( order_finish_time : ( uint32 ) ) : UExpression XBool
 Notation EAO := (UExpression (( XMaybe (uint # OrderInfoLRecord) ) # ( ( XQueue OrderInfoLRecord ) # uint128 ) ) false) .
 
 Definition extract_active_order 
-( cur_order : ( XMaybe (uint # OrderInfoLRecord) ) ) 
-( orders : ( XQueue OrderInfoLRecord ) ) 
-( all_amount : ( uint128 ) ) ( sell : ( XBool ) ) 
+( cur_order : ULValue ( XMaybe (uint # OrderInfoLRecord) ) ) 
+( orders : ULValue( XQueue OrderInfoLRecord ) ) 
+( all_amount : ULValue ( uint128 ) ) 
+( sell : ( XBool ) ) 
 : UExpression (( XMaybe (uint # OrderInfoLRecord) ) # ( ( XQueue OrderInfoLRecord ) # uint128 ) ) false  . 
 
- 	 	 refine {{ if ( #{ cur_order } ) then { { _: EAO } } ; { _ } }} . 
- 	 	 	 refine {{ return_ [ (#{ cur_order }) , (#{ orders }) , (#{ all_amount }) ] }} .
+ 	 	 refine {{ if ( !{ cur_order } ) then { { _: UEf } } ; { _ } }} . 
+ 	 	 	 refine {{ return_ [ (!{ cur_order }) , (!{ orders }) , (!{ all_amount }) ] }} .
  
- 	 	 refine {{ while ( ~ ((#{orders}) -> empty ()) ) do { { _:EAO } } ; { _ } }} . 
-(*  	 	 	 refine {{ (#{cur_order}) := (#{orders}) ^^ OrderInfo ->front_with_idx_opt () ; { _ } }} .  *)
+ 	 	 refine {{ while ( ~ ((!{orders}) -> empty ()) ) do { { _:UEf } } ; { _ } }} . 
+   	 	 	 refine {{ ({cur_order}) := (!{orders}) ->front_with_idx () ; { _ } }} .
  	 	 	 refine {{ new 'ord : ( OrderInfoLRecord ) @ "ord" := 
-                               ( second ((#{cur_order}) -> get_default () )) ; { _ } }} . 
+                               ( second ((!{cur_order}) -> get_default () )) ; { _ } }} . 
  	 	 	 refine {{ if ( ~ ( is_active_time_ ( (!{ord}) ↑ OrderInfo.order_finish_time ) ) )
                                   then { { _:EAO } } ; { _ } }} . 
-(*  	 	 	 	 refine {{ (#{all_amount} -= (!{ord}) ^^ OrderInfo.amount ; { _ } }} .  *)
+  	 	 	 	 refine {{ {all_amount} -= (!{ord}) ↑ OrderInfo.amount ; { _ } }} .
  	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
  	 	 	            [ 1 (*ec::expired*) , (!{ord}) ↑ OrderInfo.original_amount , 0 ] ; { _ } }} . 
 (*  	 	 	 	 refine {{ IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ord . account . get ( ) ) ) . onOrderFinished ( ret , sell ) ; { _ } }} .  *)
-(*  	 	 	 	 refine {{ (#{orders} -> pop () ; { _ } }} .  *)
-(*  	 	 	 	 refine {{ (#{cur_order} -> reset () ; { _ } }} .  *)
-(*  	 	 	 	 refine {{ continue }} .  *)
-(*  	 	 refine {{ break }} .  *)
-    refine {{ return_ [ #{cur_order} , #{orders} , #{all_amount} ] }} . 
-
-refine {{ return_ [ #{cur_order} , #{orders} , #{all_amount} ] }} . 
-refine {{ return_ [ #{cur_order} , #{orders} , #{all_amount} ] }} . 
+  	 	 	 	 refine {{ {orders} -> pop () (* ; { _ } }} .
+  	 	 	 	 refine {{ (#{cur_order} -> reset () ; { _ } }} .  
+  	 	 	 	 refine {{ continue *) }} . 
+ 	 	 refine {{ (* break *) {orders} -> pop () }} .
+    refine {{ return_ [ !{cur_order} , !{orders} , !{all_amount} ] }} . 
 Defined .  
 
- Definition extract_active_order_right { a1 a2 a3 a4 }  
-( cur_order : URValue ( XMaybe (uint*OrderInfoLRecord) ) a1 ) 
-( orders : URValue ( XQueue OrderInfoLRecord ) a2 ) 
-( all_amount : URValue ( uint128 ) a3 ) 
+Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
+                       ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
+                       ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ1))) 
+                       (at level 0) : ursus_scope.
+
+
+ Definition extract_active_order_right { a4 }  
+( cur_order : ULValue ( XMaybe (uint*OrderInfoLRecord) ) ) 
+( orders : ULValue ( XQueue OrderInfoLRecord ) ) 
+( all_amount : ULValue ( uint128 ) ) 
 ( sell : URValue ( XBool ) a4 ) 
 : URValue (( XMaybe (uint # OrderInfoLRecord) ) # ( ( XQueue OrderInfoLRecord ) # uint128 ) )
- ( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) extract_active_order 
+ a4 := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1LLL ) extract_active_order 
  cur_order orders all_amount sell ) . 
  
  Notation " 'extract_active_order_' '(' cur_order ',' orders ',' all_amount ',' sell ')' " := 
@@ -202,9 +213,9 @@ Definition process_queue
  	 	 refine {{ new 'sell_opt : ( XMaybe (uint # OrderInfoLRecord) ) @ "sell_opt" := {} ; { _ } }} . 
  	 	 refine {{ new 'buy_opt : ( XMaybe (uint # OrderInfoLRecord) ) @ "buy_opt" := {} ; { _ } }} . 
  	 	 refine {{ new 'deals_count : ( uint ) @ "deals_count" := 0 ; { _ } }} . 
- 	 	 refine {{ while ( TRUE ) do { { _ : UExpression PhantomType false} } ; { _ } }} . 
+ 	 	 refine {{ while ( TRUE ) do { { _ : UEf} } ; { _ } }} . 
  	 	 	 refine {{ [ {sell_opt} , _sells_ , _sells_amount_ ] := 
-             extract_active_order_ ( !{sell_opt} , _sells_ , _sells_amount_ , TRUE ) ; { _ } }} . 
+             extract_active_order_ ( {sell_opt} , {} (* _sells_ *) , _sells_amount_ , TRUE ) ; { _ } }} . 
  	 	 	 refine {{ [ {buy_opt} , _buys_ , _buys_amount_ ] := 
              extract_active_order_ ( !{buy_opt} , _buys_ , _buys_amount_ , FALSE ) ; { _ } }} . 
  	 	 	 refine {{ if ( (~ (!{ sell_opt })) \\ (~ (!{ buy_opt })) ) 
