@@ -36,7 +36,8 @@ Module Export ClassTypesModule := Flex.ClassTypes.ClassTypes xt sm .
 Module TradingPairClassTypesModule := TradingPair.ClassTypes.ClassTypes xt sm .
 Module XchgPairClassTypesModule := XchgPair.ClassTypes.ClassTypes xt sm .
 Import xt. 
-
+Require Contracts.TONTokenWallet.ClassTypes.
+Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
  [ ( XQueue FlexPublicInterfaceModule.OutgoingMessage ) : Type ; 
@@ -75,12 +76,12 @@ GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
  Opaque LocalState000100LRecord . 
  
  Inductive LocalStateFields000101I := | ι0001010 | ι0001011 . 
- Definition LocalState000101L := [ ( XHMap (string*nat) DTONTokenWalletExternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState000101L := [ ( XHMap (string*nat) TONTonkenWalletModuleForPrice.DTONTokenWalletExternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState000101L LocalStateFields000101I . 
  Opaque LocalState000101LRecord . 
  
  Inductive LocalStateFields000110I := | ι0001100 | ι0001101 . 
- Definition LocalState000110L := [ ( XHMap (string*nat) DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState000110L := [ ( XHMap (string*nat) TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState000110L LocalStateFields000110I . 
  Opaque LocalState000110LRecord . 
  
@@ -672,7 +673,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField000100 : typeclass_instances. 
- #[global, program] Instance LocalStateField000101 : LocalStateField DTONTokenWalletExternalLRecord.
+ #[global, program] Instance LocalStateField000101 : LocalStateField TONTonkenWalletModuleForPrice.DTONTokenWalletExternalLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -694,7 +695,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField000101 : typeclass_instances. 
- #[global, program] Instance LocalStateField000110 : LocalStateField DTONTokenWalletInternalLRecord.
+ #[global, program] Instance LocalStateField000110 : LocalStateField TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 

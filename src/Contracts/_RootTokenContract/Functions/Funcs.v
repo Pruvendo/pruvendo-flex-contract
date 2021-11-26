@@ -112,7 +112,7 @@ Notation " |{ e }| " := e (in custom URValue at level 0,
 (* Existing Instance xbool_default. *)
 
 
-Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XInteger8 ) ) ( root_public_key : ( XInteger256 ) ) ( root_owner : ( XAddress ) ) ( total_supply : ( XInteger128 ) ) : UExpression PhantomType TRUE . 
+Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( root_owner : ( XAddress ) ) ( total_supply : ( XUInteger128 ) ) : UExpression PhantomType TRUE . 
  	 	 	 refine {{ require_ ( ( ( (#{ root_public_key }) != 0 ) or ( std::get < addr_std > ( (#{ root_owner }) () ) . address != 0 ) ) , error_code::define_pubkey_or_internal_owner ) ; _ }} . 
  	 	 refine {{ require_ ( ( (#{ decimals }) < 4 ) , error_code::too_big_decimals ) ; _ }} . 
  	 	 refine {{ _name_ := (#{ name }) ; _ }} . 
@@ -144,7 +144,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition deployWallet ( pubkey : ( XInteger256 ) ) ( internal_owner : ( XAddress ) ) ( tokens : ( XInteger128 ) ) ( grams : ( XInteger128 ) ) : UExpression XAddress TRUE . 
+ Definition deployWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( XAddress ) ) ( tokens : ( XUInteger128 ) ) ( grams : ( XUInteger128 ) ) : UExpression XAddress TRUE . 
  	 	 	 refine {{ check_owner_ () ; _ }} . 
  	 	 refine {{ tvm.accept () ; _ }} . 
  	 	 refine {{ require_ ( ( _total_granted_ + (#{ tokens }) <= _total_supply_ ) , error_code::not_enough_balance ) ; _ }} . 
@@ -171,7 +171,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition deployEmptyWallet ( pubkey : ( XInteger256 ) ) ( internal_owner : ( XAddress ) ) ( grams : ( XInteger128 ) ) : UExpression XAddress TRUE . 
+ Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( XAddress ) ) ( grams : ( XUInteger128 ) ) : UExpression XAddress TRUE . 
  	 	 	 refine {{ require_ ( ( (#{ pubkey }) != 0 || std::get < addr_std > ( (#{ internal_owner }) () ) . address != 0 ) , error_code::define_pubkey_or_internal_owner ) ; _ }} . 
  	 	 refine {{ new 'value_gr : ( auto ) @ "value_gr" := {} ; _ }} . 
  	 	 refine {{ { value_gr } := int_value () ; _ }} . 
@@ -188,12 +188,12 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition grant ( dest : ( XAddress ) ) ( tokens : ( XInteger128 ) ) ( grams : ( XInteger128 ) ) : UExpression PhantomType TRUE . 
+ Definition grant ( dest : ( XAddress ) ) ( tokens : ( XUInteger128 ) ) ( grams : ( XUInteger128 ) ) : UExpression PhantomType TRUE . 
  	 	 	 refine {{ check_owner_ () ; _ }} . 
  	 	 refine {{ require_ ( ( _total_granted_ + (#{ tokens }) <= _total_supply_ ) , error_code::not_enough_balance ) ; _ }} . 
  	 	 refine {{ tvm.accept () ; _ }} . 
  	 	 refine {{ address answer_addr ; _ }} . 
- 	 	 refine {{ new 'msg_flags : ( XInteger ) @ "msg_flags" := {} ; _ }} . 
+ 	 	 refine {{ new 'msg_flags : ( XUInteger ) @ "msg_flags" := {} ; _ }} . 
  	 	 refine {{ { msg_flags } := 0 ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
  	 	 	 refine {{ { auto (!{ value_gr }) = int_value () ; _ }} . 
@@ -212,7 +212,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition mint ( tokens : ( XInteger128 ) ) : UExpression XBool FALSE . 
+ Definition mint ( tokens : ( XUInteger128 ) ) : UExpression XBool FALSE . 
  	 	 	 refine {{ check_owner_ () ; _ }} . 
  	 	 refine {{ tvm.accept () ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
@@ -227,7 +227,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition requestTotalGranted : UExpression XInteger128 FALSE . 
+ Definition requestTotalGranted : UExpression XUInteger128 FALSE . 
  	 	 	 refine {{ new 'value_gr : ( auto ) @ "value_gr" := {} ; _ }} . 
  	 	 refine {{ { value_gr } := int_value () ; _ }} . 
  	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
@@ -252,28 +252,28 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition getDecimals : UExpression XInteger8 FALSE . 
+ Definition getDecimals : UExpression XUInteger8 FALSE . 
  	 	 	 refine {{ return_ _decimals_ }} . 
  Defined . 
  
  
  
  
- Definition getRootKey : UExpression XInteger256 FALSE . 
+ Definition getRootKey : UExpression XUInteger256 FALSE . 
  	 	 	 refine {{ return_ _root_public_key_ }} . 
  Defined . 
  
  
  
  
- Definition getTotalSupply : UExpression XInteger128 FALSE . 
+ Definition getTotalSupply : UExpression XUInteger128 FALSE . 
  	 	 	 refine {{ return_ _total_supply_ }} . 
  Defined . 
  
  
  
  
- Definition getTotalGranted : UExpression XInteger128 FALSE . 
+ Definition getTotalGranted : UExpression XUInteger128 FALSE . 
  	 	 	 refine {{ return_ _total_granted_ }} . 
  Defined . 
  
@@ -294,14 +294,14 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition getWalletAddress ( pubkey : ( XInteger256 ) ) ( owner : ( XAddress ) ) : UExpression XAddress FALSE . 
+ Definition getWalletAddress ( pubkey : ( XUInteger256 ) ) ( owner : ( XAddress ) ) : UExpression XAddress FALSE . 
  	 	 	 refine {{ return_ calc_wallet_init_ ( (#{ pubkey }) , (#{ owner }) ) . second }} . 
  Defined . 
  
  
  
  
- Definition _on_bounced ( cell : ( (LRecord ) ) ( msg_body : ( XSlice ) ) : UExpression XInteger TRUE . 
+ Definition _on_bounced ( cell : ( (LRecord ) ) ( msg_body : ( XSlice ) ) : UExpression XUInteger TRUE . 
  	 	 	 refine {{ tvm.accept () ; _ }} . 
  	 	 refine {{ new 'Args : ( usingLRecord ) @ "Args" := {} ; _ }} . 
  	 	 refine {{ { Args } := args_struct_t ; _ }} . 
@@ -327,14 +327,14 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition getWalletCodeHash : UExpression XInteger256 FALSE . 
+ Definition getWalletCodeHash : UExpression XUInteger256 FALSE . 
  	 	 	 refine {{ return uint256 { __builtin_tvm.hashcu ( _wallet_code_ . get () ) } }} . 
  Defined . 
  
  
  
  
- Definition _fallback ( cell : ( (LRecord ) ) : UExpression XInteger FALSE . 
+ Definition _fallback ( cell : ( (LRecord ) ) : UExpression XUInteger FALSE . 
  	 	 	 refine {{ return_ 0 }} . 
  Defined . 
  
@@ -348,14 +348,14 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition workchain_id : UExpression XInteger8 FALSE . 
+ Definition workchain_id : UExpression XUInteger8 FALSE . 
  	 	 	 refine {{ return_ Std :: get < addr_std > ( Address { tvm.address () } () ) . workchain_id_ }} . 
  Defined . 
  
  
  
  
- Definition calc_wallet_init ( pubkey : ( XInteger256 ) ) ( owner_addr : ( XAddress ) ) : UExpression ( StateInitLRecord * XAddress ) FALSE . 
+ Definition calc_wallet_init ( pubkey : ( XUInteger256 ) ) ( owner_addr : ( XAddress ) ) : UExpression ( StateInitLRecord * XAddress ) FALSE . 
  	 	 	 refine {{ new 'wallet_data : ( DTONTokenWalletLRecord ) @ "wallet_data" := {} ; _ }} . 
  	 	 refine {{ { wallet_data } := prepare_wallet_data ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , Address { tvm.address () } , optional_owner_ ( (#{ owner_addr }) ) , _wallet_code_ ^^ get () , workchain_id_ () ) ; _ }} . 
  	 	 refine {{ wallet_init : ( auto ) @ "wallet_init" ; _ }} . 
@@ -403,7 +403,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  
- Definition prepare_root_state_init_and_addr ( root_code : ( XCell ) ) ( root_data : ( DRootTokenContractLRecord ) ) : UExpression ( StateInitLRecord * XInteger256 ) FALSE . 
+ Definition prepare_root_state_init_and_addr ( root_code : ( XCell ) ) ( root_data : ( DRootTokenContractLRecord ) ) : UExpression ( StateInitLRecord * XUInteger256 ) FALSE . 
  	 	 	 refine {{ new 'root_data_cl : ( XCell ) @ "root_data_cl" := {} ; _ }} . 
  	 	 refine {{ { root_data_cl } := prepare_persistent_data ( root_replay_protection_t::init () , (#{ root_data }) ) ; _ }} . 
  	 	 refine {{ new 'root_init : ( StateInitLRecord ) @ "root_init" := 	 	 

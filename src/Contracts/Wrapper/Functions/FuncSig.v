@@ -24,32 +24,32 @@ Local Open Scope ucpp_scope.
 Parameter getStateInit : ( () ) -> UExpression StateInitLRecord false . 
  Parameter init : ( ( XAddress ) ) -> UExpression XBool true . 
  Parameter setInternalWalletCode : ( ( XCell ) ) -> UExpression XBool true . 
- Parameter deployEmptyWallet : ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XInteger128 ) ) -> UExpression XAddress false . 
- Parameter onTip3Transfer : ( ( XAddress ) ) -> ( ( XInteger128 ) ) -> ( ( XInteger128 ) ) -> ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XCell ) ) -> UExpression WrapperRetLRecord true . 
- Parameter burn : ( ( XAddress ) ) -> ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XInteger128 ) ) -> UExpression PhantomType true . 
- Parameter requestTotalGranted : UExpression XInteger128 false . 
+ Parameter deployEmptyWallet : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> UExpression XAddress false . 
+ Parameter onTip3Transfer : ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XCell ) ) -> UExpression WrapperRetLRecord true . 
+ Parameter burn : ( ( XAddress ) ) -> ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> UExpression PhantomType true . 
+ Parameter requestTotalGranted : UExpression XUInteger128 false . 
  Parameter getDetails : UExpression wrapper_details_infoLRecord false . 
  Parameter getName : UExpression XString false . 
  Parameter getSymbol : UExpression XString false . 
- Parameter getDecimals : UExpression XInteger8 false . 
- Parameter getRootKey : UExpression XInteger256 false . 
- Parameter getTotalGranted : UExpression XInteger128 false . 
+ Parameter getDecimals : UExpression XUInteger8 false . 
+ Parameter getRootKey : UExpression XUInteger256 false . 
+ Parameter getTotalGranted : UExpression XUInteger128 false . 
  Parameter hasInternalWalletCode : UExpression XBool false . 
  Parameter getInternalWalletCode : UExpression XCell false . 
  Parameter getOwnerAddress : UExpression XAddress false . 
  Parameter getExternalWallet : UExpression XAddress false . 
- Parameter getWalletAddress : ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XAddress false . 
- Parameter _on_bounced : ( XCell ) -> ( ( XSlice ) ) -> UExpression XInteger true . 
- Parameter getInternalWalletCodeHash : UExpression XInteger256 false . 
- Parameter _fallback : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression XInteger false . 
+ Parameter getWalletAddress : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XAddress false . 
+ Parameter _on_bounced : ( XCell ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
+ Parameter getInternalWalletCodeHash : UExpression XUInteger256 false . 
+ Parameter _fallback : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression XUInteger false . 
  Parameter optional_owner : ( ( XAddress ) ) -> UExpression XMaybe XAddress false . 
- Parameter expected_internal_address : ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XAddress false . 
- Parameter calc_internal_wallet_init : ( ( XInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord * XAddress ) false . 
+ Parameter expected_internal_address : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XAddress false . 
+ Parameter calc_internal_wallet_init : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord * XAddress ) false . 
  Parameter is_internal_owner : UExpression XBool false . 
  Parameter check_internal_owner : UExpression PhantomType true . 
  Parameter check_external_owner : UExpression PhantomType true . 
  Parameter check_owner : UExpression PhantomType false . 
- Parameter prepare_wrapper_state_init_and_addr : ( ( XCell ) ) -> ( ( DWrapperLRecord ) ) -> UExpression ( StateInitLRecord * XInteger256 ) false . 
+ Parameter prepare_wrapper_state_init_and_addr : ( ( XCell ) ) -> ( ( DWrapperLRecord ) ) -> UExpression ( StateInitLRecord * XUInteger256 ) false . 
 
 
 End SpecSig.

@@ -173,7 +173,7 @@ Defined .
  
  
  
- Definition deployEmptyWallet ( pubkey : ( XInteger256 ) ) ( internal_owner : ( XAddress ) ) ( grams : ( XInteger128 ) ) : UExpression XAddress FALSE . 
+ Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( XAddress ) ) ( grams : ( XUInteger128 ) ) : UExpression XAddress FALSE . 
  	 	 	 refine {{ new 'value_gr : ( auto ) @ "value_gr" := {} ; _ }} . 
  	 	 refine {{ { value_gr } := int_value () ; _ }} . 
  	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
@@ -189,7 +189,7 @@ Defined .
  
  
  
- Definition onTip3Transfer ( answer_addr : ( XAddress ) ) ( balance : ( XInteger128 ) ) ( new_tokens : ( XInteger128 ) ) ( sender_pubkey : ( XInteger256 ) ) ( sender_owner : ( XAddress ) ) ( payload : ( XCell ) ) : UExpression WrapperRetLRecord TRUE . 
+ Definition onTip3Transfer ( answer_addr : ( XAddress ) ) ( balance : ( XUInteger128 ) ) ( new_tokens : ( XUInteger128 ) ) ( sender_pubkey : ( XUInteger256 ) ) ( sender_owner : ( XAddress ) ) ( payload : ( XCell ) ) : UExpression WrapperRetLRecord TRUE . 
  	 	 	 refine {{ require_ ( ( int_sender () == _external_wallet_ - > get () ) , error_code::not_my_wallet_notifies ) ; _ }} . 
  	 	 refine {{ set_int_sender ( (#{ answer_addr }) ) ; _ }} . 
  	 	 refine {{ set_int_return_value ( 0 ) ; _ }} . 
@@ -211,7 +211,7 @@ Defined .
  
  
  
- Definition burn ( answer_addr : ( XAddress ) ) ( sender_pubkey : ( XInteger256 ) ) ( sender_owner : ( XAddress ) ) ( out_pubkey : ( XInteger256 ) ) ( out_internal_owner : ( XAddress ) ) ( tokens : ( XInteger128 ) ) : UExpression PhantomType TRUE . 
+ Definition burn ( answer_addr : ( XAddress ) ) ( sender_pubkey : ( XUInteger256 ) ) ( sender_owner : ( XAddress ) ) ( out_pubkey : ( XUInteger256 ) ) ( out_internal_owner : ( XAddress ) ) ( tokens : ( XUInteger128 ) ) : UExpression PhantomType TRUE . 
  	 	 	 refine {{ require_ ( ( _total_granted_ >= (#{ tokens }) ) , error_code::burn_unallocated ) ; _ }} . 
  	 	 refine {{ sender : ( auto ) @ "sender" ; _ }} . 
  	 	 refine {{ (!{ value_gr }) : ( auto ) @ "value_gr" ; _ }} . 
@@ -225,7 +225,7 @@ Defined .
  
  
  
- Definition requestTotalGranted : UExpression XInteger128 FALSE . 
+ Definition requestTotalGranted : UExpression XUInteger128 FALSE . 
  	 	 	 refine {{ new 'value_gr : ( auto ) @ "value_gr" := {} ; _ }} . 
  	 	 refine {{ { value_gr } := int_value () ; _ }} . 
  	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
@@ -257,21 +257,21 @@ Defined .
  
  
  
- Definition getDecimals : UExpression XInteger8 FALSE . 
+ Definition getDecimals : UExpression XUInteger8 FALSE . 
  	 	 	 refine {{ return_ _decimals_ }} . 
  Defined . 
  
  
  
  
- Definition getRootKey : UExpression XInteger256 FALSE . 
+ Definition getRootKey : UExpression XUInteger256 FALSE . 
  	 	 	 refine {{ return_ _root_public_key_ }} . 
  Defined . 
  
  
  
  
- Definition getTotalGranted : UExpression XInteger128 FALSE . 
+ Definition getTotalGranted : UExpression XUInteger128 FALSE . 
  	 	 	 refine {{ return_ _total_granted_ }} . 
  Defined . 
  
@@ -306,14 +306,14 @@ Defined .
  
  
  
- Definition getWalletAddress ( pubkey : ( XInteger256 ) ) ( owner : ( XAddress ) ) : UExpression XAddress FALSE . 
+ Definition getWalletAddress ( pubkey : ( XUInteger256 ) ) ( owner : ( XAddress ) ) : UExpression XAddress FALSE . 
  	 	 	 refine {{ return_ calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ owner }) ) . second }} . 
  Defined . 
  
  
  
  
- Definition _on_bounced ( cell : ( (LRecord ) ) ( msg_body : ( XSlice ) ) : UExpression XInteger TRUE . 
+ Definition _on_bounced ( cell : ( (LRecord ) ) ( msg_body : ( XSlice ) ) : UExpression XUInteger TRUE . 
  	 	 	 refine {{ tvm.accept () ; _ }} . 
  	 	 refine {{ new 'Args : ( usingLRecord ) @ "Args" := {} ; _ }} . 
  	 	 refine {{ { Args } := args_struct_t ; _ }} . 
@@ -339,14 +339,14 @@ Defined .
  
  
  
- Definition getInternalWalletCodeHash : UExpression XInteger256 FALSE . 
+ Definition getInternalWalletCodeHash : UExpression XUInteger256 FALSE . 
  	 	 	 refine {{ return_ uint256 { __builtin_tvm.hashcu ( _internal_wallet_code_ . get () ) } }} . 
  Defined . 
  
  
  
  
- Definition _fallback ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression XInteger FALSE . 
+ Definition _fallback ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression XUInteger FALSE . 
  	 	 	 refine {{ return_ 0 }} . 
  Defined . 
  
@@ -360,8 +360,8 @@ Defined .
  
  
  
- Definition expected_internal_address ( sender_public_key : ( XInteger256 ) ) ( sender_owner_addr : ( XAddress ) ) : UExpression XAddress FALSE . 
- 	 	 	 refine {{ new 'hash_addr : ( XInteger256 ) @ "hash_addr" := {} ; _ }} . 
+ Definition expected_internal_address ( sender_public_key : ( XUInteger256 ) ) ( sender_owner_addr : ( XAddress ) ) : UExpression XAddress FALSE . 
+ 	 	 	 refine {{ new 'hash_addr : ( XUInteger256 ) @ "hash_addr" := {} ; _ }} . 
  	 	 refine {{ { hash_addr } := prepare_internal_wallet_state_init_and_addr ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ sender_public_key }) , Address { tvm.address () } , optional_owner_ ( (#{ sender_owner_addr }) ) , _internal_wallet_code_ ^^ get () , _workchain_id_ ) . second ; _ }} . 
  	 	 refine {{ return_ Address :: make_std ( _workchain_id_ , (!{ hash_addr }) ) }} . 
  Defined . 
@@ -369,7 +369,7 @@ Defined .
  
  
  
- Definition calc_internal_wallet_init ( pubkey : ( XInteger256 ) ) ( owner_addr : ( XAddress ) ) : UExpression ( StateInitLRecord * XAddress ) FALSE . 
+ Definition calc_internal_wallet_init ( pubkey : ( XUInteger256 ) ) ( owner_addr : ( XAddress ) ) : UExpression ( StateInitLRecord * XAddress ) FALSE . 
  	 	 	 refine {{ wallet_init : ( auto ) @ "wallet_init" ; _ }} . 
  	 	 refine {{ dest_addr : ( auto ) @ "dest_addr" ; _ }} . 
  	 	 refine {{ [ wallet_init , dest_addr ] := prepare_internal_wallet_state_init_and_addr ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , address { tvm.address () } , optional_owner_ ( (#{ owner_addr }) ) , _internal_wallet_code_ . get () , _workchain_id_ ) ; _ }} . 
@@ -415,7 +415,7 @@ Defined .
  
  
  
- Definition prepare_wrapper_state_init_and_addr ( wrapper_code : ( XCell ) ) ( wrapper_data : ( DWrapperLRecord ) ) : UExpression ( StateInitLRecord * XInteger256 ) FALSE . 
+ Definition prepare_wrapper_state_init_and_addr ( wrapper_code : ( XCell ) ) ( wrapper_data : ( DWrapperLRecord ) ) : UExpression ( StateInitLRecord * XUInteger256 ) FALSE . 
  	 	 	 refine {{ new 'wrapper_data_cl : ( XCell ) @ "wrapper_data_cl" := {} ; _ }} . 
  	 	 refine {{ { wrapper_data_cl } := prepare_persistent_data ( wrapper_replay_protection_t::init () , (#{ wrapper_data }) ) ; _ }} . 
  	 	 refine {{ new 'wrapper_init : ( StateInitLRecord ) @ "wrapper_init" := 	 	 

@@ -5,7 +5,7 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
 Require Import Contracts.Price.ClassTypes.
-Require Import Contracts.Price.Ledger.
+(* Require Import Contracts.Price.Ledger. *)
 
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
@@ -17,42 +17,6 @@ Local Open Scope ursus_scope.
 
 (*OrderInfo*)
 
-Definition OrderInfo_amount_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
-	|| {x} ^^ {OrderInfo_ι_amount} || : _.
-	
-Definition OrderInfo_amount_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfo_ι_amount} }} : _.
-	
-Notation " a '↑' 'OrderInfo.amount' " := ( OrderInfo_amount_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfo.amount' " := ( OrderInfo_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
-	
-Definition OrderInfo_account_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfo_ι_account} || : _.
-
-Definition OrderInfo_account_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfo_ι_account} }} : _.
-
-Notation " a '↑' 'OrderInfo.account' " := ( OrderInfo_account_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfo.account' " := ( OrderInfo_account_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-
-Definition OrderInfo_order_finish_time_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfo_ι_order_finish_time} || : _.
-
-Definition OrderInfo_order_finish_time_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfo_ι_order_finish_time} }} : _.
-
-Notation " a '↑' 'OrderInfo.order_finish_time' " := ( OrderInfo_order_finish_time_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfo.order_finish_time' " := ( OrderInfo_order_finish_time_left a ) (in custom ULValue at level 0) : ursus_scope.
-	
-Definition OrderInfo_original_amount_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
-|| {x} ^^ {OrderInfo_ι_original_amount} || : _.
-
-Definition OrderInfo_original_amount_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
-{{ {x} ^^ {OrderInfo_ι_original_amount} }} : _.
-
-Notation " a '↑' 'OrderInfo.original_amount' " := ( OrderInfo_original_amount_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'OrderInfo.original_amount' " := ( OrderInfo_original_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 (********************************************************************)
 (*dealer*)

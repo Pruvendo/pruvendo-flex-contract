@@ -36,10 +36,10 @@ Local Open Scope glist_scope.
 (* 2 *) Definition ContractL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
  ( GramsLRecord ) : Type ] .
@@ -53,30 +53,30 @@ Elpi GeneratePruvendoRecord TickTockL TickTockFields .
  Opaque TickTockLRecord . 
 
 (* 2 *) Definition lend_recordL : list Type := 
- [ ( XInteger128 ) : Type ; 
- ( XInteger32 ) : Type ] .
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord lend_recordL lend_recordFields . 
  Opaque lend_recordLRecord . 
 
 (* 2 *) Definition addr_std_fixedL : list Type := 
- [ ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ] .
+ [ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ] .
 Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
  Opaque addr_std_fixedLRecord . 
 
 (* 2 *) Definition allowance_infoL : list Type := 
  [ ( XAddress ) : Type ; 
- ( XInteger128 ) : Type ] .
+ ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord allowance_infoL allowance_infoFields . 
  Opaque allowance_infoLRecord . 
 
 (* 2 *) Definition DWrapperL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
  ( GramsLRecord ) : Type ; 
@@ -88,7 +88,7 @@ Elpi GeneratePruvendoRecord DWrapperL DWrapperFields .
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
- ( XInteger128 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord DXchgPairL DXchgPairFields . 
  Opaque DXchgPairLRecord . 
@@ -96,44 +96,44 @@ Elpi GeneratePruvendoRecord DXchgPairL DXchgPairFields .
 (* 2 *) Definition DTONTokenWalletExternalL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger256 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
  ( XAddress ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
  ( XCell ) : Type ; 
  ( ( XMaybe allowance_infoLRecord ) ) : Type ; 
- ( XInteger8 ) : Type ] .
+ ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletExternalL DTONTokenWalletExternalFields . 
  Opaque DTONTokenWalletExternalLRecord . 
 
 (* 2 *) Definition DTONTokenWalletInternalL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger128 ) : Type ; 
- ( XInteger256 ) : Type ; 
- ( XInteger256 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
  ( XAddress ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
  ( lend_ownership_mapLRecord ) : Type ; 
  ( XCell ) : Type ; 
- ( XInteger8 ) : Type ] .
+ ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
  Opaque DTONTokenWalletInternalLRecord . 
 
 (* 2 *) Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
- ( XInteger8 ) : Type ; 
- ( XInteger256 ) : Type ; 
+ ( XUInteger8 ) : Type ; 
+ ( XUInteger256 ) : Type ; 
  ( XAddress ) : Type ] .
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
  Opaque Tip3ConfigLRecord . 
 
 (* 2 *) Definition StateInitL : list Type := 
- [ ( ( XMaybe XInteger ) ) : Type ; 
+ [ ( ( XMaybe XUInteger ) ) : Type ; 
  ( ( XMaybe TickTockLRecord ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
