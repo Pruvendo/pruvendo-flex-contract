@@ -7,6 +7,7 @@ Module Export CommonTypes := Types xt sm .
  
 Import xt. 
 
+(*Проверить типы!!!*)
 Parameter FLEX_TIMESTAMP_DELAY : XUInteger . 
 Parameter sender_is_not_deployer : XUInteger . 
 Parameter unexpected_refs_count_in_code : XUInteger . 

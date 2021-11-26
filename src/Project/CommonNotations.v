@@ -242,7 +242,6 @@ Notation " a '↑' 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_fin
 Notation " a '↑' 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_finish_time_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 
-
 Definition PayloadArgs_sell_right {b} (x: URValue PayloadArgsLRecord b): URValue XBool b :=
     || {x} ^^ {PayloadArgs_ι_sell} || : _ .
 
