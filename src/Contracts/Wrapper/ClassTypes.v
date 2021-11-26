@@ -12,7 +12,6 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import Project.CommonTypes.
 
-
 (* 1 *) Inductive WrapperRetFields := | WrapperRet_ι_err_code | WrapperRet_ι_flex_wallet .
 (* 1 *) Inductive FlexDeployWalletArgsFields := | FlexDeployWalletArgs_ι_pubkey | FlexDeployWalletArgs_ι_internal_owner | FlexDeployWalletArgs_ι_grams .
 (* 1 *) Inductive wrapper_details_infoFields := | wrapper_details_info_ι_name | wrapper_details_info_ι_symbol | wrapper_details_info_ι_decimals | wrapper_details_info_ι_root_public_key | wrapper_details_info_ι_total_granted | wrapper_details_info_ι_wallet_code | wrapper_details_info_ι_owner_address | wrapper_details_info_ι_external_wallet .

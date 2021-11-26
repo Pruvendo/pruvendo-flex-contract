@@ -113,9 +113,9 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) 
  ( getNotifyAddr_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition _fallback_right { a1 a2 }  ( msg : URValue ( XCell ) a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue uint ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
- msg msg_body ) . 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback msg msg_body ) . 
  
  Notation " '_fallback_' '(' msg msg_body ')' " := 
  ( _fallback_right 

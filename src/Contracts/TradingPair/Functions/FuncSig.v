@@ -15,10 +15,9 @@ Require Import TradingPair.ClassTypesNotations.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
-(* Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm. *)
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig.
-(* Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. *)
+
 Module Type SpecSig.
 
 Local Open Scope ursus_scope.
@@ -29,7 +28,7 @@ Parameter getFlexAddr : UExpression raw_address false .
 Parameter getTip3Root : UExpression raw_address false . 
 Parameter getMinAmount : UExpression uint128 false . 
 Parameter getNotifyAddr : UExpression raw_address false . 
-Parameter _fallback :  TvmSlice -> TvmSlice -> UExpression uint false . 
+Parameter _fallback :  TvmCell -> TvmSlice -> UExpression uint false . 
 Parameter prepare_trading_pair_state_init_and_addr :  ContractLRecord  -> TvmCell -> UExpression ( StateInitLRecord * uint256 ) false . 
 
 End SpecSig.
