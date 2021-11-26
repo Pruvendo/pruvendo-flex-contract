@@ -120,8 +120,13 @@ Export tc.
 Local Open Scope string_scope.
 
 (**************************************************************************************************)
- Definition make_deal_right { a1 a2 }  ( sell : URValue ( OrderInfoLRecord ) a1 ) ( buy : URValue ( OrderInfoLRecord ) a2 ) : URValue ( XBool # (XBool # uint128) ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) make_deal 
+Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
+ 
+Definition make_deal_right 
+( sell : ULValue ( OrderInfoLRecord ) ) 
+( buy : ULValue ( OrderInfoLRecord ) ) :
+ URValue ( XBool # (XBool # uint128) ) false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LL ) make_deal 
  sell buy ) . 
  
  Notation " 'make_deal_' '(' sell buy ')' " := 
@@ -130,23 +135,29 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , sell custom URValue at level 0 
  , buy custom URValue at level 0 ) : ursus_scope .
 
- Definition extract_active_order_right { a1 a2 a3 a4 }  
-( cur_order : URValue ( XMaybe (uint # OrderInfoLRecord) ) a1 ) 
-( orders : URValue ( XQueue OrderInfoLRecord ) a2 ) 
-( all_amount : URValue ( uint128 ) a3 ) 
+Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
+                       ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
+                       ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ1))) 
+                       (at level 0) : ursus_scope.
+
+
+ Definition extract_active_order_right { a4 }  
+( cur_order : ULValue ( XMaybe (uint#OrderInfoLRecord) ) ) 
+( orders : ULValue ( XQueue OrderInfoLRecord ) ) 
+( all_amount : ULValue ( uint128 ) ) 
 ( sell : URValue ( XBool ) a4 ) 
-: URValue ( ( XMaybe (uint # OrderInfoLRecord) ) # (( XQueue OrderInfoLRecord ) # uint128) ) 
-( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) extract_active_order 
+: URValue (( XMaybe (uint # OrderInfoLRecord) ) # ( ( XQueue OrderInfoLRecord ) # uint128 ) )
+ a4 := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1LLL ) extract_active_order 
  cur_order orders all_amount sell ) . 
  
- Notation " 'extract_active_order_' '(' cur_order orders all_amount sell ')' " := 
+ Notation " 'extract_active_order_' '(' cur_order ',' orders ',' all_amount ',' sell ')' " := 
  ( extract_active_order_right 
  cur_order orders all_amount sell ) 
  (in custom URValue at level 0 , cur_order custom URValue at level 0 
- , orders custom URValue at level 0 
- , all_amount custom URValue at level 0 
- , sell custom URValue at level 0 ) : ursus_scope . 
+ , orders custom ULValue at level 0 
+ , all_amount custom ULValue at level 0 
+ , sell custom URValue at level 0 ) : ursus_scope .
  
  Definition process_queue_left { R a1 a2 }  ( sell_idx : URValue ( uint ) a1 ) ( buy_idx : URValue ( uint ) a2 ) : UExpression R ( orb a2 a1 ) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) process_queue 
