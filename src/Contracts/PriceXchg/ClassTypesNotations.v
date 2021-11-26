@@ -10,7 +10,7 @@ Require Import Contracts.PriceXchg.Ledger.
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
-Module Export ClassTypesModule := ClassTypes xt sm.
+Module Export ClassTypesModule := Contracts.PriceXchg.ClassTypes.ClassTypes xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -307,6 +307,135 @@ Notation " a '↑' 'RationalPrice.num' " := ( RationalPrice_num_left a ) (in cus
 Notation " a '↑' 'RationalPrice.denum' " := ( RationalPrice_denum_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'RationalPrice.denum' " := ( RationalPrice_denum_left a ) (in custom ULValue at level 0) : ursus_scope.
 
+
+Definition DPriceXchg_ι_price__right {b} (x: URValue DPriceXchgLRecord b): URValue RationalPriceLRecord b :=
+    || {x} ^^ {DPriceXchg_ι_price_} || : _ .
+
+Definition DPriceXchg_ι_price__left (x: ULValue DPriceXchgLRecord): ULValue RationalPriceLRecord :=
+    {{ {x} ^^ {DPriceXchg_ι_price_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.price_' " := ( DPriceXchg_ι_price__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.price_' " := ( DPriceXchg_ι_price__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_sells_amount__right {b} (x: URValue DPriceXchgLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {DPriceXchg_ι_sells_amount_} || : _ .
+
+Definition DPriceXchg_ι_sells_amount__left (x: ULValue DPriceXchgLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {DPriceXchg_ι_sells_amount_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.sells_amount_' " := ( DPriceXchg_ι_sells_amount__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.sells_amount_' " := ( DPriceXchg_ι_sells_amount__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_buys_amount__right {b} (x: URValue DPriceXchgLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {DPriceXchg_ι_buys_amount_} || : _ .
+
+Definition DPriceXchg_ι_buys_amount__left (x: ULValue DPriceXchgLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {DPriceXchg_ι_buys_amount_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.buys_amount_' " := ( DPriceXchg_ι_buys_amount__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.buys_amount_' " := ( DPriceXchg_ι_buys_amount__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_flex__right {b} (x: URValue DPriceXchgLRecord b): URValue addr_std_fixedLRecord b :=
+    || {x} ^^ {DPriceXchg_ι_flex_} || : _ .
+
+Definition DPriceXchg_ι_flex__left (x: ULValue DPriceXchgLRecord): ULValue addr_std_fixedLRecord :=
+    {{ {x} ^^ {DPriceXchg_ι_flex_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.flex_' " := ( DPriceXchg_ι_flex__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.flex_' " := ( DPriceXchg_ι_flex__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_min_amount__right {b} (x: URValue DPriceXchgLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {DPriceXchg_ι_min_amount_} || : _ .
+
+Definition DPriceXchg_ι_min_amount__left (x: ULValue DPriceXchgLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {DPriceXchg_ι_min_amount_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.min_amount_' " := ( DPriceXchg_ι_min_amount__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXch.min_amount_' " := ( DPriceXchg_ι_min_amount__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_deals_limit__right {b} (x: URValue DPriceXchgLRecord b): URValue XUInteger8 b :=
+    || {x} ^^ {DPriceXchg_ι_deals_limit_} || : _ .
+
+Definition DPriceXchg_ι_deals_limit__left (x: ULValue DPriceXchgLRecord): ULValue XUInteger8 :=
+    {{ {x} ^^ {DPriceXchg_ι_deals_limit_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.deals_limit_' " := ( DPriceXchg_ι_deals_limit__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.deals_limit_' " := ( DPriceXchg_ι_deals_limit__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_notify_addr__right {b} (x: URValue DPriceXchgLRecord b): URValue XUInteger8 b :=
+    || {x} ^^ {DPriceXchg_ι_notify_addr_} || : _ .
+
+Definition DPriceXchg_ι_notify_addr__left (x: ULValue DPriceXchgLRecord): ULValue XUInteger8 :=
+    {{ {x} ^^ {DPriceXchg_ι_notify_addr_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.notify_addr_' " := ( DPriceXchg_ι_notify_addr__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.notify_addr_' " := ( DPriceXchg_ι_notify_addr__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_workchain_id__right {b} (x: URValue DPriceXchgLRecord b): URValue XUInteger8 b :=
+    || {x} ^^ {DPriceXchg_ι_workchain_id_} || : _ .
+
+Definition DPriceXchg_ι_workchain_id__left (x: ULValue DPriceXchgLRecord): ULValue XUInteger8 :=
+    {{ {x} ^^ {DPriceXchg_ι_workchain_id_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.workchain_id_' " := ( DPriceXchg_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.workchain_id_' " := ( DPriceXchg_ι_workchain_id__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_tons_cfg__right {b} (x: URValue DPriceXchgLRecord b): URValue TonsConfigLRecord b :=
+    || {x} ^^ {DPriceXchg_ι_tons_cfg_} || : _ .
+
+Definition DPriceXchg_ι_tons_cfg__left (x: ULValue DPriceXchgLRecord): ULValue TonsConfigLRecord :=
+    {{ {x} ^^ {DPriceXchg_ι_tons_cfg_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.tons_cfg_' " := ( DPriceXchg_ι_tons_cfg__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.tons_cfg_' " := ( DPriceXchg_ι_tons_cfg__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_tip3_code__right {b} (x: URValue DPriceXchgLRecord b): URValue XCell b :=
+    || {x} ^^ {DPriceXchg_ι_tip3_code_} || : _ .
+
+Definition DPriceXchg_ι_tip3_code__left (x: ULValue DPriceXchgLRecord): ULValue XCell :=
+    {{ {x} ^^ {DPriceXchg_ι_tip3_code_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.tip3_code_' " := ( DPriceXchg_ι_tip3_code__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.tip3_code_' " := ( DPriceXchg_ι_tip3_code__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_major_tip3cfg__right {b} (x: URValue DPriceXchgLRecord b): URValue Tip3ConfigLRecord b :=
+    || {x} ^^ {DPriceXchg_ι_major_tip3cfg_} || : _ .
+
+Definition DPriceXchg_ι_major_tip3cfg__left (x: ULValue DPriceXchgLRecord): ULValue Tip3ConfigLRecord :=
+    {{ {x} ^^ {DPriceXchg_ι_major_tip3cfg_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.major_tip3cfg_' " := ( DPriceXchg_ι_major_tip3cfg__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.major_tip3cfg_' " := ( DPriceXchg_ι_major_tip3cfg__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition DPriceXchg_ι_minor_tip3cfg__right {b} (x: URValue DPriceXchgLRecord b): URValue Tip3ConfigLRecord b :=
+    || {x} ^^ {DPriceXchg_ι_minor_tip3cfg_} || : _ .
+
+Definition DPriceXchg_ι_minor_tip3cfg__left (x: ULValue DPriceXchgLRecord): ULValue Tip3ConfigLRecord :=
+    {{ {x} ^^ {DPriceXchg_ι_minor_tip3cfg_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.minor_tip3cfg_' " := ( DPriceXchg_ι_minor_tip3cfg__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.minor_tip3cfg_' " := ( DPriceXchg_ι_minor_tip3cfg__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition DPriceXchg_ι_sells__right {b} (x: URValue DPriceXchgLRecord b): URValue ( XQueue OrderInfoXchgLRecord ) b :=
+    || {x} ^^ {DPriceXchg_ι_sells_} || : _ .
+
+Definition DPriceXchg_ι_sells__left (x: ULValue DPriceXchgLRecord): ULValue ( XQueue OrderInfoXchgLRecord ) :=
+    {{ {x} ^^ {DPriceXchg_ι_sells_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.sells_' " := ( DPriceXchg_ι_sells__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.sells_' " := ( DPriceXchg_ι_sells__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+
+Definition DPriceXchg_ι_buys__right {b} (x: URValue DPriceXchgLRecord b): URValue ( XQueue OrderInfoXchgLRecord ) b :=
+    || {x} ^^ {DPriceXchg_ι_buys_} || : _ .
+
+Definition DPriceXchg_ι_buys__left (x: ULValue DPriceXchgLRecord): ULValue ( XQueue OrderInfoXchgLRecord ) :=
+    {{ {x} ^^ {DPriceXchg_ι_buys_} }} : _ .
+
+Notation " a '↑' 'DPriceXchg.buys_' " := ( DPriceXchg_ι_buys__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DPriceXchg.buys_' " := ( DPriceXchg_ι_buys__left a ) (in custom ULValue at level 0) : ursus_scope.
 
 End ClassTypesNotations.
 
