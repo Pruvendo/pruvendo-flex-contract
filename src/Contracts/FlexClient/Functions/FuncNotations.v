@@ -53,48 +53,48 @@ Import xt.
 Import UrsusNotations.
 Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
- Definition owner__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType owner_ ) : ULValue uint256 ) . 
- Definition owner__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType owner_ ) : URValue uint256 false ) . 
+ Definition owner__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_owner_ ) : ULValue uint256 ) . 
+ Definition owner__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_owner_ ) : URValue uint256 false ) . 
  Notation " '_owner_' " := ( owner__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_owner_' " := ( owner__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition trading_pair_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType trading_pair_code_ ) : ULValue XCell ) . 
- Definition trading_pair_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType trading_pair_code_ ) : URValue XCell false ) . 
+ Definition trading_pair_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_trading_pair_code_ ) : ULValue XCell ) . 
+ Definition trading_pair_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_trading_pair_code_ ) : URValue XCell false ) . 
  Notation " '_trading_pair_code_' " := ( trading_pair_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_trading_pair_code_' " := ( trading_pair_code__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition xchg_pair_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType xchg_pair_code_ ) : ULValue XCell ) . 
- Definition xchg_pair_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType xchg_pair_code_ ) : URValue XCell false ) . 
+ Definition xchg_pair_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_xchg_pair_code_ ) : ULValue XCell ) . 
+ Definition xchg_pair_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_xchg_pair_code_ ) : URValue XCell false ) . 
  Notation " '_xchg_pair_code_' " := ( xchg_pair_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_xchg_pair_code_' " := ( xchg_pair_code__right ) (in custom URValue at level 0) : ursus_scope. 
 
- Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : ULValue uint8 ) . 
- Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType workchain_id_ ) : URValue uint8 false ) . 
+ Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_workchain_id_ ) : ULValue uint8 ) . 
+ Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_workchain_id_ ) : URValue uint8 false ) . 
  Notation " '_workchain_id_' " := ( workchain_id__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_workchain_id_' " := ( workchain_id__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition tons_cfg__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType tons_cfg_ ) : ULValue TonsConfigLRecord ) . 
- Definition tons_cfg__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType tons_cfg_ ) : URValue TonsConfigLRecord false ) . 
+ Definition tons_cfg__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_tons_cfg_ ) : ULValue TonsConfigLRecord ) . 
+ Definition tons_cfg__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_tons_cfg_ ) : URValue TonsConfigLRecord false ) . 
  Notation " '_tons_cfg_' " := ( tons_cfg__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_tons_cfg_' " := ( tons_cfg__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition flex__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType flex_ ) : ULValue XAddress ) . 
- Definition flex__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType flex_ ) : URValue XAddress false ) . 
+ Definition flex__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_ ) : ULValue XAddress ) . 
+ Definition flex__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_ ) : URValue XAddress false ) . 
  Notation " '_flex_' " := ( flex__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_' " := ( flex__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition ext_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType ext_wallet_code_ ) : ULValue ( XMaybe XCell ) ) . 
- Definition ext_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType ext_wallet_code_ ) : URValue ( XMaybe XCell ) false ) . 
+ Definition ext_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_ext_wallet_code_ ) : ULValue ( XMaybe XCell ) ) . 
+ Definition ext_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_ext_wallet_code_ ) : URValue ( XMaybe XCell ) false ) . 
  Notation " '_ext_wallet_code_' " := ( ext_wallet_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_ext_wallet_code_' " := ( ext_wallet_code__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition flex_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType flex_wallet_code_ ) : ULValue ( XMaybe XCell ) ) . 
- Definition flex_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType flex_wallet_code_ ) : URValue ( XMaybe XCell ) false ) . 
+ Definition flex_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wallet_code_ ) : ULValue ( XMaybe XCell ) ) . 
+ Definition flex_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wallet_code_ ) : URValue ( XMaybe XCell ) false ) . 
  Notation " '_flex_wallet_code_' " := ( flex_wallet_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_wallet_code_' " := ( flex_wallet_code__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition flex_wrapper_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType flex_wrapper_code_ ) : ULValue ( XMaybe XCell ) ) . 
- Definition flex_wrapper_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType flex_wrapper_code_ ) : URValue ( XMaybe XCell ) false ) . 
+ Definition flex_wrapper_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wrapper_code_ ) : ULValue ( XMaybe XCell ) ) . 
+ Definition flex_wrapper_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wrapper_code_ ) : URValue ( XMaybe XCell ) false ) . 
  Notation " '_flex_wrapper_code_' " := ( flex_wrapper_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_wrapper_code_' " := ( flex_wrapper_code__right ) (in custom URValue at level 0) : ursus_scope. 
 
