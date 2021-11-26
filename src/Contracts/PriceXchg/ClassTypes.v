@@ -21,6 +21,7 @@ Local Open Scope xlist_scope.
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
+Local Open Scope ursus_scope.
 
 Definition RationalPriceL : list Type := 
  [ ( XUInteger128 ) : Type ; 
@@ -44,6 +45,10 @@ Definition OrderInfoXchgL : list Type :=
     ( addr_std_fixedLRecord ) : Type ; 
     ( XUInteger32 ) : Type ] .
 GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
+
+(* using OrderInfoXchgWithIdx = std::pair<unsigned, OrderInfoXchg>; *)
+
+Definition OrderInfoXchgWithIdx := XUInteger # OrderInfoXchgLRecord.
 
 Definition dealerL : list Type := 
  [ ( XAddress ) : Type ; 

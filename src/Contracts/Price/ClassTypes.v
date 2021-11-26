@@ -20,6 +20,7 @@ Local Open Scope xlist_scope.
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
+Local Open Scope ursus_scope.
 
 Definition SellArgsL : list Type := 
  [ ( XUInteger128 ) : Type ; 
@@ -41,6 +42,8 @@ Definition OrderInfoL : list Type :=
     ( addr_std_fixedLRecord ) : Type ; 
     ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderInfoL OrderInfoFields . 
+
+Definition OrderInfoWithIdx := XUInteger # OrderInfoLRecord.
 
 Definition dealerL : list Type := 
  [ ( XAddress ) : Type ; 

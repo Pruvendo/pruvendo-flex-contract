@@ -5,69 +5,85 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import CommonNotations.
-Require Import Contracts.Flex.ClassTypesNotations.
-Require Import Contracts.Flex.ClassTypes.
-Require Import Contracts.Flex.Ledger.
-Require Contracts.TradingPair.ClassTypes.
+Require Import Flex.ClassTypesNotations.
+Require Import Flex.ClassTypes.
+Require Import Flex.Ledger.
+
+Require TradingPair.ClassTypes.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
-(* Module Export ClassTypesModuleForFuncSig := ClassTypes xt sm. *)
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
 
 Module Type SpecSig.
+
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
-Parameter constructor : ( uint256 ) -> ( XString ) -> ( XMaybe XAddress ) -> ( TonsConfigLRecord ) -> ( uint8 ) -> ( ListingConfigLRecord ) -> UExpression PhantomType true . 
-Parameter setSpecificCode : ( uint8 ) -> ( XCell ) -> UExpression PhantomType false . 
-Parameter setPairCode : ( XCell ) -> UExpression PhantomType true . 
-Parameter setXchgPairCode : ( XCell ) -> UExpression PhantomType true . 
-Parameter setWrapperCode : ( XCell ) -> UExpression PhantomType true . 
-Parameter setPriceCode : ( XCell ) -> UExpression PhantomType true . 
-Parameter setXchgPriceCode : ( XCell ) -> UExpression PhantomType true . 
-Parameter setExtWalletCode : ( XCell ) -> UExpression PhantomType true . 
-Parameter setFlexWalletCode : ( XCell ) -> UExpression PhantomType true . 
-Parameter transfer : ( XAddress ) -> ( uint128 ) -> UExpression PhantomType true . 
-Parameter registerTradingPair : ( uint256 ) -> ( XAddress ) -> ( uint128 ) -> ( XAddress ) -> UExpression XAddress true . 
-Parameter approveTradingPair : ( uint256 ) -> UExpression XAddress true . 
-Parameter rejectTradingPair : ( uint256 ) -> UExpression XBool true . 
-Parameter registerXchgPair : ( uint256 ) -> ( XAddress ) -> ( XAddress ) -> ( uint128 ) -> ( XAddress ) -> UExpression XAddress true . 
-Parameter approveXchgPair : ( uint256 ) -> UExpression XAddress true . 
-Parameter rejectXchgPair : ( uint256 ) -> UExpression XBool true . 
-Parameter registerWrapper : ( uint256 ) -> ( Tip3ConfigLRecord ) -> UExpression XAddress true . 
-Parameter approveWrapper : ( uint256 ) -> UExpression XAddress true . 
-Parameter rejectWrapper : ( uint256 ) -> UExpression XBool true . 
-Parameter isFullyInitialized : UExpression XBool false . 
+
+Parameter constructor : uint256 -> String -> optional raw_address -> TonsConfigLRecord -> uint8 -> 
+                        ListingConfigLRecord -> UExpression PhantomType true . 
+Parameter setSpecificCode : uint8 -> TvmCell -> UExpression PhantomType false . 
+Parameter setPairCode : TvmCell -> UExpression PhantomType true . 
+Parameter setXchgPairCode : TvmCell -> UExpression PhantomType true . 
+Parameter setWrapperCode : TvmCell -> UExpression PhantomType true . 
+Parameter setPriceCode : TvmCell -> UExpression PhantomType true . 
+Parameter setXchgPriceCode : TvmCell -> UExpression PhantomType true . 
+Parameter setExtWalletCode : TvmCell -> UExpression PhantomType true . 
+Parameter setFlexWalletCode : TvmCell -> UExpression PhantomType true . 
+Parameter transfer : raw_address -> uint128 -> UExpression PhantomType true . 
+Parameter registerTradingPair : uint256 -> raw_address -> uint128 -> raw_address -> UExpression raw_address true . 
+Parameter approveTradingPair : uint256 -> UExpression raw_address true . 
+Parameter rejectTradingPair : uint256 -> UExpression boolean true . 
+Parameter registerXchgPair : uint256 -> raw_address -> raw_address -> uint128 -> raw_address -> UExpression raw_address true . 
+Parameter approveXchgPair : uint256 -> UExpression raw_address true . 
+Parameter rejectXchgPair : uint256 -> UExpression boolean true . 
+Parameter registerWrapper : uint256 -> Tip3ConfigLRecord -> UExpression raw_address true . 
+Parameter approveWrapper : uint256 -> UExpression raw_address true . 
+Parameter rejectWrapper : uint256 -> UExpression boolean true . 
+Parameter isFullyInitialized : UExpression boolean false . 
 Parameter getDetails : UExpression FlexDetailsLRecord false . 
 Parameter getTonsCfg : UExpression TonsConfigLRecord false . 
 Parameter getListingCfg : UExpression ListingConfigLRecord false . 
-Parameter getTradingPairCode : UExpression XCell false . 
-Parameter getXchgPairCode : UExpression XCell false . 
-Parameter getSellPriceCode : ( XAddress ) -> UExpression XCell true . 
-Parameter getXchgPriceCode : ( XAddress ) -> ( XAddress ) -> UExpression XCell true . 
-Parameter getSellTradingPair : ( XAddress ) -> UExpression XAddress false . 
-Parameter getXchgTradingPair : ( XAddress ) -> ( XAddress ) -> UExpression XAddress false . 
+Parameter getTradingPairCode : UExpression TvmCell false . 
+Parameter getXchgPairCode : UExpression TvmCell false . 
+Parameter getSellPriceCode : raw_address -> UExpression TvmCell true . 
+Parameter getXchgPriceCode : raw_address -> raw_address -> UExpression TvmCell true . 
+Parameter getSellTradingPair : raw_address -> UExpression raw_address false . 
+Parameter getXchgTradingPair : raw_address -> raw_address -> UExpression raw_address false . 
 Parameter getDealsLimit : UExpression uint8 false . 
 Parameter getOwnershipInfo : UExpression FlexOwnershipInfoLRecord false .
-Parameter getWrapperListingRequests : UExpression ( XHMap uint WrapperListingRequestWithPubkeyLRecord) false .
-Parameter getTradingPairListingRequests : UExpression ( XHMap uint TradingPairListingRequestWithPubkeyLRecord) false . 
-Parameter getXchgPairListingRequests : UExpression ( XHMap uint XchgPairListingRequestWithPubkeyLRecord) false . 
+Parameter getWrapperListingRequests : UExpression ( mapping uint WrapperListingRequestWithPubkeyLRecord) false .
+Parameter getTradingPairListingRequests : UExpression ( mapping uint TradingPairListingRequestWithPubkeyLRecord) false . 
+Parameter getXchgPairListingRequests : UExpression ( mapping uint XchgPairListingRequestWithPubkeyLRecord) false . 
 Parameter check_owner : UExpression PhantomType true . 
-Parameter _fallback : ( XCell ) -> ( XSlice ) -> UExpression uint false . 
-Parameter prepare_wrapper_state_init_and_addr : ( XCell ) -> ( WrapperClassTypesModule.DWrapperLRecord ) -> UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter prepare_flex_state_init_and_addr : ( ContractLRecord ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter prepare_external_wallet_state_init_and_addr : ( XString ) -> ( XString ) -> ( uint8 ) -> ( uint256 ) -> ( uint256 ) -> ( XAddress ) -> ( XMaybe XAddress ) -> ( XCell ) -> ( uint8 ) -> UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter prepare_internal_wallet_state_init_and_addr : ( XString ) -> ( XString ) -> ( uint8 ) -> ( uint256 ) -> ( uint256 ) -> ( XAddress ) -> ( XMaybe XAddress ) -> ( XCell ) -> ( uint8 ) -> UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter prepare_trading_pair_state_init_and_addr : ( TradingPairClassTypesModule.DTradingPairLRecord ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter prepare_trading_pair : ( XAddress ) -> ( XAddress ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter prepare_xchg_pair_state_init_and_addr : ( XchgPairClassTypesModule.DXchgPairLRecord ) -> ( XCell ) -> UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter approveTradingPairImpl : ( uint256 ) -> (XHMap uint256 (uint256 * TradingPairListingRequestLRecord)) -> ( XCell ) -> ( uint8 ) -> ( ListingConfigLRecord ) -> UExpression ( XAddress * (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) ) true .
-Parameter rejectTradingPairImpl : ( uint256 ) -> (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) -> ( ListingConfigLRecord ) -> UExpression ( XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) true . 
-Parameter approveXchgPairImpl : ( uint256 ) -> ( XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) -> ( XCell ) -> ( uint8 ) -> ( ListingConfigLRecord ) -> UExpression ( XAddress * (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) ) true . 
-Parameter rejectXchgPairImpl : ( uint256 ) -> ( XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) -> ( ListingConfigLRecord ) -> UExpression ( XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) true . 
-Parameter approveWrapperImpl : ( uint256 ) -> ( XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) -> ( XCell ) -> ( XCell ) -> ( XCell ) -> ( uint8 ) -> ( ListingConfigLRecord ) -> UExpression ( XAddress * (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) ) true . 
-Parameter rejectWrapperImpl : ( uint256 ) -> ( XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) -> ( ListingConfigLRecord ) -> UExpression ( XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) true . 
+Parameter _fallback : TvmCell -> TvmSlice -> UExpression uint false . 
+Parameter prepare_wrapper_state_init_and_addr : TvmCell -> WrapperClassTypesModule.DWrapperLRecord -> UExpression ( StateInitLRecord * uint256 ) false . 
+Parameter prepare_flex_state_init_and_addr : ContractLRecord -> TvmCell -> UExpression ( StateInitLRecord * uint256 ) false . 
+
+Parameter prepare_external_wallet_state_init_and_addr : String -> String -> uint8 -> uint256 -> uint256 -> raw_address -> 
+                                                        optional raw_address -> TvmCell -> uint8 -> UExpression ( StateInitLRecord * uint256 ) false . 
+Parameter prepare_internal_wallet_state_init_and_addr : String -> String -> uint8 -> uint256 -> uint256 -> raw_address -> 
+                                                        optional raw_address -> TvmCell -> uint8 -> UExpression ( StateInitLRecord * uint256 ) false . 
+Parameter prepare_trading_pair_state_init_and_addr : TradingPairClassTypesModule.DTradingPairLRecord -> TvmCell ->
+                                                     UExpression ( StateInitLRecord * uint256 ) false . 
+Parameter prepare_trading_pair : raw_address -> raw_address -> TvmCell -> UExpression ( StateInitLRecord * uint256 ) false . 
+Parameter prepare_xchg_pair_state_init_and_addr : XchgPairClassTypesModule.DXchgPairLRecord -> TvmCell -> 
+                                                  UExpression ( StateInitLRecord * uint256 ) false . 
+Parameter approveTradingPairImpl : uint256 -> mapping uint256 (uint256 * TradingPairListingRequestLRecord) -> 
+                                   TvmCell -> uint8 -> ListingConfigLRecord -> 
+                                   UExpression ( raw_address * (mapping uint256 (uint256 * TradingPairListingRequestLRecord) ) ) true .
+Parameter rejectTradingPairImpl : uint256 -> mapping uint256 (uint256 * TradingPairListingRequestLRecord)-> 
+                                  ListingConfigLRecord -> UExpression ( mapping uint256 (uint256 * TradingPairListingRequestLRecord) ) true . 
+Parameter approveXchgPairImpl : uint256 -> mapping uint256 (uint256 * XchgPairListingRequestLRecord) -> TvmCell -> uint8 -> 
+                                ListingConfigLRecord -> UExpression ( raw_address * (mapping uint256 (uint256 * XchgPairListingRequestLRecord) ) ) true . 
+Parameter rejectXchgPairImpl : uint256 -> mapping uint256 (uint256 * XchgPairListingRequestLRecord) -> ListingConfigLRecord -> 
+                               UExpression ( mapping uint256 (uint256 * XchgPairListingRequestLRecord) ) true . 
+Parameter approveWrapperImpl : uint256 -> mapping uint256 (uint256 * WrapperListingRequestLRecord) -> TvmCell -> TvmCell -> 
+                               TvmCell -> uint8 -> ListingConfigLRecord -> 
+                               UExpression ( raw_address * (mapping uint256 (uint256 * WrapperListingRequestLRecord) ) ) true . 
+Parameter rejectWrapperImpl : uint256 -> mapping uint256 (uint256 * WrapperListingRequestLRecord) ->
+                              ListingConfigLRecord -> UExpression ( mapping uint256 (uint256 * WrapperListingRequestLRecord) ) true . 
 
 
 End SpecSig.

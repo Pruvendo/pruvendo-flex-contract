@@ -2,14 +2,16 @@ Require Import FinProof.Common.
 
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
-Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import UrsusStdLib.Cpp.stdTypes.
 
-Require Import CommonNotations.
-Require Import Contracts.TONTokenWallet.ClassTypes.
-Require Import Contracts.TONTokenWallet.Ledger.
-Require Import Contracts.TONTokenWallet.ClassTypesNotations.
+Require Import UrsusTVM.Cpp.tvmNotations.
+
+Require Import Project.CommonNotations.
+
+Require Import TONTokenWallet.ClassTypes.
+Require Import TONTokenWallet.Ledger.
+Require Import TONTokenWallet.ClassTypesNotations.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
