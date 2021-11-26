@@ -44,6 +44,16 @@ Elpi GeneratePruvendoRecord SellArgsL SellArgsFields .
 Elpi GeneratePruvendoRecord DetailsInfoL DetailsInfoFields . 
  Opaque DetailsInfoLRecord . 
 
+ Definition OrderInfoL : list Type := 
+    [ ( XUInteger128 ) : Type ; 
+    ( XUInteger128 ) : Type ; 
+    ( XUInteger128 ) : Type ; 
+    ( addr_std_fixedLRecord ) : Type ; 
+    ( addr_std_fixedLRecord ) : Type ; 
+    ( XUInteger32 ) : Type ] .
+    Elpi GeneratePruvendoRecord OrderInfoL OrderInfoFields . 
+    Opaque OrderInfoLRecord . 
+
 (* 2 *) Definition dealerL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress (* IFlexNotifyPtr *) ) : Type ; 
@@ -75,15 +85,7 @@ Definition DPriceL : list Type :=
 Elpi GeneratePruvendoRecord DPriceL DPriceFields . 
  Opaque DPriceLRecord .
 
-Definition OrderInfoL : list Type := 
-[ ( XUInteger128 ) : Type ; 
-( XUInteger128 ) : Type ; 
-( XUInteger128 ) : Type ; 
-( addr_std_fixedLRecord ) : Type ; 
-( addr_std_fixedLRecord ) : Type ; 
-( XUInteger32 ) : Type ] .
-Elpi GeneratePruvendoRecord OrderInfoL OrderInfoFields . 
-Opaque OrderInfoLRecord . 
+
 
 Definition process_retL : list Type := 
  [ ( XUInteger128 ) : Type ; 
@@ -92,6 +94,7 @@ Definition process_retL : list Type :=
  ( ( XQueue OrderInfoLRecord ) ) : Type ; 
  ( ( XMaybe OrderRetLRecord ) ) : Type ] .
 Elpi GeneratePruvendoRecord process_retL process_retFields . 
+Opaque process_retLRecord .
 
 End ClassTypes .
  

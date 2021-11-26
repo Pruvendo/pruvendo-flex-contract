@@ -47,7 +47,20 @@ Elpi GeneratePruvendoRecord DetailsInfoXchgL DetailsInfoXchgFields .
  Opaque DetailsInfoXchgLRecord . 
 
 
+ 
+ Definition OrderInfoXchgL : list Type := 
+    [ ( XUInteger128 ) : Type ; 
+    ( XUInteger128 ) : Type ; 
+    ( XUInteger128 ) : Type ; 
+    ( addr_std_fixedLRecord ) : Type ; 
+    ( addr_std_fixedLRecord ) : Type ; 
+    ( addr_std_fixedLRecord ) : Type ; 
+    ( XUInteger32 ) : Type ] .
+   Elpi GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
+    Opaque OrderInfoXchgLRecord . 
 
+
+    
 (* 2 *) Definition dealerL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 
@@ -63,6 +76,8 @@ Elpi GeneratePruvendoRecord DetailsInfoXchgL DetailsInfoXchgFields .
 Elpi GeneratePruvendoRecord dealerL dealerFields . 
  Opaque dealerLRecord . 
 
+
+ 
 Definition DPriceXchgL : list Type := 
  [ ( RationalPriceLRecord ) : Type ; 
  ( XUInteger128 ) : Type ; 
@@ -81,16 +96,7 @@ Definition DPriceXchgL : list Type :=
 Elpi GeneratePruvendoRecord DPriceXchgL DPriceXchgFields . 
  Opaque DPriceXchgLRecord . 
  
-Definition OrderInfoXchgL : list Type := 
- [ ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
- ( XUInteger32 ) : Type ] .
-Elpi GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
- Opaque OrderInfoXchgLRecord . 
+
 
 Definition process_retL : list Type := 
  [ ( XUInteger128 ) : Type ; 
@@ -99,13 +105,14 @@ Definition process_retL : list Type :=
  ( ( XQueue OrderInfoXchgLRecord ) ) : Type ; 
  ( ( XMaybe OrderRetLRecord ) ) : Type ] .
 Elpi GeneratePruvendoRecord process_retL process_retFields . 
-
+Opaque process_retLRecord . 
+Opaque addr_std_fixedLRecord.
 (* 6 *) Definition PayloadArgsL : list Type := 
 [ ( XBool ) : Type ; 
 ( XUInteger128 ) : Type ; 
 ( addr_std_fixedLRecord ) : Type ; 
 ( addr_std_fixedLRecord ) : Type ] .
 Elpi GeneratePruvendoRecord PayloadArgsL PayloadArgsFields . 
-
+Opaque PayloadArgsLRecord . 
 
 End ClassTypes .
