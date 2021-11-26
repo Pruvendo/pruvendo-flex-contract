@@ -1,4 +1,3 @@
-
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
 Require Import ZArith.
@@ -14,13 +13,14 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
+Require Import Project.CommonNotations.
 
-Require Import CommonNotations.
-Require Import Contracts.TradingPair.Ledger.
-Require Import Contracts.TradingPair.Functions.FuncSig.
+Require Import TradingPair.ClassTypes.
+Require Import TradingPair.Ledger.
+Require Import TradingPair.Functions.FuncSig.
 
 (* здесь инмпортируем все внешние интерфейсы *)
-Require Import Contracts.TradingPair.Interface.
+Require Import TradingPair.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -41,74 +41,26 @@ Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-(* Definition StateInitL : list Type := 
- [ ( ( XMaybe XUInteger ) ) : Type ; 
- ( ( XMaybe TickTockLRecord ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ] . *)
-(* 
-Definition StateInit_split_depth_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XUInteger ) b :=
-    || {x} ^^ {StateInit_ι_split_depth} || : _ .
-
-Definition StateInit_special_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe TickTockLRecord ) b :=
-    || {x} ^^ {StateInit_ι_special} || : _ .
-
-Definition StateInit_code_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XCell ) b :=
-    || {x} ^^ {StateInit_ι_code} || : _ .
-
-Definition StateInit_data_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XCell ) b :=
-    || {x} ^^ {StateInit_ι_data} || : _ .
-
-Definition StateInit_library_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XCell ) b :=
-    || {x} ^^ {StateInit_ι_library} || : _ .        
-
-Definition StateInit_split_depth_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe XUInteger ) :=
-    {{ {x} ^^ {StateInit_ι_split_depth} }} : _ .
-
-Definition StateInit_special_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe TickTockLRecord ) :=
-    {{ {x} ^^ {StateInit_ι_special} }} : _ .
-
-Definition StateInit_code_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe XCell ) :=
-    {{ {x} ^^ {StateInit_ι_code} }} : _ .
-
-Definition StateInit_data_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe XCell ) :=
-    {{ {x} ^^ {StateInit_ι_data} }} : _ .
-
-Definition StateInit_library_left  (x: ULValue StateInitLRecord): ULValue ( XMaybe XCell ) :=
-    {{ {x} ^^ {StateInit_ι_library} }} : _ .      
-
-Notation " a '↑' 'StateInit.split_depth' " := ( StateInit_split_depth_left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'StateInit.split_depth' " := ( StateInit_split_depth_right a) (in custom URValue at level 0) : ursus_scope. 
-Notation " a '↑' 'StateInit.special' " := ( StateInit_special_left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'StateInit.special' " := ( StateInit_special_right a) (in custom URValue at level 0) : ursus_scope. 
-Notation " a '↑' 'StateInit.code' " := ( StateInit_code_left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'StateInit.code' " := ( StateInit_code_right a) (in custom URValue at level 0) : ursus_scope. 
-Notation " a '↑' 'StateInit.data' " := ( StateInit_data_left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'StateInit.data' " := ( StateInit_data_right a) (in custom URValue at level 0) : ursus_scope. 
-Notation " a '↑' 'StateInit.library' " := ( StateInit_library_left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'StateInit.library' " := ( StateInit_library_right a) (in custom URValue at level 0) : ursus_scope. 
- *)
 (********************************************************************************************************************)
 (*state fields*)
 
-Definition flex_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType flex_addr_ ) : ULValue XAddress ) . 
-Definition flex_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType flex_addr_ ) : URValue XAddress false ) . 
+Definition flex_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_flex_addr_ ) : ULValue XAddress ) . 
+Definition flex_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_flex_addr_ ) : URValue XAddress false ) . 
 Notation " '_flex_addr_' " := ( flex_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_flex_addr_' " := ( flex_addr__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition tip3_root__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType tip3_root_ ) : ULValue XAddress ) . 
-Definition tip3_root__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType tip3_root_ ) : URValue XAddress false ) . 
+Definition tip3_root__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_tip3_root_ ) : ULValue XAddress ) . 
+Definition tip3_root__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_tip3_root_ ) : URValue XAddress false ) . 
 Notation " '_tip3_root_' " := ( tip3_root__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_tip3_root_' " := ( tip3_root__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : ULValue uint128 ) . 
-Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType min_amount_ ) : URValue uint128 false ) . 
+Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_min_amount_ ) : ULValue uint128 ) . 
+Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_min_amount_ ) : URValue uint128 false ) . 
 Notation " '_min_amount_' " := ( min_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_min_amount_' " := ( min_amount__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType notify_addr_ ) : ULValue XAddress ) . 
-Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType notify_addr_ ) : URValue XAddress false ) . 
+Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_notify_addr_ ) : ULValue XAddress ) . 
+Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_notify_addr_ ) : URValue XAddress false ) . 
 Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
 
@@ -183,8 +135,6 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) 
  pair_data pair_code ) 
  (in custom URValue at level 0 , pair_data custom URValue at level 0 
  , pair_code custom URValue at level 0 ) : ursus_scope . 
-
-
 
 End Calls. 
 

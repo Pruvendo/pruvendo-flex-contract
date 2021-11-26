@@ -1,19 +1,21 @@
- Require Import Coq.Program.Basics. 
-
+Require Import Coq.Program.Basics. 
 Require Import String. 
+
 Require Import FinProof.Types.IsoTypes. 
 Require Import FinProof.Common. 
 Require Import FinProof.MonadTransformers21. 
-
 Require Import FinProof.ProgrammingWith.  
+
 Require Import UMLang.UrsusLib. 
 Require Import UMLang.BasicModuleTypes. 
+Require Import UMLang.GlobalClassGenerator.ClassGenerator.
+
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require Import Project.CommonTypes. 
-Require Import Contracts.XchgPair.ClassTypes.
-Require Import Contracts.XchgPair.Interface.
-Require Import UMLang.GlobalClassGenerator.ClassGenerator.
+
+Require Import XchgPair.ClassTypes.
+Require Import XchgPair.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
@@ -26,7 +28,7 @@ Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAnd
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
-Module XchgPairPublicInterfaceModule := PublicInterface xt sm.
+Module XchgPairPublicInterfaceModule := XchgPair.Interface.PublicInterface xt sm.
 
 Module Export TypesModuleForLedger := ClassTypes xt sm .
 Module Export VMStateModule := VMStateModule xt sm. 
@@ -424,8 +426,6 @@ Remove Hints LocalStateField1010 : typeclass_instances.
 Definition LocalStateField_XUInteger := LocalStateField0110 .
 Definition LocalStateField_XBool := LocalStateField0011 .
 Definition LocalStateField_XCell := LocalStateField0001 .
-
-
 
 End Ledger .
 

@@ -2,14 +2,16 @@ Require Import FinProof.Common.
 
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
-Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import UrsusStdLib.Cpp.stdTypes.
 
-Require Import CommonNotations.
-Require Import Contracts.TradingPair.ClassTypes.
-Require Import Contracts.TradingPair.Ledger.
-Require Import Contracts.TradingPair.ClassTypesNotations.
+Require Import UrsusTVM.Cpp.tvmNotations.
+
+Require Import Project.CommonNotations.
+
+Require Import TradingPair.ClassTypes.
+Require Import TradingPair.Ledger.
+Require Import TradingPair.ClassTypesNotations.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
@@ -22,13 +24,13 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
- Parameter onDeploy : ( ( uint128 ) ) -> ( ( uint128 ) ) -> ( ( XAddress ) ) -> UExpression XBool true . 
- Parameter getFlexAddr : UExpression XAddress false . 
- Parameter getTip3Root : UExpression XAddress false . 
- Parameter getMinAmount : UExpression uint128 false . 
- Parameter getNotifyAddr : UExpression XAddress false . 
- Parameter _fallback : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression uint false . 
- Parameter prepare_trading_pair_state_init_and_addr : ( ( ContractLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord * uint256 ) false . 
+Parameter onDeploy :  uint128 ->  uint128 -> raw_address -> UExpression boolean true . 
+Parameter getFlexAddr : UExpression raw_address false . 
+Parameter getTip3Root : UExpression raw_address false . 
+Parameter getMinAmount : UExpression uint128 false . 
+Parameter getNotifyAddr : UExpression raw_address false . 
+Parameter _fallback :  TvmSlice -> TvmSlice -> UExpression uint false . 
+Parameter prepare_trading_pair_state_init_and_addr :  ContractLRecord  -> TvmCell -> UExpression ( StateInitLRecord * uint256 ) false . 
 
 End SpecSig.
 
