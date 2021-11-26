@@ -7,7 +7,6 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 (* 4 *)Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address | Tip3Config_ι_workchain_id_.
 (* 5 *)Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
 (* 7 *)Inductive OrderRetFields := | OrderRet_ι_err_code | OrderRet_ι_processed | OrderRet_ι_enqueued .
-(* Price & PriceXchg *)
 
 Module Types (xt: XTypesSig) (sm: StateMonadSig).
 Export xt. 
