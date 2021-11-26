@@ -421,64 +421,11 @@ Next Obligation.
 #[local]
 Remove Hints LocalStateField1010 : typeclass_instances. 
 
-
-
 Definition LocalStateField_XUInteger := LocalStateField0110 .
 Definition LocalStateField_XBool := LocalStateField0011 .
 Definition LocalStateField_XCell := LocalStateField0001 .
 
 
-Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
-         (v2: field_type f2) (r :  MessagesAndEventsLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= MessagesAndEventsLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
-
-(* Lemma ContractFields_noeq : forall (f1 f2:  DXchgPairFields ) 
-         (v2: field_type f2) (r :  DXchgPairLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros. 
-  destruct f1; destruct f2;
-  (revert r;     
-               apply (countable_prop_proof (T:= DXchgPairLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed . *)
-
-(* Lemma LocalFields_noeq : forall (f1 f2:  LocalFieldsI ) 
-         (v2: field_type f2) (r :  LocalStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= LocalStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed . *)
-
-Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
-         (v2: field_type f2) (r :  LedgerLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= LedgerLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
 
 End Ledger .
 

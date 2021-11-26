@@ -69,4 +69,27 @@ Proof.
   proof2 f1 f2 r Tip3ConfigLRecord.  
 Qed.
 
-End StateProofs .
+(*****************************************************************************)
+
+Lemma StateInitLRecord_getset_diff : forall (f1 f2: StateInitFields ) 
+         (v2: field_type f2) (r: StateInitLRecord) ,  
+        f1 <> f2 -> 
+        f1 {$$ r with f2 := v2 $$} = f1 r.
+Proof.
+  intros. 
+  proof2 f1 f2 r StateInitLRecord.  
+Qed.
+
+(*****************************************************************************)
+
+Lemma OrderRetLRecord_getset_diff : forall (f1 f2: OrderRetFields ) 
+         (v2: field_type f2) (r: OrderRetLRecord) ,  
+        f1 <> f2 -> 
+        f1 {$$ r with f2 := v2 $$} = f1 r.
+Proof.
+  intros. 
+  proof2 f1 f2 r OrderRetLRecord.  
+Qed.
+
+
+End CommonTypesProofs .
