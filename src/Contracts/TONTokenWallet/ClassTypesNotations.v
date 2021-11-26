@@ -462,4 +462,41 @@ Definition details_info_ι_workchain_id_left (x: ULValue details_infodLRecord): 
 Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_left a ) (in custom ULValue at level 0) : ursus_scope.
 
+Definition allowance_info_ι_spender_right {b} (x: URValue allowance_infoLRecord b): URValue XAddress b :=
+    || {x} ^^ {allowance_info_ι_spender} || : _.
+    
+Definition allowance_info_ι_spender_left (x: ULValue allowance_infoLRecord): ULValue XAddress :=
+    {{ {x} ^^ {allowance_info_ι_spender} }} : _.
+    
+Notation " a '↑' 'allowance_info.spender' " := ( allowance_info_ι_spender_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'allowance_info.spender' " := ( allowance_info_ι_spender_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition allowance_info_ι_remainingTokens_right {b} (x: URValue allowance_infoLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {allowance_info_ι_remainingTokens} || : _.
+    
+Definition allowance_info_ι_remainingTokens_left (x: ULValue allowance_infoLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {allowance_info_ι_remainingTokens} }} : _.
+    
+Notation " a '↑' 'allowance_info.remainingTokens' " := ( allowance_info_ι_remainingTokens_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'allowance_info.remainingTokens' " := ( allowance_info_ι_remainingTokens_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition lend_record_ι_lend_balance_right {b} (x: URValue lend_recordLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {lend_record_ι_lend_balance} || : _.
+    
+Definition lend_record_ι_lend_balance_left (x: ULValue lend_recordLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {lend_record_ι_lend_balance} }} : _.
+    
+Notation " a '↑' 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'lend_record.lend_balance' " := ( lend_record_ι_lend_balance_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition lend_record_ι_lend_finish_time_right {b} (x: URValue lend_recordLRecord b): URValue XUInteger32 b :=
+    || {x} ^^ {lend_record_ι_lend_finish_time} || : _.
+    
+Definition lend_record_ι_lend_finish_time_left (x: ULValue lend_recordLRecord): ULValue XUInteger32 :=
+    {{ {x} ^^ {lend_record_ι_lend_finish_time} }} : _.
+    
+Notation " a '↑' 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_finish_time_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_finish_time_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
 End ClassTypesNotations.

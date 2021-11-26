@@ -16,7 +16,7 @@ Require Import Project.CommonTypes.
 (* 1 *) Inductive WrapperRetFields := | WrapperRet_ι_err_code | WrapperRet_ι_flex_wallet .
 (* 1 *) Inductive FlexDeployWalletArgsFields := | FlexDeployWalletArgs_ι_pubkey | FlexDeployWalletArgs_ι_internal_owner | FlexDeployWalletArgs_ι_grams .
 (* 1 *) Inductive wrapper_details_infoFields := | wrapper_details_info_ι_name | wrapper_details_info_ι_symbol | wrapper_details_info_ι_decimals | wrapper_details_info_ι_root_public_key | wrapper_details_info_ι_total_granted | wrapper_details_info_ι_wallet_code | wrapper_details_info_ι_owner_address | wrapper_details_info_ι_external_wallet .
-(* 1 *) Inductive DWrapperFields := | name_ | symbol_ | decimals_ | workchain_id_ | root_public_key_ | total_granted_ | internal_wallet_code_ | owner_address_ | start_balance_ | external_wallet_ .
+(* 1 *) Inductive DWrapperFields := | DWrapper_ι_name_ | DWrapper_ι_symbol_ | DWrapper_ι_decimals_ | DWrapper_ι_workchain_id_ | DWrapper_ι_root_public_key_ | DWrapper_ι_total_granted_ | DWrapper_ι_internal_wallet_code_ | DWrapper_ι_owner_address_ | DWrapper_ι_start_balance_ | DWrapper_ι_external_wallet_ .
 
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
 Module Export CommonTypes := Types xt sm.

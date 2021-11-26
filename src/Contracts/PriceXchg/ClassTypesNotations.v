@@ -15,25 +15,7 @@ Module Export ClassTypesModule := ClassTypes xt sm.
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 
-(*RationalPrice*)
 
- Definition RationalPrice_num_right {b} (x: URValue RationalPriceLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {RationalPrice_ι_num} || : _ .
-
-Definition RationalPrice_denum_right {b} (x: URValue RationalPriceLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {RationalPrice_ι_denum} || : _ .
-    
-Definition RationalPrice_num_left (x: ULValue RationalPriceLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {RationalPrice_ι_num} }} : _ .
-
-Definition RationalPrice_denum_left (x: ULValue RationalPriceLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {RationalPrice_ι_denum} }} : _ .    
-
-
-Notation " a '↑' 'RationalPrice.num' " := ( RationalPrice_num_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'RationalPrice.num' " := ( RationalPrice_num_left a ) (in custom ULValue at level 0) : ursus_scope.
-Notation " a '↑' 'RationalPrice.denum' " := ( RationalPrice_denum_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'RationalPrice.denum' " := ( RationalPrice_denum_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 (**********************************************************************************************************************)
 (* DetailsInfoXchg *)
@@ -174,7 +156,64 @@ Definition dealer_ret__left  (x: ULValue dealerLRecord): ULValue  ( XMaybe Order
  Notation " a '↑' 'dealer.ret_' " := ( dealer_ret__left a) (in custom ULValue at level 0) : ursus_scope. 
  Notation " a '↑' 'dealer.ret_' " := ( dealer_ret__right a) (in custom URValue at level 0) : ursus_scope. 
 
+ Definition OrderInfoXchg_original_amount_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {OrderInfoXchg_ι_original_amount} || : _ .
 
+Definition OrderInfoXchg_amount_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {OrderInfoXchg_ι_amount} || : _ .
+
+Definition OrderInfoXchg_account_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {OrderInfoXchg_ι_account} || : _ .
+
+Definition OrderInfoXchg_tip3_wallet_provide_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixedLRecord b :=
+    || {x} ^^ {OrderInfoXchg_ι_tip3_wallet_provide} || : _ .  
+
+Definition OrderInfoXchg_tip3_wallet_receive_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixedLRecord b :=
+    || {x} ^^ {OrderInfoXchg_ι_tip3_wallet_receive} || : _ .
+
+Definition OrderInfoXchg_client_addr_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixedLRecord b :=
+    || {x} ^^ {OrderInfoXchg_ι_client_addr} || : _ .
+
+Definition OrderInfoXchg_order_finish_time_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger32 b :=
+    || {x} ^^ {OrderInfoXchg_ι_order_finish_time} || : _ .  
+
+Definition OrderInfoXchg_original_amount_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {OrderInfoXchg_ι_original_amount} }} : _ .
+
+Definition OrderInfoXchg_amount_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {OrderInfoXchg_ι_amount} }} : _ .
+
+Definition OrderInfoXchg_account_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {OrderInfoXchg_ι_account} }} : _ .
+
+Definition OrderInfoXchg_tip3_wallet_provide_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixedLRecord :=
+    {{ {x} ^^ {OrderInfoXchg_ι_tip3_wallet_provide} }} : _ .  
+
+Definition OrderInfoXchg_tip3_wallet_receive_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixedLRecord :=
+    {{ {x} ^^ {OrderInfoXchg_ι_tip3_wallet_receive} }} : _ .
+
+Definition OrderInfoXchg_client_addr_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixedLRecord :=
+    {{ {x} ^^ {OrderInfoXchg_ι_client_addr} }} : _ .
+
+Definition OrderInfoXchg_order_finish_time_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger32 :=
+    {{ {x} ^^ {OrderInfoXchg_ι_order_finish_time} }} : _ .     
+
+ 
+ Notation "  a '↑' 'OrderInfoXchg.original_amount' " := ( OrderInfoXchg_original_amount_left a) (in custom ULValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.original_amount' " := ( OrderInfoXchg_original_amount_right a) (in custom URValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.amount' " := ( OrderInfoXchg_amount_left a) (in custom ULValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.amount' " := ( OrderInfoXchg_amount_right a) (in custom URValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.account' " := ( OrderInfoXchg_account_left a) (in custom ULValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.account' " := ( OrderInfoXchg_account_right a) (in custom URValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.tip3_wallet_provide' " := ( OrderInfoXchg_tip3_wallet_provide_left a) (in custom ULValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.tip3_wallet_provide' " := ( OrderInfoXchg_tip3_wallet_provide_right a) (in custom URValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.tip3_wallet_receive' " := ( OrderInfoXchg_tip3_wallet_receive_left a) (in custom ULValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.tip3_wallet_receive' " := ( OrderInfoXchg_tip3_wallet_receive_right a) (in custom URValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.client_addr' " := ( OrderInfoXchg_client_addr_left a) (in custom ULValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.client_addr' " := ( OrderInfoXchg_client_addr_right a) (in custom URValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.order_finish_time' " := ( OrderInfoXchg_order_finish_time_left a) (in custom ULValue at level 0) : ursus_scope. 
+ Notation "  a '↑' 'OrderInfoXchg.order_finish_time' " := ( OrderInfoXchg_order_finish_time_right a) (in custom URValue at level 0) : ursus_scope. 
+ 
 
 
 End ClassTypesNotations.
