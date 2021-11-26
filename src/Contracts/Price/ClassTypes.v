@@ -19,7 +19,7 @@ Require Import Project.CommonTypes.
 (* 1 *) Inductive lend_ownership_infoFields := | lend_ownership_info_ι_owner | lend_ownership_info_ι_lend_balance | lend_ownership_info_ι_lend_finish_time .
 Inductive OrderInfoFields := | OrderInfo_ι_original_amount | OrderInfo_ι_amount | OrderInfo_ι_account | OrderInfo_ι_tip3_wallet | OrderInfo_ι_client_addr | OrderInfo_ι_order_finish_time .
 Inductive DPriceFields := | DPrice_ι_price_ | DPrice_ι_sells_amount_ | DPrice_ι_buys_amount_ | DPrice_ι_flex_ | DPrice_ι_min_amount_ | DPrice_ι_deals_limit_ | DPrice_ι_notify_addr_ | DPrice_ι_workchain_id_ | DPrice_ι_tons_cfg_ | DPrice_ι_tip3_code_ | DPrice_ι_tip3cfg_ | DPrice_ι_sells_ | DPrice_ι_buys_ .
-
+Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_sells_ | process_ret_ι_buys_amount | process_ret_ι_buys_ | process_ret_ι_ret_ .
 
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
 Module Export CommonTypes := Types xt sm.
@@ -85,6 +85,14 @@ Definition OrderInfoL : list Type :=
 ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderInfoL OrderInfoFields . 
 Opaque OrderInfoLRecord . 
+
+Definition process_retL : list Type := 
+ [ ( XUInteger128 ) : Type ; 
+ ( ( XQueue OrderInfoLRecord ) ) : Type ; 
+ ( XUInteger128 ) : Type ; 
+ ( ( XQueue OrderInfoLRecord ) ) : Type ; 
+ ( ( XMaybe OrderRetLRecord ) ) : Type ] .
+Elpi GeneratePruvendoRecord process_retL process_retFields . 
 
 End ClassTypes .
  

@@ -204,30 +204,46 @@ Definition TradingPairListingRequest_ι_notify_addr _left (x: ULValue TradingPai
 Notation " a '↑' 'TradingPairListingRequest.notify_addr' " := ( TradingPairListingRequest_ι_notify_addr _right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'TradingPairListingRequest.notify_addr' " := ( TradingPairListingRequest_ι_notify_addr _left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition TradingPairListingRequestWithPubkey_ι_wrapper_pubkey _right {b} (x: URValue TradingPairListingRequestWithPubkeyLRecord b): URValue ttt b :=
+Definition TradingPairListingRequestWithPubkey_ι_wrapper_pubkey _right {b} (x: URValue TradingPairListingRequestWithPubkeyLRecord b): URValue XUInteger256 b :=
     || {x} ^^ {TradingPairListingRequestWithPubkey_ι_wrapper_pubkey} || : _.
     
-Definition TradingPairListingRequestWithPubkey_ι_wrapper_pubkey _left (x: ULValue TradingPairListingRequestWithPubkeyLRecord): ULValue ttt :=
+Definition TradingPairListingRequestWithPubkey_ι_wrapper_pubkey _left (x: ULValue TradingPairListingRequestWithPubkeyLRecord): ULValue XUInteger256 :=
     {{ {x} ^^ {TradingPairListingRequestWithPubkey_ι_wrapper_pubkey} }} : _.
     
 Notation " a '↑' 'TradingPairListingRequestWithPubkey.wrapper_pubkey' " := ( TradingPairListingRequestWithPubkey_ι_wrapper_pubkey _right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'TradingPairListingRequestWithPubkey.wrapper_pubkey' " := ( TradingPairListingRequestWithPubkey_ι_wrapper_pubkey _left a ) (in custom ULValue at level 0) : ursus_scope.
 
-
-
-
-
-
-
-
-
-
-
-
-Definition DXchgPair_ι_flex_addr_ _right {b} (x: URValue TradingPairListingRequestWithPubkeyLRecord b): URValue ttt b :=
+Definition TradingPairListingRequestWithPubkey_ι_request _right {b} (x: URValue TradingPairListingRequestWithPubkeyLRecord b): URValue TradingPairListingRequestLRecord b :=
     || {x} ^^ {DXchgPair_ι_flex_addr_} || : _.
     
-Definition DXchgPair_ι_flex_addr_ _left (x: ULValue TradingPairListingRequestWithPubkeyLRecord): ULValue ttt :=
+Definition TradingPairListingRequestWithPubkey_ι_request _left (x: ULValue TradingPairListingRequestWithPubkeyLRecord): ULValue TradingPairListingRequestLRecord :=
+    {{ {x} ^^ {DXchgPair_ι_flex_addr_} }} : _.
+    
+Notation " a '↑' 'TradingPairListingRequestWithPubkey.request' " := ( TradingPairListingRequestWithPubkey_ι_request _right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'TradingPairListingRequestWithPubkey.request' " := ( TradingPairListingRequestWithPubkey_ι_request _left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition XchgPairListingRequest_ι_client_addr _right {b} (x: URValue XchgPairListingRequestLRecord b): URValue XAddress b :=
+    || {x} ^^ {XchgPairListingRequest_ι_client_addr} || : _.
+    
+Definition XchgPairListingRequest_ι_client_addr _left (x: ULValue XchgPairListingRequestLRecord): ULValue XAddress :=
+    {{ {x} ^^ {XchgPairListingRequest_ι_client_addr} }} : _.
+    
+Notation " a '↑' 'XchgPairListingRequest.client_addr' " := ( XchgPairListingRequest_ι_client_addr _right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'XchgPairListingRequest.client_addr' " := ( XchgPairListingRequest_ι_client_addr _left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+
+
+
+
+
+
+
+
+Definition DXchgPair_ι_flex_addr_ _right {b} (x: URValue XchgPairListingRequestLRecord b): URValue ttt b :=
+    || {x} ^^ {DXchgPair_ι_flex_addr_} || : _.
+    
+Definition DXchgPair_ι_flex_addr_ _left (x: ULValue XchgPairListingRequestLRecord): ULValue ttt :=
     {{ {x} ^^ {DXchgPair_ι_flex_addr_} }} : _.
     
 Notation " a '↑' 'xxx' " := ( DXchgPair_ι_flex_addr_ _right a ) (in custom URValue at level 0) : ursus_scope.

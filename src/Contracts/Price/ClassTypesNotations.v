@@ -116,6 +116,47 @@ Notation " a '↑' 'OrderInfo.original_amount' " := ( OrderInfo_original_amount_
 Notation " a '↑' 'OrderInfo.original_amount' " := ( OrderInfo_original_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 
+Definition process_ret_sells_amount_right {b} (x: URValue process_retLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {process_ret_ι_sells_amount} || : _ .
+
+Definition process_ret_sells__right {b} (x: URValue process_retLRecord b): URValue ( XQueue OrderInfoLRecord ) b :=
+    || {x} ^^ {process_ret_ι_sells_} || : _ .
+
+Definition process_ret_buys_amount_right {b} (x: URValue process_retLRecord b): URValue XUInteger128 b :=
+    || {x} ^^ {process_ret_ι_buys_amount} || : _ .
+
+Definition process_ret_buys__right {b} (x: URValue process_retLRecord b): URValue ( XQueue OrderInfoLRecord ) b :=
+    || {x} ^^ {process_ret_ι_buys_} || : _ .
+
+Definition process_ret_ret__right {b} (x: URValue process_retLRecord b): URValue ( XMaybe OrderRetLRecord ) b :=
+    || {x} ^^ {process_ret_ι_ret_} || : _ .  
+
+Definition process_ret_sells_amount_left  (x: ULValue process_retLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {process_ret_ι_sells_amount} }} : _ .
+
+Definition process_ret_sells__left  (x: ULValue process_retLRecord): ULValue ( XQueue OrderInfoLRecord ) :=
+    {{ {x} ^^ {process_ret_ι_sells_} }} : _ .
+
+Definition process_ret_buys_amount_left  (x: ULValue process_retLRecord): ULValue XUInteger128 :=
+    {{ {x} ^^ {process_ret_ι_buys_amount} }} : _ .
+
+Definition process_ret_buys__left  (x: ULValue process_retLRecord): ULValue ( XQueue OrderInfoLRecord ) :=
+    {{ {x} ^^ {process_ret_ι_buys_} }} : _ .
+
+Definition process_ret_ret__left  (x: ULValue process_retLRecord): ULValue ( XMaybe OrderRetLRecord ) :=
+    {{ {x} ^^ {process_ret_ι_ret_} }} : _ .              
+
+Notation " a '↑' 'process_ret.sells_amount' " := ( process_ret_sells_amount_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'process_ret.sells_amount' " := ( process_ret_sells_amount_right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'process_ret.sells_' " := ( process_ret_sells__left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'process_ret.sells_' " := ( process_ret_sells__right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'process_ret.buys_amount' " := ( process_ret_buys_amount_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'process_ret.buys_amount' " := ( process_ret_buys_amount_right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'process_ret.buys_' " := ( process_ret_buys__left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'process_ret.buys_' " := ( process_ret_buys__right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__right a) (in custom URValue at level 0) : ursus_scope. 
+ 
 End ClassTypesNotations.
 
 

@@ -6,9 +6,8 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 (* 3 *)Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .
 (* 4 *)Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address | Tip3Config_ι_workchain_id_.
 (* 5 *)Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
-(* 6 *)Inductive PayloadArgsFields := | PayloadArgs_ι_sell | PayloadArgs_ι_amount | PayloadArgs_ι_receive_tip3_wallet | PayloadArgs_ι_client_addr .
 (* 7 *)Inductive OrderRetFields := | OrderRet_ι_err_code | OrderRet_ι_processed | OrderRet_ι_enqueued .
-(* 8 *)Inductive process_retFields := | process_ret_ι_sells_amount | process_ret_ι_sells_ | process_ret_ι_buys_amount | process_ret_ι_buys_ | process_ret_ι_ret_ .
+(* Price & PriceXchg *)
 
 Module Types (xt: XTypesSig) (sm: StateMonadSig).
 Export xt. 
@@ -52,26 +51,13 @@ Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields .
  ( XMaybe XCell ) : Type ] .
 Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
 
-(* 6 *) Definition PayloadArgsL : list Type := 
-[ ( XBool ) : Type ; 
-( XUInteger128 ) : Type ; 
-( addr_std_fixedLRecord ) : Type ; 
-( addr_std_fixedLRecord ) : Type ] .
-Elpi GeneratePruvendoRecord PayloadArgsL PayloadArgsFields . 
-
  (* 7 *)Definition OrderRetL : list Type := 
  [ ( XUInteger32 ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderRetL OrderRetFields . 
 
-(* 8 *)Definition process_retL : list Type := 
- [ ( XUInteger128 ) : Type ; 
- ( ( XQueue OrderInfoLRecord ) ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( ( XQueue OrderInfoLRecord ) ) : Type ; 
- ( ( XMaybe OrderRetLRecord ) ) : Type ] .
-Elpi GeneratePruvendoRecord process_retL process_retFields . 
+
 
  (*NOT here!*)
 Definition IFlexNotifyPtr := XAddress. 

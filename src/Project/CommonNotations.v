@@ -206,41 +206,6 @@ Notation " a '↑' 'StateInit.library' " := ( StateInit_ι_library_right a ) (in
 Notation " a '↑' 'StateInit.library' " := ( StateInit_ι_library_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 
-Definition PayloadArgs_sell_right {b} (x: URValue PayloadArgsLRecord b): URValue XBool b :=
-    || {x} ^^ {PayloadArgs_ι_sell} || : _ .
-
-Definition PayloadArgs_amount_right {b} (x: URValue PayloadArgsLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {PayloadArgs_ι_amount} || : _ .
-
-Definition PayloadArgs_receive_tip3_wallet_right {b} (x: URValue PayloadArgsLRecord b): URValue addr_std_fixedLRecord b :=
-    || {x} ^^ {PayloadArgs_ι_receive_tip3_wallet} || : _ .
-
-Definition PayloadArgs_client_addr_right {b} (x: URValue PayloadArgsLRecord b): URValue addr_std_fixedLRecord b :=
-    || {x} ^^ {PayloadArgs_ι_client_addr} || : _ .
-
-Definition PayloadArgs_sell_left (x: ULValue PayloadArgsLRecord): ULValue XBool :=
-    {{ {x} ^^ {PayloadArgs_ι_sell} }} : _ .
-
-Definition PayloadArgs_amount_left (x: ULValue PayloadArgsLRecord): ULValue XUInteger128:=
-    {{ {x} ^^ {PayloadArgs_ι_amount} }} : _ .
-
-Definition PayloadArgs_receive_tip3_wallet_left (x: ULValue PayloadArgsLRecord): ULValue addr_std_fixedLRecord :=
-    {{ {x} ^^ {PayloadArgs_ι_receive_tip3_wallet} }} : _ .
-
-Definition PayloadArgs_client_addr_left (x: ULValue PayloadArgsLRecord): ULValue addr_std_fixedLRecord :=
-    {{ {x} ^^ {PayloadArgs_ι_client_addr} }} : _ .    
-
-
-Notation " a '↑' 'PayloadArgs.sell' " := ( PayloadArgs_sell_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.sell' " := ( PayloadArgs_sell_left a ) (in custom ULValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.amount' " := ( PayloadArgs_amount_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.amount' " := ( PayloadArgs_amount_left a ) (in custom ULValue at level 0) : ursus_scope.   
-Notation " a '↑' 'PayloadArgs.receive_tip3_wallet' " := ( PayloadArgs_receive_tip3_wallet_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.receive_tip3_wallet' " := ( PayloadArgs_receive_tip3_wallet_left a ) (in custom ULValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.client_addr' " := ( PayloadArgs_client_addr_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'PayloadArgs.client_addr' " := ( PayloadArgs_client_addr_left a ) (in custom ULValue at level 0) : ursus_scope.   
-
-
  Definition OrderRet_err_code_right {b} (x: URValue OrderRetLRecord b): URValue XUInteger32 b :=
     || {x} ^^ {OrderRet_ι_err_code} || : _ .
 
@@ -266,47 +231,6 @@ Definition OrderRet_enqueued_left  (x: ULValue OrderRetLRecord): ULValue XUInteg
  Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_left a) (in custom ULValue at level 0) : ursus_scope. 
  Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_right a) (in custom URValue at level 0) : ursus_scope. 
 
-Definition process_ret_sells_amount_right {b} (x: URValue process_retLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {process_ret_ι_sells_amount} || : _ .
-
-Definition process_ret_sells__right {b} (x: URValue process_retLRecord b): URValue ( XQueue OrderInfoLRecord ) b :=
-    || {x} ^^ {process_ret_ι_sells_} || : _ .
-
-Definition process_ret_buys_amount_right {b} (x: URValue process_retLRecord b): URValue XUInteger128 b :=
-    || {x} ^^ {process_ret_ι_buys_amount} || : _ .
-
-Definition process_ret_buys__right {b} (x: URValue process_retLRecord b): URValue ( XQueue OrderInfoLRecord ) b :=
-    || {x} ^^ {process_ret_ι_buys_} || : _ .
-
-Definition process_ret_ret__right {b} (x: URValue process_retLRecord b): URValue ( XMaybe OrderRetLRecord ) b :=
-    || {x} ^^ {process_ret_ι_ret_} || : _ .  
-
-Definition process_ret_sells_amount_left  (x: ULValue process_retLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {process_ret_ι_sells_amount} }} : _ .
-
-Definition process_ret_sells__left  (x: ULValue process_retLRecord): ULValue ( XQueue OrderInfoLRecord ) :=
-    {{ {x} ^^ {process_ret_ι_sells_} }} : _ .
-
-Definition process_ret_buys_amount_left  (x: ULValue process_retLRecord): ULValue XUInteger128 :=
-    {{ {x} ^^ {process_ret_ι_buys_amount} }} : _ .
-
-Definition process_ret_buys__left  (x: ULValue process_retLRecord): ULValue ( XQueue OrderInfoLRecord ) :=
-    {{ {x} ^^ {process_ret_ι_buys_} }} : _ .
-
-Definition process_ret_ret__left  (x: ULValue process_retLRecord): ULValue ( XMaybe OrderRetLRecord ) :=
-    {{ {x} ^^ {process_ret_ι_ret_} }} : _ .              
-
-Notation " a '↑' 'process_ret.sells_amount' " := ( process_ret_sells_amount_left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'process_ret.sells_amount' " := ( process_ret_sells_amount_right a) (in custom URValue at level 0) : ursus_scope. 
-Notation " a '↑' 'process_ret.sells_' " := ( process_ret_sells__left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'process_ret.sells_' " := ( process_ret_sells__right a) (in custom URValue at level 0) : ursus_scope. 
-Notation " a '↑' 'process_ret.buys_amount' " := ( process_ret_buys_amount_left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'process_ret.buys_amount' " := ( process_ret_buys_amount_right a) (in custom URValue at level 0) : ursus_scope. 
-Notation " a '↑' 'process_ret.buys_' " := ( process_ret_buys__left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'process_ret.buys_' " := ( process_ret_buys__right a) (in custom URValue at level 0) : ursus_scope. 
-Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__left a) (in custom ULValue at level 0) : ursus_scope. 
-Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__right a) (in custom URValue at level 0) : ursus_scope. 
- 
 Definition RationalPrice_num_right {b} (x: URValue RationalPriceLRecord b): URValue XUInteger128 b :=
     || {x} ^^ {RationalPrice_ι_num} || : _ .
 
