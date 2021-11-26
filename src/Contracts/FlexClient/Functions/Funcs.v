@@ -20,28 +20,10 @@ Require Import Contracts.FlexClient.Functions.FuncSig.
 Require Import Contracts.FlexClient.Functions.FuncNotations.
 Require Import Contracts.FlexClient.Interface.
 Require Import Contracts.TradingPair.ClassTypes.
+Require Import Contracts.TradingPair.ClassTypesNotations.
 Require Import Contracts.XchgPair.ClassTypes.
 Require Import Project.CommonTypes.
 
-Elpi Command AddLocalState.
-
-Elpi Accumulate lp:{{
-
-main [Name , Term, LocalStateFieldT] :-
-  trm TrmInternal = Term,
-  trm LocalStateField = LocalStateFieldT,
-  str NameStr = Name,
-  N is NameStr ^ "_j",
-  coq.env.add-axiom N  (app [LocalStateField , TrmInternal]) _ , 
-  coq.locate  N GR, 
-  coq.TC.declare-instance GR 0,
-  coq.say TrmInternal.
-main _ :- coq.error "usage: AddLocalState <name> <term> <LocalStateField>".
-
-}}.
-
-Elpi Typecheck.
-Elpi Export AddLocalState.
 
 Module Type Has_Internal.
 
@@ -54,6 +36,7 @@ Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModu
 Import ha.
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
+Module Export TradingPairClassTypesNotations := Contracts.TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule LedgerModuleForFuncSig. 
 (* Export SpecModuleForFuncNotations.CommonNotationsModule. *)
 
 Module FuncsInternal <: SpecModuleForFuncNotations.SpecSig. 
@@ -64,7 +47,7 @@ Module XchgPairClassTypes := XchgPair.ClassTypes.ClassTypes XTypesModule StateMo
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope struct_scope.
-Local Open Scope Z_scope.
+Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 Local Open Scope ucpp_scope.
@@ -75,7 +58,7 @@ Local Notation UEt := (UExpression _ true).
 
 Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
  
-Arguments urgenerate_field {_} {_} {_} _ & .
+Arguments urgenerate_field {_} {_} {_} _ & {_} _.
 
 Notation " |{ e }| " := e (in custom URValue at level 0, 
                            e custom ULValue ,  only parsing ) : ursus_scope.
@@ -231,7 +214,7 @@ Definition prepare_trading_pair_state_init_and_addr ( pair_data : TradingPairCla
                     $] *)  ; { _ } }}.
 
  	 	 refine {{ new 'pair_init_cl : XCell @ "pair_init_cl" := {} (* build(pair_init).make_cell() *) ; { _ } }} .
- 	 	 refine {{ return_ [ !{pair_init} , {} (* tvm_hash(pair_init_cl) *) ] }} .
+ 	 	 refine {{ return_ [ !{pair_init} , tvm.hash (!{pair_init_cl}) ] }} .
 Defined.
  
 Definition prepare_trading_pair_state_init_and_addr_right {b1 b2} 
@@ -245,16 +228,17 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
     x0 custom URValue at level 0,
     x1 custom URValue at level 0) : ursus_scope.
 
-
- Definition deployTradingPair ( tip3_root : ( XAddress ) ) ( deploy_min_value : ( uint128 ) ) 
-( deploy_value : ( uint128 ) ) ( min_trade_amount : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression XAddress true . 
+ Definition deployTradingPair ( tip3_root : ( XAddress ) ) 
+                              ( deploy_min_value : ( uint128 ) ) 
+                              ( deploy_value : ( uint128 ) ) 
+                              ( min_trade_amount : ( uint128 ) ) 
+                              ( notify_addr : ( XAddress ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( int_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} .  
- 	 	 refine {{ new 'pair_data : (TradingPairClassTypes.DTradingPairLRecord ) @ "pair_data" := {} 
- 	 	        (* [$ _flex_ ⇒ { DTradingPair_ι_flex_addr_ } ; 
-               (#{ tip3_root }) ⇒ { DTradingPair_ι_tip3_root_ } ; 
-                 0 ⇒ { DTradingPair_ι_notify_addr_ }  
-               $]  *); { _ } }} . 
+       refine {{ new 'pair_data : TradingPairClassTypes.DTradingPairLRecord @ "pair_data" := 
+       DTradingPairInsert [$ _flex_ ⇒ { DTradingPair_ι_flex_addr_ } ; 
+                              ( #{tip3_root} ) ⇒ { DTradingPair_ι_tip3_root_ } ;
+                              0 ⇒ { DTradingPair_ι_notify_addr_ }  $] ; {_} }}.  
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
             prepare_trading_pair_state_init_and_addr_ ( !{ pair_data } , _trading_pair_code_ )  ; { _ } }} . 
  	 	 refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} ; { _ } }} . 
@@ -281,16 +265,16 @@ Definition prepare_xchg_pair_state_init_and_addr ( pair_data : XchgPairClassType
                            : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'pair_data_cl : XCell @ "pair_data_cl" :=  
                       prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} .
- 	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := 
-                   [$
+ 	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := {}
+                   (* [$
                          {} ⇒ { StateInit_ι_split_depth } ;
                          {} ⇒ { StateInit_ι_special } ;
                          ( #{pair_code} ) -> set () ⇒ {StateInit_ι_code} ;
                          ( !{pair_data_cl} ) -> set () ⇒ {StateInit_ι_data} ;
                          {} ⇒ {StateInit_ι_library}
-                    $] ; { _ } }}.
+                    $]  *); { _ } }}.
  	 	 refine {{ new 'pair_init_cl : XCell @ "pair_init_cl" := {} (* build(pair_init).make_cell() *) ; { _ } }} .
- 	 	 refine {{ return_ [ !{pair_init} , {} (* tvm_hash(pair_init_cl) *) ] }} .
+ 	 	 refine {{ return_ [ !{pair_init} , tvm.hash(!{pair_init_cl}) ] }} .
 Defined.
 
 Definition prepare_xchg_pair_state_init_and_addr_right {b1 b2} 
@@ -311,7 +295,7 @@ Definition deployXchgPair ( tip3_major_root : ( address_t ) )
                            ( min_trade_amount : ( uint128 ) ) 
                            ( notify_addr : ( address_t ) ) 
                             : UExpression XAddress true . 
- 	 	 refine {{ require_ ( ( msg.pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( int_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} .
  	 	 refine {{ new 'pair_data : ( XchgPairClassTypes.DXchgPairLRecord ) @ "pair_data" :=  
                	 	 [$  (* _flex_  ⇒ { DXchgPair_ι_flex_addr_ } ; *) 
@@ -365,7 +349,7 @@ Definition prepare_price_state_init_and_addr ( price_data : DPriceLRecord )
                          {} ⇒ {StateInit_ι_library}
                     $] ; { _ } }}.
  	 	 refine {{ new 'price_init_cl : XCell @ "price_init_cl" := {} (* build(price_init).make_cell() *) ; { _ } }} .
- 	 	 refine {{ return_ [ !{price_init} , {} (* tvm_hash(price_init_cl) *) ] }} .
+ 	 	 refine {{ return_ [ !{price_init} , tvm.hash(!{price_init_cl}) ] }} .
 Defined.
 
 Definition prepare_price_state_init_and_addr_right {b1 b2} 
@@ -637,7 +621,7 @@ Definition prepare_price_xchg_state_init_and_addr ( price_data : DPriceXchgLReco
                          {} ⇒ {StateInit_ι_library}
                     $] ; { _ } }}.
  	 	 refine {{ new 'price_init_cl : XCell @ "price_init_cl" := {} (* build(price_init).make_cell() *) ; { _ } }} .
- 	 	 refine {{ return_ [ !{price_init} , {} (* tvm_hash(price_init_cl) *) ] }} .
+ 	 	 refine {{ return_ [ !{price_init} , tvm_hash(!{price_init_cl})  ] }} .
 Defined.
 
 Definition prepare_price_xchg_state_init_and_addr_right {b1 b2} 
@@ -882,7 +866,7 @@ Definition prepare_wallet_state_init_and_addr (wallet_data : TonsConfigFields )
                          {} ⇒ {StateInit_ι_library}
                     $] ; { _ } }}.
  	 	 refine {{ new 'wallet_init_cl : XCell @ "price_init_cl" := {} (* build(wallet_init).make_cell() *) ; { _ } }} .
- 	 	 refine {{ return_ [ !{wallet_init} , {} (* tvm_hash(wallet_init_cl) *) ] }} .
+ 	 	 refine {{ return_ [ !{wallet_init} , tvm_hash(!{wallet_init_cl}) ] }} .
 Defined.
 
 Definition prepare_wallet_state_init_and_addr_right {b1} 
@@ -958,7 +942,7 @@ Notation " 'prepare_wrapper_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
               [ {} , {} , (#{code}) -> set () , (!{wallet_data_cl}) -> set () , {} ] ; { _ } }} . 
  	 	 refine {{ new 'wallet_init_cl : ( XCell ) @ "wallet_init_cl" := {}  
  	 	            (*  build ( !{ wallet_init } ) . make_cell ( ) *) ; { _ } }} . 
- 	 	 refine {{ return_ [ !{ wallet_init } , {} (* tvm_hash ( wallet_init_cl ) *) ] }} . 
+ 	 	 refine {{ return_ [ !{ wallet_init } ,  tvm_hash ( !{wallet_init_cl} )  ] }} . 
  Defined . 
 
  Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( XAddress ) a6 ) ( owner_address : URValue ( XMaybe XAddress ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( uint8 ) a9 ) : URValue ( StateInitLRecord * uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
