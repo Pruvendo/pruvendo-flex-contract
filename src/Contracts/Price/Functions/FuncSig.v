@@ -21,9 +21,9 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-Parameter make_deal : ( ( ULValue OrderInfoLRecord ) ) -> ( ( ULValue OrderInfoLRecord ) ) -> UExpression ( XBool # (XBool # uint128) ) false . 
- Parameter extract_active_order : ULValue ( XMaybe (uint # OrderInfoLRecord ) ) -> ULValue ( ( XQueue OrderInfoLRecord ) ) -> ( ULValue ( uint128 ) ) -> ( ( XBool ) ) -> UExpression ( ( XMaybe (uint # OrderInfoLRecord) ) # (( XQueue OrderInfoLRecord ) # uint128) ) false . 
- Parameter process_queue : ( ( uint ) ) -> ( ( uint ) ) -> UExpression PhantomType false . 
+Parameter make_deal : ( ( ULValue OrderInfoLRecord ) ) -> ( ( ULValue OrderInfoLRecord ) ) -> UExpression ( XBool # (XBool # uint128) ) true . 
+ Parameter extract_active_order : ULValue ( XMaybe (uint # OrderInfoLRecord ) ) -> ULValue ( ( XQueue OrderInfoLRecord ) ) -> ( ULValue ( uint128 ) ) -> ( ( XBool ) ) -> UExpression ( ( XMaybe (uint # OrderInfoLRecord) ) # (( XQueue OrderInfoLRecord ) # uint128) ) true . 
+ Parameter process_queue : ( ( uint ) ) -> ( ( uint ) ) -> UExpression PhantomType true . 
  Parameter onTip3LendOwnership : ( ( XAddress ) ) -> ( ( uint128 ) ) -> ( ( uint32 ) ) -> ( ( uint256 ) ) -> ( ( XAddress ) ) -> ( ( XCell ) ) -> UExpression OrderRetLRecord false . 
  Parameter buyTip3 : ( ( uint128 ) ) -> ( ( XAddress ) ) -> ( ( uint32 ) ) -> UExpression OrderRetLRecord true . 
  Parameter processQueue : UExpression PhantomType false . 
