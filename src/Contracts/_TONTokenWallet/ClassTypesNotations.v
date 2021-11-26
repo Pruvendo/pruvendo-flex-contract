@@ -4,8 +4,8 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
-Require Import Contracts.TONTokenWallet.ClassTypes.
-Require Import Contracts.TONTokenWallet.Ledger.
+Require Import TONTokenWallet.ClassTypes.
+Require Import TONTokenWallet.Ledger.
 
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).

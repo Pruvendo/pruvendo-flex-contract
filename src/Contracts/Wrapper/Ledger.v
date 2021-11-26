@@ -21,9 +21,9 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-
-(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Wrapper | _EmittedEvents | _MessagesLog.
-(* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
+(*TONTokenWallet only*)
+Inductive MessagesAndEventsFields := | _OutgoingMessages_Wrapper | _EmittedEvents | _MessagesLog.
+Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Definition ContractFields := DWrapperFields.
 

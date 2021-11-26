@@ -1,26 +1,28 @@
- Require Import Coq.Program.Basics. 
-
+Require Import Coq.Program.Basics. 
 Require Import String. 
+
 Require Import FinProof.Types.IsoTypes. 
 Require Import FinProof.Common. 
 Require Import FinProof.MonadTransformers21. 
-
 Require Import FinProof.ProgrammingWith.  
+
 Require Import UMLang.UrsusLib. 
 Require Import UMLang.BasicModuleTypes. 
+Require Import UMLang.GlobalClassGenerator.ClassGenerator.
+
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require Import Project.CommonTypes. 
-Require Import Contracts.PriceXchg.ClassTypes.
-Require Import Contracts.PriceXchg.Interface.
-Require Import UMLang.GlobalClassGenerator.ClassGenerator.
+Require Import PriceXchg.ClassTypes.
+Require Import PriceXchg.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
-(* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
+(* TONTokenWallet, *)
+Inductive MessagesAndEventsFields := | _OutgoingMessages_PriceXchg | _EmittedEvents | _MessagesLog.
+Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 Definition ContractFields := DPriceXchgFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
