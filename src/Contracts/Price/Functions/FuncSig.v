@@ -24,9 +24,9 @@ Local Open Scope ucpp_scope.
 Parameter make_deal : ( ( ULValue OrderInfoLRecord ) ) -> ( ( ULValue OrderInfoLRecord ) ) -> UExpression ( XBool # (XBool # uint128) ) true . 
  Parameter extract_active_order : ULValue ( XMaybe (uint # OrderInfoLRecord ) ) -> ULValue ( ( XQueue OrderInfoLRecord ) ) -> ( ULValue ( uint128 ) ) -> ( ( XBool ) ) -> UExpression ( ( XMaybe (uint # OrderInfoLRecord) ) # (( XQueue OrderInfoLRecord ) # uint128) ) true . 
  Parameter process_queue : ( ( uint ) ) -> ( ( uint ) ) -> UExpression PhantomType true . 
- Parameter onTip3LendOwnership : ( ( XAddress ) ) -> ( ( uint128 ) ) -> ( ( uint32 ) ) -> ( ( uint256 ) ) -> ( ( XAddress ) ) -> ( ( XCell ) ) -> UExpression OrderRetLRecord false . 
+ Parameter onTip3LendOwnership : ( ( XAddress ) ) -> ( ( uint128 ) ) -> ( ( uint32 ) ) -> ( ( uint256 ) ) -> ( ( XAddress ) ) -> ( ( XCell ) ) -> UExpression OrderRetLRecord true . 
  Parameter buyTip3 : ( ( uint128 ) ) -> ( ( XAddress ) ) -> ( ( uint32 ) ) -> UExpression OrderRetLRecord true . 
- Parameter processQueue : UExpression PhantomType false . 
+ Parameter processQueue : UExpression PhantomType true . 
  Parameter cancelSell : UExpression PhantomType false . 
  Parameter cancelBuy : UExpression PhantomType false . 
  Parameter getDetails : UExpression DetailsInfoLRecord false . 
@@ -46,7 +46,7 @@ Parameter make_deal : ( ( ULValue OrderInfoLRecord ) ) -> ( ( ULValue OrderInfoL
  Parameter prepare_price_state_init_and_addr : ( ( DPriceLRecord ) ) -> ( ( XCell ) ) -> UExpression ( StateInitLRecord # uint256 ) false . 
  Parameter is_active_time : ( ( uint32 ) ) -> UExpression XBool false . 
  Parameter calc_cost : ( ( uint128 ) ) -> ( ( uint128 ) ) -> UExpression (XMaybe uint128) false . 
- Parameter process_queue_impl : ( ( XAddress ) ) -> ( XAddress (*IFlexNotifyPtr*) ) -> ( ( uint128 ) ) -> ( ( uint8 ) ) -> ( ( TonsConfigLRecord ) ) -> ( ( uint ) ) -> ( ( uint ) ) -> ( ( uint128 ) ) -> ( ( XQueue OrderInfoLRecord ) ) -> ( ( uint128 ) ) -> ( ( XQueue OrderInfoLRecord ) ) -> UExpression process_retLRecord false . 
+ Parameter process_queue_impl : ( ( XAddress ) ) -> ( XAddress (*IFlexNotifyPtr*) ) -> ( ( uint128 ) ) -> ( ( uint8 ) ) -> ( ( TonsConfigLRecord ) ) -> ( ( uint ) ) -> ( ( uint ) ) -> ( ( uint128 ) ) -> ( ( XQueue OrderInfoLRecord ) ) -> ( ( uint128 ) ) -> ( ( XQueue OrderInfoLRecord ) ) -> UExpression process_retLRecord true . 
  Parameter cancel_order_impl : ( ( XQueue OrderInfoLRecord ) ) -> ( ( addr_std_fixedLRecord ) ) -> ( ( uint128 ) ) -> ( ( XBool ) ) -> ( uint (*Grams*) ) -> ( uint (*Grams*) ) -> ( uint (*Grams*) ) -> UExpression ((XQueue OrderInfoLRecord) # uint128) false . 
 
 

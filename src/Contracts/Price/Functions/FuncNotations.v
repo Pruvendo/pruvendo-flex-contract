@@ -121,11 +121,11 @@ Local Open Scope string_scope.
 
 (**************************************************************************************************)
 Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
- 
+
 Definition make_deal_right 
 ( sell : ULValue ( OrderInfoLRecord ) ) 
 ( buy : ULValue ( OrderInfoLRecord ) ) :
- URValue ( XBool # (XBool # uint128) ) false := 
+ URValue ( XBool # (XBool # uint128) ) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LL ) make_deal 
  sell buy ) . 
  
@@ -147,7 +147,7 @@ Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
 ( all_amount : ULValue ( uint128 ) ) 
 ( sell : URValue ( XBool ) a4 ) 
 : URValue (( XMaybe (uint # OrderInfoLRecord) ) # ( ( XQueue OrderInfoLRecord ) # uint128 ) )
- a4 := 
+ true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1LLL ) extract_active_order 
  cur_order orders all_amount sell ) . 
  
@@ -159,7 +159,7 @@ Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
  , all_amount custom ULValue at level 0 
  , sell custom URValue at level 0 ) : ursus_scope .
  
- Definition process_queue_left { R a1 a2 }  ( sell_idx : URValue ( uint ) a1 ) ( buy_idx : URValue ( uint ) a2 ) : UExpression R ( orb a2 a1 ) := 
+ Definition process_queue_left { R a1 a2 }  ( sell_idx : URValue ( uint ) a1 ) ( buy_idx : URValue ( uint ) a2 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) process_queue 
  sell_idx buy_idx ) . 
  
@@ -169,7 +169,8 @@ Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
  (in custom ULValue at level 0 , sell_idx custom URValue at level 0 
  , buy_idx custom URValue at level 0 ) : ursus_scope . 
 
- Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( balance : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( pubkey : URValue ( uint256 ) a4 ) ( internal_owner : URValue ( XAddress ) a5 ) ( payload : URValue ( XCell ) a6 ) : URValue OrderRetLRecord ( orb ( orb ( orb ( orb ( orb a6 a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( balance : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( pubkey : URValue ( uint256 ) a4 ) ( internal_owner : URValue ( XAddress ) a5 ) ( payload : URValue ( XCell ) a6 ) 
+: URValue OrderRetLRecord true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) onTip3LendOwnership 
  answer_addr balance lend_finish_time pubkey internal_owner payload ) . 
  
@@ -193,7 +194,7 @@ Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
  , receive_tip3_wallet custom URValue at level 0 
  , order_finish_time custom URValue at level 0 ) : ursus_scope . 
  
- Definition processQueue_left { R }  : UExpression R false := 
+ Definition processQueue_left { R }  : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) processQueue 
  ) . 
  
@@ -378,7 +379,8 @@ Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
  (in custom URValue at level 0 , amount custom URValue at level 0 
  , price custom URValue at level 0 ) : ursus_scope . 
 
- Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  ( tip3root : URValue ( XAddress ) a1 ) ( notify_addr : URValue ( XAddress (* IFlexNotifyPtrLRecord *) ) a2 ) ( price : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( tons_cfg : URValue ( TonsConfigLRecord ) a5 ) ( sell_idx : URValue ( uint ) a6 ) ( buy_idx : URValue ( uint ) a7 ) ( sells_amount : URValue ( uint128 ) a8 ) ( sells : URValue ( XQueue OrderInfoLRecord ) a9 ) ( buys_amount : URValue ( uint128 ) a10 ) ( buys : URValue ( XQueue OrderInfoLRecord ) a11 ) : URValue process_retLRecord ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a11 a10 ) a9 ) a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  ( tip3root : URValue ( XAddress ) a1 ) ( notify_addr : URValue ( XAddress (* IFlexNotifyPtrLRecord *) ) a2 ) ( price : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( tons_cfg : URValue ( TonsConfigLRecord ) a5 ) ( sell_idx : URValue ( uint ) a6 ) ( buy_idx : URValue ( uint ) a7 ) ( sells_amount : URValue ( uint128 ) a8 ) ( sells : URValue ( XQueue OrderInfoLRecord ) a9 ) ( buys_amount : URValue ( uint128 ) a10 ) ( buys : URValue ( XQueue OrderInfoLRecord ) a11 ) : URValue process_retLRecord true 
+(* orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a11 a10 ) a9 ) a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 *) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ11 ) process_queue_impl 
  tip3root notify_addr price deals_limit tons_cfg sell_idx buy_idx sells_amount sells buys_amount buys ) . 
  
