@@ -28,6 +28,12 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
+Definition allowance_infoL : list Type := 
+ [ ( XAddress ) : Type ; 
+ ( XUInteger128 ) : Type ] .
+Elpi GeneratePruvendoRecord allowance_infoL allowance_infoFields . 
+ Opaque allowance_infoLRecord . 
+
 (* 2 *) Definition DTONTokenWalletL : list Type := 
 [ ( XString ) : Type ; 
 ( XString ) : Type ; 
@@ -82,6 +88,12 @@ Definition DTONTokenWalletExternalL : list Type :=
 Elpi GeneratePruvendoRecord DTONTokenWalletExternalL DTONTokenWalletExternalFields . 
 Opaque DTONTokenWalletExternalLRecord . 
 
+Definition lend_recordL : list Type := 
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger32 ) : Type ] .
+Elpi GeneratePruvendoRecord lend_recordL lend_recordFields . 
+ Opaque lend_recordLRecord .
+
 (* 2 *) Definition DTONTokenWalletInternalL : list Type := 
 [ ( XString ) : Type ; 
 ( XString ) : Type ; 
@@ -96,18 +108,6 @@ Opaque DTONTokenWalletExternalLRecord .
 ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
 Opaque DTONTokenWalletInternalLRecord . 
-
-Definition allowance_infoL : list Type := 
- [ ( XAddress ) : Type ; 
- ( XUInteger128 ) : Type ] .
-Elpi GeneratePruvendoRecord allowance_infoL allowance_infoFields . 
- Opaque allowance_infoLRecord . 
-
-Definition lend_recordL : list Type := 
- [ ( XUInteger128 ) : Type ; 
- ( XUInteger32 ) : Type ] .
-Elpi GeneratePruvendoRecord lend_recordL lend_recordFields . 
- Opaque lend_recordLRecord . 
 
 
 End ClassTypes .
