@@ -45,7 +45,7 @@ Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.Clas
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
   Opaque MessagesAndEventsLRecord .
  
-(* 2 *) Definition ContractL := DPriceLRecord.
+(* 2 *) Definition ContractLRecord := DPriceLRecord.
 
  Definition ContractLEmbeddedType := DPriceLEmbeddedType. 
 

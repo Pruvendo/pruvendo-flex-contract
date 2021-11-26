@@ -127,7 +127,7 @@ Definition prepare_xchg_pair_state_init_and_addr ( pair_data : ContractLRecord )
                       [ {} , {} , (#{pair_code}) -> set () , (!{pair_data_cl}) -> set () , {} ] ; { _ } }} . 
     refine {{ new 'pair_init_cl : ( TvmCell ) @ "pair_init_cl" := {} ; { _ } }} . 
     refine {{ {pair_init_cl} := {} (* build ( !{pair_init} ) . make_cell ( ) *) ; { _ } }} . 
-    refine {{ return_ [ !{ pair_init } , {} (* tvm.hash ( !{pair_init_cl} ) *) ] }} . 
+    refine {{ return_ [ !{ pair_init } , tvm.hash ( !{pair_init_cl} )  ] }} . 
 Defined . 
 
 End FuncsInternal.

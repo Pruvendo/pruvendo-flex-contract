@@ -17,6 +17,9 @@ Require Import Project.CommonTypes.
 Inductive DTONTokenWalletExternalFields := | DTONTokenWalletExternal_ι_name_ | DTONTokenWalletExternal_ι_symbol_ | DTONTokenWalletExternal_ι_decimals_ | DTONTokenWalletExternal_ι_balance_ | DTONTokenWalletExternal_ι_root_public_key_ | DTONTokenWalletExternal_ι_wallet_public_key_ | DTONTokenWalletExternal_ι_root_address_ | DTONTokenWalletExternal_ι_owner_address_ | DTONTokenWalletExternal_ι_code_ | DTONTokenWalletExternal_ι_allowance_ | DTONTokenWalletExternal_ι_workchain_id_ .
 Inductive DTONTokenWalletInternalFields := | DTONTokenWalletInternal_ι_name_ | DTONTokenWalletInternal_ι_symbol_ | DTONTokenWalletInternal_ι_decimals_ | DTONTokenWalletInternal_ι_balance_ | DTONTokenWalletInternal_ι_root_public_key_ | DTONTokenWalletInternal_ι_wallet_public_key_ | DTONTokenWalletInternal_ι_root_address_ | DTONTokenWalletInternal_ι_owner_address_ | DTONTokenWalletExternal_ι_lend_ownership_map | DTONTokenWalletInternal_ι_code_ | DTONTokenWalletInternal_ι_workchain_id_ .
 Inductive details_infoFields := | details_info_ι_name | details_info_ι_symbol | details_info_ι_decimals | details_info_ι_balance | details_info_ι_root_public_key | details_info_ι_wallet_public_key | details_info_ι_root_address | details_info_ι_owner_address | details_info_ι_lend_ownership | details_info_ι_lend_balance | details_info_ι_code | details_info_ι_allowance | details_info_ι_workchain_id .
+Inductive allowance_infoFields := | allowance_info_ι_spender | allowance_info_ι_remainingTokens .
+Inductive lend_recordFields := | lend_record_ι_lend_balance | lend_record_ι_lend_finish_time .
+
 Module ClassTypes (xt: XTypesSig) (sm: StateMonadSig) .
 Module Export CommonTypes := Types xt sm.
 
@@ -93,6 +96,19 @@ Opaque DTONTokenWalletExternalLRecord .
 ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
 Opaque DTONTokenWalletInternalLRecord . 
+
+Definition allowance_infoL : list Type := 
+ [ ( XAddress ) : Type ; 
+ ( XUInteger128 ) : Type ] .
+Elpi GeneratePruvendoRecord allowance_infoL allowance_infoFields . 
+ Opaque allowance_infoLRecord . 
+
+Definition lend_recordL : list Type := 
+ [ ( XUInteger128 ) : Type ; 
+ ( XUInteger32 ) : Type ] .
+Elpi GeneratePruvendoRecord lend_recordL lend_recordFields . 
+ Opaque lend_recordLRecord . 
+
 
 End ClassTypes .
  
