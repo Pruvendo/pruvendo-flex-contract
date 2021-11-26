@@ -52,26 +52,28 @@ Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields .
  ( XMaybe XCell ) : Type ] .
 Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
 
-(* 6 *) Definition PayloadArgsL : list Type := 
+Locate PayloadArgsL.
+
+(* (* 6 *) Definition PayloadArgsL : list Type := 
 [ ( XBool ) : Type ; 
 ( XUInteger128 ) : Type ; 
 ( addr_std_fixedLRecord ) : Type ; 
-( addr_std_fixedLRecord ) : Type ] .
-Elpi GeneratePruvendoRecord PayloadArgsL PayloadArgsFields . 
+( addr_std_fixedLRecord ) : Type ] . 
+Elpi GeneratePruvendoRecord PayloadArgsL PayloadArgsFields .  *)
 
  (* 7 *)Definition OrderRetL : list Type := 
  [ ( XUInteger32 ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderRetL OrderRetFields . 
-
+(* 
 (* 8 *)Definition process_retL : list Type := 
  [ ( XUInteger128 ) : Type ; 
  ( ( XQueue OrderInfoLRecord ) ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( ( XQueue OrderInfoLRecord ) ) : Type ; 
  ( ( XMaybe OrderRetLRecord ) ) : Type ] .
-Elpi GeneratePruvendoRecord process_retL process_retFields . 
+Elpi GeneratePruvendoRecord process_retL process_retFields .  *)
 
  (*NOT here!*)
 Definition IFlexNotifyPtr := XAddress. 

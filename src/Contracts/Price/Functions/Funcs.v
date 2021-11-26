@@ -205,21 +205,21 @@ Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
  , all_amount custom ULValue at level 0 
  , sell custom URValue at level 0 ) : ursus_scope .
  
-Definition process_queue 
+Definition process_queue
 ( sell_idx : ( uint ) ) 
 ( buy_idx : ( uint ) ) 
 : UExpression PhantomType true . 
  	 	 refine {{ new 'sell_opt : ( XMaybe (uint # OrderInfoLRecord) ) @ "sell_opt" := {} ; { _ } }} . 
  	 	 refine {{ new 'buy_opt : ( XMaybe (uint # OrderInfoLRecord) ) @ "buy_opt" := {} ; { _ } }} . 
  	 	 refine {{ new 'deals_count : ( uint ) @ "deals_count" := 0 ; { _ } }} . 
- 	 	 refine {{ while ( TRUE ) do { { _ : UEt} } ; { _ } }} . 
+ 	 	 refine {{ while ( TRUE ) do { { _ : UEt} } ; { _ } }} .  
  	 	 	 refine {{ [ {sell_opt} , _sells_ , _sells_amount_ ] := 
               extract_active_order_ ( {sell_opt} , _sells_ , _sells_amount_ , TRUE )  ; { _ } }} . 
  	 	 	 refine {{ [ {buy_opt} , _buys_ , _buys_amount_ ] := 
               extract_active_order_ ( {buy_opt} , _buys_ , _buys_amount_ , FALSE )  ; { _ } }} . 
  	 	 	 refine {{ if ( (~ (!{ sell_opt })) \\ (~ (!{ buy_opt })) ) 
-                    then { { _: UEt } } }} . 
- 	 	 	 	 refine {{ return_ {} (* break *) }} . 
+                    then { { _: UEt } } ; { _ } }} .
+ 	 	 	 	 refine {{  break_ }} . 
  	 	 refine {{ new ( 'sell_idx_cur : uint , 'sell : OrderInfoLRecord ) @
                 ( "sell_idx_cur" , "sell" ) := (!{sell_opt}) -> get () ; { _ } }} .
  	 	 refine {{ new ( 'buy_idx_cur : uint , 'buy : OrderInfoLRecord ) @
@@ -227,9 +227,9 @@ Definition process_queue
  	 	 	 refine {{ new 'sell_out_of_tons : ( XBool ) @ "sell_out_of_tons" := FALSE ; { _ } }} . 
  	 	 	 refine {{ new 'buy_out_of_tons : ( XBool ) @ "buy_out_of_tons" := FALSE ; { _ } }} . 
  	 	 	 refine {{ new 'deal_amount : ( uint128 ) @ "deal_amount" := 0 ; { _ } }} . 
-
+ 
  	 	 	 refine {{ if ( ++ ({ deals_count }) > _deals_limit_ ) 
-                      then { { _: UEt } } ; { _ } }} . 
+                      then { { _: UEt } } }} . 
  	 	 	 	 refine {{ new 'half_process_queue : uint @ "half_process_queue" 
                          := (_tons_cfg_ ↑ TonsConfig.process_queue) / #{2} ; { _ } }} . 
  	 	 	 	 refine {{ new 'safe_extra : ( uint ) @ "safe_extra" := 
@@ -240,43 +240,43 @@ Definition process_queue
                             then { { _: UEf } } ; { _ } }} .
  	 	 	 	 	 refine {{ {sell_out_of_tons} := TRUE }} . 
  	 	 	 refine {{ if ( ( (!{buy}) ↑ OrderInfo.account )
-                        < !{half_process_queue} + !{ safe_extra } ) then { { _:UEt } } ; { _ } }} . 
- 	 	 	 	 refine {{ {buy_out_of_tons} := TRUE }} . 
+                        < !{half_process_queue} + !{ safe_extra } ) then { { _:UEf } } ; { _ } }} . 
+ 	 	 	 	 refine {{ {buy_out_of_tons} := TRUE }} .
  	 	   refine {{ if ( (~ !{ sell_out_of_tons } ) && (~ !{ buy_out_of_tons } ) ) 
                         then { { _:UEt } } ; { _ } }} . 	 	 	 
          refine {{ ({sell} ↑ OrderInfo.account) -= !{half_process_queue} ; { _ } }} . 
  	 	 	   refine {{ ({buy} ↑ OrderInfo.account) -= !{half_process_queue} ; { _ } }} . 
 (*  	 	 	 refine {{ IPricePtr ( address { tvm.address ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
- 	 	 	     refine {{ if ( (#{sell_idx}) == !{sell_idx_cur} ) then { { _:UEt } } ; { _ } }} . 
- 	 	 	 	  (* refine {{ dealer.ret_ := [ 1 (* ec::deals_limit *) , 
+ 	 	 	     refine {{ if ( (#{sell_idx}) == !{sell_idx_cur} ) then { { _:UEf } } ; { _ } }} . 
+ 	 	 	 	     (* refine {{ dealer.ret_ := [ 1 (* ec::deals_limit *) , 
                               ((!{sell}) ↑ OrderInfo.original_amount) - 
                               ((!{sell}) ↑ OrderInfo.amount) , 
-                              ((!{sell}) ↑ OrderInfo.amount) ] }} . *)
+                              ((!{sell}) ↑ OrderInfo.amount) ] }} . *) 
+             refine {{ return_ {} }} .
  	 	 	 refine {{ if ( (#{ buy_idx }) == !{ buy_idx_cur } ) then { { _:UEf } } ; { _ } }} . 
  	 	 	 	 (* refine {{ dealer.ret_ := [ 1 (* ec::deals_limit *) , 
                               ((!{buy}) ↑ OrderInfo.original_amount) - 
                               ((!{buy}) ↑ OrderInfo.amount) , 
                               ((!{buy}) ↑ OrderInfo.amount) ] }} . *)
- 	 	 	 refine {{ {sell} := {} (* break *) }} . 
+             refine {{ return_ {} }} .
 
-refine {{ {sell} := {} }} . (* TODO Delete! *)
-refine {{ {sell} := {} }} . (* TODO Delete! *)
+ 	 	 	 refine {{ break_ }} . 
 
  refine {{ if ( (~ !{ sell_out_of_tons }) && (~ !{ buy_out_of_tons }) ) then { { _:UEt } } ; { _ } }} . 
  
  	 refine {{ [ {sell_out_of_tons} , {buy_out_of_tons} , {deal_amount} ] := 
                          make_deal_ ( {sell} , {buy} ) }} . 
- refine {{ if ( !{ sell_out_of_tons } ) then { { _:UEt } } ; { _ } }} . 
+ refine {{ if ( !{ sell_out_of_tons } ) then { { _:UEf } } ; { _ } }} . 
   	 refine {{ _sells_ -> pop () ; { _ } }} .
  	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 
  	 	 	                      [ 1 (*ec::out_of_tons*) , 
                               ((!{sell}) ↑ OrderInfo.original_amount) - 
                               ((!{sell}) ↑ OrderInfo.amount) , 
                               ((!{sell}) ↑ OrderInfo.amount) ] ; { _ } }} .
- 	 refine {{ if ( (#{ sell_idx }) == !{sell_idx_cur} ) then { { _:UEt } } ; { _ } }} . 
+ 	 refine {{ if ( (#{ sell_idx }) == !{sell_idx_cur} ) then { { _:UEf } } ; { _ } }} . 
  	 	 refine {{ (* dealer.ret_ *) {ret} := !{ ret } }} . 
  	 refine {{ if ( ((!{sell}) ↑ OrderInfo.account) > 
-                (_tons_cfg_ ↑ TonsConfig.return_ownership) ) then { { _:UEt } } ; { _ } }} . 
+                (_tons_cfg_ ↑ TonsConfig.return_ownership) ) then { { _:UEf } } ; { _ } }} . 
  	 	 refine {{ (({sell}) ↑ OrderInfo.account) -= (_tons_cfg_ ↑ TonsConfig.return_ownership) (* ; { _ } }} . 
  	 	 refine {{ ITONTokenWalletPtr ( sell . tip3_wallet ) ( Grams ( tons_cfg_ . return_ownership . get ( ) ) ) . returnOwnership ( sell . amount ) ; { _ } }} . 
  	 	 refine {{ IPriceCallbackPtr ( sell . client_addr ) ( Grams ( sell . account . get ( ) ) ) . onOrderFinished ( ret , bool_t { true } ) *) }} . 
@@ -294,7 +294,7 @@ refine {{ {sell} := {} }} . (* TODO Delete! *)
 (*  	 refine {{ IPriceCallbackPtr ( buy . client_addr ) ( Grams ( buy . account . get ( ) ) ) . onOrderFinished ( ret , bool_t { false } ) ; { _ } }} .  *)
  	 refine {{ ({buy_opt}) -> reset () }} . 
  refine {{ if ( !{ sell_out_of_tons } \\ !{ buy_out_of_tons } ) then { { _:UEt } } ; { _ } }} . 
- 	 refine {{ (* continue *) ({buy_opt}) -> reset () }} .
+ 	 refine {{ continue_ }} .
 (*                      TODO:
 The term "sell_opt" has type "ULValue (optional (uint # OrderInfoLRecord))"
   refine {{  second ( {sell_opt} ) := !{sell} ; { _ } }} .
@@ -302,28 +302,28 @@ The term "sell_opt" has type "ULValue (optional (uint # OrderInfoLRecord))"
 
  refine {{ _sells_amount_ -= !{ deal_amount } ; { _ } }} . 
  refine {{ _buys_amount_ -= !{ deal_amount } ; { _ } }} .
- refine {{ if ( ~ ( (!{sell}) ↑ OrderInfo.amount ) ) then { { _:UEt } } ; { _ } }} . 
-(*  	 refine {{ dealer.sells_ -> _pop () ; { _ } }} .  *)
+ refine {{ if ( ~ ( (!{sell}) ↑ OrderInfo.amount ) ) then { { _:UEf } } ; { _ } }} . 
+(*  	 refine {{ dealer.sells_ -> pop () ; { _ } }} .  *)
  	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 
  	 	 	                            [ 1 (* #{ok} *) , 
                                     ((!{sell}) ↑ OrderInfo.amount) , 
                                     0 ] ; { _ } }} . 
- 	 refine {{ if ( (#{sell_idx}) == !{sell_idx_cur} ) then { { _:UEt } } ; { _ } }} . 
+ 	 refine {{ if ( (#{sell_idx}) == !{sell_idx_cur} ) then { { _:UEf } } ; { _ } }} . 
  	 	 refine {{ (* dealer.ret_ *) {ret} := !{ ret } }} . 
 (*  	 refine {{ IPriceCallbackPtr ( sell . client_addr ) ( Grams ( sell . account . get ( ) ) ) . onOrderFinished ( ret , bool_t { true } ) ; { _ } }} .  *)
  	 refine {{ ({sell_opt}) -> reset () }} . 
- refine {{ if ( ~ ((!{buy}) ↑ OrderInfo.amount ) ) then { { _:UEt } } }} . 
+ refine {{ if ( ~ ((!{buy}) ↑ OrderInfo.amount ) ) then { { _:UEf } } }} . 
  	 refine {{  (* dealer.buys_ . pop () *) ({sell_opt}) -> reset () ; { _ } }} . 
  	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 
  	 	 	                          [ 1 (* #{ok} *) , 
                                     ((!{buy}) ↑ OrderInfo.amount) , 
                                     0 ] ; { _ } }} . 
  	 refine {{ if ( (#{buy_idx}) == !{buy_idx_cur} ) then { { _:UEf } } ; { _ } }} . 
- 	 	 refine {{ (* dealer.ret_ *) {ret} := !{ ret } }} . 
+ 	 	 refine {{ (* dealer.ret_ *) {ret} := !{ ret } }} .
 (*  	 refine {{ IPriceCallbackPtr ( buy . client_addr ) ( Grams ( buy . account . get ( ) ) ) . onOrderFinished ( ret , bool_t { false } ) ; { _ } }} .  *)
  	 refine {{ {buy_opt} -> reset () }} .
  refine {{ if (  ?(!{sell_opt}) && ?((second ( (!{sell_opt}) -> get () )) ↑ OrderInfo.amount) ) 
-                         then { { _:UEf } } ; { _ } }} . 
+                         then { { _:UEt } } ; { _ } }} . 
  	 refine {{ new 'sell : OrderInfoLRecord @ "sell" 
                          := second ( (!{sell_opt}) -> get () ) ; { _ } }} . 
   	(*  refine {{ _sells_ -> change_front ( sell ) ; { _ } }} . *)
@@ -336,7 +336,7 @@ refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := {} ; { _ } }} . (* TODO: del
                                     ((!{sell}) ↑ OrderInfo.amount) , 
                                      (!{sell}) ↑ OrderInfo.amount ] }} . 
  refine {{ if ( ? !{buy_opt} && ? ((second ( (!{buy_opt}) -> get () )) ↑ OrderInfo.amount) ) 
-                         then { { _:UEf } } }} .  
+                         then { { _:UEt } } }} .  
  	 refine {{ new 'buy : OrderInfoLRecord @ "buy" 
                          := second ( (!{buy_opt}) -> get () ) ; { _ } }} . 
 (*  	 refine {{ buys_ -> change_front ( sell ) ; { _ } }} .  *)
@@ -350,7 +350,10 @@ refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := {} ; { _ } }} . (* TODO: del
                                      (!{buy}) ↑ OrderInfo.amount ] }} . 
 Defined.
 
- Definition process_queue_left { R a1 a2 }  ( sell_idx : URValue ( uint ) a1 ) ( buy_idx : URValue ( uint ) a2 ) : UExpression R ( orb a2 a1 ) := 
+ Definition process_queue_left { R a1 a2 }  
+( sell_idx : URValue ( uint ) a1 ) 
+( buy_idx : URValue ( uint ) a2 ) 
+: UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) process_queue 
  sell_idx buy_idx ) . 
  
@@ -565,7 +568,7 @@ Defined .
 ( sells : ( XQueue OrderInfoLRecord ) ) 
 ( buys_amount : ( uint128 ) ) 
 ( buys : ( XQueue OrderInfoLRecord ) ) 
-: UExpression process_retLRecord false . 
+: UExpression process_retLRecord true . 
  	 	 refine {{ new 'd : ( dealerLRecord ) @ "d" := 	 	 
  	 	 	 [ #{tip3root} , #{notify_addr} , #{price} , #{deals_limit} , #{tons_cfg} ,
            #{sells_amount} , #{sells} , #{buys_amount} , #{buys} , {} ] ; { _ } }} . 
@@ -577,7 +580,19 @@ Defined .
                          (!{d}) ↑ dealer.ret_ ] }} . 
  Defined . 
 
- Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  ( tip3root : URValue ( XAddress ) a1 ) ( notify_addr : URValue ( XAddress (* IFlexNotifyPtrLRecord *) ) a2 ) ( price : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( tons_cfg : URValue ( TonsConfigLRecord ) a5 ) ( sell_idx : URValue ( uint ) a6 ) ( buy_idx : URValue ( uint ) a7 ) ( sells_amount : URValue ( uint128 ) a8 ) ( sells : URValue ( XQueue OrderInfoLRecord ) a9 ) ( buys_amount : URValue ( uint128 ) a10 ) ( buys : URValue ( XQueue OrderInfoLRecord ) a11 ) : URValue process_retLRecord ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a11 a10 ) a9 ) a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 } 
+ ( tip3root : URValue ( XAddress ) a1 ) 
+( notify_addr : URValue ( XAddress (* IFlexNotifyPtrLRecord *) ) a2 ) 
+( price : URValue ( uint128 ) a3 ) 
+( deals_limit : URValue ( uint8 ) a4 ) 
+( tons_cfg : URValue ( TonsConfigLRecord ) a5 ) 
+( sell_idx : URValue ( uint ) a6 ) 
+( buy_idx : URValue ( uint ) a7 ) 
+( sells_amount : URValue ( uint128 ) a8 ) 
+( sells : URValue ( XQueue OrderInfoLRecord ) a9 ) 
+( buys_amount : URValue ( uint128 ) a10 ) 
+( buys : URValue ( XQueue OrderInfoLRecord ) a11 ) : 
+  URValue process_retLRecord true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ11 ) process_queue_impl 
  tip3root notify_addr price deals_limit tons_cfg sell_idx buy_idx sells_amount sells buys_amount buys ) . 
  
@@ -597,7 +612,7 @@ Defined .
  , buys custom URValue at level 0 ) : ursus_scope . 
 
 
-Definition onTip3LendOwnership ( answer_addr : ( XAddress ) ) ( balance : ( uint128 ) ) ( lend_finish_time : ( uint32 ) ) ( pubkey : ( uint256 ) ) ( internal_owner : ( XAddress ) ) ( payload : ( XCell ) ) : UExpression OrderRetLRecord false . 
+Definition onTip3LendOwnership ( answer_addr : ( XAddress ) ) ( balance : ( uint128 ) ) ( lend_finish_time : ( uint32 ) ) ( pubkey : ( uint256 ) ) ( internal_owner : ( XAddress ) ) ( payload : ( XCell ) ) : UExpression OrderRetLRecord true . 
  	 	 refine {{ new ( 'tip3_wallet : XAddress , 'value : uint (*Grams*) ) 
                      @ ( "tip3_wallet" , "value" ) := 
                                         int_sender_and_value_ ( ) ; { _ } }} . 
@@ -670,7 +685,7 @@ refine {{ new 'wallet_in : XAddress @ "wallet_in" := {} ; { _ } }} .
  	 	 refine {{ if ( (_sells_  -> empty ()) && ( _buys_ -> empty () ) )
               then { { _:UExpression OrderRetLRecord false } } ; { _ } }} . 
  	 	 	 refine {{ {buys_amount} := !{buys_amount} (* suicide ( _flex_ ) *) }} . 
- 	 	 refine {{ if ( !{ret} ) then { { _:UExpression OrderRetLRecord false } } ; { _ } }} . 
+ 	 	 refine {{ if ( !{ret} ) then { { _:UEt } } ; { _ } }} . 
  	 	 	 refine {{ return_ (!{ret}) -> get () }} .
  
  	 	 refine {{ return_ [ 0 (* #{ok} *) , 0 , (!{sell}) ↑ OrderInfo.amount ] }} . 
@@ -704,7 +719,8 @@ Definition buyTip3 ( amount : ( uint128 ) ) ( receive_tip3_wallet : ( XAddress )
  	 	 refine {{ new 'cost : ( ( XMaybe uint ) ) @ "cost" := 
                          calc_cost_ ( #{ amount } , _price_ ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( !{cost} ) , 1 (* ec::too_big_tokens_amount *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( (!{value_gr}) > buyTip3MinValue_ ( (!{cost}) -> get () ) ) , 1 (* ec::not_enough_tons_to_process *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( (!{value_gr}) > buyTip3MinValue_ ( (!{cost}) -> get_default () ) ) , 
+                              1 (* ec::not_enough_tons_to_process *) ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( is_active_time_ ( #{ order_finish_time } ) ) , 1 (* ec::expired *) ) ; { _ } }} . 
  	 	 refine {{ set_int_return_value_ ( ) (* tons_cfg_ . order_answer . get ( ) *) ; { _ } }} . 
  	 	 refine {{ new 'account : ( uint128 ) @ "account" := 
@@ -743,14 +759,14 @@ Definition buyTip3 ( amount : ( uint128 ) ) ( receive_tip3_wallet : ( XAddress )
  	 	 refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) 
                  then { { _: UExpression _ false } } ; { _ } }} . 
  	 	 	 refine {{ _sells_amount_ := !{ sells_amount } (* suicide ( _flex_ ) *) }} . 
- 	 	 refine {{ if ( !{ret} ) then { { _: UExpression _ false } } ; { _ } }} . 
+ 	 	 refine {{ if ( !{ret} ) then { { _: UEt } } ; { _ } }} . 
  	 	 	 refine {{ return_ (!{ret}) -> get () }} . 
  	 	 refine {{ return_ [ 0 (* ok *) , 0 , (!{buy}) ↑ OrderInfo.amount ] }} . 
 Defined . 
  
-Definition processQueue : UExpression PhantomType false . 
+Definition processQueue : UExpression PhantomType true . 
  	 	 refine {{ if ( (_sells_ -> empty ()) \\ ( _buys_ -> empty () ) ) 
-                 then { { _: UExpression PhantomType false } } ; { _ } }} . 
+                 then { { _: UEf } } ; { _ } }} . 
  	 	 	 refine {{ return_ {} }} . 
  	 	 refine {{ new ('sells_amount:uint128 , 
                     'sells:( XQueue OrderInfoLRecord ) , 
