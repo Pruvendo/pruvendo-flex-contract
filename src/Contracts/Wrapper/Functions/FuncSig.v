@@ -47,12 +47,12 @@ Parameter getInternalWalletCodeHash : UExpression uint256 false .
 Parameter _fallback : TvmCell -> TvmSlice -> UExpression uint false . 
 Parameter optional_owner : raw_address -> UExpression (optional raw_address) false . 
 Parameter expected_internal_address : uint256 -> raw_address -> UExpression raw_address false . 
-Parameter calc_internal_wallet_init : uint256 -> raw_address -> UExpression ( StateInitLRecord * raw_address ) false . 
+Parameter calc_internal_wallet_init : uint256 -> raw_address -> UExpression ( StateInitLRecord # raw_address ) false . 
 Parameter is_internal_owner : UExpression boolean false . 
 Parameter check_internal_owner : UExpression PhantomType true . 
 Parameter check_external_owner : UExpression PhantomType true . 
 Parameter check_owner : UExpression PhantomType false . 
-Parameter prepare_wrapper_state_init_and_addr : TvmCell ->  ContractLRecord -> UExpression ( StateInitLRecord * uint256 ) false . 
+Parameter prepare_wrapper_state_init_and_addr : TvmCell ->  ContractLRecord -> UExpression ( StateInitLRecord # uint256 ) false . 
 
 
 End SpecSig.

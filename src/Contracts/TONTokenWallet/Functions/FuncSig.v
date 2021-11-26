@@ -17,7 +17,7 @@ Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
-(* Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. *)
+(# Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. #)
 Module Type SpecSig.
 
 Local Open Scope ursus_scope.
@@ -61,16 +61,16 @@ Parameter transfer : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) 
  Parameter prepare_transfer_message_flags : ( ( XUInteger128 ) ) -> UExpression XUInteger false . 
  Parameter update_spent_balance : ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> UExpression PhantomType false . 
  Parameter optional_owner : ( ( XAddress ) ) -> UExpression XMaybe XAddress false . 
- Parameter calc_wallet_init_hash : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord * XUInteger256 ) false . 
+ Parameter calc_wallet_init_hash : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false . 
  Parameter expected_sender_address : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XUInteger256 false . 
- Parameter calc_wallet_init : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord * XAddress ) false . 
- Parameter filter_lend_ownerhip_map : UExpression ( lend_ownership_mapLRecord * XUInteger128 ) false . 
- Parameter filter_lend_ownerhip_array : UExpression ( lend_ownership_arrayLRecord * XUInteger128 ) false . 
+ Parameter calc_wallet_init : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord # XAddress ) false . 
+ Parameter filter_lend_ownerhip_map : UExpression ( lend_ownership_mapLRecord # XUInteger128 ) false . 
+ Parameter filter_lend_ownerhip_array : UExpression ( lend_ownership_arrayLRecord # XUInteger128 ) false . 
  Parameter is_internal_owner : UExpression XBool false . 
  Parameter check_internal_owner : ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression XUInteger128 true . 
  Parameter check_external_owner : UExpression XUInteger128 true . 
  Parameter check_owner : ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression XUInteger128 false . 
- Parameter prepare_root_state_init_and_addr : ( ( XCell ) ) -> ( ( DRootTokenContractLRecord ) ) -> UExpression ( StateInitLRecord * XUInteger256 ) false . 
+ Parameter prepare_root_state_init_and_addr : ( ( XCell ) ) -> ( ( DRootTokenContractLRecord ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false . 
 
 
 End SpecSig.

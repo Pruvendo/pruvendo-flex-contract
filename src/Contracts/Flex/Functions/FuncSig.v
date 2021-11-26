@@ -2,9 +2,10 @@ Require Import FinProof.Common.
 
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
+
 Require Import UrsusTVM.Cpp.tvmNotations.
 
-Require Import CommonNotations.
+Require Import Project.CommonNotations.
 Require Import Flex.ClassTypesNotations.
 Require Import Flex.ClassTypes.
 Require Import Flex.Ledger.
@@ -58,32 +59,32 @@ Parameter getTradingPairListingRequests : UExpression ( mapping uint TradingPair
 Parameter getXchgPairListingRequests : UExpression ( mapping uint XchgPairListingRequestWithPubkeyLRecord) false . 
 Parameter check_owner : UExpression PhantomType true . 
 Parameter _fallback : TvmCell -> TvmSlice -> UExpression uint false . 
-Parameter prepare_wrapper_state_init_and_addr : TvmCell -> WrapperClassTypesModule.DWrapperLRecord -> UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter prepare_flex_state_init_and_addr : ContractLRecord -> TvmCell -> UExpression ( StateInitLRecord * uint256 ) false . 
+Parameter prepare_wrapper_state_init_and_addr : TvmCell -> WrapperClassTypesModule.DWrapperLRecord -> UExpression ( StateInitLRecord # uint256 ) false . 
+Parameter prepare_flex_state_init_and_addr : ContractLRecord -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
 
 Parameter prepare_external_wallet_state_init_and_addr : String -> String -> uint8 -> uint256 -> uint256 -> raw_address -> 
-                                                        optional raw_address -> TvmCell -> uint8 -> UExpression ( StateInitLRecord * uint256 ) false . 
+                                                        optional raw_address -> TvmCell -> uint8 -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter prepare_internal_wallet_state_init_and_addr : String -> String -> uint8 -> uint256 -> uint256 -> raw_address -> 
-                                                        optional raw_address -> TvmCell -> uint8 -> UExpression ( StateInitLRecord * uint256 ) false . 
+                                                        optional raw_address -> TvmCell -> uint8 -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter prepare_trading_pair_state_init_and_addr : TradingPairClassTypesModule.DTradingPairLRecord -> TvmCell ->
-                                                     UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter prepare_trading_pair : raw_address -> raw_address -> TvmCell -> UExpression ( StateInitLRecord * uint256 ) false . 
+                                                     UExpression ( StateInitLRecord # uint256 ) false . 
+Parameter prepare_trading_pair : raw_address -> raw_address -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter prepare_xchg_pair_state_init_and_addr : XchgPairClassTypesModule.DXchgPairLRecord -> TvmCell -> 
-                                                  UExpression ( StateInitLRecord * uint256 ) false . 
-Parameter approveTradingPairImpl : uint256 -> mapping uint256 (uint256 * TradingPairListingRequestLRecord) -> 
+                                                  UExpression ( StateInitLRecord # uint256 ) false . 
+Parameter approveTradingPairImpl : uint256 -> mapping uint256 (uint256 # TradingPairListingRequestLRecord) -> 
                                    TvmCell -> uint8 -> ListingConfigLRecord -> 
-                                   UExpression ( raw_address * (mapping uint256 (uint256 * TradingPairListingRequestLRecord) ) ) true .
-Parameter rejectTradingPairImpl : uint256 -> mapping uint256 (uint256 * TradingPairListingRequestLRecord)-> 
-                                  ListingConfigLRecord -> UExpression ( mapping uint256 (uint256 * TradingPairListingRequestLRecord) ) true . 
-Parameter approveXchgPairImpl : uint256 -> mapping uint256 (uint256 * XchgPairListingRequestLRecord) -> TvmCell -> uint8 -> 
-                                ListingConfigLRecord -> UExpression ( raw_address * (mapping uint256 (uint256 * XchgPairListingRequestLRecord) ) ) true . 
-Parameter rejectXchgPairImpl : uint256 -> mapping uint256 (uint256 * XchgPairListingRequestLRecord) -> ListingConfigLRecord -> 
-                               UExpression ( mapping uint256 (uint256 * XchgPairListingRequestLRecord) ) true . 
-Parameter approveWrapperImpl : uint256 -> mapping uint256 (uint256 * WrapperListingRequestLRecord) -> TvmCell -> TvmCell -> 
+                                   UExpression ( raw_address # (mapping uint256 (uint256 # TradingPairListingRequestLRecord) ) ) true .
+Parameter rejectTradingPairImpl : uint256 -> mapping uint256 (uint256 # TradingPairListingRequestLRecord)-> 
+                                  ListingConfigLRecord -> UExpression ( mapping uint256 (uint256 # TradingPairListingRequestLRecord) ) true . 
+Parameter approveXchgPairImpl : uint256 -> mapping uint256 (uint256 # XchgPairListingRequestLRecord) -> TvmCell -> uint8 -> 
+                                ListingConfigLRecord -> UExpression ( raw_address # (mapping uint256 (uint256 # XchgPairListingRequestLRecord) ) ) true . 
+Parameter rejectXchgPairImpl : uint256 -> mapping uint256 (uint256 # XchgPairListingRequestLRecord) -> ListingConfigLRecord -> 
+                               UExpression ( mapping uint256 (uint256 # XchgPairListingRequestLRecord) ) true . 
+Parameter approveWrapperImpl : uint256 -> mapping uint256 (uint256 # WrapperListingRequestLRecord) -> TvmCell -> TvmCell -> 
                                TvmCell -> uint8 -> ListingConfigLRecord -> 
-                               UExpression ( raw_address * (mapping uint256 (uint256 * WrapperListingRequestLRecord) ) ) true . 
-Parameter rejectWrapperImpl : uint256 -> mapping uint256 (uint256 * WrapperListingRequestLRecord) ->
-                              ListingConfigLRecord -> UExpression ( mapping uint256 (uint256 * WrapperListingRequestLRecord) ) true . 
+                               UExpression ( raw_address # (mapping uint256 (uint256 # WrapperListingRequestLRecord) ) ) true . 
+Parameter rejectWrapperImpl : uint256 -> mapping uint256 (uint256 # WrapperListingRequestLRecord) ->
+                              ListingConfigLRecord -> UExpression ( mapping uint256 (uint256 # WrapperListingRequestLRecord) ) true . 
 
 
 End SpecSig.

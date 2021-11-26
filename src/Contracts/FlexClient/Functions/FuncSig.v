@@ -2,12 +2,14 @@ Require Import FinProof.Common.
 
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
+
 Require Import UrsusTVM.Cpp.tvmNotations.
 
-Require Import CommonNotations.
-Require Import Contracts.FlexClient.ClassTypes.
-Require Import Contracts.FlexClient.Ledger.
-Require Import Contracts.FlexClient.ClassTypesNotations.
+Require Import Project.CommonNotations.
+
+Require Import FlexClient.ClassTypes.
+Require Import FlexClient.Ledger.
+Require Import FlexClient.ClassTypesNotations.
 
 Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
@@ -55,10 +57,10 @@ Parameter hasFlexWrapperCode : UExpression boolean false .
 Parameter getPayloadForDeployInternalWallet : uint256 ->  raw_address ->  uint128 -> UExpression TvmCell false . 
 Parameter _fallback : TvmCell -> TvmSlice -> UExpression uint false . 
 Parameter preparePrice : uint128 ->  uint128 ->  uint8 -> TvmCell ->  Tip3ConfigLRecord ->  
-                         TvmCell ->  raw_address -> UExpression ( StateInitLRecord * ( raw_address * uint256 ) )  false . 
+                         TvmCell ->  raw_address -> UExpression ( StateInitLRecord # ( raw_address # uint256 ) )  false . 
 Parameter preparePriceXchg :  uint128 ->  uint128 ->  uint128 ->  uint8 ->  Tip3ConfigLRecord ->  
                               Tip3ConfigLRecord ->  TvmCell ->  raw_address -> 
-                              UExpression ( StateInitLRecord * ( raw_address * uint256 ) )  false . 
+                              UExpression ( StateInitLRecord # ( raw_address # uint256 ) )  false . 
 
 End SpecSig.
 

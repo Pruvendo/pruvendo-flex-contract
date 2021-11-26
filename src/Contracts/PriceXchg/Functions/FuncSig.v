@@ -22,11 +22,11 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-Parameter make_deal : ULValue OrderInfoXchgLRecord -> ULValue OrderInfoXchgLRecord -> UExpression ( boolean * (boolean * uint128) ) false . 
+Parameter make_deal : ULValue OrderInfoXchgLRecord -> ULValue OrderInfoXchgLRecord -> UExpression ( boolean # (boolean # uint128) ) false . 
 Parameter extract_active_order : ULValue ( optional OrderInfoXchgWithIdx ) -> 
                                  ULValue ( queue OrderInfoXchgLRecord )  -> 
                                  ULValue ( uint128 ) -> boolean -> 
-          UExpression ( optional OrderInfoXchgWithIdx * (queue OrderInfoXchgLRecord) * uint128 )  true . 
+          UExpression ( optional OrderInfoXchgWithIdx # (queue OrderInfoXchgLRecord) # uint128 )  true . 
 Parameter process_queue : uint -> uint -> UExpression PhantomType true . 
 Parameter onTip3LendOwnership : raw_address -> uint128 -> uint32 -> uint256 -> raw_address -> TvmCell -> UExpression OrderRetLRecord false . 
 Parameter processQueue : UExpression PhantomType false . 
@@ -56,7 +56,7 @@ Parameter process_queue_impl : raw_address -> raw_address -> raw_address (* IFle
                                uint128 -> queue OrderInfoXchgLRecord -> UExpression process_retLRecord false .
 Parameter cancel_order_impl : queue OrderInfoXchgLRecord -> 
                               addr_std_fixedLRecord -> uint128 -> boolean -> 
-                              Grams -> Grams -> Grams -> UExpression ((queue OrderInfoXchgLRecord) * uint128) false . 
+                              Grams -> Grams -> Grams -> UExpression ((queue OrderInfoXchgLRecord) # uint128) false . 
 Parameter int_sender_and_value : UExpression ( raw_address # Grams ) false . 
 
 End SpecSig.

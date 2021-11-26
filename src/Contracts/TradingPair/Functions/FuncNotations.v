@@ -126,7 +126,7 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) 
  Definition prepare_trading_pair_state_init_and_addr_right { a1 a2 }  
 ( pair_data : URValue ( ContractLRecord ) a1 )
  ( pair_code : URValue ( XCell ) a2 ) 
-: URValue ( StateInitLRecord * uint256 ) ( orb a2 a1 ) := 
+: URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_trading_pair_state_init_and_addr 
  pair_data pair_code ) . 
  
