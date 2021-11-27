@@ -17,7 +17,6 @@ Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
-
 Module Type SpecSig.
 
 Local Open Scope ursus_scope.

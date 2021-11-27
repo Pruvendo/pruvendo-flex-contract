@@ -806,25 +806,25 @@ Defined .
  	 	 refine {{ new 'is_first : ( XBool ) @ "is_first" := TRUE ; { _ } }} . 
  	 	 refine {{ new 'it : ( XQueue OrderInfoLRecord ) @ "it" := {} ; { _ } }} . 
  	 	(*  refine {{ for ( {it} = orders -> begin () ; ~ ({it} != orders -> end ()) ) { { _ } } ; { _ } }} . 
- 	 	 	 refine {{ new 'next_it : OrderInfoLRecord @ "next_it" := std : : next ( it ) ; { _ } }} . 
- 	 	 	 refine {{ new 'ord : ( OrderInfoLRecord ) @ "ord" := *it ; { _ } }} . 
- 	 	 	 refine {{ if ( ({ord} ↑ OrderInfo.client_addr) == !{client_addr} ) then { { _:UEf } } ; { _ } }} . 
- 	 	 	 	 refine {{ new 'minus_val : XUInteger @ "minus_val" := !{is_first} ? #{process_queue} : 0 ; { _ } }} . 
- 	 	 	 	 refine {{ if ( #{sell} ) then { { _:UEf } } ; { _ } }} . 
-(*  	 	 	 refine {{ { ITONTokenWalletPtr ( ord . tip3_wallet ) ( return_ownership ) . returnOwnership ( ord . amount ) ; { _ } }} .  *)
- 	 	 	 	 	 refine {{ {minus_val} += (#{return_ownership}) }} . 
- 	 	 	 refine {{ new 'plus_val : ( XUInteger ) @ "plus_val" := 
-                      (((!{ord}) ↑ OrderInfo.account) + ( !{is_first} ? (#{incoming_val}) : 0 )) ; { _ } }} . 
- 	 	 	 refine {{ {is_first} := FALSE ; { _ } }} . 
- 	 	 	 refine {{ if ( !{plus_val} > !{minus_val} ) then { { _:UEf } } ; { _ } }} . 
- 	 	 	 	 refine {{ new 'ret_val : XUInteger @ "ret_val" := (!{plus_val} - !{minus_val}) ; { _ } }} . 
+ 	 	 	 refine {{ { auto next_it = std : : next ( it ) ; { _ } }} . 
+ 	 	 	 refine {{ new 'ord : ( auto ) @ "ord" := {} ; { _ } }} . 
+ 	 	 	 refine {{ { ord } := *it ; { _ } }} . 
+ 	 	 	 refine {{ if ( ord ^^ auto:client_addr == !{ client_addr } ) then { { _ } } else { { _ } } ; { _ } }} . 
+ 	 	 	 	 refine {{ { unsigned minus_val = is_first ? process_queue . get ( ) : 0 ; { _ } }} . 
+ 	 	 	 	 refine {{ if ( !{ sell } ) then { { _ } } else { { _ } } ; { _ } }} . 
+ 	 	 	 	 	 refine {{ { ITONTokenWalletPtr ( ord . tip3_wallet ) ( return_ownership ) . returnOwnership ( ord . amount ) ; { _ } }} . 
+ 	 	 	 	 	 refine {{ minus_val += return_ownership ^^ GramsLRecord:get ( ) }} . 
+ 	 	 	 refine {{ new 'plus_val : ( uint ) @ "plus_val" := {} ; { _ } }} . 
+ 	 	 	 refine {{ { plus_val } := ord ^^ auto:account . get ( ) + ( !{ is_first } ? incoming_val ^^ GramsLRecord:get ( ) : 0 ) ; { _ } }} . 
+ 	 	 	 refine {{ { is_first } := false ; { _ } }} . 
+ 	 	 	 refine {{ if ( !{ plus_val } > minus_val ) then { { _ } } else { { _ } } ; { _ } }} . 
+ 	 	 	 	 refine {{ { unsigned ret_val = plus_val - minus_val ; { _ } }} . 
  	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
- 	 	 	                          [$ ec::canceled , !{ord} ↑ OrderInfo.original_amount 
-                                                - !{ord} ↑ OrderInfo.amount, 0 $] (* ; { _ } }} . 
- 	 	 	 	 refine {{ IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) *) }} . 
- 	 	 refine {{ {all_amount} -= !{ord} ↑ OrderInfo.amount ; { _ } }} . 
- 	 	 refine {{ {orders} -> erase ( it ) }} . 
-   refine {{ {it} := !{next_it} }} .  *)
+ 	 	 	 [$ $] ; { _ } }} . 
+ 	 	 	 	 refine {{ IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) }} . 
+ 	 	 refine {{ { all_amount } -= ord ^^ auto:amount ; { _ } }} . 
+ 	 	 refine {{ orders ^^ OrderInfoLRecord:erase ( it ) }} . 
+   refine {{ it := next_it }} .  *)
  refine {{ return_ [ #{ orders } , #{ all_amount } ] }} . 
 Defined . 
 
