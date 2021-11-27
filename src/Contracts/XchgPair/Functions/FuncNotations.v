@@ -14,9 +14,11 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
-Require Import Contracts.XchgPair.ClassTypes.
-Require Import Contracts.XchgPair.Ledger.
-Require Import Contracts.XchgPair.Functions.FuncSig.
+Require Import XchgPair.ClassTypes.
+Require Import XchgPair.Ledger.
+Require Import XchgPair.Functions.FuncSig.
+
+Require Import XchgPair.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -31,7 +33,7 @@ Module Export SpecModuleForFuncNotations := Spec xt sm.
 
 Import xt.
 
-Fail Check OutgoingMessage_default.
+(* Fail Check OutgoingMessage_default. *)
 
 Import UrsusNotations.
 Local Open Scope ucpp_scope.
@@ -40,30 +42,51 @@ Local Open Scope ursus_scope.
 (********************************************************************************************************************)
 (*state fields*)
  
- Definition flex_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_flex_addr_ ) : ULValue raw_address ) . 
- Definition flex_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_flex_addr_ ) : URValue raw_address false ) . 
- Notation " '_flex_addr_' " := ( flex_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_flex_addr_' " := ( flex_addr__right ) (in custom URValue at level 0) : ursus_scope. 
+Definition flex_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_flex_addr_ ) : ULValue raw_address ) . 
+Definition flex_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_flex_addr_ ) : URValue raw_address false ) . 
+Notation " '_flex_addr_' " := ( flex_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " '_flex_addr_' " := ( flex_addr__right ) (in custom URValue at level 0) : ursus_scope. 
+
+Definition tip3_major_root__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_tip3_major_root_ ) : ULValue raw_address ) . 
+Definition tip3_major_root__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_tip3_major_root_ ) : URValue raw_address false ) . 
+Notation " '_tip3_major_root_' " := ( tip3_major_root__left ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " '_tip3_major_root_' " := ( tip3_major_root__right ) (in custom URValue at level 0) : ursus_scope. 
+
+Definition tip3_minor_root__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_tip3_minor_root_ ) : ULValue raw_address ) . 
+Definition tip3_minor_root__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_tip3_minor_root_ ) : URValue raw_address false ) . 
+Notation " '_tip3_minor_root_' " := ( tip3_minor_root__left ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " '_tip3_minor_root_' " := ( tip3_minor_root__right ) (in custom URValue at level 0) : ursus_scope. 
+
+Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_min_amount_ ) : ULValue uint128 ) . 
+Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_min_amount_ ) : URValue uint128 false ) . 
+Notation " '_min_amount_' " := ( min_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " '_min_amount_' " := ( min_amount__right ) (in custom URValue at level 0) : ursus_scope. 
+
+Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_notify_addr_ ) : ULValue raw_address ) . 
+Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_notify_addr_ ) : URValue raw_address false ) . 
+Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
+Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
+
+Definition self_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_XchgPair ) : 
+                                   ULValue ( mapping raw_address (queue (OutgoingMessage XchgPairPublicInterface.PublicInterface )) )) . 
+Definition self_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_XchgPair ) : 
+                                   URValue ( mapping raw_address (queue (OutgoingMessage XchgPairPublicInterface.PublicInterface ))) false) . 
+Notation " 'IXchgPairPtr' " := ( self_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
+
+
+(*| IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> PublicInterfaceP *)
+Definition IonDeploy_right { a1 a2 a3 }  ( min_amount : URValue uint128 a1 ) 
+                                          ( deploy_value : URValue uint128 a2 ) 
+                                          ( notify_addr : URValue raw_address a3 ) : URValue (XchgPairPublicInterface.PublicInterface) (orb a1 (orb a2 a3)).
+ pose proof (urvalue_bind min_amount (fun a => urvalue_bind deploy_value (fun b => urvalue_bind notify_addr (fun c => #(IonDeploy a b c: XchgPairPublicInterface.PublicInterface)))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onDeploy' ( x , y , z ) " := (IonDeploy_right x y z)
+(in custom URValue at level 0 , x custom URValue at level 0 , y custom URValue at level 0 , z custom URValue at level 0 ) : ursus_scope .
  
- Definition tip3_major_root__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_tip3_major_root_ ) : ULValue raw_address ) . 
- Definition tip3_major_root__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_tip3_major_root_ ) : URValue raw_address false ) . 
- Notation " '_tip3_major_root_' " := ( tip3_major_root__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_tip3_major_root_' " := ( tip3_major_root__right ) (in custom URValue at level 0) : ursus_scope. 
- 
- Definition tip3_minor_root__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_tip3_minor_root_ ) : ULValue raw_address ) . 
- Definition tip3_minor_root__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_tip3_minor_root_ ) : URValue raw_address false ) . 
- Notation " '_tip3_minor_root_' " := ( tip3_minor_root__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_tip3_minor_root_' " := ( tip3_minor_root__right ) (in custom URValue at level 0) : ursus_scope. 
- 
- Definition min_amount__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_min_amount_ ) : ULValue uint128 ) . 
- Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_min_amount_ ) : URValue uint128 false ) . 
- Notation " '_min_amount_' " := ( min_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_min_amount_' " := ( min_amount__right ) (in custom URValue at level 0) : ursus_scope. 
- 
- Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_notify_addr_ ) : ULValue raw_address ) . 
- Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_notify_addr_ ) : URValue raw_address false ) . 
- Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
- Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
+Check {{ IXchgPairPtr [[ {_} ]] with { _ } ⤳ .onDeploy ( {} ,  {} ,  {} ) }}.
 
 
 Module Calls (tc : SpecSig).
