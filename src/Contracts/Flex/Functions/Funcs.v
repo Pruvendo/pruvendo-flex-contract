@@ -1,6 +1,5 @@
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
-From elpi Require Import elpi.
 Require Import Setoid.
 Require Import ZArith.
 Require Import Coq.Program.Equality.
@@ -177,7 +176,7 @@ persistent_data_header base ) .
 
  Definition setPairCode ( code :  ( XCell ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( ~ _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( tvm.pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) ,  error_code::unexpected_refs_count_in_code  ) ; { _ } }} . 
  	 	 refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
@@ -313,7 +312,7 @@ Definition check_owner : UExpression PhantomType true .
 
  Definition registerTradingPair ( pubkey :  ( uint256 ) ) ( tip3_root :  ( XAddress ) ) ( min_amount :  ( uint128 ) ) ( notify_addr :  ( XAddress ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( int_value () > ( _listing_cfg_ ↑  ListingConfig.register_pair_cost) ) ,  error_code::not_enough_funds  ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ~ {} (* _trading_pair_listing_requests_ ->contains ( #{pubkey} ) *) ) ,  error_code::trading_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ (_trading_pair_listing_requests_ ->contains ( #{pubkey} )) ) ,  error_code::trading_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
 (*  	 	 refine {{ trading_pair_listing_requests_.set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3_root , min_amount , notify_addr } ) ; { _ } }} .  *)
 (*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
 

@@ -9,6 +9,7 @@ Require Import FinProof.MonadTransformers21.
 Require Import UMLang.UrsusLib. 
 Require Import UMLang.BasicModuleTypes. 
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
+
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require Import Project.CommonTypes. 
@@ -20,7 +21,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XUInteger128 XAddress InternalMessageParamsLRecord XCell: Type.
+Variables XUInteger128 XAddress: Type.
 
 Inductive VarInitFields      := | VarInit_ι_DTradingPair | VarInit_ι_pubkey. (* = DFlex *)
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
@@ -31,10 +32,6 @@ Inductive PublicInterfaceP :=
 | IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> PublicInterfaceP
 | _Icreate : InitialState -> PublicInterfaceP
 | _Itransfer : PublicInterfaceP .
-
-Inductive OutgoingMessageP :=
-| EmptyMessage : OutgoingMessageP
-| OutgoingInternalMessage : XAddress -> InternalMessageParamsLRecord -> PublicInterfaceP -> OutgoingMessageP.
 
 End InterfaceDef.
 
@@ -55,21 +52,10 @@ GeneratePruvendoRecord InitialStateL InitialStateFields.
 (* Print PublicInterfaceP. *)
 Definition PublicInterface : Type := PublicInterfaceP XUInteger128 XAddress InitialStateLRecord.
 
-Print OutgoingMessageP.
-Definition OutgoingMessage : Type := OutgoingMessageP XUInteger128 XAddress InternalMessageParamsLRecord InitialStateLRecord.
-
 (* Print Iconstructor. *)
 Arguments _Icreate {_} {_} {_}.
 Arguments IonDeploy {_} {_} {_}.
 Arguments _Itransfer {_} {_} {_}.
-
-Arguments OutgoingInternalMessage {_} {_} {_} {_}.
-
-Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
-{
-    default := EmptyMessage XUInteger128 XAddress InternalMessageParamsLRecord InitialStateLRecord
-}.
-
 
 End PublicInterface.
 

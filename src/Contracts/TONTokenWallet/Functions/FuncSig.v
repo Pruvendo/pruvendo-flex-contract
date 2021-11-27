@@ -17,7 +17,7 @@ Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
-(# Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig. #)
+Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig.
 Module Type SpecSig.
 
 Local Open Scope ursus_scope.
@@ -51,7 +51,7 @@ Parameter transfer : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) 
  Parameter internalTransferFrom : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
  Parameter disapprove : UExpression PhantomType false . 
  Parameter _on_bounced : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
- Parameter _fallback : ( ( XCell ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
+ Parameter _fallback : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
  Parameter transfer_impl : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
  Parameter transfer_to_recipient_impl : ( ( XAddress ) ) -> ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType false . 
  Parameter transfer_from_impl : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType false . 
@@ -60,12 +60,12 @@ Parameter transfer : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) 
  Parameter check_transfer_requires : ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression XUInteger128 true . 
  Parameter prepare_transfer_message_flags : ( ( XUInteger128 ) ) -> UExpression XUInteger false . 
  Parameter update_spent_balance : ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> UExpression PhantomType false . 
- Parameter optional_owner : ( ( XAddress ) ) -> UExpression XMaybe XAddress false . 
+ Parameter optional_owner : ( ( XAddress ) ) -> UExpression ( XMaybe XAddress ) false . 
  Parameter calc_wallet_init_hash : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false . 
  Parameter expected_sender_address : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XUInteger256 false . 
  Parameter calc_wallet_init : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord # XAddress ) false . 
- Parameter filter_lend_ownerhip_map : UExpression ( lend_ownership_mapLRecord # XUInteger128 ) false . 
- Parameter filter_lend_ownerhip_array : UExpression ( lend_ownership_arrayLRecord # XUInteger128 ) false . 
+ Parameter filter_lend_ownerhip_map : UExpression ( lend_ownership_map # XUInteger128 ) false . 
+ Parameter filter_lend_ownerhip_array : UExpression ( lend_ownership_array # XUInteger128 ) false . 
  Parameter is_internal_owner : UExpression XBool false . 
  Parameter check_internal_owner : ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression XUInteger128 true . 
  Parameter check_external_owner : UExpression XUInteger128 true . 

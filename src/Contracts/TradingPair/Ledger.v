@@ -35,7 +35,7 @@ Module Export TypesModuleForLedger := ClassTypes xt sm .
 Import xt. 
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ ( XQueue TradingPairPublicInterfaceModule.OutgoingMessage ) : Type ; 
+ [ ( XHMap XAddress (XQueue (OutgoingMessage TradingPairPublicInterfaceModule.PublicInterface)) ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .

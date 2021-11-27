@@ -35,7 +35,7 @@ Module Export VMStateModule := VMStateModule xt sm.
 Import xt.
 
 Definition MessagesAndEventsL : list Type := 
- [ ( XQueue XchgPairPublicInterfaceModule.OutgoingMessage ) : Type ; 
+ [ ( XHMap XAddress (XQueue (OutgoingMessage XchgPairPublicInterfaceModule.PublicInterface )) ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .

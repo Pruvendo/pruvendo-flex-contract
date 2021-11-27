@@ -18,7 +18,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XAddress InternalMessageParamsLRecord XUInteger128 : Type.
+Variables XAddress XUInteger128 : Type.
 
 Inductive VarInitFields      := | VarInit_ι_DXchgPair | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
@@ -29,10 +29,6 @@ Inductive PublicInterfaceP :=
 | IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> PublicInterfaceP
 | _Icreate : InitialState -> PublicInterfaceP
 | _Itransfer : PublicInterfaceP .
-
-Inductive OutgoingMessageP :=
-| EmptyMessage : OutgoingMessageP
-| OutgoingInternalMessage : XAddress -> InternalMessageParamsLRecord -> PublicInterfaceP -> OutgoingMessageP.
 
 End InterfaceDef.
 
@@ -52,19 +48,19 @@ GeneratePruvendoRecord InitialStateL InitialStateFields.
 Definition PublicInterface: Type := PublicInterfaceP XAddress XUInteger128 InitialStateLRecord .
 
 (* Print OutgoingMessageP. *)
-Definition OutgoingMessage: Type := OutgoingMessageP XAddress InternalMessageParamsLRecord XUInteger128 InitialStateLRecord.
+(* Definition OutgoingMessage: Type := OutgoingMessageP XAddress InternalMessageParamsLRecord XUInteger128 InitialStateLRecord. *)
 
 Arguments _Icreate {_} {_} {_}.
 Arguments IonDeploy {_} {_} {_}.
 Arguments _Itransfer {_} {_} {_}.
 
-Arguments OutgoingInternalMessage {_} {_} {_} {_}.
+(* Arguments OutgoingInternalMessage {_} {_} {_} {_}. *)
 
-Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
+(* Global Instance OutgoingMessage_default : XDefault OutgoingMessage :=
 {
     default := EmptyMessage XAddress InternalMessageParamsLRecord XUInteger128 InitialStateLRecord
 }.
-
+ *)
 
 End PublicInterface.
 
