@@ -1,6 +1,5 @@
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
-From elpi Require Import elpi.
 Require Import Setoid.
 Require Import ZArith.
 Require Import Coq.Program.Equality.
@@ -313,7 +312,7 @@ Definition check_owner : UExpression PhantomType true .
 
  Definition registerTradingPair ( pubkey :  ( uint256 ) ) ( tip3_root :  ( XAddress ) ) ( min_amount :  ( uint128 ) ) ( notify_addr :  ( XAddress ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( int_value () > ( _listing_cfg_ ↑  ListingConfig.register_pair_cost) ) ,  error_code::not_enough_funds  ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ~ {} (* _trading_pair_listing_requests_ ->contains ( #{pubkey} ) *) ) ,  error_code::trading_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ (_trading_pair_listing_requests_ ->contains ( #{pubkey} )) ) ,  error_code::trading_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
 (*  	 	 refine {{ trading_pair_listing_requests_.set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3_root , min_amount , notify_addr } ) ; { _ } }} .  *)
 (*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
 
