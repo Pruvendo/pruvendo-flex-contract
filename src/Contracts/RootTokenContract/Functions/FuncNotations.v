@@ -273,7 +273,7 @@ Local Open Scope string_scope.
  (in custom ULValue at level 0 , dest custom URValue at level 0 
  , tokens custom URValue at level 0 
  , grams custom URValue at level 0 ) : ursus_scope . 
- Definition mint_right { a1 }  ( tokens : URValue ( XUInteger128 ) a1 ) : URValue XBool a1 := 
+ Definition mint_right { a1 }  ( tokens : URValue ( XUInteger128 ) a1 ) : URValue XBool true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) mint 
  tokens ) . 
  
@@ -345,7 +345,7 @@ Local Open Scope string_scope.
  ( hasWalletCode_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getWalletCode_right  : URValue XCell false := 
+ Definition getWalletCode_right  : URValue XCell true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getWalletCode 
  ) . 
  
@@ -357,14 +357,15 @@ Local Open Scope string_scope.
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) getWalletAddress 
  pubkey owner ) . 
  
- Notation " 'getWalletAddress_' '(' pubkey owner ')' " := 
+ Notation " 'getWalletAddress_' '(' pubkey ',' owner ')' " := 
  ( getWalletAddress_right 
  pubkey owner ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , owner custom URValue at level 0 ) : ursus_scope . 
- Definition _on_bounced_right { a1 a2 }  ( cell : URValue XCell a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger true := 
+
+ Definition _on_bounced_right { a1 a2 }  ( msg : URValue XCell a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _on_bounced 
- cell msg_body ) . 
+ msg msg_body ) . 
  
  Notation " '_on_bounced_' '(' cell msg_body ')' " := 
  ( _on_bounced_right 
@@ -408,6 +409,7 @@ y custom URValue at level 0 ) : ursus_scope .
  ( workchain_id_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition calc_wallet_init_right { a1 a2 }  ( pubkey : URValue ( XUInteger256 ) a1 ) ( owner_addr : URValue ( XAddress ) a2 ) : URValue ( StateInitLRecord # XAddress ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_wallet_init 
  pubkey owner_addr ) . 
@@ -445,7 +447,7 @@ y custom URValue at level 0 ) : ursus_scope .
  allow_pubkey_owner_in_internal_node ) 
  (in custom ULValue at level 0 , allow_pubkey_owner_in_internal_node custom URValue at level 0 ) : ursus_scope . 
  
- Definition check_owner_left { R a1 }  ( false : URValue XBool a1 ) : UExpression R a1 := 
+ Definition check_owner_left { R a1 }  ( false : URValue XBool a1 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) check_owner 
  false ) . 
  
@@ -453,6 +455,7 @@ y custom URValue at level 0 ) : ursus_scope .
  ( check_owner_left 
  false ) 
  (in custom ULValue at level 0 , false custom URValue at level 0 ) : ursus_scope . 
+
  Definition prepare_root_state_init_and_addr_right { a1 a2 }  ( root_code : URValue ( XCell ) a1 ) ( root_data : URValue ( DRootTokenContractLRecord ) a2 ) : URValue ( StateInitLRecord # XUInteger256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_root_state_init_and_addr 
  root_code root_data ) . 

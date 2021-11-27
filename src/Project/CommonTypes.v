@@ -1,6 +1,12 @@
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
+Module Type CompilerOptions.
+
+Parameter Internal: bool .
+
+End CompilerOptions.
+
 (* 1 *)Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
 (* 2 *)Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
 (* 3 *)Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address .

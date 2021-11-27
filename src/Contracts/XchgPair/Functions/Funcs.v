@@ -15,6 +15,8 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonNotations.
 Require Import Project.CommonConstSig.
+Require Import Project.CommonTypes.
+
 (*Fully qualified name are mandatory in multi-contract environment*)
 Require Import XchgPair.ClassTypes.
 Require Import XchgPair.Ledger.
@@ -24,16 +26,10 @@ Require Import XchgPair.Functions.FuncNotations.
 
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
- 
-Module Type Has_Internal.
 
-Parameter Internal: bool .
+Module Funcs (co : CompilerOptions) (dc : ConstsTypesSig XTypesModule StateMonadModule) .
 
-End Has_Internal.
-
-Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModule) .
-
-Import ha.
+Import co.
 
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
@@ -48,18 +44,6 @@ Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
-(*move somewhere*)
-Local Notation UE := (UExpression _ _).
-Local Notation UEf := (UExpression _ false).
-Local Notation UEt := (UExpression _ true).
-
-Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
- 
-Arguments urgenerate_field {_} {_} {_} _ {_} & _.
-
-Notation " |{ e }| " := e (in custom URValue at level 0, e custom ULValue , only parsing ) : ursus_scope.
-
-(******************************************)
 
 Parameter int_value__ : URValue uint false .
 Notation " 'int_value' '(' ')' " := 
@@ -110,30 +94,30 @@ Check  {{ new 'pair_data : DXchgPairLRecord  @ "pair_data" := {};
  *)
 
 Definition onDeploy (min_amount: uint128) (deploy_value: uint128) (notify_addr: raw_address) : UExpression boolean true . 
- 	 	 refine {{ require_ ( ( ( int_value ( ) ) > #{ deploy_value } ) , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
-  	 	 refine {{ require_ ( ( _min_amount_ ) , 1 (* error_code::double_deploy *) ) ; { _ } }} .  
- 	 	 refine {{ require_ ( ( #{ min_amount } ) > 0  , 1 (* error_code::zero_min_amount *) ) ; { _ } }} . 
- 	 	 refine {{ _min_amount_ := #{ min_amount } ; { _ } }} . 
- 	 	 refine {{ _notify_addr_ := #{ notify_addr } ; { _ } }} . 
-  	 	 refine {{ tvm.rawreserve ( #{deploy_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .  
- 	 	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
- 	 	 refine {{ return_ TRUE  }} . 
+    refine {{ require_ ( ( ( int_value ( ) ) > #{ deploy_value } ) , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
+    refine {{ require_ ( ( _min_amount_ ) , 1 (* error_code::double_deploy *) ) ; { _ } }} .  
+    refine {{ require_ ( ( #{ min_amount } ) > 0  , 1 (* error_code::zero_min_amount *) ) ; { _ } }} . 
+    refine {{ _min_amount_ := #{ min_amount } ; { _ } }} . 
+    refine {{ _notify_addr_ := #{ notify_addr } ; { _ } }} . 
+    refine {{ tvm_rawreserve ( #{deploy_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .  
+    refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
+    refine {{ return_ TRUE  }} . 
  Defined . 
  
 Definition getFlexAddr : UExpression raw_address false . 
- 	 	 refine {{ return_ _flex_addr_  }} . 
+    refine {{ return_ _flex_addr_  }} . 
 Defined . 
  
 Definition getTip3MajorRoot : UExpression raw_address false . 
- 	 	 refine {{ return_ _tip3_major_root_  }} . 
+    refine {{ return_ _tip3_major_root_  }} . 
 Defined . 
  
 Definition getTip3MinorRoot : UExpression raw_address false . 
- 	 	 refine {{ return_ _tip3_minor_root_ }} . 
+    refine {{ return_ _tip3_minor_root_ }} . 
 Defined . 
 
 Definition getMinAmount : UExpression uint128 false . 
- 	 	 refine {{ return_ _min_amount_ }} . 
+    refine {{ return_ _min_amount_ }} . 
 Defined . 
  
 Definition getNotifyAddr : UExpression raw_address false . 
@@ -141,17 +125,17 @@ Definition getNotifyAddr : UExpression raw_address false .
 Defined . 
  
 Definition _fallback ( msg : TvmCell ) ( msg_body : TvmSlice ) : UExpression uint false . 
- 	 refine {{ return_ 0 }} . 
+ 	refine {{ return_ 0 }} . 
 Defined . 
  
 Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
                                            (base : Y): UExpression TvmCell false .
- refine {{ return_ {} }} .  
+    refine {{ return_ {} }} .  
 Defined .
 
 Definition prepare_persistent_data_right { X Y a1 a2 }  
-                                    ( persistent_data_header : URValue ( X ) a1 ) 
-                                    ( base : URValue ( Y ) a2 ) : URValue ( TvmCell ) (orb a2 a1) := 
+                ( persistent_data_header : URValue ( X ) a1 ) 
+                ( base : URValue ( Y ) a2 ) : URValue ( TvmCell ) (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
  
 Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_data_right a b ) 

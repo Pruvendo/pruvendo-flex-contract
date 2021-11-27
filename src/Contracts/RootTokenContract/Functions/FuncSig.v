@@ -27,7 +27,7 @@ Parameter constructor : ( ( XString ) ) -> ( ( XString ) ) -> ( ( XUInteger8 ) )
  Parameter deployWallet : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression XAddress true . 
  Parameter deployEmptyWallet : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> UExpression XAddress true . 
  Parameter grant : ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression PhantomType true . 
- Parameter mint : ( ( XUInteger128 ) ) -> UExpression XBool false . 
+ Parameter mint : ( ( XUInteger128 ) ) -> UExpression XBool true . 
  Parameter requestTotalGranted : UExpression XUInteger128 false . 
  Parameter getName : UExpression XString false . 
  Parameter getSymbol : UExpression XString false . 
@@ -36,7 +36,7 @@ Parameter constructor : ( ( XString ) ) -> ( ( XString ) ) -> ( ( XUInteger8 ) )
  Parameter getTotalSupply : UExpression XUInteger128 false . 
  Parameter getTotalGranted : UExpression XUInteger128 false . 
  Parameter hasWalletCode : UExpression XBool false . 
- Parameter getWalletCode : UExpression XCell false . 
+ Parameter getWalletCode : UExpression XCell true . 
  Parameter getWalletAddress : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression XAddress false . 
  Parameter _on_bounced : ( XCell ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
  Parameter getWalletCodeHash : UExpression XUInteger256 false . 
@@ -47,7 +47,7 @@ Parameter constructor : ( ( XString ) ) -> ( ( XString ) ) -> ( ( XUInteger8 ) )
  Parameter is_internal_owner : UExpression XBool false . 
  Parameter check_internal_owner : UExpression PhantomType true . 
  Parameter check_external_owner : ( ( XBool ) ) -> UExpression PhantomType true . 
- Parameter check_owner : ( XBool ) -> UExpression PhantomType false . 
+ Parameter check_owner : ( XBool ) -> UExpression PhantomType true . 
  Parameter prepare_root_state_init_and_addr : ( ( XCell ) ) -> ( ( DRootTokenContractLRecord ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false . 
 
 
