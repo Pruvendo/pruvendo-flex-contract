@@ -176,7 +176,7 @@ persistent_data_header base ) .
 
  Definition setPairCode ( code :  ( XCell ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( ~ _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( tvm.pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm.accept () ; { _ } }} . 
  	 	 refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) ,  error_code::unexpected_refs_count_in_code  ) ; { _ } }} . 
  	 	 refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 

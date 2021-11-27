@@ -61,6 +61,8 @@ Arguments urgenerate_field {_} {_} {_} _ & .
 Notation " |{ e }| " := e (in custom URValue at level 0, 
                            e custom ULValue ,  only parsing ) : ursus_scope.
 
+Existing Instance LedgerPruvendoRecord.
+
 (***************************************************************************)						   
 
 Definition calc_cost ( amount : ( uint128 ) ) ( price : ( uint128 ) ) : UExpression (XMaybe uint128) false . 
@@ -164,19 +166,19 @@ Definition extract_active_order
  	 	 	 refine {{ return_ [ (!{ cur_order }) , (!{ orders }) , (!{ all_amount }) ] }} .
  
  	 	 refine {{ while ( ~ ((!{orders}) -> empty ()) ) do { { _:UEt } } ; { _ } }} . 
-   	 	 	 refine {{ ({cur_order}) := (!{orders}) ->front_with_idx () ; { _ } }} .
+   	 	 	 refine {{ ({cur_order}) := (!{orders}) ->front_with_idx_opt () ; { _ } }} .
  	 	 	 refine {{ new 'ord : ( OrderInfoLRecord ) @ "ord" := 
                                ( second ((!{cur_order}) -> get () )) ; { _ } }} . 
  	 	 	 refine {{ if ( ~ ( is_active_time_ ( (!{ord}) ↑ OrderInfo.order_finish_time ) ) )
-                                  then { { _:UEf } } ; { _ } }} . 
+                                  then { { _:UEt } } ; { _ } }} . 
   	 	 	 	 refine {{ {all_amount} -= (!{ord}) ↑ OrderInfo.amount ; { _ } }} .
  	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
  	 	 	            [ 1 (*ec::expired*) , (!{ord}) ↑ OrderInfo.original_amount , 0 ] ; { _ } }} . 
 (*  	 	 	 	 refine {{ IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ord . account . get ( ) ) ) . onOrderFinished ( ret , sell ) ; { _ } }} .  *)
   	 	 	 	 refine {{ {orders} -> pop () ; { _ } }} .
-  	 	 	 	 refine {{ {cur_order} -> reset () (* ; { _ } }} .  
-  	 	 	 	 refine {{ continue *) }} . 
- 	 	 refine {{ (* break *) {orders} -> pop () }} .
+  	 	 	 	 refine {{ {cur_order} -> reset () ; { _ } }} .  
+  	 	 	 	 refine {{ continue_ }} . 
+ 	 	 refine {{ break_ }} .
     refine {{ return_ [ !{cur_order} , !{orders} , !{all_amount} ] }} . 
 Defined .  
 
@@ -445,7 +447,7 @@ persistent_data_header base ) .
 ( code :  ( XCell ) ) 
 ( workchain_id :  ( uint8 ) ) 
 : UExpression ( StateInitLRecord * uint256 ) false .
- 	 	 refine {{ new 'wallet_data : ( DTONTokenWalletInternalLRecord ) @ "wallet_data" := 
+ 	 	 refine {{ new 'wallet_data : ( TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord ) @ "wallet_data" := 
                  [ #{name} , #{symbol} , #{decimals} , 0 , #{root_public_key} , 
                    #{wallet_public_key} , #{root_address} , #{owner_address} , 
                    {} , #{code} , #{workchain_id} ] ; { _ } }} . 
@@ -656,7 +658,7 @@ refine {{ new 'wallet_in : XAddress @ "wallet_in" := {} ; { _ } }} .
                        - (_tons_cfg_ ↑ TonsConfig.order_answer ); { _ } }} . 
  	 	 refine {{ new 'sell : ( OrderInfoLRecord ) @ "sell" := 	 	 
  	 	 	 [ !{amount} , !{amount} , !{account} , (* !{tip3_wallet} *) {} , 
-        (* ((!{args}) ^^ SellArgs.receive_wallet) *) {} , #{lend_finish_time} ] ; { _ } }} . (*TODO!*)
+        (* ((!{args}) ↑ SellArgs.receive_wallet) *) {} , #{lend_finish_time} ] ; { _ } }} . (*TODO!*)
  	 	 refine {{ _sells_ -> push ( !{sell} ) ; { _ } }} . 
  	 	 refine {{ _sells_amount_ += ((!{sell}) ↑ OrderInfo.amount) ; { _ } }} . 
 (*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onOrderAdded ( bool_t { true } , tip3cfg_ . root_address , price_ , sell . amount , sells_amount_ ) ; { _ } }} .  *)
@@ -671,7 +673,7 @@ refine {{ new 'wallet_in : XAddress @ "wallet_in" := {} ; { _ } }} .
                                      _price_ , 
                                      _deals_limit_ , 
                                      _tons_cfg_ , 
-                                     (* _sells_ . back_with_idx ( ) . first *) {} , 
+                                     first ( _sells_ -> back_with_idx ()) , 
                                      0 , 
                                      _sells_amount_ , 
                                      _sells_ , 
@@ -746,7 +748,7 @@ Definition buyTip3 ( amount : ( uint128 ) ) ( receive_tip3_wallet : ( XAddress )
                                      _deals_limit_ , 
                                      _tons_cfg_ , 
                                      0 , 
-                                     {} (* buys_ . back_with_idx ( ) . first *) , 
+                                     first ( _buys_ -> back_with_idx () ) , 
                                      _sells_amount_ , 
                                      _sells_ , 
                                      _buys_amount_ , 

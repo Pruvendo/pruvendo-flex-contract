@@ -73,15 +73,25 @@ Definition SellArgs_amount_left (x: ULValue SellArgsLRecord): ULValue XUInteger1
 Notation " a '↑' 'SellArgs.amount' " := (SellArgs_amount_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'SellArgs.amount' " := (SellArgs_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
  
+Definition SellArgs_receive_wallet_right {b} (x: URValue SellArgsLRecord b): URValue XAddress b :=
+|| {x} ^^ {SellArgs_ι_receive_wallet} || : _.
+
+Definition SellArgs_receive_wallet_left (x: ULValue SellArgsLRecord): ULValue XAddress :=
+{{ {x} ^^ {SellArgs_ι_receive_wallet} }} : _.
+
+Notation " a '↑' 'SellArgs.receive_wallet' " := (SellArgs_receive_wallet_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'SellArgs.receive_wallet' " := (SellArgs_receive_wallet_left a ) (in custom ULValue at level 0) : ursus_scope.
+ 
+(**************************************************************************************************************)
+(*OrderInfo*)
+	
 Definition OrderInfo_amount_right {b} (x: URValue OrderInfoLRecord b): URValue XUInteger128 b :=
 	|| {x} ^^ {OrderInfo_ι_amount} || : _.
 	
 Definition OrderInfo_amount_left (x: ULValue OrderInfoLRecord): ULValue XUInteger128 :=
 {{ {x} ^^ {OrderInfo_ι_amount} }} : _.
 
-(**************************************************************************************************************)
-(*OrderInfo*)
-	
+
 Notation " a '↑' 'OrderInfo.amount' " := ( OrderInfo_amount_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'OrderInfo.amount' " := ( OrderInfo_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
 	

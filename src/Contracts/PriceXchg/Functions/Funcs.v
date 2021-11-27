@@ -89,8 +89,7 @@ Definition make_deal
  ( sell : ULValue ( OrderInfoXchgLRecord ) ) 
 ( buy : ULValue ( OrderInfoXchgLRecord ) ) 
 : UExpression ( XBool # (XBool # uint128) ) false . 
- 	 	 refine {{ new 'deal_amount : ( uint128 ) @ "deal_amount" := {}  
- 	 	        (* std::min ( (#{sell}) ↑ OrderInfoLRecord.amount , (#{buy}) ↑ OrderInfoXchgLRecord.amount ) *) ; { _ } }} . 
+ 	 	 refine {{ new 'deal_amount : ( uint128 ) @ "deal_amount" := min ( (!{sell}) ↑ OrderInfoXchg.amount , (!{buy}) ↑ OrderInfoXchg.amount )  ; { _ } }} . 
  	 	 refine {{ new 'last_tip3_sell : ( XBool ) @ "last_tip3_sell" := 
                    ( !{deal_amount} == ((!{sell}) ↑ OrderInfoXchg.amount) ) ; { _ } }} .
  	 	 refine {{ new 'last_tip3_buy : ( XBool ) @ "last_tip3_buy" := 	 	 
@@ -164,7 +163,7 @@ UExpression ( (XMaybe ( uint # OrderInfoXchgLRecord )) # ( (XQueue OrderInfoXchg
  	 	 	 refine {{ return_ [ !{cur_order} , !{orders} , !{all_amount} ] }} . 
 
  	 	 refine {{ while ( (!{orders}) -> empty () ) do { { _:UEt } } ; { _ } }} . 
- 	 	 	 refine {{ {cur_order} := {} (* orders...front_with_idx_opt ( ) *) ; { _ } }} . 
+ 	 	 	 refine {{ {cur_order} := !{orders} ->front_with_idx_opt () ; { _ } }} . 
  	 	 	 refine {{ new 'ord : ( OrderInfoXchgLRecord ) @ "ord" := 
                       second ( (!{cur_order}) -> get_default () ) ; { _ } }} . 
  	 	 	 refine {{ if ( ~ ( is_active_time_ ( (!{ord}) ↑ OrderInfoXchg.order_finish_time ) ) ) 
@@ -177,7 +176,7 @@ UExpression ( (XMaybe ( uint # OrderInfoXchgLRecord )) # ( (XQueue OrderInfoXchg
  	 	 	 	 refine {{ {orders} -> pop () ; { _ } }} . 
  	 	 	 	 refine {{ {cur_order} -> reset () ; { _ } }} . 
  	 	 	 	 refine {{ continue_ }} . 
- 	 	 refine {{ (* break *) {orders} -> pop () }} . 
+ 	 	 refine {{ break_ }} . 
  refine {{ return_ [ !{ cur_order } , !{ orders } , !{ all_amount } ] }} . 
 Defined . 
  
@@ -288,7 +287,6 @@ Definition process_queue ( sell_idx : ( uint ) ) ( buy_idx : ( uint ) ) : UExpre
        refine || ((!{sell}) ↑ OrderInfoXchg.amount) || . (* TODO: *) 
 
 (*        refine {{ if ( ~ !(({sell}) ↑ OrderInfoXchg.amount) ) then { { _:UEf } } ; { _ } }} .
-compute. apply intFunBool.
  *)
 (*  	       refine {{ dealer.sells_ -> pop () ; { _ } }} .  *)
  	       refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 
@@ -605,7 +603,7 @@ Definition onTip3LendOwnership
 ( pubkey : ( uint256 ) ) 
 ( internal_owner : ( XAddress ) ) 
 ( payload : ( XCell ) ) 
-: UExpression OrderRetLRecord false . 
+: UExpression OrderRetLRecord true . 
  	 	 refine {{ new ( 'tip3_wallet:XAddress , 'value:uint (* Grams *) ) @ 
                  ( "tip3_wallet" , "value" ) := int_sender_and_value_ ( ) ; { _ } }} . 
   	 refine {{ new 'wallet_in:XAddress @ "wallet_in" (* ITONTokenWalletPtr *) := !{tip3_wallet} ; { _ } }} . 
@@ -659,20 +657,15 @@ Definition onTip3LendOwnership
  	 	 refine {{ new 'sell_idx : ( uint ) @ "sell_idx" := 0 ; { _ } }} . 
  	 	 refine {{ new 'buy_idx : ( uint ) @ "buy_idx" := 0 ; { _ } }} . 
  	 	 refine {{ new 'notify_amount:( uint128 ) @ "notify_amount" := {}  ; { _ } }} . 
- 	 	 refine {{ if ( !{ is_sell } ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
+ 	 	 refine {{ if ( !{ is_sell } ) then { { _:UEt } } else { { _:UEt } } ; { _ } }} . 
  	 	 	 refine {{ _sells_ -> push ( !{ord} ) ; { _ } }} . 
  	 	 	 refine {{ _sells_amount_ += ((!{ord}) ↑ OrderInfoXchg.amount) ; { _ } }} . 
-
-Check || _sells_ || .
-Print OrderInfoXchgLRecord .
-Print ClassGenerator.prod_list .
-
- 	 	 	 refine {{ { sell_idx } := {} (* sells_.back_with_idx().first *); { _ } }} . 
+ 	 	 	 refine {{ { sell_idx } :=  first ( _sells_ ->back_with_idx() ); { _ } }} . 
  	 	 	 refine {{ {notify_amount} := _sells_amount_ }} . 
 
      	 refine {{ _buys_ -> push ( !{ord} ) ; { _ } }} . 
      	 refine {{ _buys_amount_ += !{ord} ↑ OrderInfoXchg.amount ; { _ } }} . 
-     	 refine {{ { buy_idx } := {} (* buys_ ^^ back_with_idx ( ) . first *) ; { _ } }} . 
+     	 refine {{ { buy_idx } := first ( _buys_ -> back_with_idx () ) ; { _ } }} . 
      	 refine {{ {notify_amount} := _buys_amount_ }} . 
 (*  refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderAdded ( is_sell , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . num , price_ . denum , ord . amount , notify_amount ) ; { _ } }} .  *)
  	 	 refine {{ new ( 'sells_amount:uint128 , 'sells:(XQueue OrderInfoXchgLRecord) , 
