@@ -61,41 +61,44 @@ Defined .
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) minor_cost 
  amount price ) . 
  
-Notation " 'minor_cost_' '(' amount ',' price ')' " := (minor_cost_right amount price) 
- (in custom URValue at level 0 , amount custom URValue at level 0 , price custom URValue at level 0 ) : ursus_scope .
+ Notation " 'minor_cost_' '(' amount ',' price ')' " := 
+ ( minor_cost_right 
+ amount price ) 
+ (in custom URValue at level 0 , amount custom URValue at level 0 
+ , price custom URValue at level 0 ) : ursus_scope . 
 
 
-Definition make_deal (sell : ULValue OrderInfoXchgLRecord) 
-					 (buy : ULValue OrderInfoXchgLRecord) : UExpression ( boolean # (boolean # uint128) ) false . 
-
-	refine {{ new 'deal_amount : ( uint128 ) @ "deal_amount" := {}  
-		(* std::min ( (#{sell}) ↑ OrderInfoLRecord.amount , (#{buy}) ↑ OrderInfoXchgLRecord.amount ) *) ; { _ } }} . 
-	refine {{ new 'last_tip3_sell : ( XBool ) @ "last_tip3_sell" := 
-			( !{deal_amount} == ((!{sell}) ↑ OrderInfoXchg.amount) ) ; { _ } }} .
-	refine {{ new 'last_tip3_buy : ( XBool ) @ "last_tip3_buy" := 	 	 
-			( !{deal_amount} == ( (!{buy}) ↑ OrderInfoXchg.amount ) ) ; { _ } }} .
-	refine {{ new 'buy_payment : ( (XMaybe uint128) ) @ "buy_payment" := 
-		minor_cost_ ( !{deal_amount} , _price_ ) ; { _ } }} . 
-	refine {{ if ( ~ !{ buy_payment } ) then { { _: UExpression _ false } } ; { _ } }} . 
-		refine {{ return_ [ TRUE , TRUE , 0 ] }} . 
-	refine {{ new 'sell_ton_costs : ( uint128 ) @ "sell_ton_costs" := 0 ; { _ } }} . 
-	refine {{ new 'buy_ton_costs : ( uint128 ) @ "buy_ton_costs" := 0 ; { _ } }} . 
-	refine {{ new 'transaction_costs : ( uint128 ) @ "transaction_costs" := 
-		( (_tons_cfg_ ↑ TonsConfig.transfer_tip3) * #{2} ) + 
-			(_tons_cfg_ ↑ TonsConfig.send_notify) ; { _ } }} . 
-	refine {{ if ( !{ last_tip3_sell } ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
-		refine {{ { sell_ton_costs } += !{ transaction_costs } }} . 
-	refine {{ { buy_ton_costs } += !{ transaction_costs } }} . 
-	refine {{ new 'sell_out_of_tons : ( XBool ) @ "sell_out_of_tons" := 
-		(!{ sell_ton_costs } ) > ( (!{sell}) ↑ OrderInfoXchg.account ) ; { _ } }} . 
-	refine {{ new 'buy_out_of_tons : ( XBool ) @ "buy_out_of_tons" := 
-		((!{buy}) ↑ OrderInfoXchg.account) < (!{ buy_ton_costs } ) ; { _ } }} . 
-	refine {{ if ( !{ sell_out_of_tons } \\ !{ buy_out_of_tons } ) then { { _:UEf } } ; { _ } }} . 
-		refine {{ return_ [ !{ sell_out_of_tons } , !{ buy_out_of_tons } , 0 ] }} . 
-	refine {{ (({sell}) ↑ OrderInfoXchg.amount) -= !{deal_amount} ; { _ } }} . 
-	refine {{ (({buy}) ↑ OrderInfoXchg.amount) -= !{deal_amount} ; { _ } }} . 
-	refine {{ (({sell}) ↑ OrderInfoXchg.account) -= !{sell_ton_costs} ; { _ } }} . 
-	refine {{ (({buy}) ↑ OrderInfoXchg.account) -= !{buy_ton_costs} ; { _ } }} . 
+Definition make_deal
+ ( sell : ULValue ( OrderInfoXchgLRecord ) ) 
+( buy : ULValue ( OrderInfoXchgLRecord ) ) 
+: UExpression ( XBool # (XBool # uint128) ) false . 
+ 	 	 refine {{ new 'deal_amount : ( uint128 ) @ "deal_amount" := min ( (!{sell}) ↑ OrderInfoXchg.amount , (!{buy}) ↑ OrderInfoXchg.amount )  ; { _ } }} . 
+ 	 	 refine {{ new 'last_tip3_sell : ( XBool ) @ "last_tip3_sell" := 
+                   ( !{deal_amount} == ((!{sell}) ↑ OrderInfoXchg.amount) ) ; { _ } }} .
+ 	 	 refine {{ new 'last_tip3_buy : ( XBool ) @ "last_tip3_buy" := 	 	 
+                   ( !{deal_amount} == ( (!{buy}) ↑ OrderInfoXchg.amount ) ) ; { _ } }} .
+ 	 	 refine {{ new 'buy_payment : ( (XMaybe uint128) ) @ "buy_payment" := 
+                minor_cost_ ( !{deal_amount} , _price_ ) ; { _ } }} . 
+ 	 	 refine {{ if ( ~ !{ buy_payment } ) then { { _: UExpression _ false } } ; { _ } }} . 
+ 	 	 	 refine {{ return_ [ TRUE , TRUE , 0 ] }} . 
+ 	 	 refine {{ new 'sell_ton_costs : ( uint128 ) @ "sell_ton_costs" := 0 ; { _ } }} . 
+ 	 	 refine {{ new 'buy_ton_costs : ( uint128 ) @ "buy_ton_costs" := 0 ; { _ } }} . 
+ 	 	 refine {{ new 'transaction_costs : ( uint128 ) @ "transaction_costs" := 
+                ( (_tons_cfg_ ↑ TonsConfig.transfer_tip3) * #{2} ) + 
+                  (_tons_cfg_ ↑ TonsConfig.send_notify) ; { _ } }} . 
+ 	 	 refine {{ if ( !{ last_tip3_sell } ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
+ 	 	 	 refine {{ { sell_ton_costs } += !{ transaction_costs } }} . 
+ 	 	   refine {{ { buy_ton_costs } += !{ transaction_costs } }} . 
+ 	 	 refine {{ new 'sell_out_of_tons : ( XBool ) @ "sell_out_of_tons" := 
+              (!{ sell_ton_costs } ) > ( (!{sell}) ↑ OrderInfoXchg.account ) ; { _ } }} . 
+ 	 	 refine {{ new 'buy_out_of_tons : ( XBool ) @ "buy_out_of_tons" := 
+              ((!{buy}) ↑ OrderInfoXchg.account) < (!{ buy_ton_costs } ) ; { _ } }} . 
+ 	 	 refine {{ if ( !{ sell_out_of_tons } \\ !{ buy_out_of_tons } ) then { { _:UEf } } ; { _ } }} . 
+ 	 	 	 refine {{ return_ [ !{ sell_out_of_tons } , !{ buy_out_of_tons } , 0 ] }} . 
+ 	 	 refine {{ (({sell}) ↑ OrderInfoXchg.amount) -= !{deal_amount} ; { _ } }} . 
+ 	 	 refine {{ (({buy}) ↑ OrderInfoXchg.amount) -= !{deal_amount} ; { _ } }} . 
+ 	 	 refine {{ (({sell}) ↑ OrderInfoXchg.account) -= !{sell_ton_costs} ; { _ } }} . 
+ 	 	 refine {{ (({buy}) ↑ OrderInfoXchg.account) -= !{buy_ton_costs} ; { _ } }} . 
 (*  	 	 refine {{ ITONTokenWalletPtr ( (#{sell}) ↑ OrderInfoXchg.tip3_wallet_provide ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer ( sell . tip3_wallet_provide , buy . tip3_wallet_receive , deal_amount , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
 (*  	 	 refine {{ ITONTokenWalletPtr ( buy . tip3_wallet_provide ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer ( buy . tip3_wallet_provide , sell . tip3_wallet_receive , *buy_payment , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
 (*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgDealCompleted ( tip3root_sell_ , tip3root_buy_ , price_ . num , price_ . denom , deal_amount ) ; { _ } }} .  *)
@@ -124,30 +127,30 @@ Notation " 'is_active_time_' '(' order_finish_time ')' " := (is_active_time_righ
 
 
 Definition extract_active_order 
-			( cur_order : ULValue (optional (uint # OrderInfoXchgLRecord ))) 
-			( orders : ULValue (queue OrderInfoXchgLRecord )) 
-			( all_amount : ULValue uint128) 
-			( sell : boolean ):  UExpression ((optional ( uint # OrderInfoXchgLRecord )) # 
-								 ((queue OrderInfoXchgLRecord) # uint128 )) true . 
-	refine {{ if ( !{ cur_order } ) then { { _:UEf } } ; { _ } }} . 
-		refine {{ return_ [ !{cur_order} , !{orders} , !{all_amount} ] }} . 
+( cur_order : ULValue ( XMaybe (uint # OrderInfoXchgLRecord ) ) ) 
+( orders : ULValue ( XQueue OrderInfoXchgLRecord ) ) 
+( all_amount : ULValue ( uint128 ) ) 
+( sell : ( XBool ) ) : 
+UExpression ( (XMaybe ( uint # OrderInfoXchgLRecord )) # ( (XQueue OrderInfoXchgLRecord) # uint128 ) ) true . 
+ 	 	 refine {{ if ( !{ cur_order } ) then { { _:UEf } } ; { _ } }} . 
+ 	 	 	 refine {{ return_ [ !{cur_order} , !{orders} , !{all_amount} ] }} . 
 
-	refine {{ while ( (!{orders}) -> empty () ) do { { _:UEt } } ; { _ } }} . 
-		refine {{ {cur_order} := {} (* orders...front_with_idx_opt ( ) *) ; { _ } }} . 
-		refine {{ new 'ord : ( OrderInfoXchgLRecord ) @ "ord" := 
-				second ( (!{cur_order}) -> get_default () ) ; { _ } }} . 
-		refine {{ if ( ~ ( is_active_time_ ( (!{ord}) ↑ OrderInfoXchg.order_finish_time ) ) ) 
-				then { { _:UEt } } ; { _ } }} . 
-			refine {{ ({all_amount}) -= ((!{ord}) ↑ OrderInfoXchg.amount) ; { _ } }} . 
-			refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
-		[ 1 (* ec::expired *) , ((!{ord}) ↑ OrderInfoXchg.original_amount)
-						- ((!{ord}) ↑ OrderInfoXchg.amount) , 0 ] ; { _ } }} . 
+ 	 	 refine {{ while ( (!{orders}) -> empty () ) do { { _:UEt } } ; { _ } }} . 
+ 	 	 	 refine {{ {cur_order} := !{orders} ->front_with_idx_opt () ; { _ } }} . 
+ 	 	 	 refine {{ new 'ord : ( OrderInfoXchgLRecord ) @ "ord" := 
+                      second ( (!{cur_order}) -> get_default () ) ; { _ } }} . 
+ 	 	 	 refine {{ if ( ~ ( is_active_time_ ( (!{ord}) ↑ OrderInfoXchg.order_finish_time ) ) ) 
+                     then { { _:UEt } } ; { _ } }} . 
+ 	 	 	 	 refine {{ ({all_amount}) -= ((!{ord}) ↑ OrderInfoXchg.amount) ; { _ } }} . 
+ 	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
+ 	 	 	 [ 1 (* ec::expired *) , ((!{ord}) ↑ OrderInfoXchg.original_amount)
+                              - ((!{ord}) ↑ OrderInfoXchg.amount) , 0 ] ; { _ } }} . 
 (*  	 	 	 	 refine {{ IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ord . account . get ( ) ) ) . onOrderFinished ( ret , sell ) ; { _ } }} .  *)
-			refine {{ {orders} -> pop () ; { _ } }} . 
-			refine {{ {cur_order} -> reset () ; { _ } }} . 
-			refine {{ continue_ }} . 
-	refine {{ (* break *) {orders} -> pop () }} . 
-refine {{ return_ [ !{ cur_order } , !{ orders } , !{ all_amount } ] }} . 
+ 	 	 	 	 refine {{ {orders} -> pop () ; { _ } }} . 
+ 	 	 	 	 refine {{ {cur_order} -> reset () ; { _ } }} . 
+ 	 	 	 	 refine {{ continue_ }} . 
+ 	 	 refine {{ break_ }} . 
+ refine {{ return_ [ !{ cur_order } , !{ orders } , !{ all_amount } ] }} . 
 Defined . 
  
 (* Notation "'λ4LLLR'" :=   ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ3) (at level 0) : ursus_scope. (*move 2 sml*) *)
@@ -256,7 +259,6 @@ Definition process_queue (sell_idx : uint)
        refine || ((!{sell}) ↑ OrderInfoXchg.amount) || . (* TODO: *) 
 
 (*        refine {{ if ( ~ !(({sell}) ↑ OrderInfoXchg.amount) ) then { { _:UEf } } ; { _ } }} .
-compute. apply intFunBool.
  *)
 (*  	       refine {{ dealer.sells_ -> pop () ; { _ } }} .  *)
  	       refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 
@@ -541,12 +543,14 @@ Notation " 'process_queue_impl_' '(' tip3root_sell ',' tip3root_buy ',' notify_a
  , buys custom URValue at level 0 ) : ursus_scope . 
 
 
-Definition onTip3LendOwnership ( answer_addr : raw_address ) 
-							   ( balance : uint128 ) 
-							   ( lend_finish_time : uint32 ) 
-							   ( pubkey : uint256 ) 
-							   ( internal_owner : raw_address ) 
-							   ( payload : TvmCell ) : UExpression OrderRetLRecord false . 
+Definition onTip3LendOwnership 
+( answer_addr : ( XAddress ) ) 
+( balance : ( uint128 ) ) 
+( lend_finish_time : ( uint32 ) ) 
+( pubkey : ( uint256 ) ) 
+( internal_owner : ( XAddress ) ) 
+( payload : ( XCell ) ) 
+: UExpression OrderRetLRecord true . 
  	 	 refine {{ new ( 'tip3_wallet:XAddress , 'value:uint (* Grams *) ) @ 
                  ( "tip3_wallet" , "value" ) := int_sender_and_value_ ( ) ; { _ } }} . 
   	 refine {{ new 'wallet_in:XAddress @ "wallet_in" (* ITONTokenWalletPtr *) := !{tip3_wallet} ; { _ } }} . 
@@ -600,16 +604,15 @@ Definition onTip3LendOwnership ( answer_addr : raw_address )
  	 	 refine {{ new 'sell_idx : ( uint ) @ "sell_idx" := 0 ; { _ } }} . 
  	 	 refine {{ new 'buy_idx : ( uint ) @ "buy_idx" := 0 ; { _ } }} . 
  	 	 refine {{ new 'notify_amount:( uint128 ) @ "notify_amount" := {}  ; { _ } }} . 
- 	 	 refine {{ if ( !{ is_sell } ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
+ 	 	 refine {{ if ( !{ is_sell } ) then { { _:UEt } } else { { _:UEt } } ; { _ } }} . 
  	 	 	 refine {{ _sells_ -> push ( !{ord} ) ; { _ } }} . 
  	 	 	 refine {{ _sells_amount_ += ((!{ord}) ↑ OrderInfoXchg.amount) ; { _ } }} . 
-
- 	 	 	 refine {{ { sell_idx } := {} (* sells_.back_with_idx().first *); { _ } }} . 
+ 	 	 	 refine {{ { sell_idx } :=  first ( _sells_ ->back_with_idx() ); { _ } }} . 
  	 	 	 refine {{ {notify_amount} := _sells_amount_ }} . 
 
      	 refine {{ _buys_ -> push ( !{ord} ) ; { _ } }} . 
      	 refine {{ _buys_amount_ += !{ord} ↑ OrderInfoXchg.amount ; { _ } }} . 
-     	 refine {{ { buy_idx } := {} (* buys_ ^^ back_with_idx ( ) . first *) ; { _ } }} . 
+     	 refine {{ { buy_idx } := first ( _buys_ -> back_with_idx () ) ; { _ } }} . 
      	 refine {{ {notify_amount} := _buys_amount_ }} . 
 (*  refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onXchgOrderAdded ( is_sell , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , price_ . num , price_ . denum , ord . amount , notify_amount ) ; { _ } }} .  *)
  	 	 refine {{ new ( 'sells_amount:uint128 , 'sells:(XQueue OrderInfoXchgLRecord) , 
