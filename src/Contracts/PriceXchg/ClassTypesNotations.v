@@ -4,13 +4,14 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
-Require Import Contracts.PriceXchg.ClassTypes.
-Require Import Contracts.PriceXchg.Ledger.
+
+Require Import PriceXchg.ClassTypes.
+Require Import PriceXchg.Ledger.
 
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
-Module Export ClassTypesModule := Contracts.PriceXchg.ClassTypes.ClassTypes xt sm.
+Module Export ClassTypesModule := PriceXchg.ClassTypes.ClassTypes xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.

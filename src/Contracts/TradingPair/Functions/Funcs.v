@@ -14,32 +14,27 @@ Require Import UMLang.ProofEnvironment2.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
-Require Import CommonNotations.
+Require Import Project.CommonTypes.
+Require Import Project.CommonNotations.
 Require Import Project.CommonConstSig.
+
 (*Fully qualified name are mandatory in multi-contract environment*)
-Require Import Contracts.TradingPair.Ledger.
-Require Import Contracts.TradingPair.Functions.FuncSig.
-Require Import Contracts.TradingPair.Functions.FuncNotations.
-Require Contracts.TradingPair.Interface.
+Require Import TradingPair.Ledger.
+Require Import TradingPair.Functions.FuncSig.
+Require Import TradingPair.Functions.FuncNotations.
+
+(* Require TradingPair.Interface. *)
 
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
 
-Module Type Has_Internal.
+Module Funcs (co : CompilerOptions) (dc : ConstsTypesSig XTypesModule StateMonadModule) .
 
-Parameter Internal: bool .
-
-End Has_Internal.
-
-Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModule) .
-
-Import ha.
+Import co.
 
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 
-(* Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule.
- *)
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  
 Import UrsusNotations.
@@ -49,22 +44,6 @@ Local Open Scope struct_scope.
 Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
-
-(*move somewhere*)
-
-Local Notation UE := (UExpression _ _)(only parsing).
-Local Notation UEf := (UExpression _ false)(only parsing).
-Local Notation UEt := (UExpression _ true)(only parsing).
-
-Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
-Notation " 'private' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
- 
-Arguments urgenerate_field {_} {_} {_} _ & .
-
-Notation " |{ e }| " := e (in custom URValue at level 0, 
-                           e custom ULValue ,  only parsing ) : ursus_scope.
-
-(**************************************************************************)
 
 Parameter set_int_return_flag : UExpression XBool false .
 Notation " 'set_int_return_flag_' '(' ')' " := 
@@ -78,7 +57,7 @@ Definition onDeploy ( min_amount : ( uint128 ) ) ( deploy_value : ( uint128 ) ) 
  	 	 refine {{ require_ ( ( #{ min_amount } ) > 0 , 1 (* error_code::zero_min_amount *) ) ; { _ } }} . 
  	 	 refine {{ _min_amount_ := (#{ min_amount }) ; { _ } }} . 
  	 	 refine {{ _notify_addr_ := (#{ notify_addr }) ; { _ } }} . 
-  	 	 refine {{ tvm.rawreserve ( #{deploy_value} , 1 ) ; (* (* rawreserve_flag::up_to *) ) ; *) { _ } }} .  
+  	 	 refine {{ tvm_rawreserve ( #{deploy_value} , 1 ) ; (* (* rawreserve_flag::up_to *) ) ; *) { _ } }} .  
  	 	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
  	 	 refine {{ return_ TRUE }} .
 Defined.
