@@ -15,6 +15,17 @@ Module Export TypesModule := Types xt sm.
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 
+Notation UE := (UExpression _ _) (only parsing).
+Notation UEf := (UExpression _ false) (only parsing).
+Notation UEt := (UExpression _ true) (only parsing).
+
+Notation " 'public' x " := ( x ) (at level 12, left associativity, only parsing) : ursus_scope .
+ 
+Arguments urgenerate_field {_} {_} {_} _ {_} & _.
+
+Notation " |{ e }| " := e (in custom URValue at level 0, e custom ULValue , only parsing ) : ursus_scope.
+Notation " {| e |} " := e (in custom ULValue at level 0, e custom URValue , only parsing ) : ursus_scope.
+
 Definition TonsConfig_ι_transfer_tip3_right {b} (x: URValue TonsConfigLRecord b): URValue XUInteger128 b :=
     || {x} ^^ {TonsConfig_ι_transfer_tip3} || : _ .
     

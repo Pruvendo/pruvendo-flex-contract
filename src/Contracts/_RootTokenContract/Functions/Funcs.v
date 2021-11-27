@@ -135,7 +135,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  	 	 refine {{ _wallet_code_ := (#{ wallet_code }) ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
  	 	 	 refine {{ { auto value_gr = int_value () ; _ }} . 
- 	 	 	 refine {{ tvm.rawreserve ( tvm.balance () - value_gr () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm.balance () - value_gr () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} . 
  	 refine {{ return bool_t TRUE ; _ }} . 
  
@@ -152,7 +152,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  	 	 refine {{ address answer_addr ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
  	 	 	 refine {{ { auto value_gr = int_value () ; _ }} . 
- 	 	 	 refine {{ tvm.rawreserve ( tvm.balance () - value_gr () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm.balance () - value_gr () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 	 refine {{ answer_addr := int_sender () }} . 
  	 refine {{ { answer_addr := Address { tvm.address () } }} . 
  refine {{ wallet_init : ( auto ) @ "wallet_init" ; _ }} . 
@@ -175,7 +175,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  	 	 	 refine {{ require_ ( ( (#{ pubkey }) != 0 || std::get < addr_std > ( (#{ internal_owner }) () ) . address != 0 ) , error_code::define_pubkey_or_internal_owner ) ; _ }} . 
  	 	 refine {{ new 'value_gr : ( auto ) @ "value_gr" := {} ; _ }} . 
  	 	 refine {{ { value_gr } := int_value () ; _ }} . 
- 	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 refine {{ tvm_rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 refine {{ wallet_init : ( auto ) @ "wallet_init" ; _ }} . 
  	 	 refine {{ dest : ( auto ) @ "dest" ; _ }} . 
  	 	 refine {{ [ wallet_init , dest ] := calc_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; _ }} . 
@@ -197,7 +197,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  	 	 refine {{ { msg_flags } := 0 ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
  	 	 	 refine {{ { auto (!{ value_gr }) = int_value () ; _ }} . 
- 	 	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 	 refine {{ { msg_flags } := SEND_ALL_GAS ; _ }} . 
  	 	 	 refine {{ (#{ grams }) := 0 ; _ }} . 
  	 	 	 refine {{ answer_addr := int_sender () }} . 
@@ -217,7 +217,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  	 	 refine {{ tvm.accept () ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
  	 	 	 refine {{ { auto (!{ value_gr }) = int_value () ; _ }} . 
- 	 	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) }} . 
  	 refine {{ _total_supply_ += (#{ tokens }) ; _ }} . 
  	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; _ }} . 
  	 refine {{ return bool_t TRUE ; _ }} . 
@@ -230,7 +230,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  Definition requestTotalGranted : UExpression XUInteger128 FALSE . 
  	 	 	 refine {{ new 'value_gr : ( auto ) @ "value_gr" := {} ; _ }} . 
  	 	 refine {{ { value_gr } := int_value () ; _ }} . 
- 	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 refine {{ tvm_rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; _ }} . 
  	 	 refine {{ return_ _total_granted_ }} . 
  Defined . 
