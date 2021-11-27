@@ -5,7 +5,6 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
 Require Import Contracts.Flex.ClassTypes.
-Require Import Contracts.Flex.Ledger.
 
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
@@ -102,8 +101,8 @@ Definition ListingConfig_ι_pair_keep_balance_right {b} (x: URValue ListingConfi
 Definition ListingConfig_ι_pair_keep_balance_left (x: ULValue ListingConfigLRecord): ULValue XUInteger128 :=
     {{ {x} ^^ {ListingConfig_ι_pair_keep_balance} }} : _.
     
-Notation " a '↑' 'ListingConfig_ι_pair_keep_balance' " := ( ListingConfig_ι_pair_keep_balance_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'ListingConfig_ι_pair_keep_balance' " := ( ListingConfig_ι_pair_keep_balance_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'ListingConfig.pair_keep_balance' " := ( ListingConfig_ι_pair_keep_balance_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'ListingConfig.pair_keep_balance' " := ( ListingConfig_ι_pair_keep_balance_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 Definition ListingConfig_ι_register_return_value_right {b} (x: URValue ListingConfigLRecord b): URValue XUInteger128 b :=
     || {x} ^^ {ListingConfig_ι_register_return_value} || : _.
@@ -111,8 +110,8 @@ Definition ListingConfig_ι_register_return_value_right {b} (x: URValue ListingC
 Definition ListingConfig_ι_register_return_value_left (x: ULValue ListingConfigLRecord): ULValue XUInteger128 :=
     {{ {x} ^^ {ListingConfig_ι_register_return_value} }} : _.
     
-Notation " a '↑' 'ListingConfig_ι_register_return_value' " := ( ListingConfig_ι_register_return_value_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'ListingConfig_ι_register_return_value' " := ( ListingConfig_ι_register_return_value_left a ) (in custom ULValue at level 0) : ursus_scope.
+Notation " a '↑' 'ListingConfig.register_return_value' " := ( ListingConfig_ι_register_return_value_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'ListingConfig.register_return_value' " := ( ListingConfig_ι_register_return_value_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 Definition WrapperListingRequest_ι_client_addr_right {b} (x: URValue WrapperListingRequestLRecord b): URValue XAddress b :=
     || {x} ^^ {WrapperListingRequest_ι_client_addr} || : _.
