@@ -115,7 +115,7 @@ Definition make_deal
  	 	  refine {{ (({sell}) ↑ OrderInfo.account) -= !{sell_costs} ; { _ } }} . 
  	 	 refine {{ (({buy})  ↑ OrderInfo.account) -= !{buy_costs} ; { _ } }} .
 (*  	 	 refine {{ ITONTokenWalletPtr ( sell . tip3_wallet ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer ( sell . tip3_wallet , buy . tip3_wallet , deal_amount , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
-(*  	 	 refine {{ tvm.transfer ( sell . client_addr , cost - > get ( ) , true , SENDER_WANTS_TO_PAY_FEES_SEPARATELY ) ; { _ } }} .  *)
+(*  	 	 refine {{ tvm_transfer ( sell . client_addr , cost - > get ( ) , true , SENDER_WANTS_TO_PAY_FEES_SEPARATELY ) ; { _ } }} .  *)
 (*  	 	 refine {{ notify_addr_ ( Grams ( _tons_cfg_ ^^ TonsConfig.send_notify ) ) . onDealCompleted ( _tip3root_ , _price_ , !{deal_amount} ) ; { _ } }} .  *)
 	refine {{ return_ [ FALSE , FALSE , !{ deal_amount } ] }} . 
 Defined .
@@ -133,7 +133,7 @@ Notation " 'make_deal_' '(' sell ',' buy ')' " :=
 Parameter safe_delay_period : uint.
 
 Definition is_active_time ( order_finish_time : uint32 ) : UExpression boolean false . 
- 	refine {{ return_ ( ( (tvm.now ()) +  (#{safe_delay_period}) ) < (#{order_finish_time} ) ) }} . 
+ 	refine {{ return_ ( ( (tvm_now ()) +  (#{safe_delay_period}) ) < (#{order_finish_time} ) ) }} . 
 Defined. 
  
 Definition is_active_time_right { a1 }  ( order_finish_time : URValue uint32 a1 ) : URValue boolean a1 := 
@@ -228,7 +228,7 @@ Definition process_queue ( sell_idx : uint ) ( buy_idx : uint ) : UExpression Ph
                         then { { _:UEt } } ; { _ } }} . 	 	 	 
          refine {{ ({sell} ↑ OrderInfo.account) -= !{half_process_queue} ; { _ } }} . 
  	 	 	   refine {{ ({buy} ↑ OrderInfo.account) -= !{half_process_queue} ; { _ } }} . 
-(*  	 	 	 refine {{ IPricePtr ( address { tvm.address ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
+(*  	 	 	 refine {{ IPricePtr ( address { tvm_address ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
  	 	 	     refine {{ if ( (#{sell_idx}) == !{sell_idx_cur} ) then { { _:UEf } } ; { _ } }} . 
  	 	 	 	     (* refine {{ dealer.ret_ := [ 1 (* ec::deals_limit *) , 
                               ((!{sell}) ↑ OrderInfo.original_amount) - 
@@ -522,7 +522,7 @@ Definition on_sell_fail ( ec : ( uint ) )
              else { { _: UExpression OrderRetLRecord false } } ; { _ } }} .
  	 	 refine {{ set_int_return_flag_  ( ) (* SEND_ALL_GAS | DELETE_ME_IF_I_AM_EMPTY *) }} . 
  	 refine {{ new 'incoming_value : uint @ "incoming_value" := int_value ( ) (* ( ) . get ( ) *) ; { _ } }} . 
-  	 refine {{ tvm_rawreserve ( tvm.balance () - !{incoming_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .
+  	 refine {{ tvm_rawreserve ( tvm_balance () - !{incoming_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .
  	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) }} . 
  refine {{ return_ [ #{ec} , {} , {} ] }} . 
 Defined . 

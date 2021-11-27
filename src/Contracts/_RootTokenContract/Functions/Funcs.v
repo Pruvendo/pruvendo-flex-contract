@@ -122,7 +122,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  	 	 refine {{ _total_supply_ := (#{ total_supply }) ; _ }} . 
  	 	 refine {{ _total_granted_ := 0 ; _ }} . 
  	 	 refine {{ _owner_address_ := optional_owner_ ( (#{ root_owner }) ) ; _ }} . 
- 	 	 refine {{ _start_balance_ := tvm.balance () }} . 
+ 	 	 refine {{ _start_balance_ := tvm_balance () }} . 
  Defined . 
  
  
@@ -130,12 +130,12 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  Definition setWalletCode ( wallet_code : ( XCell ) ) : UExpression XBool TRUE . 
  	 	 	 refine {{ check_owner_ ( TRUE ) ; _ }} . 
- 	 	 refine {{ tvm.accept () ; _ }} . 
+ 	 	 refine {{ tvm_accept () ; _ }} . 
  	 	 refine {{ require_ ( ( ~ _wallet_code_ ) , error_code::cant_override_wallet_code ) ; _ }} . 
  	 	 refine {{ _wallet_code_ := (#{ wallet_code }) ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
  	 	 	 refine {{ { auto value_gr = int_value () ; _ }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm.balance () - value_gr () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - value_gr () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} . 
  	 refine {{ return bool_t TRUE ; _ }} . 
  
@@ -146,15 +146,15 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  Definition deployWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( XAddress ) ) ( tokens : ( XUInteger128 ) ) ( grams : ( XUInteger128 ) ) : UExpression XAddress TRUE . 
  	 	 	 refine {{ check_owner_ () ; _ }} . 
- 	 	 refine {{ tvm.accept () ; _ }} . 
+ 	 	 refine {{ tvm_accept () ; _ }} . 
  	 	 refine {{ require_ ( ( _total_granted_ + (#{ tokens }) <= _total_supply_ ) , error_code::not_enough_balance ) ; _ }} . 
  	 	 refine {{ require_ ( ( (#{ pubkey }) != 0 || std::get < addr_std > ( (#{ internal_owner }) () ) . address != 0 ) , error_code::define_pubkey_or_internal_owner ) ; _ }} . 
  	 	 refine {{ address answer_addr ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
  	 	 	 refine {{ { auto value_gr = int_value () ; _ }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm.balance () - value_gr () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - value_gr () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 	 refine {{ answer_addr := int_sender () }} . 
- 	 refine {{ { answer_addr := Address { tvm.address () } }} . 
+ 	 refine {{ { answer_addr := Address { tvm_address () } }} . 
  refine {{ wallet_init : ( auto ) @ "wallet_init" ; _ }} . 
  	 	 refine {{ dest : ( auto ) @ "dest" ; _ }} . 
  	 	 refine {{ [ wallet_init , dest ] := calc_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; _ }} . 
@@ -175,7 +175,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  	 	 	 refine {{ require_ ( ( (#{ pubkey }) != 0 || std::get < addr_std > ( (#{ internal_owner }) () ) . address != 0 ) , error_code::define_pubkey_or_internal_owner ) ; _ }} . 
  	 	 refine {{ new 'value_gr : ( auto ) @ "value_gr" := {} ; _ }} . 
  	 	 refine {{ { value_gr } := int_value () ; _ }} . 
- 	 	 refine {{ tvm_rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 refine {{ wallet_init : ( auto ) @ "wallet_init" ; _ }} . 
  	 	 refine {{ dest : ( auto ) @ "dest" ; _ }} . 
  	 	 refine {{ [ wallet_init , dest ] := calc_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; _ }} . 
@@ -191,17 +191,17 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  Definition grant ( dest : ( XAddress ) ) ( tokens : ( XUInteger128 ) ) ( grams : ( XUInteger128 ) ) : UExpression PhantomType TRUE . 
  	 	 	 refine {{ check_owner_ () ; _ }} . 
  	 	 refine {{ require_ ( ( _total_granted_ + (#{ tokens }) <= _total_supply_ ) , error_code::not_enough_balance ) ; _ }} . 
- 	 	 refine {{ tvm.accept () ; _ }} . 
+ 	 	 refine {{ tvm_accept () ; _ }} . 
  	 	 refine {{ address answer_addr ; _ }} . 
  	 	 refine {{ new 'msg_flags : ( XUInteger ) @ "msg_flags" := {} ; _ }} . 
  	 	 refine {{ { msg_flags } := 0 ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
  	 	 	 refine {{ { auto (!{ value_gr }) = int_value () ; _ }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 	 refine {{ { msg_flags } := SEND_ALL_GAS ; _ }} . 
  	 	 	 refine {{ (#{ grams }) := 0 ; _ }} . 
  	 	 	 refine {{ answer_addr := int_sender () }} . 
- 	 refine {{ { answer_addr := Address { tvm.address () } }} . 
+ 	 refine {{ { answer_addr := Address { tvm_address () } }} . 
  refine {{ ITONTokenWalletPtr dest_handle ( (#{ dest }) ) ; _ }} . 
  refine {{ dest_handle ( Grams ( (#{ grams }) . get () ) , (!{ msg_flags }) ) . accept ( (#{ tokens }) , answer_addr , uint128 ( 0 ) ) ; _ }} . 
  refine {{ _total_granted_ += (#{ tokens }) ; _ }} . 
@@ -214,10 +214,10 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  Definition mint ( tokens : ( XUInteger128 ) ) : UExpression XBool FALSE . 
  	 	 	 refine {{ check_owner_ () ; _ }} . 
- 	 	 refine {{ tvm.accept () ; _ }} . 
+ 	 	 refine {{ tvm_accept () ; _ }} . 
  	 	 refine {{ if ( Internal ) then { _ } else { _ } ; _ }} . 
  	 	 	 refine {{ { auto (!{ value_gr }) = int_value () ; _ }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) }} . 
  	 refine {{ _total_supply_ += (#{ tokens }) ; _ }} . 
  	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; _ }} . 
  	 refine {{ return bool_t TRUE ; _ }} . 
@@ -230,7 +230,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  Definition requestTotalGranted : UExpression XUInteger128 FALSE . 
  	 	 	 refine {{ new 'value_gr : ( auto ) @ "value_gr" := {} ; _ }} . 
  	 	 refine {{ { value_gr } := int_value () ; _ }} . 
- 	 	 refine {{ tvm_rawreserve ( tvm.balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
+ 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr }) () , rawreserve_flag::up_to ) ; _ }} . 
  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; _ }} . 
  	 	 refine {{ return_ _total_granted_ }} . 
  Defined . 
@@ -302,7 +302,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  Definition _on_bounced ( cell : ( (LRecord ) ) ( msg_body : ( XSlice ) ) : UExpression XUInteger TRUE . 
- 	 	 	 refine {{ tvm.accept () ; _ }} . 
+ 	 	 	 refine {{ tvm_accept () ; _ }} . 
  	 	 refine {{ new 'Args : ( usingLRecord ) @ "Args" := {} ; _ }} . 
  	 	 refine {{ { Args } := args_struct_t ; _ }} . 
  	 	 refine {{ parser p ( (#{ msg_body }) ) ; _ }} . 
@@ -349,7 +349,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  
  Definition workchain_id : UExpression XUInteger8 FALSE . 
- 	 	 	 refine {{ return_ Std :: get < addr_std > ( Address { tvm.address () } () ) . workchain_id_ }} . 
+ 	 	 	 refine {{ return_ Std :: get < addr_std > ( Address { tvm_address () } () ) . workchain_id_ }} . 
  Defined . 
  
  
@@ -357,7 +357,7 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  
  Definition calc_wallet_init ( pubkey : ( XUInteger256 ) ) ( owner_addr : ( XAddress ) ) : UExpression ( StateInitLRecord * XAddress ) FALSE . 
  	 	 	 refine {{ new 'wallet_data : ( DTONTokenWalletLRecord ) @ "wallet_data" := {} ; _ }} . 
- 	 	 refine {{ { wallet_data } := prepare_wallet_data ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , Address { tvm.address () } , optional_owner_ ( (#{ owner_addr }) ) , _wallet_code_ ^^ get () , workchain_id_ () ) ; _ }} . 
+ 	 	 refine {{ { wallet_data } := prepare_wallet_data ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , Address { tvm_address () } , optional_owner_ ( (#{ owner_addr }) ) , _wallet_code_ ^^ get () , workchain_id_ () ) ; _ }} . 
  	 	 refine {{ wallet_init : ( auto ) @ "wallet_init" ; _ }} . 
  	 	 refine {{ dest_addr : ( auto ) @ "dest_addr" ; _ }} . 
  	 	 refine {{ [ wallet_init , dest_addr ] := prepare_wallet_state_init_and_addr ( (!{ wallet_data }) ) ; _ }} . 

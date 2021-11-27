@@ -67,8 +67,8 @@ Notation " |{ e }| " := e (in custom URValue at level 0,
                            e custom ULValue ,  only parsing ) : ursus_scope.
 
 Definition onlyOwner {X b}`{XDefault X} (e:UExpression X b) : UExpression X true .
-   refine {{ require_ ( (tvm.pubkey() != 0) && (tvm.pubkey() == msg.pubkey()), 1 ) ; { _ } }} .
-   refine {{ tvm.accept(); {e} }}.
+   refine {{ require_ ( (tvm_pubkey() != 0) && (tvm_pubkey() == msg.pubkey()), 1 ) ; { _ } }} .
+   refine {{ tvm_accept(); {e} }}.
 Defined .
 
 Definition Flex_Ф_constructor ( deployer_pubkey : uint256 ) 
@@ -96,7 +96,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
          refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
          refine {{ require_ ( ( ~ TRUE (* Flex.pair_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
-(*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
+(*  	 	 refine {{ tvm_accept () ; { _ } }} .  *)
          refine {{ require_ ( (* ( code.ctos ( ) . srefs ( ) *) 1 == 1 (* 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
          refine {{ Flex.pair_code_ := {} (* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( )  *) }} . 
  Defined . 
@@ -106,7 +106,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
          refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
          refine {{ require_ ( TRUE (* ~ Flex.xchg_pair_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
-(*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
+(*  	 	 refine {{ tvm_accept () ; { _ } }} .  *)
          refine {{ require_ ( (* ( code.ctos ( ) . srefs ( ) == 2 )  *) 1 == 1 , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
          refine {{ Flex.xchg_pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *)  }} . 
  Defined . 
@@ -116,7 +116,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
          refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
          refine {{ require_ ( ( ~ TRUE (* Flex.price_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
-(*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
+(*  	 	 refine {{ tvm_accept () ; { _ } }} .  *)
          refine {{ Flex.price_code_ ->set !{ code }  }} . 
  Defined . 
  
@@ -125,7 +125,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
          refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
          refine {{ require_ ( ( ~ TRUE (* Flex.xchg_price_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
-(*  	 	 refine {{ tvm.accept () ; { _ } }} .  *)
+(*  	 	 refine {{ tvm_accept () ; { _ } }} .  *)
          refine {{ Flex.xchg_price_code_ ->set !{ code } }} . 
  Defined . 
  
@@ -175,7 +175,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  Definition Flex_Ф_getSellTradingPair ( tip3_root : XAddress ) : UExpression XAddress false . 
          refine {{ tip3_root : ( XAddress ) @ "tip3_root" ; { _ } }} . 
          refine {{ (* new *) myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
-         refine {{ { myaddr } := (* tvm.myaddr *) tvm.address () ; { _ } }} . 
+         refine {{ { myaddr } := (* tvm_myaddr *) tvm_address () ; { _ } }} . 
          refine {{ (* new *) pair_data : ( TradingPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_root_ = tip3_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
          refine {{ (* new *) std_addr : ( StateInitStateLRecord * uint256 ) @ "std_addr" ; { _ } }} . 
@@ -191,7 +191,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
          refine {{ tip3_major_root : ( XAddress ) @ "tip3_major_root" ; { _ } }} . 
          refine {{ tip3_minor_root : ( XAddress ) @ "tip3_minor_root" ; { _ } }} . 
          refine {{ (* new *) myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
-         refine {{ { myaddr } := (* tvm_myaddr *) tvm.address () ; { _ } }} . 
+         refine {{ { myaddr } := (* tvm_myaddr *) tvm_address () ; { _ } }} . 
          refine {{ (* new *) pair_data : ( XchgPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_major_root_ = tip3_major_root , . tip3_minor_root_ = tip3_minor_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
          refine {{ (* new *) std_addr : ( uint (* auto *) ) @ "std_addr" ; { _ } }} . 

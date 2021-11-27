@@ -115,7 +115,7 @@ Notation " 'make_deal_' '(' sell buy ')' " := ( make_deal_right sell buy )
  (in custom URValue at level 0 , sell custom URValue at level 0 , buy custom URValue at level 0 ) : ursus_scope . 
 
 Definition is_active_time ( order_finish_time : ( uint32 ) ) : UExpression XBool false . 
-	refine {{ return_ ( (tvm.now ()) + (#{300})(* safe_delay_period *) ) 
+	refine {{ return_ ( (tvm_now ()) + (#{300})(* safe_delay_period *) ) 
 					<  (#{order_finish_time}) }} . 
 Defined . 
 
@@ -209,7 +209,7 @@ Definition process_queue (sell_idx : uint)
  	 	 	     refine {{ ({sell} ↑ OrderInfoXchg.account) -= !{half_process_queue} ; { _ } }} . 
  	 	 	     refine {{ ({buy} ↑ OrderInfoXchg.account) -= !{half_process_queue} ; { _ } }} . 
 
-(*      	 	 	 refine {{ IPriceXchgPtr ( address { tvm.address ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
+(*      	 	 	 refine {{ IPriceXchgPtr ( address { tvm_address ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
      	 	 	 refine {{ if ( (#{sell_idx}) == (!{sell_idx_cur}) ) then { { _:UEf } } ; { _ } }} . 
      	 	 	 	 refine {{ {sell} := !{sell} (* dealer.ret_ := [ 1 (* ec::deals_limit *) , 
                     ((!{sell}) ↑ OrderInfoXchg.original_amount) - 
@@ -479,7 +479,7 @@ Definition on_ord_fail (ec: uint) (wallet_in : raw_address (* ITONTokenWalletPtr
  	 	 refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
  	 	 	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS | DELETE_ME_IF_I_AM_EMPTY *) }} . 
      	 refine {{ new 'incoming_value : uint @ "incoming_value" := int_value ( ) ; { _ } }} . 
-     	 refine {{ tvm_rawreserve (tvm.balance () - !{incoming_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} . 
+     	 refine {{ tvm_rawreserve (tvm_balance () - !{incoming_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} . 
      	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) }} . 
  refine {{ return_ [ 1 (* ec *) , {} , {} ] }} . 
 Defined . 

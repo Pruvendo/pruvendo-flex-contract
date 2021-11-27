@@ -141,7 +141,7 @@ Definition constructor_left { R a1 a2 a3 }
 ( tons_cfg : ( TonsConfigLRecord ) ) 
 ( flex : ( XAddress ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ _tons_cfg_ := #{ tons_cfg } ; { _ } }} . 
  	 	 refine {{ _flex_ := #{ flex }  }} . 
  Defined . 
@@ -160,7 +160,7 @@ Definition constructor_left { R a1 a2 a3 }
 
  Definition setExtWalletCode ( ext_wallet_code : ( XCell ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ _ext_wallet_code_ ->set ( #{ ext_wallet_code } ) }} . 
  Defined . 
  
@@ -175,7 +175,7 @@ Definition constructor_left { R a1 a2 a3 }
  
  Definition setFlexWalletCode ( flex_wallet_code : ( XCell ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ _flex_wallet_code_ ->set (  #{ flex_wallet_code } ) }} . 
  Defined . 
   Definition setFlexWalletCode_left { R a1 }  ( flex_wallet_code : URValue ( XCell ) a1 ) : UExpression R true := 
@@ -189,7 +189,7 @@ Definition constructor_left { R a1 a2 a3 }
   
  Definition setFlexWrapperCode ( flex_wrapper_code : ( XCell ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ _flex_wrapper_code_  ->set (  #{ flex_wrapper_code } ) }} . 
  Defined . 
  
@@ -247,7 +247,7 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
                               ( min_trade_amount : ( uint128 ) ) 
                               ( notify_addr : ( XAddress ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} .  
+ 	 	 refine {{ tvm_accept () ; { _ } }} .  
        refine {{ new 'pair_data : TradingPairClassTypes.DTradingPairLRecord @ "pair_data" := 
        DTradingPairInsert [$ _flex_ ⇒ { DTradingPair_ι_flex_addr_ } ; 
                               ( #{tip3_root} ) ⇒ { DTradingPair_ι_tip3_root_ } ;
@@ -317,7 +317,7 @@ Definition deployXchgPair ( tip3_major_root : ( address_t ) )
                            ( notify_addr : ( address_t ) ) 
                             : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} .
+ 	 	 refine {{ tvm_accept () ; { _ } }} .
 
      (* Compute field_type DXchgPair_ι_tip3_major_root_.
      Check ( || #{ tip3_major_root } || : URValue _ false ) : URValue (field_type DXchgPair_ι_tip3_major_root_) false. *) 
@@ -476,7 +476,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
 : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
                       'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
@@ -534,7 +534,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
                       'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
@@ -568,7 +568,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
                       'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
@@ -598,7 +598,7 @@ Definition cancelBuyOrder ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) (
 ( value : ( uint128 ) ) ( price_code : ( XCell ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
                       'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
@@ -760,7 +760,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( pr
 ( notify_addr : ( XAddress ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
                       'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") 
@@ -774,7 +774,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( pr
            [$ #{ sell }  ⇒ { PayloadArgs_ι_sell } ; 
               #{ amount } ⇒ { PayloadArgs_ι_amount } (*; 
               #{ receive_wallet } ⇒ { PayloadArgs_ι_receive_tip3_wallet } ;
-              tvm.address () ⇒ { PayloadArgs_ι_client_addr } *)  $]  ; { _ } }} . 
+              tvm_address () ⇒ { PayloadArgs_ι_client_addr } *)  $]  ; { _ } }} . 
 
  	 	 refine {{ new 'payload : ( XCell ) @ "payload" := {} (* build ( !{ payload_args } ) . endc ( ) *) ; { _ } }} . 
  	 	 refine {{ new 'my_tip3: XAddress @ "my_tip3" := #{ my_tip3_addr } ; { _ } }} . 
@@ -811,7 +811,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( pr
 ( notify_addr : ( address_t ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
       refine {{ new ( 'state_init : StateInitLRecord , 
                       'addr : XAddress ,
                       'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
@@ -843,7 +843,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( pr
 
  Definition transfer ( dest : ( address_t ) ) ( value : ( uint128 ) ) ( bounce : ( XBool ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () (*;  { _ } }} . 
+ 	 	 refine {{ tvm_accept () (*;  { _ } }} . 
  	 	 refine {{ tvm_transfer ( dest , value . get ( ) , bounce . get ( ) ) ; { _ } *) }} . 
  Defined . 
  
@@ -992,7 +992,7 @@ Definition deployEmptyFlexWallet ( pubkey : ( uint256 ) ) ( tons_to_wallet : ( u
 ( tip3cfg : ( Tip3ConfigLRecord ) ) : UExpression XAddress true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
      refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=  
                   prepare_internal_wallet_state_init_and_addr_ 
                      ( (#{tip3cfg}) ↑  Tip3Config.name , 
@@ -1001,7 +1001,7 @@ Definition deployEmptyFlexWallet ( pubkey : ( uint256 ) ) ( tons_to_wallet : ( u
                        (#{tip3cfg}) ↑  Tip3Config.root_public_key , 
                         #{pubkey} , 
                        (#{tip3cfg}) ↑  Tip3Config.root_address , 
-                       (tvm.address ()) -> set () , 
+                       (tvm_address ()) -> set () , 
                         _flex_wallet_code_ -> get_default () , 
                         _workchain_id_ ) ; { _ } }} . 
  	 	 refine {{ new 'new_wallet : ( XAddress ) @ "new_wallet" := {} ; { _ } }}.
@@ -1024,7 +1024,7 @@ Definition deployEmptyFlexWallet ( pubkey : ( uint256 ) ) ( tons_to_wallet : ( u
  Definition burnWallet ( tons_value : ( uint128 ) ) ( out_pubkey : ( uint256 ) ) 
 ( out_internal_owner : ( address_t ) ) ( my_tip3_addr : ( address_t ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ new 'my_tip3 : ( XAddress ) @ "my_tip3" := {} ; { _ } }}.
 (*  	 	 refine {{ ITONTokenWalletPtr my_tip3 ( my_tip3_addr ) ; { _ } }} . 
  	 	 refine {{ my_tip3 ( Grams ( tons_value . get ( ) ) ) . burn ( out_pubkey , out_internal_owner )   }} . 
@@ -1140,19 +1140,19 @@ Definition hasFlexWrapperCode : UExpression XBool false .
 
  Definition registerWrapper ( wrapper_pubkey : ( uint256 ) ) ( value : ( uint128 ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) (* ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ IFlexPtr ( flex_ ) ( Grams ( value . get ( ) ) ) . registerWrapper ( wrapper_pubkey , tip3cfg ) *) }} . 
  Defined . 
 
  Definition registerTradingPair ( request_pubkey : ( uint256 ) ) ( value : ( uint128 ) ) ( tip3_root : ( XAddress ) ) ( min_amount : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () (* ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () (* ; { _ } }} . 
  	 	 refine {{ IFlexPtr ( flex_ ) ( Grams ( value . get ( ) ) ) . registerTradingPair ( request_pubkey , tip3_root , min_amount , notify_addr ) *) }} . 
  Defined . 
 
  Definition registerXchgPair ( request_pubkey : ( uint256 ) ) ( value : ( uint128 ) ) ( tip3_major_root : ( XAddress ) ) ( tip3_minor_root : ( XAddress ) ) ( min_amount : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () (*; { _ } }} . 
+ 	 	 refine {{ tvm_accept () (*; { _ } }} . 
  	 	 refine {{ IFlexPtr ( flex_ ) ( Grams ( value . get ( ) ) ) . registerXchgPair ( request_pubkey , tip3_major_root , tip3_minor_root , min_amount , notify_addr ) *) }} . 
  Defined . 
 
