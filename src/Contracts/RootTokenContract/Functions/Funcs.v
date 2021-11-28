@@ -1,6 +1,5 @@
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
-From elpi Require Import elpi.
 Require Import Setoid.
 Require Import ZArith.
 Require Import Coq.Program.Equality.
@@ -16,27 +15,22 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 Require Import Project.CommonTypes.
-(*Fully qualified name are mandatory in multi-contract environment*)
-Require Import Contracts.RootTokenContract.Ledger.
-Require Import Contracts.RootTokenContract.Functions.FuncSig.
-Require Import Contracts.RootTokenContract.Functions.FuncNotations.
-Require Contracts.RootTokenContract.Interface.
 
-Require Import Contracts.TONTokenWallet.ClassTypes.
+(*Fully qualified name are mandatory in multi-contract environment*)
+Require Import RootTokenContract.Ledger.
+Require Import RootTokenContract.Functions.FuncSig.
+Require Import RootTokenContract.Functions.FuncNotations.
+
+Require RootTokenContract.Interface.
+
+Require Import TONTokenWallet.ClassTypes.
 
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
 
- 
-Module Type Has_Internal.
+Module Funcs (co : CompilerOptions)(dc : ConstsTypesSig XTypesModule StateMonadModule) .
 
-Parameter Internal: bool .
-
-End Has_Internal.
-
-Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModule) .
-
-Import ha.
+Import co.
 
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
@@ -50,28 +44,14 @@ Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 Local Open Scope struct_scope.
-
 Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
-Local Notation UE := (UExpression _ _).
-Local Notation UEf := (UExpression _ false).
-Local Notation UEt := (UExpression _ true).
 
-Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
- 
-Arguments urgenerate_field {_} {_} {_} _ & .
-
-Notation " |{ e }| " := e (in custom URValue at level 0, 
-                           e custom ULValue ,  only parsing ) : ursus_scope.
-
-(* Existing Instance xbool_default. *)
-
-
- Definition optional_owner ( owner : ( XAddress ) ) : UExpression (XMaybe XAddress) false . 
+Definition optional_owner ( owner : ( XAddress ) ) : UExpression (XMaybe XAddress) false . 
  	 	 	 refine {{ return_ {} (* Std :: get < addr_std > ( (#{ owner }) () ) . address ? std::optional ( (#{ owner }) ) : std::optional () *) }} . 
- Defined . 
+Defined . 
 
 Definition optional_owner_right { a1 }  ( owner : URValue ( XAddress ) a1 ) : URValue (XMaybe XAddress) a1 := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner 

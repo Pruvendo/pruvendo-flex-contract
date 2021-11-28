@@ -4,6 +4,7 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 Module Type CompilerOptions.
 
 Parameter Internal: bool .
+Parameter TIP3_ENABLE_EXTERNAL : bool .
 
 End CompilerOptions.
 
