@@ -117,7 +117,7 @@ GeneratePruvendoRecord LocalState01011L LocalStateFields01011I .
 Opaque LocalState01011LRecord . 
 
 Inductive LocalStateFields01100I := | ι011000 | ι011001 . 
-Definition LocalState01100L := [ ( XHMap (string*nat) XUInteger(* TODO: auto *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState01100L := [ ( XHMap (string*nat) lend_array_recordLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState01100L LocalStateFields01100I . 
 Opaque LocalState01100LRecord . 
 
@@ -676,7 +676,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01011 : typeclass_instances. 
- #[global, program] Instance LocalStateField01100 : LocalStateField XUInteger(* auto *).
+ #[global, program] Instance LocalStateField01100 : LocalStateField lend_array_recordLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
