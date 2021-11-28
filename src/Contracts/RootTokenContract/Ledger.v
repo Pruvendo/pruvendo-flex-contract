@@ -1,46 +1,46 @@
- Require Import Coq.Program.Basics. 
-
+Require Import Coq.Program.Basics. 
 Require Import String. 
+
 Require Import FinProof.Types.IsoTypes. 
 Require Import FinProof.Common. 
 Require Import FinProof.MonadTransformers21. 
-
 Require Import FinProof.ProgrammingWith.  
+
 Require Import UMLang.UrsusLib. 
 Require Import UMLang.BasicModuleTypes. 
+Require Import UMLang.GlobalClassGenerator.ClassGenerator.
+
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
+Require TONTokenWallet.Interface.
+
 Require Import Project.CommonTypes. 
-Require Import Contracts.RootTokenContract.ClassTypes.
-Require Import Contracts.RootTokenContract.Interface.
-Require Import UMLang.GlobalClassGenerator.ClassGenerator.
+Require Import RootTokenContract.ClassTypes.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
+(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_ITONTokenWallet | _EmittedEvents | _MessagesLog.
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
-Module PricePublicInterfaceModule := PublicInterface xt sm.
+Module TONPublicInterfaceModule := TONTokenWallet.Interface.PublicInterface xt sm.
 
-(* Module Import BasicTypesClass := BasicTypes xt sm. *)
 Module Export VMStateModule := VMStateModule xt sm. 
 Module Export TypesModuleForLedger := ClassTypes xt sm .
-Module RootTokenContractClassTypesModule := RootTokenContract.ClassTypes.ClassTypes xt sm .
+Module Export ClassTypesModule := ClassTypes xt sm .
 
 Import xt.
 
-
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ ( XQueue PricePublicInterfaceModule.OutgoingMessage ) : Type ; 
- ( XList TVMEvent ) : Type ; 
- ( XString ) : Type ] .
+ [ XHMap XAddress ( XQueue (OutgoingMessage TONPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
+   XList TVMEvent : Type ; 
+   XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
-  Opaque MessagesAndEventsLRecord .
+Opaque MessagesAndEventsLRecord .
 
 Definition ContractLRecord := DRootTokenContractLRecord . 
 Definition ContractLEmbeddedType := RootTokenContractClassTypesModule.DRootTokenContractLEmbeddedType.

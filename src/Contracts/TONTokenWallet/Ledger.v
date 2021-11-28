@@ -13,6 +13,9 @@ Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require Import Project.CommonTypes. 
+
+Require Wrapper.Interface.
+
 Require Import TONTokenWallet.ClassTypes.
 Require Import TONTokenWallet.Interface.
 
@@ -20,23 +23,30 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
+Inductive MessagesAndEventsFields := | _OutgoingMessages_TONTokenWalletNotify 
+                                     | _OutgoingMessages_Wrapper
+                                     | _OutgoingMessages_TONTokenWallet
+                                     | _EmittedEvents 
+                                     | _MessagesLog.
 Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Definition ContractFields := DTONTokenWalletFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
-Module TONTokenWalletPublicInterfaceModule := PublicInterface xt sm.
+Module TONTokenWalletPublicInterfaceModule := TONTokenWallet.Interface.PublicInterface xt sm.
+Module WrapperPublicInterfaceModule := Wrapper.Interface.PublicInterface xt sm.
 
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Export TypesModuleForLedger := ClassTypes xt sm .
+Module Export TypesModuleForLedger := (* TONTokenWallet.ClassTypes. *)ClassTypes xt sm .
 Import xt.
 
 Definition MessagesAndEventsL : list Type := 
- [ ( XQueue TONTokenWalletPublicInterfaceModule.OutgoingMessage ) : Type ; 
- ( XList TVMEvent ) : Type ; 
- ( XString ) : Type ] .
+ [ XHMap XAddress ( XQueue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWalletNotify ) ) : Type ; 
+   XHMap XAddress ( XQueue (OutgoingMessage WrapperPublicInterfaceModule.IWrapper ) ) : Type ; 
+   XHMap XAddress ( XQueue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
+   XList TVMEvent : Type ; 
+   XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
 

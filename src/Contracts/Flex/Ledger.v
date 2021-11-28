@@ -15,25 +15,40 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import Project.CommonTypes. 
 
 Require Import Flex.ClassTypes.
-Require TradingPair.ClassTypes.
 Require XchgPair.ClassTypes.
+Require TradingPair.ClassTypes.
 Require TONTokenWallet.ClassTypes.
 Require Wrapper.ClassTypes.
 
 Require Import Flex.Interface.
+Require XchgPair.Interface.
+Require TradingPair.Interface.
+Require TONTokenWallet.Interface.
+Require Wrapper.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-Inductive MessagesAndEventsFields := | _OutgoingMessages_Flex | _EmittedEvents | _MessagesLog.
-Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
+Inductive MessagesAndEventsFields := | _OutgoingMessages_IListingAnswer
+                                     | _OutgoingMessages_IXchgPair
+                                     | _OutgoingMessages_ITradingPair
+                                     | _OutgoingMessages_IWrapper
+                                     | _OutgoingMessages_ITONTokenWallet
+                                     | _EmittedEvents 
+                                     | _MessagesLog.
+
+Inductive LedgerFieldsI := | _Contract 
+                           | _ContractCopy 
+                           | _VMState 
+                           | _MessagesAndEvents 
+                           | _MessagesAndEventsCopy 
+                           | _LocalState 
+                           | _LocalStateCopy .
 
 Definition ContractFields := DFlexFields.  
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
-
-Module FlexPublicInterfaceModule := Flex.Interface.PublicInterface xt sm.
 
 Module Export BasicTypesModule := BasicTypes xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
@@ -44,12 +59,23 @@ Module XchgPairClassTypesModule := XchgPair.ClassTypes.ClassTypes xt sm .
 Module TONTonkenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes xt sm.
 Module WrapperClassTypesModule := Wrapper.ClassTypes.ClassTypes xt sm.
 
+Module FlexPublicInterfaceModule := Flex.Interface.PublicInterface xt sm.
+Module TradingPairInterfaceModule := TradingPair.Interface.PublicInterface xt sm .
+Module XchgPairInterfaceModule := XchgPair.Interface.PublicInterface xt sm .
+Module TONTonkenWalletInterfaceModule := TONTokenWallet.Interface.PublicInterface xt sm.
+Module WrapperInterfaceModule := Wrapper.Interface.PublicInterface xt sm.
+
 Import xt. 
 
 Definition MessagesAndEventsL : list Type := 
- [ ( XQueue FlexPublicInterfaceModule.OutgoingMessage ) : Type ; 
- ( XList TVMEvent ) : Type ; 
- ( XString ) : Type ] .
+ [ ( XHMap XAddress (XQueue (OutgoingMessage FlexPublicInterfaceModule.IListingAnswer )) ) : Type ;
+   ( XHMap XAddress (XQueue (OutgoingMessage XchgPairInterfaceModule.IXchgPair )) ) : Type ;
+   ( XHMap XAddress (XQueue (OutgoingMessage TradingPairInterfaceModule.ITradingPair )) ) : Type ;
+   ( XHMap XAddress (XQueue (OutgoingMessage WrapperInterfaceModule.IWrapper )) ) : Type ;
+   ( XHMap XAddress (XQueue (OutgoingMessage TONTonkenWalletInterfaceModule.ITONTokenWallet )) ) : Type ;
+   ( XList TVMEvent ) : Type ; 
+   ( XString ) : Type ] .
+   
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
  
