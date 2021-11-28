@@ -53,7 +53,7 @@ Elpi GeneratePruvendoRecord wrapper_details_infoL wrapper_details_infoFields .
  ( XUInteger128 ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XAddress ) ) : Type ; 
- ( Grams ) : Type ; 
+ ( XUInteger16 (* Grams *) ) : Type ; 
  ( ( XMaybe XAddress (* ITONTokenWalletPtrLRecord *) ) ) : Type ] .
 Elpi GeneratePruvendoRecord DWrapperL DWrapperFields . 
  Opaque DWrapperLRecord . 
