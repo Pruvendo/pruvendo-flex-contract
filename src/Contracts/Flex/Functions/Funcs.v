@@ -289,7 +289,7 @@ Definition check_owner : UExpression PhantomType true .
 
  Definition prepare_trading_pair ( flex :  ( XAddress ) ) ( tip3_root :  ( XAddress ) ) ( pair_code :  ( XCell ) ) : UExpression ( StateInitLRecord * uint256 )  false . 
  	 	 refine {{ new 'pair_data : ( TradingPairClassTypes.DTradingPairLRecord ) @ "pair_data" :=  
-               	 	 [$ ( tvm_address () ) ⇒ { DTradingPair_ι_flex_addr_ } ; 
+               	 	 [$ ( tvm_myaddr () ) ⇒ { DTradingPair_ι_flex_addr_ } ; 
                      (#{tip3_root}) ⇒ { DTradingPair_ι_tip3_root_ } ; 
                      0 ⇒ { DTradingPair_ι_min_amount_ } ; 
                      0 ⇒ { DTradingPair_ι_notify_addr_ }  
@@ -317,7 +317,7 @@ Definition check_owner : UExpression PhantomType true .
 (*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
 
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
-                prepare_trading_pair_ ( tvm_address () , #{tip3_root} , _pair_code_ -> get_default () ) ; { _ } }} .
+                prepare_trading_pair_ ( tvm_myaddr () , #{tip3_root} , _pair_code_ -> get_default () ) ; { _ } }} .
  	 	 refine {{ return_ {} (* Address :: make_std ( workchain_id_ , std_addr ) *) }} . 
  Defined .
  
@@ -333,7 +333,7 @@ Definition approveTradingPairImpl ( pubkey :  ( uint256 ) )
  	 	 refine {{ new 'req_info : ( TradingPairListingRequestLRecord ) @ "req_info" := {} ; { _ } }} . 
  	 	 refine {{ { req_info } := (!{opt_req_info}) -> get_default () ; { _ } }} . 
  	 	 refine {{ new ( 'state_init : StateInitLRecord, 'std_addr : uint256 ) @ ("state_init", "std_addr") := 
-                 prepare_trading_pair_ ( tvm_address () , 
+                 prepare_trading_pair_ ( tvm_myaddr () , 
                 (!{req_info}) ↑ TradingPairListingRequest.tip3_root , 
                 #{pair_code} ) ; { _ } }} . 
  	 	 refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} (*  
@@ -373,7 +373,7 @@ URValue ( XAddress * (XHMap uint256 (uint256 * TradingPairListingRequestLRecord)
  	 	 refine {{ _trading_pair_listing_requests_ := !{new_trading_pair_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value ()  ; { _ } }} . 
-  	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ) (* {} (* rawreserve_flag::up_to *) ) *) (* ; { _ } *) }} .
+  	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {} ) (* {} (* rawreserve_flag::up_to *) ) *) (* ; { _ } *) }} .
 (*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ !{ trade_pair } }} . 
  Defined .
@@ -424,7 +424,7 @@ UExpression (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) true .
  	 	 refine {{ _trading_pair_listing_requests_ := 
               rejectTradingPairImpl_ ( #{pubkey} , _trading_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) ; { _ } }} .
+  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {} (* , rawreserve_flag : : up_to *) ) ; { _ } }} .
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	   refine {{ {value_gr} := int_value () (* ; { _ } *) }} .  	 	 	 
 (*    refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -482,7 +482,7 @@ Definition approveXchgPairImpl ( pubkey :  ( uint256 ) )
  	 	 refine {{ new 'req_info : ( XchgPairListingRequestLRecord ) @ "req_info" := 
                           (!{opt_req_info}) -> get_default () ; { _ } }} . 
  	 	 refine {{ new 'pair_data : ( XchgPairClassTypes.DXchgPairLRecord ) @ "pair_data" :=  
-               	 	 [$ tvm_address () ⇒ { DXchgPair_ι_flex_addr_ } ; 
+               	 	 [$ tvm_myaddr () ⇒ { DXchgPair_ι_flex_addr_ } ; 
               ( (!{req_info}) ↑  XchgPairListingRequest.tip3_major_root ) ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
               ( (!{req_info}) ↑  XchgPairListingRequest.tip3_minor_root ) ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
                0 ⇒ { DXchgPair_ι_min_amount_ } ; 
@@ -674,7 +674,7 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
                (#{pubkey}) ⇒ { DWrapper_ι_root_public_key_ } ; 
                {} ⇒ { DWrapper_ι_total_granted_ } ; 
                {} ⇒ { DWrapper_ι_internal_wallet_code_ } ; 
-              ( ( tvm_address () ) -> set () )  ⇒ { DWrapper_ι_owner_address_ } ; 
+              ( ( tvm_myaddr () ) -> set () )  ⇒ { DWrapper_ι_owner_address_ } ; 
                ( (#{listing_cfg}) ↑ ListingConfig.wrapper_keep_balance ) ⇒ { DWrapper_ι_start_balance_ } ; 
                {} ⇒ { DWrapper_ι_external_wallet_ }  
                $] ; { _ } }} . 
@@ -763,7 +763,7 @@ Definition rejectWrapperImpl
  refine {{ require_ ( ~ ( {} (* _xchg_pair_listing_requests_.contains({pubkey}) *) ) ,  error_code::xchg_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
 (*  refine {{ xchg_pair_listing_requests_.set_at ( {pubkey} , { int_sender ( ) , int_value () - listing_cfg_ . register_return_value , tip3_major_root , tip3_minor_root , min_amount , notify_addr } ) ; { _ } }} . *)
  	 	 refine {{ new 'pair_data : ( XchgPairClassTypes.DXchgPairLRecord ) @ "pair_data" :=  
-               	 	 [$  ( tvm_address () ) ⇒ { DXchgPair_ι_flex_addr_ } ; 
+               	 	 [$  ( tvm_myaddr () ) ⇒ { DXchgPair_ι_flex_addr_ } ; 
                       (#{tip3_major_root}) ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
                       (#{tip3_minor_root}) ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
                       0 ⇒ { DXchgPair_ι_min_amount_ } ; 
@@ -788,7 +788,7 @@ Definition rejectWrapperImpl
  	 	 refine {{ _xchg_pair_listing_requests_ := !{xchg_pair_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .  
+  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .  
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ !{ xchg_pair } }} . 
  Defined . 
@@ -799,7 +799,7 @@ Definition rejectXchgPair ( pubkey : ( uint256 ) ) : UExpression XBool true .
           rejectXchgPairImpl_ ( #{pubkey} , _xchg_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
  Defined . 
@@ -816,10 +816,10 @@ Definition registerWrapper ( pubkey :  ( uint256 ) ) ( tip3cfg :  ( Tip3ConfigLR
         _workchain_id_ ⇒ { DWrapper_ι_workchain_id_ } ;
           (#{pubkey}) ⇒ { DWrapper_ι_root_public_key_ } ; 
 (* (#{pubkey}) ⇒ { DWrapper_ι_root_pubkey_ } ;
- ( tvm_address () ) ⇒ { DWrapper_ι_root_owner_ } ;*)
+ ( tvm_myaddr () ) ⇒ { DWrapper_ι_root_owner_ } ;*)
         {} ⇒ { DWrapper_ι_total_granted_ } ; 
         {} ⇒ { DWrapper_ι_internal_wallet_code_ } ; 
-       ( (tvm_address ()) -> set() ) ⇒ { DWrapper_ι_owner_address_ } ;
+       ( (tvm_myaddr ()) -> set() ) ⇒ { DWrapper_ι_owner_address_ } ;
        (_listing_cfg_ ↑ ListingConfig.wrapper_keep_balance) ⇒ { DWrapper_ι_start_balance_ } ; 
         {} ⇒ { DWrapper_ι_external_wallet_ }  
       $] ; { _ } }} . 
@@ -845,7 +845,7 @@ Definition registerWrapper ( pubkey :  ( uint256 ) ) ( tip3cfg :  ( Tip3ConfigLR
  	 	 refine {{ _wrapper_listing_requests_ := !{new_wrapper_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 refine {{new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
+  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {}(* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ !{ wrapper_addr } }} . 
 Defined . 
@@ -858,7 +858,7 @@ Defined .
             rejectWrapperImpl_ ( #{pubkey} , _wrapper_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {}(* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
 Defined . 
@@ -1042,13 +1042,13 @@ Defined .
 
  Definition getSellTradingPair ( tip3_root :  ( XAddress ) ) : UExpression XAddress false . 
  	 	 refine {{ new 'std_addr : ( uint256 ) @ "std_addr" := 
-          second (  prepare_trading_pair_ ( ( tvm_address () ) , #{tip3_root} , _pair_code_ -> get_default () ) ) ; { _ } }} . 
+          second (  prepare_trading_pair_ ( ( tvm_myaddr () ) , #{tip3_root} , _pair_code_ -> get_default () ) ) ; { _ } }} . 
  	 	 refine {{ return_ {} (* Address :: make_std ( workchain_id_ , !{ std_addr } ) *) }} . 
  Defined . 
  
  Definition getXchgTradingPair ( tip3_major_root :  ( XAddress ) ) 
 ( tip3_minor_root :  ( XAddress ) ) : UExpression XAddress false . 
- 	 	 refine {{ new 'myaddr : ( XAddress ) @ "myaddr" := ( tvm_address () ) ; { _ } }} . 
+ 	 	 refine {{ new 'myaddr : ( XAddress ) @ "myaddr" := ( tvm_myaddr () ) ; { _ } }} . 
  	 	 refine {{ new 'pair_data : ( XchgPairClassTypes.DXchgPairLRecord ) @ "pair_data" :=  
                	 	 [$           !{ myaddr } ⇒ { DXchgPair_ι_flex_addr_ } ; 
                         (#{tip3_major_root}) ⇒ { DXchgPair_ι_tip3_major_root_ } ; 

@@ -49,7 +49,6 @@ Module Export SpecModuleForFuncNotations := Spec xt sm.
 
 Import xt.
 
-Fail Check OutgoingMessage_default.
 
 Import UrsusNotations.
 Local Open Scope ucpp_scope.

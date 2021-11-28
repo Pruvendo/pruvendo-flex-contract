@@ -180,7 +180,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  Definition Flex_Ф_getSellTradingPair ( tip3_root : XAddress ) : UExpression XAddress false . 
          refine {{ tip3_root : ( XAddress ) @ "tip3_root" ; { _ } }} . 
          refine {{ (* new *) myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
-         refine {{ { myaddr } := (* tvm_myaddr *) tvm_address () ; { _ } }} . 
+         refine {{ { myaddr } := (* tvm_myaddr *) tvm_myaddr () ; { _ } }} . 
          refine {{ (* new *) pair_data : ( TradingPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_root_ = tip3_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
  (*         refine {{ (* new *) std_addr : ( StateInitStateLRecord * uint256 ) @ "std_addr" ; { _ } }} . 
@@ -196,7 +196,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
          refine {{ tip3_major_root : ( XAddress ) @ "tip3_major_root" ; { _ } }} . 
          refine {{ tip3_minor_root : ( XAddress ) @ "tip3_minor_root" ; { _ } }} . 
          refine {{ (* new *) myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
-         refine {{ { myaddr } := (* tvm_myaddr *) tvm_address () ; { _ } }} . 
+         refine {{ { myaddr } := (* tvm_myaddr *) tvm_myaddr () ; { _ } }} . 
          refine {{ (* new *) pair_data : ( XchgPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_major_root_ = tip3_major_root , . tip3_minor_root_ = tip3_minor_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
          refine {{ (* new *) std_addr : ( uint (* auto *) ) @ "std_addr" ; { _ } }} . 

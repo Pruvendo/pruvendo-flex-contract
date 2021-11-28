@@ -209,7 +209,7 @@ Definition process_queue (sell_idx : uint)
  	 	 	     refine {{ ({sell} ↑ OrderInfoXchg.account) -= !{half_process_queue} ; { _ } }} . 
  	 	 	     refine {{ ({buy} ↑ OrderInfoXchg.account) -= !{half_process_queue} ; { _ } }} . 
 
-(*      	 	 	 refine {{ IPriceXchgPtr ( address { tvm_address ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
+(*      	 	 	 refine {{ IPriceXchgPtr ( address { tvm_myaddr ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
      	 	 	 refine {{ if ( (#{sell_idx}) == (!{sell_idx_cur}) ) then { { _:UEf } } ; { _ } }} . 
      	 	 	 	 refine {{ {sell} := !{sell} (* dealer.ret_ := [ 1 (* ec::deals_limit *) , 
                     ((!{sell}) ↑ OrderInfoXchg.original_amount) - 
@@ -469,10 +469,10 @@ Notation " 'int_value' '(' ')' " :=
  ( int_value__ ) 
  (in custom URValue at level 0 ) : ursus_scope .
 
-Parameter tvm_rawreserve : UExpression OrderRetLRecord false .
+(* Parameter tvm_rawreserve : UExpression OrderRetLRecord false .
 Notation " 'tvm_rawreserve' '(' ')' " := 
  ( tvm_rawreserve ) 
- (in custom ULValue at level 0 ) : ursus_scope .
+ (in custom ULValue at level 0 ) : ursus_scope . *)
 
 Definition on_ord_fail (ec: uint) (wallet_in : raw_address (* ITONTokenWalletPtrLRecord *)) (amount: uint128) : UExpression OrderRetLRecord false . 
 (*  	 	 refine {{ wallet_in(Grams(tons_cfg_.return_ownership.get())).returnOwnership(amount) ; { _ } }} .  *)
