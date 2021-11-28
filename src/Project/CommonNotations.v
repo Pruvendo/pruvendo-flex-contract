@@ -20,7 +20,8 @@ Notation UEf := (UExpression _ false) (only parsing).
 Notation UEt := (UExpression _ true) (only parsing).
 
 Notation " 'public' x " := ( x ) (at level 12, left associativity, only parsing) : ursus_scope .
- 
+Notation " 'private' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
+
 Arguments urgenerate_field {_} {_} {_} _ {_} & _.
 
 Notation " |{ e }| " := e (in custom URValue at level 0, e custom ULValue , only parsing ) : ursus_scope.

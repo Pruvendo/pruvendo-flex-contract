@@ -16,6 +16,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import Project.CommonConstSig.
 Require Import Project.CommonTypes.
 Require Import Project.CommonNotations.
+
 (*Fully qualified name are mandatory in multi-contract environment*)
 Require Import Price.Ledger.
 Require Import Price.Functions.FuncSig.
@@ -44,19 +45,7 @@ Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
-
-(*move somewhere*)
-Local Notation UE := (UExpression _ _).
-Local Notation UEf := (UExpression _ false).
-Local Notation UEt := (UExpression _ true).
-
-Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
- 
-Arguments urgenerate_field {_} {_} {_} _ & .
-
-Notation " |{ e }| " := e (in custom URValue at level 0, 
-                           e custom ULValue ,  only parsing ) : ursus_scope.
-
+(*MOVE SOMEWHERE*)
 Existing Instance LedgerPruvendoRecord.
 
 (***************************************************************************)						   

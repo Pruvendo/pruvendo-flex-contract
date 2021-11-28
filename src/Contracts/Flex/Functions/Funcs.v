@@ -14,34 +14,28 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
-(*Fully qualified name are mandatory in multi-contract environment*)
-Require Import Contracts.Flex.Ledger.
-Require Import Contracts.Flex.ClassTypesNotations.
-Require Import Contracts.Flex.ClassTypes.
-Require Import Contracts.Flex.Functions.FuncSig.
-Require Import Contracts.Flex.Functions.FuncNotations.
-Require Contracts.Flex.Interface.
-
 Require Import Project.CommonTypes.
 
+(*Fully qualified name are mandatory in multi-contract environment*)
+Require Import Flex.Ledger.
+Require Import Flex.ClassTypesNotations.
+Require Import Flex.ClassTypes.
+Require Import Flex.Functions.FuncSig.
+Require Import Flex.Functions.FuncNotations.
+
+(* Require Flex.Interface. *)
 
 Require Import TradingPair.ClassTypes.
-Require  Import XchgPair.ClassTypes.
-Require  Import Wrapper.ClassTypes.
-Require  Import TONTokenWallet.ClassTypes.
+Require Import XchgPair.ClassTypes.
+Require Import Wrapper.ClassTypes.
+Require Import TONTokenWallet.ClassTypes.
 
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
 
 
-Module Type Has_Internal.
-
-Parameter Internal: bool .
-
-End Has_Internal.
-
-Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModule) .
-Import ha.
+Module Funcs (co : CompilerOptions)(dc : ConstsTypesSig XTypesModule StateMonadModule) .
+Import co.
 
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
@@ -53,8 +47,6 @@ Module TONTokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes XT
 (* Export SpecModuleForFuncNotations(* ForFuncs *).tvmNotationsModule.
  *)
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
- 
-
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -64,20 +56,7 @@ Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
-Local Notation UE := (UExpression _ _)(only parsing).
-Local Notation UEf := (UExpression _ false)(only parsing).
-Local Notation UEt := (UExpression _ true)(only parsing).
 Existing Instance LedgerPruvendoRecord.
-
-
-Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
-Notation " 'private' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
- 
-Arguments urgenerate_field {_} {_} {_} _ & .
-
-Notation " |{ e }| " := e (in custom URValue at level 0, 
-                           e custom ULValue ,  only parsing ) : ursus_scope.
-About ListingConfigLRecord.
 
 Definition constructor ( deployer_pubkey :  ( uint256 ) ) ( ownership_description :  ( XString ) ) ( owner_address :  ( XMaybe XAddress ) ) ( tons_cfg :  ( TonsConfigLRecord ) ) ( deals_limit :  ( uint8 ) ) ( listing_cfg :  ( ListingConfigLRecord ) ) : UExpression PhantomType true . 
  	 	 refine {{ _deployer_pubkey_ := #{ deployer_pubkey } ; { _ } }} . 

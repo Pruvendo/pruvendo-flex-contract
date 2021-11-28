@@ -42,8 +42,8 @@ Parameter TIP3_ENABLE_EXTERNAL : bool .
 
 End Has_Internal.
 
-Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModule) . 
-Import ha.
+Module Funcs (co : CompilerOptions)(dc : ConstsTypesSig XTypesModule StateMonadModule) . 
+Import co.
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
 Module Export TradingPairClassTypesNotations := Contracts.TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule LedgerModuleForFuncSig. 

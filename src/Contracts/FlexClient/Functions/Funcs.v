@@ -1,6 +1,5 @@
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
-From elpi Require Import elpi.
 Require Import Setoid.
 Require Import ZArith.
 Require Import Coq.Program.Equality.
@@ -15,35 +14,26 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
+Require Import Project.CommonTypes.
 
 Require Import FlexClient.Ledger.
 Require Import FlexClient.Functions.FuncSig.
 Require Import FlexClient.Functions.FuncNotations.
 Require Import FlexClient.Interface.
 
-Require  Import TradingPair.ClassTypes.
-Require  Import PriceXchg.ClassTypes.
-Require  Import XchgPair.ClassTypes.
-Require  Import Price.ClassTypes.
-Require  Import Wrapper.ClassTypes.
-Require  Import TONTokenWallet.ClassTypes.
+Require Import TradingPair.ClassTypes.
+Require Import PriceXchg.ClassTypes.
+Require Import XchgPair.ClassTypes.
+Require Import Price.ClassTypes.
+Require Import Wrapper.ClassTypes.
+Require Import TONTokenWallet.ClassTypes.
 
 (*********************************************)
 Require Import TradingPair.ClassTypesNotations.
 (*********************************************)
 
-Require Import Project.CommonTypes.
-
-
-Module Type Has_Internal.
-
-Parameter Internal : bool .
-Parameter TIP3_ENABLE_EXTERNAL : bool .
-
-End Has_Internal.
-
-Module Funcs (ha : Has_Internal)(dc : ConstsTypesSig XTypesModule StateMonadModule) . 
-Import ha.
+Module Funcs (co : CompilerOptions)(dc : ConstsTypesSig XTypesModule StateMonadModule) . 
+Import co.
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
 Module Export TradingPairClassTypesNotations := Contracts.TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule LedgerModuleForFuncSig. 
@@ -65,21 +55,9 @@ Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 Local Open Scope ucpp_scope.
 
-Local Notation UE := (UExpression _ _).
-Local Notation UEf := (UExpression _ false).
-Local Notation UEt := (UExpression _ true).
-
-Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
- 
-Arguments urgenerate_field {_} {_} {_} _ & {_} _.
-
-Notation " |{ e }| " := e (in custom URValue at level 0, 
-                           e custom ULValue ,  only parsing ) : ursus_scope.
-
-Locate "_ && _".
-
-
+(*move somewhere*)
 Existing Instance LedgerPruvendoRecord.
+
 (* inline cell prepare_persistent_data(persistent_data_header_t<IContract, ReplayAttackProtection> persistent_data_header,
                                     DContract base) {
   using namespace schema;
