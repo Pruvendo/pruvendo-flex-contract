@@ -70,7 +70,7 @@ Parameter transfer : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) 
  Parameter check_internal_owner : ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression XUInteger128 true . 
  Parameter check_external_owner : UExpression XUInteger128 true . 
  Parameter check_owner : ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression XUInteger128 false . 
- Parameter prepare_root_state_init_and_addr : ( ( XCell ) ) -> ( ( DRootTokenContractLRecord ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false . 
+(*  Parameter prepare_root_state_init_and_addr : ( ( XCell ) ) -> ( ( DRootTokenContractLRecord ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false .  *)
 
 
 End SpecSig.
