@@ -71,7 +71,7 @@ Definition filter_lend_ownerhip_map : UExpression ( (mapping addr_std_fixedLReco
     refine {{ return_ [ !{rv} , !{lend_balance} ] }} .
 Defined .
  
-Definition filter_lend_ownerhip_map_right : URValue ( (XHMap addr_std_fixedLRecord lend_recordLRecord) # uint128 ) false := 
+Definition filter_lend_ownerhip_map_right : URValue ( (mapping addr_std_fixedLRecord lend_recordLRecord) # uint128 ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) filter_lend_ownerhip_map ) . 
  
 Notation " 'filter_lend_ownerhip_map_' '(' ')' " := ( filter_lend_ownerhip_map_right ) 
