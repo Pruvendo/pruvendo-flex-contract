@@ -74,7 +74,7 @@ Defined.
 Notation " '.onDeploy' ( x , y , z ) " := (IonDeploy_right x y z)
 (in custom URValue at level 0 , x custom URValue at level 0 , y custom URValue at level 0 , z custom URValue at level 0 ) : ursus_scope .
  
-Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IXchgPair a1.
+Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue IXchgPair a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IXchgPair)): URValue _ _).
  rewrite right_or_false in X.
  refine X.

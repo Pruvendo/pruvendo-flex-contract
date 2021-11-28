@@ -4,11 +4,15 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
+
 Require Import Price.ClassTypes.
+Require Import Price.Interface.
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
+
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
 Module Export ClassTypesModule := ClassTypes xt sm.
+Module Export InterfaceModule := PublicInterface xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -167,6 +171,87 @@ Notation " a '↑' 'process_ret.buys_' " := ( process_ret_buys__right a) (in cus
 Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__left a) (in custom ULValue at level 0) : ursus_scope. 
 Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__right a) (in custom URValue at level 0) : ursus_scope. 
  
+
+(*interface*)
+
+(* Inductive IPriceP :=
+| IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> IPriceP
+| IbuyTip3 : XUInteger128 -> XAddress -> XUInteger32 -> IPriceP
+| IprocessQueue : IPriceP
+| IcancelSell : IPriceP
+| IcancelBuy : IPriceP
+| _Icreate : InitialState -> IPriceP.
+ *)
+
+Definition  IprocessQueue_right : URValue IPrice false.
+ refine (#IprocessQueue).
+Defined.
+
+Notation " '.processQueue' '()' " := (IprocessQueue_right ) 
+(in custom URValue at level 0 ) : ursus_scope .
+
+Definition  IcancelSell_right : URValue IPrice false.
+ refine (#IcancelSell).
+Defined.
+
+Notation " '.cancelSell' '()' " := (IcancelSell_right ) 
+(in custom URValue at level 0 ) : ursus_scope .
+
+Definition  IcancelBuy_right : URValue IPrice false.
+ refine (#IcancelBuy).
+Defined.
+
+Notation " '.cancelBuy' '()' " := (IcancelBuy_right ) 
+(in custom URValue at level 0 ) : ursus_scope .
+
+Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IPrice a1.
+ pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IPrice)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '._create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+ 
+(* | IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> IPriceP *)
+
+Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+                                                 (y : URValue XUInteger128 a2) 
+                                                 (z : URValue XUInteger32 a3)
+                                                 (t : URValue XUInteger256 a4)
+                                                 (u : URValue XAddress a5)
+                                                 (v : URValue XCell a6) : URValue IPrice (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  
+                                urvalue_bind v (fun v' =>  #(IonTip3LendOwnership x' y' z' t' u' v' : IPrice))))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onTip3LendOwnership' ( x , y , z , t , u , v ) " := (IonTip3LendOwnership_right x y z t u v) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
+
+
+(*| IbuyTip3 : XUInteger128 -> XAddress -> XUInteger32 -> IPriceP*)
+Definition IbuyTip3_right { a1 a2 a3 } (x : URValue XUInteger128 a1 ) 
+                                       (y : URValue XAddress a2) 
+                                       (z : URValue XUInteger32 a3)
+                                        : URValue IPrice (orb a1 (orb a2 a3)).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  #(IbuyTip3 x' y' z'  : IPrice)))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.buyTip3' ( x , y , z  ) " := (IbuyTip3_right x y z) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0) : ursus_scope .
+
 End ClassTypesNotations.
 
 

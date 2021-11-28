@@ -6,12 +6,14 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import Project.CommonNotations.
 
 Require Import PriceXchg.ClassTypes.
-Require Import PriceXchg.Ledger.
+Require Import PriceXchg.Interface.
 
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
+
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
-Module Export ClassTypesModule := PriceXchg.ClassTypes.ClassTypes xt sm.
+Module Export ClassTypesModule := (* PriceXchg.ClassTypes. *)ClassTypes xt sm.
+Module Export InterfaceModule := (* PriceXchg.ClassTypes. *)PublicInterface xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -425,8 +427,6 @@ Definition DPriceXchg_ι_sells__left (x: ULValue DPriceXchgLRecord): ULValue ( X
 Notation " a '↑' 'DPriceXchg.sells_' " := ( DPriceXchg_ι_sells__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DPriceXchg.sells_' " := ( DPriceXchg_ι_sells__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-
-
 Definition DPriceXchg_ι_buys__right {b} (x: URValue DPriceXchgLRecord b): URValue ( XQueue OrderInfoXchgLRecord ) b :=
     || {x} ^^ {DPriceXchg_ι_buys_} || : _ .
 
@@ -435,6 +435,69 @@ Definition DPriceXchg_ι_buys__left (x: ULValue DPriceXchgLRecord): ULValue ( XQ
 
 Notation " a '↑' 'DPriceXchg.buys_' " := ( DPriceXchg_ι_buys__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DPriceXchg.buys_' " := ( DPriceXchg_ι_buys__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+(*interface*)
+(* Inductive IPriceXchgP :=
+| IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> IPriceXchgP
+| IprocessQueue : IPriceXchgP
+| IcancelSell : IPriceXchgP
+| IcancelBuy : IPriceXchgP
+| _Icreate : InitialState -> IPriceXchgP.
+ *)
+
+Definition  IprocessQueue_right : URValue IPriceXchg false.
+ refine (#IprocessQueue).
+Defined.
+
+Notation " '.processQueue' '()' " := (IprocessQueue_right ) 
+(in custom URValue at level 0 ) : ursus_scope .
+
+Definition  IcancelSell_right : URValue IPriceXchg false.
+ refine (#IcancelSell).
+Defined.
+
+Notation " '.cancelSell' '()' " := (IcancelSell_right ) 
+(in custom URValue at level 0 ) : ursus_scope .
+
+Definition  IcancelBuy_right : URValue IPriceXchg false.
+ refine (#IcancelBuy).
+Defined.
+
+Notation " '.cancelBuy' '()' " := (IcancelBuy_right ) 
+(in custom URValue at level 0 ) : ursus_scope .
+
+Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IPriceXchg a1.
+ pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IPriceXchg)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '._create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+ 
+(* IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> IPriceXchgP *)
+
+Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+                                                 (y : URValue XUInteger128 a2) 
+                                                 (z : URValue XUInteger32 a3)
+                                                 (t : URValue XUInteger256 a4)
+                                                 (u : URValue XAddress a5)
+                                                 (v : URValue XCell a6) : URValue IPriceXchg (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  
+                                urvalue_bind v (fun v' =>  #(IonTip3LendOwnership x' y' z' t' u' v' : IPriceXchg))))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onTip3LendOwnership' ( x , y , z , t , u , v ) " := (IonTip3LendOwnership_right x y z t u v) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
+
 
 End ClassTypesNotations.
 

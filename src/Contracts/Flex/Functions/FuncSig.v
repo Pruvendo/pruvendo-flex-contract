@@ -25,8 +25,6 @@ Notation xchg_pairs_map := ( mapping uint256 (uint256 # XchgPairListingRequestLR
 
 Module Type SpecSig.
 
-
-
 Parameter constructor : uint256 -> String -> optional raw_address -> TonsConfigLRecord -> uint8 -> 
                         ListingConfigLRecord -> UExpression PhantomType true . 
 Parameter setSpecificCode : uint8 -> TvmCell -> UExpression PhantomType false . 

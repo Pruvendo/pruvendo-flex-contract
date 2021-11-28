@@ -4,13 +4,15 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
-Require Import FlexClient.ClassTypes.
-Require Import FlexClient.Ledger.
 
+Require Import FlexClient.ClassTypes.
+Require Import FlexClient.Interface.
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
+
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
-Module Export ClassTypesModule := Contracts.FlexClient.ClassTypes.ClassTypes xt sm.
+Module Export ClassTypesModule := ClassTypes xt sm.
+Module Export InterfaceModule := PublicInterface xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -95,6 +97,77 @@ Definition DFlexClient_ι_flex_wrapper_code__left (x: ULValue DFlexClientLRecord
     
 Notation " a '↑' 'DFlexClient.flex_wrapper_code_' " := ( DFlexClient_ι_flex_wrapper_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlexClient.flex_wrapper_code_' " := ( DFlexClient_ι_flex_wrapper_code__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+(*interface*)
+(* Inductive IFlexClientP :=
+| Iconstructor : XUInteger256 -> XCell -> XCell -> IFlexClientP
+| IsetFlexCfg   : TonsConfigLRecord -> XAddress -> IFlexClientP
+| IsetExtWalletCode : XCell -> IFlexClientP
+| IsetFlexWalletCode : XCell -> IFlexClientP
+| IsetFlexWrapperCode : XCell -> IFlexClientP
+| _Icreate : InitialState -> IFlexClientP.
+ *)
+
+Definition Iconstructor_right { a1 a2 a3 } (x : URValue XUInteger256 a1 ) 
+                                       (y : URValue XCell a2) 
+                                       (z : URValue XCell a3)
+                                        : URValue IFlexClient (orb a1 (orb a2 a3)).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  #(Iconstructor x' y' z'  : IFlexClient)))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.contructor' ( x , y , z  ) " := (Iconstructor_right x y z) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0) : ursus_scope .
+
+Definition IsetFlexCfg_right { a1 a2 } (x : URValue TonsConfigLRecord a1 ) 
+                                       (y : URValue XAddress a2) 
+                                        : URValue IFlexClient (orb a1 a2).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' => #(IsetFlexCfg x' y'  : IFlexClient))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.setFlexCfg' ( x , y  ) " := (IsetFlexCfg_right x y) 
+(in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope .
+
+
+Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IFlexClient a1.
+ pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IFlexClient)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '._create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+Definition IsetFlexWrapperCode_right { a1 }  ( x : URValue XCell a1 ) : URValue IFlexClient a1.
+ pose proof (urvalue_bind x (fun x' => #(IsetFlexWrapperCode x' : IFlexClient)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.setFlexWrapperCode' ( x ) " := (IsetFlexWrapperCode_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+Definition IsetFlexWalletCode_right { a1 }  ( x : URValue XCell a1 ) : URValue IFlexClient a1.
+ pose proof (urvalue_bind x (fun x' => #(IsetFlexWalletCode x' : IFlexClient)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.setFlexWalletCode' ( x ) " := (IsetFlexWalletCode_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+Definition IsetExtWalletCode_right { a1 }  ( x : URValue XCell a1 ) : URValue IFlexClient a1.
+ pose proof (urvalue_bind x (fun x' => #(IsetExtWalletCode x' : IFlexClient)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.setExtWalletCode' ( x ) " := (IsetExtWalletCode_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
 
 End ClassTypesNotations.
 

@@ -27,7 +27,6 @@ Inductive IRootTokenContractP :=
 | Igrant : XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
 | Imint : XUInteger128 -> IRootTokenContractP
 | IrequestTotalGranted : IRootTokenContractP
-
 | _Icreate : InitialState -> IRootTokenContractP.
 
 End InterfaceDef.

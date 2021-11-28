@@ -7,7 +7,6 @@ Require Import Project.CommonNotations.
 Require Import Project.CommonTypes.
 
 Require Import TONTokenWallet.ClassTypes.
-(* Require Import TONTokenWallet.Ledger. *)
 Require Import TONTokenWallet.Interface.
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).

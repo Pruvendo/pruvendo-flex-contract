@@ -4,12 +4,16 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
-Require Import Contracts.Flex.ClassTypes.
+
+Require Import Flex.ClassTypes.
+Require Import Flex.Interface.
 
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
+
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
-Module Export ClassTypesModule := Contracts.Flex.ClassTypes.ClassTypes xt sm.
+Module Export ClassTypesModule := ClassTypes xt sm.
+Module Export InterfaceModule := PublicInterface xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -562,6 +566,419 @@ Definition DFlex_ι_xchg_pair_listing_requests__left (x: ULValue DFlexLRecord): 
     
 Notation " a '↑' 'DFlex.xchg_pair_listing_requests_' " := ( DFlex_ι_xchg_pair_listing_requests__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.xchg_pair_listing_requests_' " := ( DFlex_ι_xchg_pair_listing_requests__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+(* Inductive IFlexP :=
+| Iconstructor : XUInteger256 -> XString -> XMaybe XAddress -> TonsConfigLRecord -> 
+                                          XUInteger8 -> ListingConfigLRecord -> IFlexP
+| IsetSpecificCode : XUInteger8 -> XCell -> IFlexP
+| Itransfer : XAddress -> XUInteger128 -> IFlexP
+| IregisterTradingPair : XUInteger256 -> XAddress -> XUInteger128 -> XAddress -> IFlexP
+| IregisterXchgPair : XUInteger256 -> XAddress -> XAddress -> XUInteger128 -> XAddress -> IFlexP
+| IregisterWrapper : XUInteger256 -> Tip3ConfigLRecord -> IFlexP
+| IapproveTradingPair : XUInteger256 -> IFlexP
+| IrejectTradingPair : XUInteger256 -> IFlexP
+| IapproveXchgPair : XUInteger256 -> IFlexP
+| IrejectXchgPair : XUInteger256 -> IFlexP
+| IapproveWrapper : XUInteger256 -> IFlexP
+| IrejectWrapper : XUInteger256 -> IFlexP 
+
+| _Icreate : InitialStateLRecord -> IFlexP  *)
+
+(* Iconstructor : XUInteger256 -> XString -> XMaybe XAddress -> TonsConfigLRecord -> 
+                                          XUInteger8 -> ListingConfigLRecord -> IFlexP *)
+Definition Iconstructor_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XUInteger256 a1 ) 
+                                                 (y : URValue XString a2) 
+                                                 (z : URValue (XMaybe XAddress) a3)
+                                                 (t : URValue TonsConfigLRecord a4)
+                                                 (u : URValue XUInteger8 a5)
+                                                 (v : URValue ListingConfigLRecord a6) : URValue IFlex (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  
+                                urvalue_bind v (fun v' =>  #(Iconstructor x' y' z' t' u' v' : IFlex))))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.constructor' ( x , y , z , t , u , v ) " := (Iconstructor_right x y z t u v) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
+
+(* IsetSpecificCode : XUInteger8 -> XCell -> IFlexP *)
+Definition IsetSpecificCode_right { a1 a2 } (x : URValue XUInteger8 a1 ) 
+                                            (y : URValue XCell a2) 
+                                        : URValue IFlex (orb a1 a2).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' => #(IsetSpecificCode x' y'  : IFlex))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.setSpecificCode' ( x , y  ) " := (IsetSpecificCode_right x y) 
+(in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope .
+
+(* Itransfer : XAddress -> XUInteger128 -> IFlexP *)
+Definition Itransfer_right { a1 a2 } (x : URValue XAddress a1 ) 
+                                     (y : URValue XUInteger128 a2) 
+                                        : URValue IFlex (orb a1 a2).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' => #(Itransfer x' y'  : IFlex))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.transfer' ( x , y  ) " := (Itransfer_right x y) 
+(in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope .
+
+(* | IregisterTradingPair : XUInteger256 -> XAddress -> XUInteger128 -> XAddress -> IFlexP *)
+Definition IregisterTradingPair_right { a1 a2 a3 a4 }  (x : URValue XUInteger256 a1 ) 
+                                                 (y : URValue XAddress a2) 
+                                                 (z : URValue XUInteger128 a3)
+                                                 (t : URValue XAddress a4)
+                                                  : URValue IFlex (orb a1 (orb a2 (orb a3 a4))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  #(IregisterTradingPair x' y' z' t'  : IFlex))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.registerTradingPair' ( x , y , z , t ) " := (IregisterTradingPair_right x y z t) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 ) : ursus_scope .
+
+(* IregisterXchgPair : XUInteger256 -> XAddress -> XAddress -> XUInteger128 -> XAddress -> IFlexP *)
+Definition IregisterXchgPair_right { a1 a2 a3 a4 a5 }  (x : URValue XUInteger256 a1 ) 
+                                                 (y : URValue XAddress a2) 
+                                                 (z : URValue XAddress a3)
+                                                 (t : URValue XUInteger128 a4)
+                                                 (u : URValue XAddress a5) : 
+                                                 URValue IFlex (orb a1 (orb a2 (orb a3 (orb a4 a5)))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  #(IregisterXchgPair x' y' z' t' u'  : IFlex)))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.registerXchgPair' ( x , y , z , t , u ) " := (IregisterXchgPair_right x y z t u) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0 ) : ursus_scope .
+
+(* | IregisterWrapper : XUInteger256 -> Tip3ConfigLRecord -> IFlexP *)
+Definition IregisterWrapper_right { a1 a2 }  (x : URValue XUInteger256 a1 ) 
+                                             (y : URValue Tip3ConfigLRecord a2)  : 
+                                                 URValue IFlex (orb a1 a2).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' => #(IregisterWrapper x' y'  : IFlex))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.registerWrapper' ( x , y  ) " := (IregisterWrapper_right x y ) 
+(in custom URValue at level 0 , x custom URValue at level 0,y custom URValue at level 0  ) : ursus_scope .
+
+
+(* | IapproveTradingPair : XUInteger256 -> IFlexP *)
+
+Definition IapproveTradingPair_right { a1 }  ( x : URValue XUInteger256 a1 ) : URValue IFlex a1.
+ pose proof (urvalue_bind x (fun x' => #(IapproveTradingPair x' : IFlex)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.approveTradingPair' ( x ) " := (IapproveTradingPair_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+
+(* | IrejectTradingPair : XUInteger256 -> IFlexP *)
+
+Definition IrejectTradingPair_right { a1 }  ( x : URValue XUInteger256 a1 ) : URValue IFlex a1.
+ pose proof (urvalue_bind x (fun x' => #(IrejectTradingPair x' : IFlex)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.rejectTradingPair' ( x ) " := (IrejectTradingPair_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+(* | IapproveXchgPair : XUInteger256 -> IFlexP *)
+
+Definition IapproveXchgPair_right { a1 }  ( x : URValue XUInteger256 a1 ) : URValue IFlex a1.
+ pose proof (urvalue_bind x (fun x' => #(IapproveXchgPair x' : IFlex)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.approveXchgPair' ( x ) " := (IapproveXchgPair_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+(* | IrejectXchgPair : XUInteger256 -> IFlexP *)
+
+Definition IrejectXchgPair_right { a1 }  ( x : URValue XUInteger256 a1 ) : URValue IFlex a1.
+ pose proof (urvalue_bind x (fun x' => #(IrejectXchgPair x' : IFlex)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.rejectXchgPair' ( x ) " := (IrejectXchgPair_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+
+(* | IapproveWrapper : XUInteger256 -> IFlexP *)
+
+Definition IapproveWrapper_right { a1 }  ( x : URValue XUInteger256 a1 ) : URValue IFlex a1.
+ pose proof (urvalue_bind x (fun x' => #(IapproveWrapper x' : IFlex)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.approveWrapper' ( x ) " := (IapproveWrapper_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+
+(* | IrejectWrapper : XUInteger256 -> IFlexP  *)
+
+Definition IrejectWrapper_right { a1 }  ( x : URValue XUInteger256 a1 ) : URValue IFlex a1.
+ pose proof (urvalue_bind x (fun x' => #(IrejectWrapper x' : IFlex)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.rejectWrapper' ( x ) " := (IrejectWrapper_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+(* | _Icreate : InitialStateLRecord -> IFlexP *)
+Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IFlex a1.
+ pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IFlex)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '._create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+
+(*  | IonWrapperApproved : XUInteger256 -> XAddress -> IListingAnswerP *)
+
+Definition IonWrapperApproved_right { a1 a2 } (x : URValue XUInteger256 a1 ) 
+                                  (y : URValue XAddress a2) 
+                                    : URValue IListingAnswer (orb a1 a2).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>  #(IonWrapperApproved x' y' : IListingAnswer))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onWrapperApproved' ( x , y ) " := (IonWrapperApproved_right x y) 
+(in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope . 
+
+
+(*  | IonWrapperRejected : XUInteger256 -> IListingAnswerP *)
+
+Definition IonWrapperRejected_right { a1 } (x : URValue XUInteger256 a1 ) 
+                                    : URValue IListingAnswer a1.
+ pose proof (urvalue_bind x (fun x' =>  #(IonWrapperRejected x' : IListingAnswer)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onWrapperRejected' ( x ) " := (IonWrapperRejected_right x ) 
+(in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope . 
+
+
+(*  | IonTradingPairApproved : XUInteger256 -> XAddress -> IListingAnswerP *)
+
+Definition IonTradingPairApproved_right { a1 a2 } (x : URValue XUInteger256 a1 ) 
+                                  (y : URValue XAddress a2) 
+                                    : URValue IListingAnswer (orb a1 a2).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>  #(IonTradingPairApproved x' y' : IListingAnswer))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onTradingPairApproved' ( x , y ) " := (IonTradingPairApproved_right x y) 
+(in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope . 
+
+
+(*  | IonTradingPairRejected : XUInteger256 -> IListingAnswerP *)
+
+Definition IonTradingPairRejected_right { a1 } (x : URValue XUInteger256 a1 ) 
+                                    : URValue IListingAnswer a1.
+ pose proof (urvalue_bind x (fun x' =>  #(IonTradingPairRejected x' : IListingAnswer)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onTradingPairRejected' ( x ) " := (IonTradingPairRejected_right x ) 
+(in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope . 
+
+(*  | IonXchgPairApproved : XUInteger256 -> XAddress -> IListingAnswerP *)
+
+Definition IonXchgPairApproved_right { a1 a2 } (x : URValue XUInteger256 a1 ) 
+                                  (y : URValue XAddress a2) 
+                                    : URValue IListingAnswer (orb a1 a2).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>  #(IonXchgPairApproved x' y' : IListingAnswer))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onXchgPairApproved' ( x , y ) " := (IonXchgPairApproved_right x y) 
+(in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope . 
+
+(*  | IonXchgPairRejected : XUInteger256 -> IListingAnswerP.  *)
+
+Definition IonXchgPairRejected_right { a1 }  ( x : URValue XUInteger256 a1 ) : URValue IListingAnswer a1.
+ pose proof (urvalue_bind x (fun x' => #(IonXchgPairRejected x' : IListingAnswer)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onXchgPairRejected' ( x ) " := (IonXchgPairRejected_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+(*Inductive IFlexNotifyP := *)
+(* | IonDealCompleted : XAddress -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+
+Definition IonDealCompleted_right { a1 a2 a3 } (x : URValue XAddress a1 ) 
+                                               (y : URValue XUInteger128 a2) 
+                                               (z : URValue XUInteger128 a3)
+                                                 : URValue IFlexNotify (orb a1 (orb a2 a3)).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  #(IonDealCompleted x' y' z'  : IFlexNotify)))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onDealCompleted' ( x , y , z  ) " := (IonDealCompleted_right x y z) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0) : ursus_scope .
+
+(* | IonXchgDealCompleted: XAddress -> XAddress ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+
+Definition IonXchgDealCompleted_right { a1 a2 a3 a4 a5 } (x : URValue XAddress a1 ) 
+                                                 (y : URValue XAddress a2) 
+                                                 (z : URValue XUInteger128 a3)
+                                                 (t : URValue XUInteger128 a4)
+                                                 (u : URValue XUInteger128 a5) : 
+                                                 URValue IFlexNotify (orb a1 (orb a2 (orb a3 (orb a4 a5)))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  #(IonXchgDealCompleted x' y' z' t' u' : IFlexNotify)))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onXchgDealCompleted' ( x , y , z , t , u  ) " := (IonXchgDealCompleted_right x y z t u) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0 ) : ursus_scope .
+
+
+(* | IonOrderAdded : XBool -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+
+Definition IonOrderAdded_right { a1 a2 a3 a4 a5 }  (x : URValue XBool a1 ) 
+                                                 (y : URValue XAddress a2) 
+                                                 (z : URValue XAddress a3)
+                                                 (t : URValue XUInteger128 a4)
+                                                 (u : URValue XUInteger128 a5) : 
+                                                 URValue IFlexNotify (orb a1 (orb a2 (orb a3 (orb a4 a5)))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  #(IonOrderAdded x' y' z' t' u' : IFlexNotify)))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onOrderAdded' ( x , y , z , t , u  ) " := (IonOrderAdded_right x y z t u) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0 ) : ursus_scope .
+
+(* | IonOrderCanceled : XBool -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+
+Definition IonOrderCanceled_right { a1 a2 a3 a4 a5 }  (x : URValue XBool a1 ) 
+                                                 (y : URValue XAddress a2) 
+                                                 (z : URValue XAddress a3)
+                                                 (t : URValue XUInteger128 a4)
+                                                 (u : URValue XUInteger128 a5) : 
+                                                 URValue IFlexNotify (orb a1 (orb a2 (orb a3 (orb a4 a5)))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  #(IonOrderCanceled x' y' z' t' u' : IFlexNotify)))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onOrderCanceled' ( x , y , z , t , u  ) " := (IonOrderCanceled_right x y z t u) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0 ) : ursus_scope .
+
+
+(* | IonXchgOrderAdded : XBool -> XAddress -> XAddress ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+
+Definition IonXchgOrderAdded_right { a1 a2 a3 a4 a5 a6 a7}  (x : URValue XBool a1 ) 
+                                                 (y : URValue XAddress a2) 
+                                                 (z : URValue XAddress a3)
+                                                 (t : URValue XUInteger128 a4)
+                                                 (u : URValue XUInteger128 a5)
+                                                 (v : URValue XUInteger128 a6)
+                                                 (w : URValue XUInteger128 a7) : 
+                                                 URValue IFlexNotify (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 (orb a6 a7)))))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  
+                                urvalue_bind v (fun v' =>  
+                                    urvalue_bind w (fun w' =>  #(IonXchgOrderAdded x' y' z' t' u' v' w': IFlexNotify)))))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onXchgOrderAdded' ( x , y , z , t , u , v , w ) " := (IonXchgOrderAdded_right x y z t u v w) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0, 
+ v custom URValue at level 0, w custom URValue at level 0 ) : ursus_scope .
+
+(* | IonXchgOrderCanceled : XBool -> XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+Definition IonXchgOrderCanceled_right { a1 a2 a3 a4 a5 a6 a7}  (x : URValue XBool a1 ) 
+                                                 (y : URValue XAddress a2) 
+                                                 (z : URValue XAddress a3)
+                                                 (t : URValue XUInteger128 a4)
+                                                 (u : URValue XUInteger128 a5)
+                                                 (v : URValue XUInteger128 a6)
+                                                 (w : URValue XUInteger128 a7) : 
+                                                 URValue IFlexNotify (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 (orb a6 a7)))))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  
+                                urvalue_bind v (fun v' =>  
+                                    urvalue_bind w (fun w' =>  #(IonXchgOrderCanceled x' y' z' t' u' v' w': IFlexNotify)))))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onXchgOrderCanceled' ( x , y , z , t , u , v , w ) " := (IonXchgOrderCanceled_right x y z t u v w) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0, 
+ v custom URValue at level 0, w custom URValue at level 0 ) : ursus_scope .
+
 
 End ClassTypesNotations.
 

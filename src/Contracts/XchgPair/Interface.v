@@ -39,7 +39,7 @@ GeneratePruvendoRecord VarInitL VarInitFields.
 Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
-Definition IXchgPair: Type := IXchgPairP XAddress XUInteger128 InitialStateLRecord .
+Definition IXchgPair: Type := IXchgPairP XAddress XUInteger128 (* InitialStateLRecord *) StateInitLRecord.
 
 Arguments IonDeploy {_} {_} {_}.
 Arguments _Icreate {_} {_} {_}.
