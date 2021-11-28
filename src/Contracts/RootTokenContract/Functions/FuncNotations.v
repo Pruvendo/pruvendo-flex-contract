@@ -34,8 +34,6 @@ Module Export SpecModuleForFuncNotations := Spec xt sm.
 
 Import xt.
 
-Fail Check OutgoingMessage_default.
-
 Import UrsusNotations.
 
 Local Open Scope ursus_scope.
@@ -209,7 +207,18 @@ Notation " 'allowance_info.spender' " := ( allowance_info_ι_spender ) (in custo
  Notation " 'lend_array_record.lend_finish_time' " := ( lend_array_record_ι_lend_finish_time ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " 'lend_array_record.lend_finish_time' " := ( lend_array_record_ι_lend_finish_time ) (in custom URValue at level 0) : ursus_scope. 
  
+Notation " 'error_code::internal_owner_disabled' " := (sInject error_code_ι_internal_owner_disabled) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code_ι_message_sender_is_not_my_owner) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::internal_owner_enabled' " := (sInject error_code_ι_internal_owner_enabled) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::define_pubkey_or_internal_owner' " := (sInject error_code_ι_define_pubkey_or_internal_owner) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::too_big_decimals' " := (sInject error_code_ι_too_big_decimals) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::cant_override_wallet_code' " := (sInject error_code_ι_cant_override_wallet_code) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::not_enough_balance' " := (sInject error_code_ι_not_enough_balance) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::define_pubkey_or_internal_owner' " := (sInject error_code_ι_define_pubkey_or_internal_owner) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrong_bounced_header' " := (sInject error_code_ι_wrong_bounced_header) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrong_bounced_args' " := (sInject error_code_ι_wrong_bounced_args) (in custom URValue at level 0) : ursus_scope. 
 
+Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
 
  
 Module Calls (tc : SpecSig).

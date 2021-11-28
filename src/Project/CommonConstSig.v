@@ -41,5 +41,20 @@ Parameter ec_ι_unverified_tip3_wallet : XUInteger .
 Parameter ec_ι_not_enough_tokens_amount : XUInteger .
 Parameter ec_ι_too_big_tokens_amount : XUInteger .
 
+Parameter error_code_ι_internal_owner_disabled : XUInteger .
+Parameter error_code_ι_message_sender_is_not_my_owner : XUInteger .
+Parameter error_code_ι_internal_owner_enabled : XUInteger .
+Parameter error_code_ι_too_big_decimals : XUInteger .
+Parameter error_code_ι_cant_override_wallet_code : XUInteger .
+Parameter error_code_ι_not_enough_balance : XUInteger .
+Parameter error_code_ι_define_pubkey_or_internal_owner : XUInteger .
+Parameter error_code_ι_wrong_bounced_header : XUInteger .
+Parameter error_code_ι_wrong_bounced_args : XUInteger .
+(* Parameter  : XUInteger . *)
+
+
+
+
+
 
 End ConstsTypesSig.

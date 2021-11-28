@@ -143,8 +143,8 @@ Definition optional_owner_right { a1 }  ( owner : URValue ( XAddress ) a1 ) : UR
  (in custom URValue at level 0 ) : ursus_scope . 
 
  Definition check_internal_owner : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( is_internal_owner_ ( ) ) , 1 (* error_code::internal_owner_disabled *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( (_owner_address_ -> get_default () == int_sender ()) ) , 1 (* error_code::message_sender_is_not_my_owner *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( is_internal_owner_ ( ) ) , error_code::internal_owner_disabled ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( (_owner_address_ -> get_default () == int_sender ()) ) , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
      refine {{ return_ {} }} .
  Defined . 
  
@@ -158,8 +158,8 @@ Definition optional_owner_right { a1 }  ( owner : URValue ( XAddress ) a1 ) : UR
  (in custom ULValue at level 0 ) : ursus_scope . 
  
  Definition check_external_owner ( allow_pubkey_owner_in_internal_node : ( XBool ) ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( (#{ allow_pubkey_owner_in_internal_node }) \\ ~ (is_internal_owner_ ( )) ) , 1 (* error_code::internal_owner_enabled *) ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( msg_pubkey () == _root_public_key_ ) , 1 (* error_code::message_sender_is_not_my_owner *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( (#{ allow_pubkey_owner_in_internal_node }) \\ ~ (is_internal_owner_ ( )) ) , error_code::internal_owner_enabled ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( msg_pubkey () == _root_public_key_ ) , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
      refine {{ return_ {} }} . 
  Defined . 
  
@@ -191,8 +191,8 @@ Defined .
 
 
 Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( root_owner : ( XAddress ) ) ( total_supply : ( XUInteger128 ) ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ( (#{ root_public_key }) != 0 ) \\ {} (* std::get < addr_std > ( (#{ root_owner }) () ) . address != 0 *) ) , 1 (* error_code::define_pubkey_or_internal_owner  *)) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( (#{ decimals }) < #{4} ) , 1 (* error_code::too_big_decimals *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ( (#{ root_public_key }) != 0 ) \\ {} (* std::get < addr_std > ( (#{ root_owner }) () ) . address != 0 *) ) , error_code::define_pubkey_or_internal_owner ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( (#{ decimals }) < #{4} ) , error_code::too_big_decimals ) ; { _ } }} . 
  	 	 refine {{ _name_ := (#{ name }) ; { _ } }} . 
  	 	 refine {{ _symbol_ := (#{ symbol }) ; { _ } }} . 
  	 	 refine {{ _decimals_ := (#{ decimals }) ; { _ } }} . 
@@ -200,19 +200,19 @@ Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimal
  	 	 refine {{ _total_supply_ := (#{ total_supply }) ; { _ } }} . 
  	 	 refine {{ _total_granted_ := 0 ; { _ } }} . 
  	 	 refine {{ _owner_address_ := optional_owner_ ( (#{ root_owner }) ) ; { _ } }} . 
- 	 	 refine {{ _start_balance_ := tvm.balance () ; {_} }} . 
+ 	 	 refine {{ _start_balance_ := tvm_balance () ; {_} }} . 
 refine {{ return_ {} }} .
  Defined . 
  
 
  Definition setWalletCode ( wallet_code : ( XCell ) ) : UExpression XBool true . 
  	 	 	 refine {{ check_owner_ ( TRUE ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ~ _wallet_code_ ) , 1 (* error_code::cant_override_wallet_code *) ) ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ~ _wallet_code_ ) , error_code::cant_override_wallet_code ) ; { _ } }} . 
  	 	 refine {{ _wallet_code_ := ( (#{ wallet_code }) -> set () ) ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { {_:UEf} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : XUInteger @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm.rawreserve ( (tvm.balance ()) - (!{value_gr}) , 1 (* rawreserve_flag::up_to *) ) }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( (tvm_balance ()) - (!{value_gr}) , rawreserve_flag::up_to ) }} . 
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
  Defined . 
@@ -274,7 +274,7 @@ Defined .
  , x9 custom URValue at level 0 ) : ursus_scope . 
 
  Definition workchain_id : UExpression XUInteger8 false . 
- 	 	 	 refine {{ return_ {} (* Std :: get < addr_std > ( Address { tvm.address () } () ) . workchain_id_ *) }} . 
+ 	 	 	 refine {{ return_ {} (* Std :: get < addr_std > ( Address { tvm_myaddr () } () ) . workchain_id_ *) }} . 
  Defined . 
 
  Definition workchain_id_right  : URValue XUInteger8 false := 
@@ -333,7 +333,7 @@ Notation " 'prepare_wallet_state_init_and_addr_' '(' x0  ')' " :=
  Definition calc_wallet_init ( pubkey : ( XUInteger256 ) ) ( owner_addr : ( XAddress ) ) 
 : UExpression ( StateInitLRecord # XAddress ) false . 
 (*  	 	 refine {{ new 'wallet_data : ( TONTokenWalletClassTypes.DTONTokenWalletLRecord ) @ "wallet_data" := 
-                  prepare_wallet_data_ ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , tvm.address () , optional_owner_ ( (#{ owner_addr }) ) , _wallet_code_ ->get_default () ,  workchain_id_ ( ) ) ; { _:UEf } }} . 
+                  prepare_wallet_data_ ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , tvm_myaddr () , optional_owner_ ( (#{ owner_addr }) ) , _wallet_code_ ->get_default () ,  workchain_id_ ( ) ) ; { _:UEf } }} . 
  *) 	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:XAddress ) @ ( "wallet_init" , "dest_addr" ) := 
                               prepare_wallet_state_init_and_addr_ ( {} (*TODO! !{wallet_data} *) ) ; { _ } }} . 
  	 	 refine {{ new 'dest : ( XAddress ) @ "dest" := 
@@ -355,16 +355,16 @@ Notation " 'prepare_wallet_state_init_and_addr_' '(' x0  ')' " :=
  
  Definition deployWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( XAddress ) ) ( tokens : ( XUInteger128 ) ) ( grams : ( XUInteger128 ) ) : UExpression XAddress true . 
  	 	 	 refine {{ check_owner_ ( FALSE ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( (_total_granted_ + (#{ tokens })) <= _total_supply_ ) , 1 (* error_code::not_enough_balance *) ) ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( (_total_granted_ + (#{ tokens })) <= _total_supply_ ) , error_code::not_enough_balance ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( ( (#{ pubkey }) != 0 ) \\ 
-             ( (* std::get < addr_std > ( (#{ internal_owner }) () ) . address *) {} ) != 0 ) , 1 (* error_code::define_pubkey_or_internal_owner *) ) ; { _ } }} . 
+             ( (* std::get < addr_std > ( (#{ internal_owner }) () ) . address *) {} ) != 0 ) , error_code::define_pubkey_or_internal_owner ) ; { _ } }} . 
  	 	 refine {{ new 'answer_addr : XAddress @ "answer_addr" := {} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { {_:UEf} } else { {_:UEf} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr:XUInteger @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm.rawreserve ( (tvm.balance ()) - !{value_gr} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( (tvm_balance ()) - !{value_gr} , rawreserve_flag::up_to ) ; { _ } }} . 
  	 	 	 refine {{ {answer_addr} := int_sender () }} . 
- 	     refine {{ {answer_addr} := tvm.address () }} . 
+ 	     refine {{ {answer_addr} := tvm_myaddr () }} . 
 
  	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:XAddress ) @ ( "wallet_init" , "dest" ) :=  
                            calc_wallet_init_  ( (#{ pubkey }) , (#{ internal_owner }) ) ; { _ } }} . 
@@ -382,9 +382,9 @@ Notation " 'prepare_wallet_state_init_and_addr_' '(' x0  ')' " :=
  
  
  Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( XAddress ) ) ( grams : ( XUInteger128 ) ) : UExpression XAddress true . 
- 	 	 	 refine {{ require_ ( ( ( (#{pubkey}) != 0 ) \\ ((*std::get<addr_std>((#{ internal_owner })()).address*) {} != 0 ) ) , 1 (* error_code::define_pubkey_or_internal_owner *) ) ; { _ } }} . 
+ 	 	 	 refine {{ require_ ( ( ( (#{pubkey}) != 0 ) \\ ((*std::get<addr_std>((#{ internal_owner })()).address*) {} != 0 ) ) , error_code::define_pubkey_or_internal_owner ) ; { _ } }} . 
  	 	 refine {{ new 'value_gr : ( XUInteger ) @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} . 
+ 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr }) , rawreserve_flag::up_to ) ; { _ } }} . 
  	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:XAddress ) @ ( "wallet_init" , "dest" ) := 
                                    calc_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; { _ } }} . 
 (*  	 	 refine {{ ITONTokenWalletPtr dest_handle ( dest ) ; { _ } }} .  *)
@@ -398,18 +398,18 @@ Notation " 'prepare_wallet_state_init_and_addr_' '(' x0  ')' " :=
  
  Definition grant ( dest : ( XAddress ) ) ( tokens : ( XUInteger128 ) ) ( grams : ( XUInteger128 ) ) : UExpression PhantomType true . 
  	 	 refine {{ check_owner_ ( FALSE ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( (_total_granted_ + (#{ tokens })) <= _total_supply_ ) , 1 (* error_code::not_enough_balance *) ) ; { _ } }} . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( (_total_granted_ + (#{ tokens })) <= _total_supply_ ) , error_code::not_enough_balance ) ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ new 'answer_addr:XAddress @ "answer_addr" := {} ; { _ } }} . 
  	 	 refine {{ new 'msg_flags : ( XUInteger ) @ "msg_flags" := 0 ; { _ } }} . 
 refine {{ new 'grams_:XUInteger128 @ "grams_" := #{grams} ; { _ } }}.
  	 	 refine {{ if ( #{Internal} ) then { {_:UEf} } else { {_:UEf} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr:XUInteger @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{value_gr} ) , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{value_gr} ) , rawreserve_flag::up_to ) ; { _ } }} . 
  	 	 	 refine {{ { msg_flags } := 1 (* SEND_ALL_GAS *) ; { _ } }} . 
  	 	 	 refine {{ { grams_ } := 0 ; { _ } }} . 
  	 	 	 refine {{ {answer_addr} := int_sender () }} . 
- 	     refine {{ {answer_addr} := tvm.address () }} . 
+ 	     refine {{ {answer_addr} := tvm_myaddr () }} . 
 
 (*      refine {{ ITONTokenWalletPtr dest_handle ( (#{ dest }) ) ; { _ } }} .  *)
 (*      refine {{ dest_handle ( Grams ( (#{ grams_ }) . get () ) , (!{ msg_flags }) ) . accept ( (#{ tokens }) , answer_addr , uint128 ( 0 ) ) ; { _ } }} .  *)
@@ -419,10 +419,10 @@ refine {{ new 'grams_:XUInteger128 @ "grams_" := #{grams} ; { _ } }}.
  
 Definition mint ( tokens : ( XUInteger128 ) ) : UExpression XBool true . 
  	 	 refine {{ check_owner_ ( FALSE ) ; { _ } }} .  
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { {_:UEf} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr:XUInteger@"value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) , 1 (* rawreserve_flag::up_to *) ) }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr }) , rawreserve_flag::up_to ) }} . 
  	 refine {{ _total_supply_ += (#{ tokens }) ; { _ } }} . 
 (*  	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; { _ } }} .  *)
  	 refine {{ return_ TRUE }} . 
@@ -433,7 +433,7 @@ Defined .
  
  Definition requestTotalGranted : UExpression XUInteger128 false . 
  	 	 	 refine {{ new 'value_gr : ( XUInteger ) @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 refine {{ tvm.rawreserve ( tvm.balance () - (!{ value_gr }) , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} . 
+ 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr }) , rawreserve_flag::up_to ) ; { _ } }} . 
 (*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; { _ } }} .  *)
  	 	 refine {{ return_ _total_granted_ }} . 
  Defined . 
@@ -505,13 +505,13 @@ Defined .
 (*  Definition Args := args_struct_t<&ITONTokenWallet::accept>; *)
  
  Definition _on_bounced ( msg : XCell ) ( msg_body : ( XSlice ) ) : UExpression XUInteger true . 
- 	 	 refine {{ tvm.accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} . 
 (*  	 	 refine {{ new 'p : parser @ "p" := ( (#{ msg_body }) ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( (* p ↑ ldi ( #{32} ) *) {} == #{(-1)%Z} ) , 1 (* error_code::wrong_bounced_header *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( (* p ↑ ldi ( #{32} ) *) {} == #{(-1)%Z} ) , error_code::wrong_bounced_header ) ; { _ } }} . 
  	 	 refine {{ new 'opt_hdr : ( XMaybe XAddress ) @ "opt_hdr" := {} ; { _ } }} . 
 (*  	 	 refine {{ [ opt_hdr , =p ] := parse_continue < abiv2::internal_msg_header_with_answer_id > ( p ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( ? !{opt_hdr} && {} (* opt_hdr -> function_id == id_v < &ITONTokenWallet::accept > *) ) , 1
-                                                (* error_code::wrong_bounced_header *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( ? !{opt_hdr} && {} (* opt_hdr -> function_id == id_v < &ITONTokenWallet::accept > *) ) , 
+                                               error_code::wrong_bounced_header ) ; { _ } }} . 
  	 	 refine {{ new 'args : ( XAddress ) @ "args" := {} 
                               (* parse ( p , error_code::wrong_bounced_args ) *) ; { _ } }} . 
  	 	 refine {{ new 'bounced_val : ( XUInteger (* auto *) ) @ "bounced_val" := {} (* (!{ args }) ↑ auto:tokens *) ; { _ } }} . 
@@ -520,7 +520,7 @@ Defined .
 
  	 	 refine {{ new ( 'hdr:XUInteger , 'persist:DRootTokenContractLRecord ) @ ( "hdr" , "persist" ) := {}
 (*      load_persistent_data < IRootTokenContract , root_replay_protection_t , DRootTokenContract > ()*) ; { _ } }} .  
- 	 	 refine {{ require_ ( ( (!{bounced_val}) <= ((!{persist}) ↑ DRootTokenContract.total_granted_) ) , 1 (* error_code::wrong_bounced_args *) ) ; { _ } }} . 
+ 	 	 refine {{ require_ ( ( (!{bounced_val}) <= ((!{persist}) ↑ DRootTokenContract.total_granted_) ) , error_code::wrong_bounced_args ) ; { _ } }} . 
  	 	 refine {{ (({persist}) ↑ DRootTokenContract.total_granted_) -= (!{ bounced_val }) ; { _ } }} . 
 (*  	 	 refine {{ save_persistent_data < IRootTokenContract , root_replay_protection_t > ( hdr , persist ) ; { _ } }} .  *)
  	 	 refine {{ return_ 0 }} . 
