@@ -46,10 +46,6 @@ Definition OrderInfoXchgL : list Type :=
     ( XUInteger32 ) : Type ] .
 GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
 
-(* using OrderInfoXchgWithIdx = std::pair<unsigned, OrderInfoXchg>; *)
-
-Definition OrderInfoXchgWithIdx := XUInteger # OrderInfoXchgLRecord.
-
 Definition dealerL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress ) : Type ; 

@@ -18,10 +18,20 @@ Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
 Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig.
-Module Type SpecSig.
 
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
+
+Notation address_t := XAddress.
+
+Notation lend_ownership_map := (mapping addr_std_fixedLRecord (addr_std_fixedLRecord # lend_recordLRecord)).
+Notation lend_ownership_array := (mapping uint lend_array_recordLRecord).
+
+
+
+Module Type SpecSig.
+
+
 
 Parameter transfer : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> UExpression PhantomType false . 
  Parameter transferWithNotify : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType false . 

@@ -45,6 +45,7 @@ Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
+
  Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_price_ ) : ULValue uint128 ) . 
  Definition price__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_price_ ) : URValue uint128 false ) . 
  Notation " '_price_' " := ( price__left ) (in custom ULValue at level 0) : ursus_scope. 

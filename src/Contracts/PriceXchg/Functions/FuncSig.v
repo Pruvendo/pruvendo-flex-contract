@@ -18,10 +18,15 @@ Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
 
-Module Type SpecSig.
-
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
+
+
+Notation price_t := (RationalPriceLRecord).
+Notation OrderInfoXchgWithIdx := (uint # OrderInfoXchgLRecord).
+
+Module Type SpecSig.
+
 
 Parameter make_deal : ULValue OrderInfoXchgLRecord -> ULValue OrderInfoXchgLRecord -> UExpression ( boolean # (boolean # uint128) ) false . 
 
@@ -55,9 +60,9 @@ Parameter on_ord_fail :  uint -> raw_address (* ITONTokenWalletPtrLRecord *)  ->
 
 Parameter prepare_price_xchg_state_init_and_addr: ContractLRecord -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter is_active_time : uint32  -> UExpression boolean false . 
-Parameter minor_cost : uint128 -> RationalPriceLRecord -> UExpression (optional uint128) false . 
+Parameter minor_cost : uint128 -> price_t -> UExpression (optional uint128) false . 
 Parameter process_queue_impl : raw_address -> raw_address -> raw_address (* IFlexNotifyPtrLRecord *) -> 
-                               RationalPriceLRecord -> uint8 -> TonsConfigLRecord -> 
+                               price_t -> uint8 -> TonsConfigLRecord -> 
                                uint -> uint -> uint128 -> queue OrderInfoXchgLRecord ->
                                uint128 -> queue OrderInfoXchgLRecord -> UExpression process_retLRecord false .
 Parameter cancel_order_impl : queue OrderInfoXchgLRecord -> 

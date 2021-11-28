@@ -16,11 +16,16 @@ Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
+Local Open Scope ursus_scope.
+Local Open Scope ucpp_scope.
+
+Notation wrappers_map := ( mapping uint256 (uint256 # WrapperListingRequestLRecord) ).
+Notation trading_pairs_map := ( mapping uint256 (uint256 # TradingPairListingRequestLRecord) ).
+Notation xchg_pairs_map := ( mapping uint256 (uint256 # XchgPairListingRequestLRecord) ).
 
 Module Type SpecSig.
 
-Local Open Scope ursus_scope.
-Local Open Scope ucpp_scope.
+
 
 Parameter constructor : uint256 -> String -> optional raw_address -> TonsConfigLRecord -> uint8 -> 
                         ListingConfigLRecord -> UExpression PhantomType true . 
@@ -71,20 +76,20 @@ Parameter prepare_trading_pair_state_init_and_addr : TradingPairClassTypesModule
 Parameter prepare_trading_pair : raw_address -> raw_address -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter prepare_xchg_pair_state_init_and_addr : XchgPairClassTypesModule.DXchgPairLRecord -> TvmCell -> 
                                                   UExpression ( StateInitLRecord # uint256 ) false . 
-Parameter approveTradingPairImpl : uint256 -> mapping uint256 (uint256 # TradingPairListingRequestLRecord) -> 
+Parameter approveTradingPairImpl : uint256 -> trading_pairs_map -> 
                                    TvmCell -> uint8 -> ListingConfigLRecord -> 
-                                   UExpression ( raw_address # (mapping uint256 (uint256 # TradingPairListingRequestLRecord) ) ) true .
-Parameter rejectTradingPairImpl : uint256 -> mapping uint256 (uint256 # TradingPairListingRequestLRecord)-> 
-                                  ListingConfigLRecord -> UExpression ( mapping uint256 (uint256 # TradingPairListingRequestLRecord) ) true . 
-Parameter approveXchgPairImpl : uint256 -> mapping uint256 (uint256 # XchgPairListingRequestLRecord) -> TvmCell -> uint8 -> 
-                                ListingConfigLRecord -> UExpression ( raw_address # (mapping uint256 (uint256 # XchgPairListingRequestLRecord) ) ) true . 
-Parameter rejectXchgPairImpl : uint256 -> mapping uint256 (uint256 # XchgPairListingRequestLRecord) -> ListingConfigLRecord -> 
-                               UExpression ( mapping uint256 (uint256 # XchgPairListingRequestLRecord) ) true . 
-Parameter approveWrapperImpl : uint256 -> mapping uint256 (uint256 # WrapperListingRequestLRecord) -> TvmCell -> TvmCell -> 
+                                   UExpression ( raw_address # trading_pairs_map ) true .
+Parameter rejectTradingPairImpl : uint256 -> trading_pairs_map-> 
+                                  ListingConfigLRecord -> UExpression trading_pairs_map true . 
+Parameter approveXchgPairImpl : uint256 -> xchg_pairs_map -> TvmCell -> uint8 -> 
+                                ListingConfigLRecord -> UExpression ( raw_address # xchg_pairs_map ) true . 
+Parameter rejectXchgPairImpl : uint256 -> xchg_pairs_map -> ListingConfigLRecord -> 
+                               UExpression xchg_pairs_map true . 
+Parameter approveWrapperImpl : uint256 -> wrappers_map -> TvmCell -> TvmCell -> 
                                TvmCell -> uint8 -> ListingConfigLRecord -> 
-                               UExpression ( raw_address # (mapping uint256 (uint256 # WrapperListingRequestLRecord) ) ) true . 
-Parameter rejectWrapperImpl : uint256 -> mapping uint256 (uint256 # WrapperListingRequestLRecord) ->
-                              ListingConfigLRecord -> UExpression ( mapping uint256 (uint256 # WrapperListingRequestLRecord) ) true . 
+                               UExpression ( raw_address # wrappers_map )  true . 
+Parameter rejectWrapperImpl : uint256 -> wrappers_map ->
+                              ListingConfigLRecord -> UExpression wrappers_map true . 
 
 
 End SpecSig.

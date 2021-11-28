@@ -17,10 +17,13 @@ Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
-Module Type SpecSig.
 
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
+
+Notation OrderInfoWithIdx := (uint # OrderInfoLRecord).
+
+Module Type SpecSig.
 
 Parameter make_deal : ULValue OrderInfoLRecord  ->  ULValue OrderInfoLRecord -> UExpression ( boolean # (boolean # uint128)) true . 
 (*Check  ULValue !!!!*)

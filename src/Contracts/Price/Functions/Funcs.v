@@ -134,11 +134,11 @@ Definition is_active_time_right { a1 }  ( order_finish_time : URValue uint32 a1 
  (in custom URValue at level 0 , order_finish_time custom URValue at level 0 ) : ursus_scope .
 
 Definition extract_active_order 
-( cur_order : ULValue ( XMaybe (uint # OrderInfoLRecord) ) ) 
+( cur_order : ULValue ( XMaybe (OrderInfoWithIdx) ) ) 
 ( orders : ULValue( XQueue OrderInfoLRecord ) ) 
 ( all_amount : ULValue ( uint128 ) ) 
 ( sell : ( XBool ) ) 
-: UExpression (( XMaybe (uint # OrderInfoLRecord) ) 
+: UExpression (( XMaybe (OrderInfoWithIdx) ) 
                 # ( ( XQueue OrderInfoLRecord ) # uint128 ) ) true  . 
 
  	 	 refine {{ if ( !{ cur_order } ) then { { _:UEf  } } ; { _ } }} .
@@ -168,10 +168,10 @@ Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
 
 
 Definition extract_active_order_right { a4 }  
-			( cur_order : ULValue ( optional (uint # OrderInfoLRecord) ) ) 
+			( cur_order : ULValue ( optional (OrderInfoWithIdx) ) ) 
 			( orders : ULValue ( queue OrderInfoLRecord ) ) 
 			( all_amount : ULValue uint128 ) 
-			( sell : URValue boolean a4 ) : URValue (( optional (uint # OrderInfoLRecord) ) # ( ( queue OrderInfoLRecord ) # uint128 ) ) true := 
+			( sell : URValue boolean a4 ) : URValue (( optional (OrderInfoWithIdx) ) # ( ( queue OrderInfoLRecord ) # uint128 ) ) true := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1LLL ) extract_active_order cur_order orders all_amount sell ) . 
  
 Notation " 'extract_active_order_' '(' cur_order ',' orders ',' all_amount ',' sell ')' " := 
@@ -180,8 +180,8 @@ Notation " 'extract_active_order_' '(' cur_order ',' orders ',' all_amount ',' s
   all_amount custom ULValue at level 0 , sell custom URValue at level 0 ) : ursus_scope .
  
 Definition process_queue ( sell_idx : uint ) ( buy_idx : uint ) : UExpression PhantomType true . 
- 	 	 refine {{ new 'sell_opt : ( XMaybe (uint # OrderInfoLRecord) ) @ "sell_opt" := {} ; { _ } }} . 
- 	 	 refine {{ new 'buy_opt : ( XMaybe (uint # OrderInfoLRecord) ) @ "buy_opt" := {} ; { _ } }} . 
+ 	 	 refine {{ new 'sell_opt : ( XMaybe (OrderInfoWithIdx) ) @ "sell_opt" := {} ; { _ } }} . 
+ 	 	 refine {{ new 'buy_opt : ( XMaybe (OrderInfoWithIdx) ) @ "buy_opt" := {} ; { _ } }} . 
  	 	 refine {{ new 'deals_count : ( uint ) @ "deals_count" := 0 ; { _ } }} . 
  	 	 refine {{ while ( TRUE ) do { { _ : UEt} } ; { _ } }} .  
  	 	 	 refine {{ [ {sell_opt} , _sells_ , _sells_amount_ ] := 
@@ -267,7 +267,7 @@ Definition process_queue ( sell_idx : uint ) ( buy_idx : uint ) : UExpression Ph
  refine {{ if ( !{ sell_out_of_tons } \\ !{ buy_out_of_tons } ) then { { _:UEt } } ; { _ } }} . 
  	 refine {{ continue_ }} .
 (*                      TODO:
-The term "sell_opt" has type "ULValue (optional (uint # OrderInfoLRecord))"
+The term "sell_opt" has type "ULValue (optional (OrderInfoWithIdx))"
   refine {{  second ( {sell_opt} ) := !{sell} ; { _ } }} .
   refine {{ { buy_opt } - > second = buy ; { _ } }} .  *)
 

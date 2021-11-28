@@ -301,10 +301,10 @@ Definition check_owner : UExpression PhantomType true .
  Defined .
  
 Definition approveTradingPairImpl ( pubkey :  ( uint256 ) ) 
-( trading_pair_listing_requests :  (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) ) 
+( trading_pair_listing_requests :  (trading_pairs_map ) ) 
 ( pair_code :  ( XCell ) ) ( workchain_id :  ( uint8 ) ) 
 ( listing_cfg :  ( ListingConfigLRecord ) ) 
-: UExpression ( XAddress * (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) ) true . 
+: UExpression ( XAddress * (trading_pairs_map ) ) true . 
 
  	 	 refine {{ new 'opt_req_info : ( XMaybe TradingPairListingRequestLRecord ) @ "opt_req_info" := {} ; { _ } }} . 
  	 	                     (* trading_pair_listing_requests.extract ( pubkey.get ( ) ) *)  
@@ -326,11 +326,11 @@ Definition approveTradingPairImpl ( pubkey :  ( uint256 ) )
 
  Definition approveTradingPairImpl_right { a1 a2 a3 a4 a5 }  
 ( pubkey : URValue ( uint256 ) a1 ) 
-( trading_pair_listing_requests : URValue (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) a2 ) 
+( trading_pair_listing_requests : URValue (trading_pairs_map ) a2 ) 
 ( pair_code : URValue ( XCell ) a3 )
  ( workchain_id : URValue ( uint8 ) a4 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) : 
-URValue ( XAddress * (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) )  true := 
+URValue ( XAddress * (trading_pairs_map ) )  true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveTradingPairImpl 
  pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) . 
  
@@ -346,7 +346,7 @@ URValue ( XAddress * (XHMap uint256 (uint256 * TradingPairListingRequestLRecord)
  Definition approveTradingPair ( pubkey :  ( uint256 ) ) : UExpression XAddress true . 
   	 	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm_accept () ; { _ } }} . 
- 	 	 refine {{ new ( 'trade_pair : XAddress , 'new_trading_pair_listing_requests : (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) ) 
+ 	 	 refine {{ new ( 'trade_pair : XAddress , 'new_trading_pair_listing_requests : (trading_pairs_map ) ) 
        @ ("trade_pair", "new_trading_pair_listing_requests")    := 
             approveTradingPairImpl_ ( #{pubkey} , _trading_pair_listing_requests_ , _pair_code_ -> get_default () , _workchain_id_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _trading_pair_listing_requests_ := !{new_trading_pair_listing_requests} ; { _ } }} . 
@@ -367,9 +367,9 @@ URValue ( XAddress * (XHMap uint256 (uint256 * TradingPairListingRequestLRecord)
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
 Definition rejectTradingPairImpl ( pubkey :  ( uint256 ) ) 
-( trading_pair_listing_requests :  (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) ) 
+( trading_pair_listing_requests :  (trading_pairs_map ) ) 
 ( listing_cfg :  ( ListingConfigLRecord ) ) : 
-UExpression (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) true . 
+UExpression (trading_pairs_map ) true . 
 
  	 	 refine {{ new 'opt_req_info : ( XMaybe TradingPairListingRequestLRecord ) @ "opt_req_info" := {} ; { _ } }} . 
 (*  	 	 refine {{ { opt_req_info } := trading_pair_listing_requests.extract ( pubkey ) ; { _ } }} .  *)
@@ -384,9 +384,9 @@ UExpression (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) true .
 
  Definition rejectTradingPairImpl_right { a1 a2 a3 }  
 ( pubkey : URValue ( uint256 ) a1 )
- ( trading_pair_listing_requests : URValue (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) a2 ) 
+ ( trading_pair_listing_requests : URValue (trading_pairs_map ) a2 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a3 ) 
-: URValue (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) true := 
+: URValue (trading_pairs_map ) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) rejectTradingPairImpl 
  pubkey trading_pair_listing_requests listing_cfg ) . 
 
@@ -449,11 +449,11 @@ Definition prepare_xchg_pair_state_init_and_addr
  , pair_code custom URValue at level 0 ) : ursus_scope .
 
 Definition approveXchgPairImpl ( pubkey :  ( uint256 ) ) 
-( xchg_pair_listing_requests :  (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) ) 
+( xchg_pair_listing_requests :  (xchg_pairs_map ) ) 
 ( xchg_pair_code :  ( XCell ) ) 
 ( workchain_id :  ( uint8 ) ) 
 ( listing_cfg :  ( ListingConfigLRecord ) ) 
-: UExpression ( XAddress * (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) )  true . 
+: UExpression ( XAddress * (xchg_pairs_map ) )  true . 
 
  	 	 refine {{ new 'opt_req_info : ( XMaybe XchgPairListingRequestLRecord ) @ "opt_req_info" := {}(* 
               xchg_pair_listing_requests.extract ( pubkey ) *) ; { _ } }} . 
@@ -480,10 +480,10 @@ Definition approveXchgPairImpl ( pubkey :  ( uint256 ) )
  
  Definition approveXchgPairImpl_right { a1 a2 a3 a4 a5 }  
 ( pubkey : URValue ( uint256 ) a1 ) 
-( xchg_pair_listing_requests : URValue (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) a2 ) 
+( xchg_pair_listing_requests : URValue (xchg_pairs_map ) a2 ) 
 ( xchg_pair_code : URValue ( XCell ) a3 ) ( workchain_id : URValue ( uint8 ) a4 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) 
-: URValue ( XAddress * (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) )  true := 
+: URValue ( XAddress * (xchg_pairs_map ) ) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveXchgPairImpl 
  pubkey xchg_pair_listing_requests xchg_pair_code workchain_id listing_cfg ) . 
  
@@ -498,9 +498,9 @@ Definition approveXchgPairImpl ( pubkey :  ( uint256 ) )
 
  Definition rejectXchgPairImpl 
 ( pubkey :  ( uint256 ) ) 
-( xchg_pair_listing_requests :  (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) ) 
+( xchg_pair_listing_requests :  (xchg_pairs_map ) ) 
 ( listing_cfg :  ( ListingConfigLRecord ) ) : 
-UExpression (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) true . 
+UExpression (xchg_pairs_map ) true . 
  	 	 refine {{ new 'opt_req_info : ( XMaybe XchgPairListingRequestLRecord ) @ "opt_req_info" := {} 
            (* xchg_pair_listing_requests.extract (pubkey) *) ; { _ } }} . 
  	 	 refine {{ require_ ( !{ opt_req_info } ,  error_code::xchg_pair_not_requested  ) ; { _ } }} . 
@@ -515,9 +515,9 @@ UExpression (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) true .
  
  Definition rejectXchgPairImpl_right { a1 a2 a3 } 
  ( pubkey : URValue ( uint256 ) a1 ) 
-( xchg_pair_listing_requests : URValue (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) a2 ) 
+( xchg_pair_listing_requests : URValue (xchg_pairs_map ) a2 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a3 ) 
-: URValue (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) true := 
+: URValue (xchg_pairs_map ) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) rejectXchgPairImpl 
  pubkey xchg_pair_listing_requests listing_cfg ) . 
  
@@ -630,13 +630,13 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
 
  Definition approveWrapperImpl 
 ( pubkey :  ( uint256 ) ) 
-( wrapper_listing_requests :  (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) ) 
+( wrapper_listing_requests :  ( wrappers_map ) ) 
 ( wrapper_code :  ( XCell ) ) 
 ( ext_wallet_code :  ( XCell ) ) 
 ( flex_wallet_code :  ( XCell ) ) 
 ( workchain_id :  ( uint8 ) ) 
 ( listing_cfg :  ( ListingConfigLRecord ) ) 
-: UExpression ( XAddress * (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) )  true . 
+: UExpression ( XAddress # ( wrappers_map ) )  true . 
 
  refine {{ new 'opt_req_info : ( XMaybe WrapperListingRequestLRecord ) @ "opt_req_info" := {}
        (* wrapper_listing_requests.extract ( pubkey ^^ uint256:get ( ) ) *) ; { _ } }} . 
@@ -683,13 +683,13 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
 
  Definition approveWrapperImpl_right { a1 a2 a3 a4 a5 a6 a7 }  
 ( pubkey : URValue ( uint256 ) a1 ) 
-( wrapper_listing_requests : URValue (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) a2 )
+( wrapper_listing_requests : URValue (wrappers_map ) a2 )
 ( wrapper_code : URValue ( XCell ) a3 ) 
 ( ext_wallet_code : URValue ( XCell ) a4 ) 
 ( flex_wallet_code : URValue ( XCell ) a5 )
  ( workchain_id : URValue ( uint8 ) a6 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a7 ) 
-: URValue ( XAddress * (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) )  true := 
+: URValue ( XAddress * (wrappers_map ) )  true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) approveWrapperImpl 
  pubkey wrapper_listing_requests wrapper_code ext_wallet_code flex_wallet_code workchain_id listing_cfg ) . 
  
@@ -706,9 +706,9 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
 
 Definition rejectWrapperImpl 
 ( pubkey :  ( uint256 ) ) 
-( wrapper_listing_requests :  (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) ) 
+( wrapper_listing_requests :  (wrappers_map ) ) 
 ( listing_cfg :  ( ListingConfigLRecord ) ) 
-: UExpression (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) true . 
+: UExpression (wrappers_map ) true . 
 
  	 	 refine {{ new 'opt_req_info : ( XMaybe WrapperListingRequestLRecord ) @ "opt_req_info" := {} 
         (* wrapper_listing_requests.extract ( pubkey ) *) ; { _ } }} . 
@@ -724,9 +724,9 @@ Definition rejectWrapperImpl
  
  Definition rejectWrapperImpl_right { a1 a2 a3 } 
 ( pubkey : URValue ( uint256 ) a1 ) 
-( wrapper_listing_requests : URValue (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) a2 ) 
+( wrapper_listing_requests : URValue (wrappers_map ) a2 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a3 ) 
-: URValue (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) true := 
+: URValue (wrappers_map ) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) rejectWrapperImpl 
  pubkey wrapper_listing_requests listing_cfg ) . 
  
@@ -757,8 +757,7 @@ Definition rejectWrapperImpl
  Definition approveXchgPair ( pubkey :  ( uint256 ) ) : UExpression XAddress true . 
   	 	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm_accept () ; { _ } }} . 
- 	 	 refine {{ new ( 'xchg_pair : XAddress , 'xchg_pair_listing_requests : (XHMap uint256 
-               (uint256 * XchgPairListingRequestLRecord) ) ) @ ( "xchg_pair" , "xchg_pair_listing_requests" ) := 
+ 	 	 refine {{ new ( 'xchg_pair : XAddress , 'xchg_pair_listing_requests : xchg_pairs_map  ) @ ( "xchg_pair" , "xchg_pair_listing_requests" ) := 
                approveXchgPairImpl_ ( #{pubkey} , 
                                       _xchg_pair_listing_requests_ , 
                                       _xchg_pair_code_ -> get_default () , 
@@ -812,7 +811,7 @@ Definition registerWrapper ( pubkey :  ( uint256 ) ) ( tip3cfg :  ( Tip3ConfigLR
   	 	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ new ( 'wrapper_addr : XAddress , 
-                     'new_wrapper_listing_requests : (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) )
+                     'new_wrapper_listing_requests : (wrappers_map ) )
                      @ ( "wrapper_addr" , "new_wrapper_listing_requests" ) := 
                  approveWrapperImpl_ ( #{pubkey} , 
                                   _wrapper_listing_requests_ , 

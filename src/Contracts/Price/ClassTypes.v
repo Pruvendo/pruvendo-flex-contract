@@ -43,8 +43,6 @@ Definition OrderInfoL : list Type :=
     ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderInfoL OrderInfoFields . 
 
-Definition OrderInfoWithIdx := XUInteger # OrderInfoLRecord.
-
 Definition dealerL : list Type := 
  [ ( XAddress ) : Type ; 
  ( XAddress (* IFlexNotifyPtr *) ) : Type ; 

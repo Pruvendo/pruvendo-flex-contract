@@ -16,6 +16,7 @@ Module Export ClassTypesModule := PriceXchg.ClassTypes.ClassTypes xt sm.
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 
+
 (**********************************************************************************************************************)
 (* DetailsInfoXchg *)
 

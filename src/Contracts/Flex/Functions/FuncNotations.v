@@ -55,6 +55,8 @@ Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope. 
 
 
+
+
  Definition deployer_pubkey__left := ( ULState (f:= _Contract ) (H:=ContractLEmbeddedType DFlex_ι_deployer_pubkey_ ) : ULValue uint256 ) . 
  Definition deployer_pubkey__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_deployer_pubkey_ ) : URValue uint256 false ) . 
  Notation " '_deployer_pubkey_' " := ( deployer_pubkey__left ) (in custom ULValue at level 0) : ursus_scope. 

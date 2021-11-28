@@ -16,11 +16,6 @@ Module Export ClassTypesModule := ClassTypes xt sm.
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 
-
-Notation "'DTradingPairInsert' [$ x ; .. ; y $]" := (default_with_sigmafield (H:=DTradingPairLPruvendoRecord) x .. (default_with_sigmafield (H:=DTradingPairLPruvendoRecord) y (# default)) .. ) 
-(in custom URValue at level 2 , x custom URValue, y custom URValue) : ursus_scope. 
-
-
 Definition DTradingPair_ι_flex_addr__right {b} (x: URValue DTradingPairLRecord b): URValue XAddress b :=
     || {x} ^^ {DTradingPair_ι_flex_addr_} || : _.
     

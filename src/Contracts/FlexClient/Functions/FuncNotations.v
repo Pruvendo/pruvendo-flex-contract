@@ -53,6 +53,9 @@ Import xt.
 Import UrsusNotations.
 Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
+
+
+
  Definition owner__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_owner_ ) : ULValue uint256 ) . 
  Definition owner__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_owner_ ) : URValue uint256 false ) . 
  Notation " '_owner_' " := ( owner__left ) (in custom ULValue at level 0) : ursus_scope. 

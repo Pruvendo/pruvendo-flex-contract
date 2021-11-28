@@ -47,7 +47,7 @@ Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
  Definition minor_cost (amount: uint128) 
- 					   (price: RationalPriceLRecord) : UExpression (optional uint128) false . 
+ 					   (price: price_t) : UExpression (optional uint128) false . 
 	refine {{ new 'cost : ( uint ) @ "cost" := {} 
 			(* __builtin_tvm_muldivr ( amount ^^ uint128:get ( ) , price ^^ RationalPriceLRecord:num , price ^^ RationalPriceLRecord:denum ) *) ; { _ } }} . 
 	refine {{ if ( ( ?((!{cost}) >> #{128})) \\ ( (!{cost}) == 0 ) ) 
@@ -57,7 +57,7 @@ Local Open Scope xlist_scope.
 Defined . 
 
  Definition minor_cost_right {a1 a2} (amount: URValue uint128 a1) 
- 									 (price: URValue RationalPriceLRecord a2) : URValue (optional uint128) ( orb a2 a1 ) := 
+ 									 (price: URValue price_t a2) : URValue (optional uint128) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) minor_cost amount price ) . 
  
 Notation " 'minor_cost_' '(' amount ',' price ')' " := ( minor_cost_right amount price ) 
@@ -477,7 +477,7 @@ Notation " 'on_ord_fail_' '(' ec ',' wallet_in ',' amount ')' " :=
 Definition process_queue_impl ( tip3root_sell : raw_address ) 
 							  ( tip3root_buy : raw_address ) 
 							  ( notify_addr : raw_address (* IFlexNotifyPtr *) ) 
-							  ( price : RationalPriceLRecord ) 
+							  ( price : price_t ) 
 							  ( deals_limit : uint8 ) 
 							  ( tons_cfg : TonsConfigLRecord ) 
 							  ( sell_idx : uint ) 
@@ -501,7 +501,7 @@ Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 }
 									( tip3root_sell : URValue raw_address a1 ) 
 									( tip3root_buy : URValue raw_address a2 ) 
 									( notify_addr : URValue raw_address (* IFlexNotifyPtrLRecord *) a3 ) 
-									( price : URValue RationalPriceLRecord a4 ) 
+									( price : URValue price_t a4 ) 
 									( deals_limit : URValue uint8 a5 ) 
 									( tons_cfg : URValue TonsConfigLRecord a6 ) 
 									( sell_idx : URValue uint a7 ) 

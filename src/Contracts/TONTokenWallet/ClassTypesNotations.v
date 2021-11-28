@@ -16,11 +16,6 @@ Module Export ClassTypesModule := ClassTypes xt sm.
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 
-Notation " 'lend_ownership_map' " := (XHMap addr_std_fixedLRecord lend_recordLRecord) (at level 0).
-Notation " 'lend_ownership_array' " := ((* ???? *)lend_array_recordLRecord) (at level 0).
-
-
-
 Definition lend_array_record_ι_lend_addr_right {b} (x: URValue lend_array_recordLRecord b): URValue XAddress b :=
     || {x} ^^ {lend_array_record_ι_lend_addr} || : _.
     
