@@ -24,56 +24,9 @@ Require Contracts.RootTokenContract.Interface.
 
 Require Import Contracts.TONTokenWallet.ClassTypes.
 
-(*this elpi code move to the Ursus lib afterwards*)
-
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
 
-
-Elpi Command AddLocalState.
-
-Elpi Accumulate lp:{{
-
-main [Name , Term, LocalStateFieldT] :-
-  trm TrmInternal = Term,
-  trm LocalStateField = LocalStateFieldT,
-  str NameStr = Name,
-  N is NameStr ^ "_j",
-  coq.env.add-axiom N  (app [LocalStateField , TrmInternal]) _ , 
-  coq.locate  N GR, 
-  coq.TC.declare-instance GR 0,
-  coq.say TrmInternal.
-main _ :- coq.error "usage: AddLocalState <name> <term> <LocalStateField>".
-
-}}.
-
-Elpi Typecheck.
-Elpi Export AddLocalState.
-
-Elpi Command TestDefinitions. 
-Elpi Accumulate lp:{{
-
-pred get_name i:string , o:term.
-get_name NameS NameG :-
-    coq.locate NameS GR ,
-    NameG = global GR . 
-
-pred constructors_names i:string , o:list constructor.
-constructors_names IndName Names :-
-  std.assert! (coq.locate IndName (indt GR)) "not an inductive type",
-  coq.env.indt GR _ _ _ _ Names _.
-
-pred coqlist->list i:term, o: list term.
-coqlist->list {{ [ ]%xlist }} [ ].
-coqlist->list {{ (lp:X::lp:XS)%xlist }} [X | M] :- coqlist->list XS M.
-coqlist->list X _ :- coq.say "error",
-                    coq.say X.
-
-main [ A ] :-
-  coq.say  A. 
-}}. 
-
-Elpi Typecheck.
  
 Module Type Has_Internal.
 

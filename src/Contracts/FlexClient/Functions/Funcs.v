@@ -774,7 +774,7 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( pr
            [$ #{ sell }  ⇒ { PayloadArgs_ι_sell } ; 
               #{ amount } ⇒ { PayloadArgs_ι_amount } (*; 
               #{ receive_wallet } ⇒ { PayloadArgs_ι_receive_tip3_wallet } ;
-              tvm_address () ⇒ { PayloadArgs_ι_client_addr } *)  $]  ; { _ } }} . 
+              tvm_myaddr () ⇒ { PayloadArgs_ι_client_addr } *)  $]  ; { _ } }} . 
 
  	 	 refine {{ new 'payload : ( XCell ) @ "payload" := {} (* build ( !{ payload_args } ) . endc ( ) *) ; { _ } }} . 
  	 	 refine {{ new 'my_tip3: XAddress @ "my_tip3" := #{ my_tip3_addr } ; { _ } }} . 
@@ -1001,7 +1001,7 @@ Definition deployEmptyFlexWallet ( pubkey : ( uint256 ) ) ( tons_to_wallet : ( u
                        (#{tip3cfg}) ↑  Tip3Config.root_public_key , 
                         #{pubkey} , 
                        (#{tip3cfg}) ↑  Tip3Config.root_address , 
-                       (tvm_address ()) -> set () , 
+                       (tvm_myaddr ()) -> set () , 
                         _flex_wallet_code_ -> get_default () , 
                         _workchain_id_ ) ; { _ } }} . 
  	 	 refine {{ new 'new_wallet : ( XAddress ) @ "new_wallet" := {} ; { _ } }}.

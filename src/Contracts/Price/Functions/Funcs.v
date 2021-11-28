@@ -228,7 +228,7 @@ Definition process_queue ( sell_idx : uint ) ( buy_idx : uint ) : UExpression Ph
                         then { { _:UEt } } ; { _ } }} . 	 	 	 
          refine {{ ({sell} ↑ OrderInfo.account) -= !{half_process_queue} ; { _ } }} . 
  	 	 	   refine {{ ({buy} ↑ OrderInfo.account) -= !{half_process_queue} ; { _ } }} . 
-(*  	 	 	 refine {{ IPricePtr ( address { tvm_address ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
+(*  	 	 	 refine {{ IPricePtr ( address { tvm_myaddr ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
  	 	 	     refine {{ if ( (#{sell_idx}) == !{sell_idx_cur} ) then { { _:UEf } } ; { _ } }} . 
  	 	 	 	     (* refine {{ dealer.ret_ := [ 1 (* ec::deals_limit *) , 
                               ((!{sell}) ↑ OrderInfo.original_amount) - 
