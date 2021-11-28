@@ -4,12 +4,16 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
+
 Require Import RootTokenContract.ClassTypes.
-Require Import RootTokenContract.Ledger.
+Require Import RootTokenContract.Interface.
+(* Require Import RootTokenContract.Ledger. *)
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
+
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
-Module Export ClassTypesModule := RootTokenContract.ClassTypes.ClassTypes xt sm.
+Module Export ClassTypesModule := ClassTypes xt sm.
+Module Export InterfaceModule := PublicInterface xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -96,6 +100,14 @@ Definition DRootTokenContract_ι_start_balance__left (x: ULValue DRootTokenContr
 Notation " a '↑' 'DRootTokenContract.start_balance_' " := ( DRootTokenContract_ι_start_balance__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DRootTokenContract.start_balance_' " := ( DRootTokenContract_ι_start_balance__left a ) (in custom ULValue at level 0) : ursus_scope.
 
+
+(* Inductive IRootTokenContractP :=
+| Iconstructor : XString -> XString -> XUInteger8 -> XUInteger256 -> XAddress -> XUInteger128 -> IRootTokenContractP
+| IdeployWallet : XUInteger256 -> XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
+| IdeployEmptyWallet : XUInteger256 -> XAddress -> XUInteger128 -> IRootTokenContractP
+| Igrant : XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
+| Imint : XUInteger128 -> IRootTokenContractP
+| IrequestTotalGranted : IRootTokenContractP *)
 
 End ClassTypesNotations.
 

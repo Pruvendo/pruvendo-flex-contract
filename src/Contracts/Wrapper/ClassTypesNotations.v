@@ -4,12 +4,16 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonNotations.
-Require Import Contracts.Wrapper.ClassTypes.
-Require Import Contracts.Wrapper.Ledger.
+
+Require Import Wrapper.ClassTypes.
+(* Require Import Wrapper.Ledger. *)
+Require Import Wrapper.Interface.
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
+
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
 Module Export ClassTypesModule := ClassTypes xt sm.
+Module Export InterfaceModule := PublicInterface xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -58,8 +62,6 @@ Definition FlexDeployWalletArgs_ι_grams_left (x: ULValue FlexDeployWalletArgsLR
     
 Notation " a '↑' 'FlexDeployWalletArgs.grams' " := ( FlexDeployWalletArgs_ι_grams_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'FlexDeployWalletArgs.grams' " := ( FlexDeployWalletArgs_ι_grams_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-
 
 Definition wrapper_details_info_ι_name_right {b} (x: URValue wrapper_details_infoLRecord b): URValue XString b :=
     || {x} ^^ {wrapper_details_info_ι_name} || : _ .
@@ -222,5 +224,110 @@ Definition DWrapper_ι_external_wallet__left (x: ULValue DWrapperLRecord): ULVal
     
 Notation " a '↑' 'DWrapper.external_wallet_' " := ( DWrapper_ι_external_wallet__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DWrapper.external_wallet_' " := ( DWrapper_ι_external_wallet__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+(***************************************************************************************************)
+
+(* Inductive IWrapperP :=
+    | Iinit : XAddress -> IWrapperP
+    | IsetInternalWalletCode : XCell -> IWrapperP
+    | IdeployEmptyWallet : XUInteger256 -> XAddress -> XUInteger128 -> IWrapperP
+    | IonTip3Transfer : XAddress -> XUInteger128 -> XUInteger128 -> XUInteger256 -> 
+                                                XAddress -> XCell -> IWrapperP
+    | Iburn : XAddress -> XUInteger256 -> XAddress -> XUInteger256 -> 
+                                                XAddress -> XUInteger128 -> IWrapperP
+    | IhasInternalWalletCode : IWrapperP
+
+    | _Icreate : InitialState -> IWrapperP. *)
+
+Definition Iinit_right { a1 }  ( x : URValue XAddress a1 ) : URValue IWrapper a1.
+ pose proof (urvalue_bind x (fun x' => #(Iinit x' : IWrapper)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.init' ( x ) " := (Iinit_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+ 
+Definition IsetInternalWalletCode_right { a1 }  ( x : URValue XCell a1 ) : URValue IWrapper a1.
+ pose proof (urvalue_bind x (fun x' => #(IsetInternalWalletCode x' : IWrapper)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.setInternalWalletCode' ( x ) " := (IsetInternalWalletCode_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+Definition IdeployEmptyWallet_right { a1 a2 a3}  (x : URValue XUInteger256 a1 ) 
+                                                 (y : URValue XAddress a2) 
+                                                 (z : URValue XUInteger128 a3) : URValue IWrapper ( (orb  a1 (orb a2 a3)) ).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  #(IdeployEmptyWallet x' y' z' : IWrapper)))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.deployEmptyWallet' ( x , y , z ) " := (IdeployEmptyWallet_right x y z) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0) : ursus_scope .
+
+(* | IonTip3Transfer : XAddress -> XUInteger128 -> XUInteger128 -> XUInteger256 -> XAddress -> XCell -> IWrapperP *)
+Definition IonTip3Transfer_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+                                                 (y : URValue XUInteger128 a2) 
+                                                 (z : URValue XUInteger128 a3)
+                                                 (t : URValue XUInteger256 a4)
+                                                 (u : URValue XAddress a5)
+                                                 (v : URValue XCell a6) : URValue IWrapper (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  
+                                urvalue_bind v (fun v' =>  #(IonTip3Transfer x' y' z' t' u' v' : IWrapper))))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.onTip3Transfer' ( x , y , z , t , u , v ) " := (IonTip3Transfer_right x y z t u v) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
+
+(* | Iburn : XAddress -> XUInteger256 -> XAddress -> XUInteger256 -> 
+                                                XAddress -> XUInteger128 -> IWrapperP *)
+Definition Iburn_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+                                                 (y : URValue XUInteger256 a2) 
+                                                 (z : URValue XAddress a3)
+                                                 (t : URValue XUInteger256 a4)
+                                                 (u : URValue XAddress a5)
+                                                 (v : URValue XUInteger128 a6) : URValue IWrapper (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  
+                                urvalue_bind v (fun v' =>  #(Iburn x' y' z' t' u' v' : IWrapper))))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.burn' ( x , y , z , t , u , v ) " := (Iburn_right x y z t u v) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
+
+
+Definition IhasInternalWalletCode_right : URValue IWrapper false.
+ refine (# IhasInternalWalletCode ) .
+Defined.
+
+Notation " '.hasInternalWalletCode' ( x ) " := (IhasInternalWalletCode_right) (in custom URValue at level 0 ) : ursus_scope .
+ 
+Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IWrapper a1.
+ pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IWrapper)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '._create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+ 
 
 End ClassTypesNotations.

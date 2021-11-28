@@ -29,18 +29,17 @@ Definition ContractFields := DWrapperFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
-Module PricePublicInterfaceModule := Wrapper.Interface.PublicInterface xt sm.
+Module WrapperPublicInterfaceModule := Wrapper.Interface.PublicInterface xt sm.
 
-(* Module Import BasicTypesClass := BasicTypes xt sm. *)
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Export TypesModuleForLedger := Contracts.Wrapper.ClassTypes.ClassTypes xt sm .
+Module Export TypesModuleForLedger := Wrapper.ClassTypes.ClassTypes xt sm .
 Import xt.
 
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ ( XQueue PricePublicInterfaceModule.OutgoingMessage ) : Type ; 
- ( XList TVMEvent ) : Type ; 
- ( XString ) : Type ] .
+ [ XHMap XAddress ( XQueue (OutgoingMessage  WrapperPublicInterfaceModule.IWrapper ) ) : Type ; 
+   XList TVMEvent : Type ; 
+   XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
  
@@ -710,9 +709,6 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10011 : typeclass_instances. 
-
-
-
 
 Definition LocalStateField_XUInteger := LocalStateField01110 .
 Definition LocalStateField_XBool := LocalStateField00011 .

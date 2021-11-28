@@ -63,23 +63,12 @@ Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at leve
 Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
 
 Definition self_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TradingPair ) : 
-                                   ULValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterface.PublicInterface )))) . 
+                                   ULValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterface.ITradingPair )))) . 
 Definition self_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TradingPair ) : 
-                                   URValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterface.PublicInterface ))) false) . 
+                                   URValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterface.ITradingPair ))) false) . 
 
 Notation " 'ITradingPairPtr' " := ( self_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
 
-Definition IonDeploy_right { a1 a2 a3 }  ( min_amount : URValue uint128 a1 ) 
-                                         ( deploy_value : URValue uint128 a2 ) 
-                                         ( notify_addr : URValue raw_address a3 ) : URValue (TradingPairPublicInterface.PublicInterface) (orb a1 (orb a2 a3)).
- pose proof (urvalue_bind min_amount (fun a => urvalue_bind deploy_value (fun b => urvalue_bind notify_addr (fun c => #(IonDeploy a b c: TradingPairPublicInterface.PublicInterface)))): URValue _ _).
- rewrite right_or_false in X.
- refine X.
-Defined.
-
-Notation " '.onDeploy' ( x , y , z ) " := (IonDeploy_right x y z)
-(in custom URValue at level 0 , x custom URValue at level 0 , y custom URValue at level 0 , z custom URValue at level 0 ) : ursus_scope .
- 
 Check {{ ITradingPairPtr [[ {_} ]] with { _ } ⤳ .onDeploy ( {} ,  {} ,  {} ) }}.
 
 

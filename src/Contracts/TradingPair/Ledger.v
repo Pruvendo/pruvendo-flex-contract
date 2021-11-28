@@ -31,13 +31,13 @@ Module TradingPairPublicInterfaceModule := TradingPair.Interface.PublicInterface
 
 Module Import BasicTypesClass := BasicTypes xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Export TypesModuleForLedger := ClassTypes xt sm .
+Module Export TypesModuleForLedger := TradingPair.ClassTypes.ClassTypes xt sm .
 Import xt. 
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ ( XHMap XAddress (XQueue (OutgoingMessage TradingPairPublicInterfaceModule.PublicInterface)) ) : Type ; 
- ( XList TVMEvent ) : Type ; 
- ( XString ) : Type ] .
+ [ XHMap XAddress (XQueue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair)) : Type ; 
+   XList TVMEvent : Type ; 
+   XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
  
