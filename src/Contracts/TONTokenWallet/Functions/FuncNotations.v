@@ -112,6 +112,19 @@ Notation " 'error_code::not_enough_balance' " := (sInject error_code_ι_not_enou
 Notation " 'error_code::define_pubkey_or_internal_owner' " := (sInject error_code_ι_define_pubkey_or_internal_owner) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::wrong_bounced_header' " := (sInject error_code_ι_wrong_bounced_header) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::wrong_bounced_args' " := (sInject error_code_ι_wrong_bounced_args) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::only_original_owner_allowed' " := (sInject only_original_owner_allowed) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wallet_in_lend_owneship' " := (sInject wallet_in_lend_owneship) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::not_enough_tons_to_process' " := (sInject ec_ι_not_enough_tons_to_process) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::transfer_to_zero_address' " := (sInject transfer_to_zero_address) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::message_sender_is_not_my_root' " := (sInject message_sender_is_not_my_root) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::message_sender_is_not_good_wallet' " := (sInject message_sender_is_not_good_wallet) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::destroy_non_empty_wallet' " := (sInject destroy_non_empty_wallet) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::finish_time_must_be_greater_than_now' " := (sInject finish_time_must_be_greater_than_now) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::no_allowance_set' " := (sInject no_allowance_set) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrong_spender' " := (sInject wrong_spender) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::not_enough_allowance' " := (sInject not_enough_allowance) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrong_public_call' " := (sInject wrong_public_call) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::non_zero_remaining' " := (sInject non_zero_remaining) (in custom URValue at level 0) : ursus_scope. 
 
 Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
 

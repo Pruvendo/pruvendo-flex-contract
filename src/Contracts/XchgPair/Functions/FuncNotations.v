@@ -72,6 +72,13 @@ Definition self_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesA
 Definition self_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_XchgPair ) : 
                                    URValue ( mapping raw_address (queue (OutgoingMessage XchgPairPublicInterface.IXchgPair ))) false) . 
 
+Notation " 'error_code::not_enough_tons' " := (sInject not_enough_tons) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::double_deploy' " := (sInject double_deploy) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::zero_min_amount' " := (sInject zero_min_amount) (in custom URValue at level 0) : ursus_scope. 
+
+
+
+
 Notation " 'IXchgPairPtr' " := ( self_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
 
 Check {{ IXchgPairPtr [[ {_} ]] with { _ } ⤳ .onDeploy ( {} ,  {} ,  {} ) }}.

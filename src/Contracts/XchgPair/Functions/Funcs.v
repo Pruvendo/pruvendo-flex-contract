@@ -99,8 +99,8 @@ Definition onDeploy (min_amount: uint128) (deploy_value: uint128) (notify_addr: 
     (* refine ( let a := min_amount in {{  new 'min_amount : uint128 @ "min_amount" := #{a} ; {_} }} ). *)
 
     refine {{ require_ ( ( ( int_value ( ) ) > #{ deploy_value } ) , 1 (* error_code::not_enough_tons *) ) ; { _ } }} . 
-    refine {{ require_ ( ( _min_amount_ ) , 1 (* error_code::double_deploy *) ) ; { _ } }} .  
-    refine {{ require_ ( ( #{ min_amount } ) > 0  , 1 (* error_code::zero_min_amount *) ) ; { _ } }} . 
+    refine {{ require_ ( ( _min_amount_ ) ,  error_code::double_deploy  ) ; { _ } }} .  
+    refine {{ require_ ( ( #{ min_amount } ) > 0  , error_code::zero_min_amount ) ; { _ } }} . 
     refine {{ _min_amount_ := #{ min_amount } ; { _ } }} . 
     refine {{ _notify_addr_ := #{ notify_addr } ; { _ } }} . 
     refine {{ tvm_rawreserve ( #{deploy_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .  

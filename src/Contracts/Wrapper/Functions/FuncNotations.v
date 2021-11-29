@@ -27,7 +27,7 @@ Module FuncNotations (xt: XTypesSig)
                      (dc : ConstsTypesSig xt sm ).
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
-
+Export dc.
 Import xt.
 Module WrapperPublicInterface := Contracts.Wrapper.Interface.PublicInterface xt sm.
 
@@ -84,6 +84,25 @@ Definition external_wallet__left := ( ULState (f:=_Contract) (H:=ContractLEmbedd
 Definition external_wallet__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_external_wallet_ ) : URValue ( XMaybe XAddress (* ITONTokenWalletPtrLRecord *)) false ) . 
 Notation " '_external_wallet_' " := ( external_wallet__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_external_wallet_' " := ( external_wallet__right ) (in custom URValue at level 0) : ursus_scope. 
+
+
+Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject message_sender_is_not_my_owner) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::not_enough_balance' " := (sInject error_code_ι_not_enough_balance) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrong_bounced_header' " := (sInject error_code_ι_wrong_bounced_header) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrong_bounced_args' " := (sInject error_code_ι_wrong_bounced_args) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::internal_owner_enabled' " := (sInject error_code_ι_internal_owner_enabled) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::define_pubkey_or_internal_owner' " := (sInject error_code_ι_define_pubkey_or_internal_owner) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrong_wallet_code_hash' " := (sInject wrong_wallet_code_hash) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::cant_override_wallet_code' " := (sInject error_code_ι_cant_override_wallet_code) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::too_big_decimals' " := (sInject too_big_decimals) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::not_my_wallet_notifies' " := (sInject not_my_wallet_notifies) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::burn_unallocated' " := (sInject burn_unallocated) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::message_sender_is_not_good_wallet' " := (sInject message_sender_is_not_good_wallet) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::cant_override_external_wallet' " := (sInject cant_override_external_wallet) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::only_flex_may_deploy_me' " := (sInject only_flex_may_deploy_me) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::unexpected_refs_count_in_code' " := (sInject unexpected_refs_count_in_code) (in custom URValue at level 0) : ursus_scope. 
+
+
 
 Module Calls (tc : SpecSig).
 

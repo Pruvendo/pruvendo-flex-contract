@@ -119,11 +119,11 @@ Notation " 'is_active_time_' '(' order_finish_time ')' " := (is_active_time_righ
  (in custom URValue at level 0 , order_finish_time custom URValue at level 0 ) : ursus_scope .
 
 
-Definition extract_active_order  ( cur_order : ULValue ( optional (uint # OrderInfoXchgLRecord ) ) ) 
+Definition extract_active_order  ( cur_order : ULValue ( optional (OrderInfoXchgWithIdx ) ) ) 
 								 ( orders : ULValue ( queue OrderInfoXchgLRecord ) ) 
 								 ( all_amount : ULValue uint128 ) 
 							     ( sell : boolean ) : 
-		  UExpression ( (optional ( uint # OrderInfoXchgLRecord )) # ( (queue OrderInfoXchgLRecord) # uint128 ) ) true . 
+		  UExpression ( (optional ( OrderInfoXchgWithIdx )) # ( (queue OrderInfoXchgLRecord) # uint128 ) ) true . 
 	refine {{ if ( !{ cur_order } ) then { { _:UEf } } ; { _ } }} . 
 		refine {{ return_ [ !{cur_order} , !{orders} , !{all_amount} ] }} . 
 
@@ -169,8 +169,8 @@ Defined .
 
 Definition process_queue (sell_idx : uint) 
 						 (buy_idx : uint) : UExpression PhantomType true . 
- 	 	 refine {{ new 'sell_opt : optional (uint # OrderInfoXchgLRecord) @ "sell_opt" := {} ; { _ } }} . 
- 	 	 refine {{ new 'buy_opt  : optional (uint # OrderInfoXchgLRecord) @ "buy_opt"  := {} ; { _ } }} . 
+ 	 	 refine {{ new 'sell_opt : optional (OrderInfoXchgWithIdx) @ "sell_opt" := {} ; { _ } }} . 
+ 	 	 refine {{ new 'buy_opt  : optional (OrderInfoXchgWithIdx) @ "buy_opt"  := {} ; { _ } }} . 
  	 	 refine {{ new 'deals_count : uint @ "deals_count" := 0 ; { _ } }} . 
 
  	 	 refine {{ while ( TRUE ) do { { _:UEt } } ; { _ } }} . 

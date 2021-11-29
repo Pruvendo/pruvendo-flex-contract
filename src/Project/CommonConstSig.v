@@ -52,9 +52,34 @@ Parameter error_code_ι_wrong_bounced_header : XUInteger .
 Parameter error_code_ι_wrong_bounced_args : XUInteger .
 (* Parameter  : XUInteger . *)
 
+Parameter not_enough_tons : XUInteger.
+Parameter double_deploy : XUInteger.
+Parameter zero_min_amount : XUInteger.
+
+Parameter wrong_wallet_code_hash : XUInteger.
+Parameter too_big_decimals : XUInteger.
+Parameter not_my_wallet_notifies : XUInteger.
+Parameter burn_unallocated : XUInteger.
+Parameter message_sender_is_not_good_wallet : XUInteger.
+Parameter cant_override_external_wallet : XUInteger.
+Parameter only_flex_may_deploy_me : XUInteger.
 
 
+Parameter deals_limit : XUInteger.
+Parameter different_workchain_id : XUInteger.
+Parameter canceled : XUInteger.
 
+Parameter only_original_owner_allowed : XUInteger.
+Parameter wallet_in_lend_owneship : XUInteger.
+Parameter transfer_to_zero_address : XUInteger.
+Parameter message_sender_is_not_my_root : XUInteger.
+Parameter destroy_non_empty_wallet : XUInteger.
+Parameter finish_time_must_be_greater_than_now : XUInteger.
+Parameter no_allowance_set : XUInteger.
+Parameter wrong_spender : XUInteger.
+Parameter not_enough_allowance : XUInteger.
+Parameter wrong_public_call : XUInteger.
+Parameter non_zero_remaining : XUInteger.
 
 
 End ConstsTypesSig.

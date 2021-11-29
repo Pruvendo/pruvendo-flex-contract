@@ -60,10 +60,10 @@ Local Open Scope xlist_scope.
 (*move this somewhere*)
 Existing Instance LedgerPruvendoRecord.
 
-Definition filter_lend_ownerhip_map : UExpression ( (mapping addr_std_fixedLRecord lend_recordLRecord) # uint128 ) false . 
+Definition filter_lend_ownerhip_map : UExpression ( (lend_ownership_map) # uint128 ) false . 
 	refine {{ if ( _lend_ownership_ -> empty () ) then { return_ {} } ; {_} }} .
 	refine {{ new 'now_v : uint256 @ "now_v" := tvm_now () ; {_} }} . 
-	refine {{ new 'rv : mapping addr_std_fixedLRecord lend_recordLRecord @ "rv" := {} ; {_} }} . 
+	refine {{ new 'rv : lend_ownership_map @ "rv" := {} ; {_} }} . 
 	refine {{ new 'lend_balance : uint128 @ "lend_balance" := {} ; {_} }} . 
     refine {{ for ( 'v : _lend_ownership_) do { {_ : UEf} } ; { _ } }}.
 	refine {{ if ( ( !{now_v} ) < second ( {v} )  ↑ lend_record.lend_finish_time ) then { {_ : UEf } } }}.
@@ -73,7 +73,7 @@ Definition filter_lend_ownerhip_map : UExpression ( (mapping addr_std_fixedLReco
     refine {{ return_ [ !{rv} , !{lend_balance} ] }} .
 Defined .
  
-Definition filter_lend_ownerhip_map_right : URValue ( (mapping addr_std_fixedLRecord lend_recordLRecord) # uint128 ) false := 
+Definition filter_lend_ownerhip_map_right : URValue ( lend_ownership_map # uint128 ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) filter_lend_ownerhip_map ) . 
  
 Notation " 'filter_lend_ownerhip_map_' '(' ')' " := ( filter_lend_ownerhip_map_right ) 
@@ -96,16 +96,16 @@ Definition check_internal_owner ( original_owner_only : boolean ) ( allowed_for_
                    filter_lend_ownerhip_map_ ( ) ; {_} }} . 
  	 	 refine {{ if ( !{actual_lend_balance} > 0 ) then { {_:UEt} } else { {_:UEt} } }} . 
  	 	 	 refine {{ if ( (#{ allowed_for_original_owner_in_lend_state }) ) then { {_:UEt} } ; {_} }} .
-        refine {{ require_ ( (is_internal_owner_ ( )) , 1 (* error_code::internal_owner_disabled *) ) ; {_} }} . 
+        refine {{ require_ ( (is_internal_owner_ ( )) ,  error_code::internal_owner_disabled  ) ; {_} }} . 
  	 	 	  refine {{ if ( _owner_address_ -> get () == int_sender () ) then { {_:UEf} } }} . 
  	 	 	 	 refine {{ return_ (_balance_ - (!{actual_lend_balance}) ) }} . 
- 	 	 refine {{ require_ ( ( ~ (#{ original_owner_only }) ) , 1 (* error_code::only_original_owner_allowed *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( ~ (#{ original_owner_only }) ) ,  error_code::only_original_owner_allowed ) ; {_} }} . 
  	 	 refine {{ new 'elem : ( XUInteger ) @ "elem" := {}
                        (* filtered_map.lookup ( int_sender () ) *) ; {_} }} . 
- 	 	 refine {{ require_ ( (!{ elem }) , 1 (* error_code::message_sender_is_not_my_owner *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( (!{ elem }) ,  error_code::message_sender_is_not_my_owner  ) ; {_} }} . 
  	 	 refine {{ return_ min ( _balance_ , (!{ elem }) (* -> lend_balance *) ) }} . 
- refine {{ require_ ( (is_internal_owner_ ( )) , 1 (* error_code::internal_owner_disabled *) ) ; {_} }} . 
- refine {{ require_ ( ( (_owner_address_ -> get_default ()) == int_sender () ) , 1 (* error_code::message_sender_is_not_my_owner *) ) ; {_} }} . 
+ refine {{ require_ ( (is_internal_owner_ ( )) ,  error_code::internal_owner_disabled  ) ; {_} }} . 
+ refine {{ require_ ( ( (_owner_address_ -> get_default ()) == int_sender () ) , error_code::message_sender_is_not_my_owner  ) ; {_} }} . 
  refine {{ return_ _balance_ }} .  
 Defined . 
 
@@ -121,12 +121,12 @@ Defined .
 
 
 Definition check_external_owner : UExpression XUInteger128 true . 
- 	 	 refine {{ require_ ( ( ~ (is_internal_owner_ ( )) ) , 1 (* error_code::internal_owner_enabled *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( ~ (is_internal_owner_ ( )) ) ,  error_code::internal_owner_enabled  ) ; {_} }} . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _wallet_public_key_ ) , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
  	 	 refine {{ new ( 'filtered_map:(XHMap addr_std_fixedLRecord lend_recordLRecord) , 'lend_balance:XUInteger128 ) @
                    ( "filtered_map" , "lend_balance" ) := filter_lend_ownerhip_map_ ( ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( (!{filtered_map}) -> empty () ) , 1 (* error_code::wallet_in_lend_owneship *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( (!{filtered_map}) -> empty () ) ,  error_code::wallet_in_lend_owneship  ) ; {_} }} . 
  	 	 refine {{ return_ _balance_ }} . 
 Defined . 
  
@@ -173,7 +173,7 @@ Definition check_transfer_requires ( tokens : ( XUInteger128 ) ) ( grams : ( XUI
                              check_owner_ ( FALSE , FALSE ) ; {_} }} . 
  	 	 refine {{ require_ ( ( (#{ tokens }) <= (!{ active_balance }) ) , error_code::not_enough_balance ) ; {_} }} . 
  	 	 refine {{ if ( (#{Internal}) ) then { {_:UEt} } else { {_:UEt} } ; {_} }} . 
- 	 	 	 refine {{ require_ ( ( ( int_value () ) >= 1 (* min_transfer_costs *) ) , 1 (* error_code::not_enough_tons_to_process *) ) }} . 
+ 	 	 	 refine {{ require_ ( ( ( int_value () ) >= 1 (* min_transfer_costs *) ) ,  error_code::not_enough_tons_to_process  ) }} . 
  	 	   refine {{ require_ ( ( ((#{ grams }) >= 1 (* min_transfer_costs *)) && (tvm_balance () > (#{ grams }) ) ) , 1 (*  error_code::not_enough_tons_to_process *) ) }} . 
  	 	 refine {{ return_ (!{ active_balance }) }} . 
 Defined . 
@@ -260,7 +260,7 @@ Definition transfer_impl
 : UExpression PhantomType true . 
  	 	 refine {{ new 'active_balance : ( XUInteger128 ) @ "active_balance" := 
                          check_transfer_requires_ ( (#{ tokens }) , (#{ grams }) ) ; {_} }} . 
- 	 	 refine {{ require_ ( (#{ too }) != 0 , 1 (* error_code::transfer_to_zero_address *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( (#{ too }) != 0 ,  error_code::transfer_to_zero_address ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
  	 	 refine {{ new 'answer_addr_fxd : ( XAddress ) @ "answer_addr_fxd" := 
                          fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} . 
@@ -553,7 +553,7 @@ Notation " 'set_int_return_value_' '(' ')' " :=
 Definition accept ( tokens : ( XUInteger128 ) ) ( answer_addr : ( XAddress ) ) ( keep_grams : ( XUInteger128 ) ) : UExpression XBool true . 
  	 	 refine {{ new ( 'sender:XAddress , 'value_gr:uint ) @
                    ( "sender" , "value_gr" ) := int_sender_and_value_ ( ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( _root_address_ == !{sender} ) , 1 (* error_code::message_sender_is_not_my_root *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( _root_address_ == !{sender} ) , error_code::message_sender_is_not_my_root ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
  	 	 refine {{ _balance_ += (#{ tokens }) ; {_} }} . 
  	 	 refine {{ tvm_rawreserve ( tvm_balance () + (#{ keep_grams }) - !{value_gr} , rawreserve_flag::up_to ) ; {_} }} . 
@@ -575,7 +575,7 @@ Definition internalTransfer
  	 	 refine {{ { expected_address } := expected_sender_address_ ( (#{ sender_pubkey }) , (#{ sender_owner }) ) ; {_} }} . 
  	 	 refine {{ new ( 'sender:XAddress , 'value_gr:uint ) @
                    ( "sender" , "value_gr" ) := int_sender_and_value_ ( ) ; {_} }} . 
- 	 	 refine {{ require_ ( (* ( std::get < addr_std > ( sender () ) . address *) {} == (!{ expected_address })  , 1 (* error_code::message_sender_is_not_good_wallet *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( (* ( std::get < addr_std > ( sender () ) . address *) {} == (!{ expected_address })  , error_code::message_sender_is_not_good_wallet  ) ; {_} }} . 
  	 	 refine {{ _balance_ += (#{ tokens }) ; {_} }} . 
  	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , rawreserve_flag::up_to ) ; {_} }} . 
  	 	 refine {{ if ( (#{ notify_receiver }) && ( ? _owner_address_) ) then { {_:UEf} } else { {_:UEf} } }} . 
@@ -589,7 +589,7 @@ Defined .
  
 Definition destroy ( dest : ( XAddress ) ) : UExpression PhantomType true . 
  	 	 refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( _balance_ == 0 ) , 1 (* error_code::destroy_non_empty_wallet *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( _balance_ == 0 ) ,  error_code::destroy_non_empty_wallet  ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
  	 	 refine {{ tvm_transfer ( (#{ dest }) , 0 , FALSE , {} (* SEND_ALL_GAS | SENDER_WANTS_TO_PAY_FEES_SEPARATELY | DELETE_ME_IF_I_AM_EMPTY | IGNORE_ACTION_ERRORS *) ) }} . 
  Defined . 
@@ -616,7 +616,7 @@ Definition lendOwnership
  	 	 refine {{ new 'allowed_balance : ( XUInteger128 ) @ "allowed_balance" := 
                           check_owner_ ( TRUE , TRUE ) ; {_} }} . 
  	 	 refine {{ require_ ( ( ( (#{ lend_balance }) > 0 ) && ( (#{ lend_balance }) <= (!{ allowed_balance }) ) ) , error_code::not_enough_balance ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( (#{ lend_finish_time }) > tvm_now () ) , 1 (* error_code::finish_time_must_be_greater_than_now *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( (#{ lend_finish_time }) > tvm_now () ) ,  error_code::finish_time_must_be_greater_than_now  ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
  	 	 refine {{ new 'answer_addr_fxd : ( XAddress ) @ "answer_addr_fxd" := 
                            fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} . 
@@ -817,7 +817,7 @@ Definition approve ( spender : ( XAddress ) ) ( remainingTokens : ( XUInteger128
 (*  	 	 	 refine {{ ( ( _allowance_ ->get_default () ) ↑ allowance_info.remainingTokens ) := (#{ tokens }) ; {_} }} .  *)
 (*  	 	 	 refine {{ ( ( _allowance_ ->get_default () ) ↑ allowance_info.spender ) = (#{ spender }) }} .  *)
 refine {{ return_ {} }} .
- refine {{ require_ ( (#{ remainingTokens }) == 0 , 1 (* error_code::non_zero_remaining *) ) ; {_} }} . 
+ refine {{ require_ ( (#{ remainingTokens }) == 0 ,  error_code::non_zero_remaining  ) ; {_} }} . 
  refine {{ _allowance_ := ( [ (#{ spender }) , (#{ tokens }) ] -> set () ) ; {_} }} . 
  refine {{ return_ {}  }} .
 Defined . 
@@ -885,9 +885,9 @@ Definition transferFrom ( answer_addr : ( XAddress ) )
 ( notify_receiver : ( XBool ) ) 
 ( payload : ( XCell ) ) 
 : UExpression PhantomType true . 
- refine {{ require_ ( ( _allowance_ ) , 1 (* error_code::no_allowance_set *) ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( int_sender () == ( ( _allowance_ ->get_default () ) ↑ allowance_info.spender) ) , 1 (* error_code::wrong_spender *) ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( (#{ tokens }) <= ( ( _allowance_ ->get_default () ) ↑ allowance_info.remainingTokens) ) , 1 (* error_code::not_enough_allowance *) ) ; {_} }} . 
+ refine {{ require_ ( ( _allowance_ ) ,  error_code::no_allowance_set  ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( int_sender () == ( ( _allowance_ ->get_default () ) ↑ allowance_info.spender) ) ,  error_code::wrong_spender  ) ; {_} }} . 
+ 	 	 refine {{ require_ ( ( (#{ tokens }) <= ( ( _allowance_ ->get_default () ) ↑ allowance_info.remainingTokens) ) , error_code::not_enough_allowance  ) ; {_} }} . 
  	 	 refine {{ require_ ( ( (#{ tokens }) <= _balance_ ) , error_code::not_enough_balance ) ; {_} }} . 
 (*  	 	 refine {{ ITONTokenWalletPtr dest_wallet ( (#{ too }) ) ; {_} }} .  *)
  	 	 refine {{ tvm_rawreserve ( tvm_balance () - int_value () , rawreserve_flag::up_to ) ; {_} }} . 
@@ -907,7 +907,7 @@ Definition transferFrom ( answer_addr : ( XAddress ) )
 Definition _on_bounced ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression XUInteger true . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
 (*  	 	 refine {{ parser p ( (#{ msg_body }) ) ; {_} }} .  *)
- 	 	 refine {{ require_ ( (* ( p ^^ ldi ( 32 ) *) {} == #{(-1)%Z} , 1 (* error_code::wrong_bounced_header *) ) ; {_} }} . 
+ 	 	 refine {{ require_ ( (* ( p ^^ ldi ( 32 ) *) {} == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} . 
 (*  	 	 refine {{ opt_hdr : ( auto ) @ "opt_hdr" ; {_} }} .  *)
        refine {{ new 'opt_hdr @ "opt_hdr" := {} ; {_} }} .
 (* 	 	 refine {{ [ opt_hdr , =p ] := parse_continue < abiv2::internal_msg_header > ( p ) ; {_} }} . *) 
@@ -935,7 +935,7 @@ Definition _on_bounced ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpressi
  Defined . 
  
  Definition _fallback ( msg : XCell ) ( msg_body : ( XSlice ) ) : UExpression XUInteger true . 
- refine {{ require_ ( (  (* parser (#{ msg_body }) ).ldu ( 32 ) *) {} == 0 ) , 1 (* error_code::wrong_public_call *) ) ; {_} }} . 
+ refine {{ require_ ( (  (* parser (#{ msg_body }) ).ldu ( 32 ) *) {} == 0 ) , error_code::wrong_public_call  ) ; {_} }} . 
  	 	 refine {{ return_ 0 }} . 
  Defined . 
  
