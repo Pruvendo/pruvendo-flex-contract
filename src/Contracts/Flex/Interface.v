@@ -14,7 +14,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XAddress TonsConfigLRecord XUInteger8 InitialStateLRecord
+Variables XAddress TonsConfigLRecord XUInteger8 StateInitLRecord
            XCell XUInteger256 XUInteger128 XBool XString ListingConfigLRecord Tip3ConfigLRecord : Type.
 Variable XMaybe : Type -> Type .
 
@@ -36,7 +36,7 @@ Inductive IFlexP :=
 | IapproveWrapper : XUInteger256 -> IFlexP
 | IrejectWrapper : XUInteger256 -> IFlexP 
 
-| _Icreate : InitialStateLRecord -> IFlexP
+| _Icreate : StateInitLRecord -> IFlexP
 (* | _Itransfer : PublicInterfaceP  *).
 
 Inductive IListingAnswerP :=
@@ -72,7 +72,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IFlexP. *)
-Definition IFlex : Type := IFlexP XAddress TonsConfigLRecord XUInteger8 InitialStateLRecord XCell XUInteger256
+Definition IFlex : Type := IFlexP XAddress TonsConfigLRecord XUInteger8 StateInitLRecord XCell XUInteger256
      XUInteger128 XString ListingConfigLRecord Tip3ConfigLRecord XMaybe  .
 
 (* __interface IFlex *)

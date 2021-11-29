@@ -30,6 +30,13 @@ Require Import XchgPair.ClassTypes.
 Require Import Wrapper.ClassTypes.
 Require Import TONTokenWallet.ClassTypes.
 
+Require Import Contracts.XchgPair.ClassTypesNotations.
+Require Import Contracts.TradingPair.ClassTypesNotations.
+Require Import Contracts.TONTokenWallet.ClassTypesNotations.
+
+
+
+
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
 
@@ -39,6 +46,13 @@ Import co.
 
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
+
+
+Module Import XchgPairModuleForFlex := Contracts.XchgPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import TradingPairModuleForFlex := Contracts.TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import TONTokenWalletModuleForFlex := Contracts.TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+
+
 
 (* Module TradingPairClassTypes := TradingPair.ClassTypes.ClassTypes XTypesModule StateMonadModule.
 Module XchgPairClassTypes := XchgPair.ClassTypes.ClassTypes XTypesModule StateMonadModule.
@@ -294,10 +308,25 @@ Definition approveTradingPairImpl ( pubkey : uint256 )
                  prepare_trading_pair_ ( tvm_myaddr () , !{req_info} ↑ TradingPairListingRequest.tip3_root , #{pair_code} ) ; { _ } }} . 
  	 	 refine {{ new 'trade_pair : raw_address @ "trade_pair" := {} (*  
  	 	  ITradingPairPtr ( Address :: make_std ( !{ workchain_id } , std_addr ) )  *); { _ } }} . 
-(* 	 	 refine {{ trade_pair.deploy ( state_init , Grams ( listing_cfg . pair_deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , ) . onDeploy ( req_info . min_amount , listing_cfg . pair_keep_balance , req_info . notify_addr ) ; { _ } }} .  *)
+(* 	 	 refine {{ trade_pair.deploy ( state_init , Grams ( listing_cfg . pair_deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , ) . 
+onDeploy ( req_info . min_amount , listing_cfg . pair_keep_balance , req_info . notify_addr ) ; { _ } }} .  *)
+refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
+              {{ {trade_pair_ptr} with {} ⤳ TradingPair.deploy ( !{state_init} ) ; {_} }} ).  
+Locate ListingConfigLRecord.
+              refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
+                  {{ {trade_pair_ptr} with [$ (#{listing_cfg}) ↑ ListingConfig.pair_deploy_value ⇒ { Messsage_ι_value } ;
+                                  (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags }  $] 
+                                  ⤳ TradingPair.onDeploy (!{req_info} ↑ TradingPairListingRequest.min_amount , 
+                                                          !{listing_cfg} ↑ ListingConfig.pair_keep_balance, 
+                                                          !{req_info} ↑ TradingPairListingRequest.notify_addr ) ; { _ } }} ).
+
+
  	 	 refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := {} (*  
  	 	   req_info.client_funds - listing_cfg ^^ ListingConfigLRecord:register_pair_cost *) ; { _ } }} . 
 (*  	 	 refine {{ IListingAnswerPtr ( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onTradingPairApproved ( pubkey , trade_pair . get ( ) ) ; { _ } }} .  *)
+refine {{ IListingAnswerPtr [[  !{req_info} ↑ TradingPairListingRequest.client_addr ]]
+          with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onTradingPairApproved ( #{pubkey} , !{trade_pair} ) ; {_} }}. 
+
  	 	 refine {{ return_ [ !{trade_pair} , #{trading_pair_listing_requests} ] }} . 
 Defined .
 
@@ -346,6 +375,8 @@ Definition rejectTradingPairImpl ( pubkey : uint256 )
  	 	 refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := 
             ( (!{req_info}) ↑ TradingPairListingRequest.client_funds ) - ( (#{listing_cfg}) ↑ ListingConfig.reject_pair_cost ) ; { _ } }} . 
 (*  	 	 refine {{ IListingAnswerPtr( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onTradingPairRejected ( pubkey ) ; { _ } }} .  *)
+refine {{ IListingAnswerPtr [[  !{req_info} ↑ TradingPairListingRequest.client_addr ]]
+          with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onTradingPairRejected ( #{pubkey} ) ; {_} }}.                                                               
  	 	 refine {{ return_ #{trading_pair_listing_requests} }} . 
 Defined . 
 
@@ -416,20 +447,20 @@ Definition approveXchgPairImpl ( pubkey :  uint256 ) ( xchg_pair_listing_request
                       0 ⇒ { DXchgPair_ι_min_amount_ } ; 
                       0 ⇒ { DXchgPair_ι_notify_addr_ } $] ; { _ } }} . 
  	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ( "state_init" , "std_addr" ) := prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , #{xchg_pair_code} ) ; { _ } }} . 
- 	 	 
-     refine {{ new 'xchg_pair : raw_address @ "xchg_pair" := {} 
-                (* IXchgPairPtr ( Address :: make_std ( !{ workchain_id } , std_addr ) ) *) ; { _ } }} .
-
+      refine {{ new 'xchg_pair : raw_address @ "xchg_pair" := {}  ; {_} }}.
+                (* IXchgPairPtr ( Address :: make_std ( !{ workchain_id } , std_addr ) ) *) (* ; { _ } }} .
+ *)
     (* xchg_pair.deploy(state_init, Grams(listing_cfg.pair_deploy_value.get()), DEFAULT_MSG_FLAGS, false).
     onDeploy(req_info.min_amount, listing_cfg.pair_keep_balance, req_info.notify_addr); *)
 
-(*     refine ( let xchg_pair_ptr := {{ IXchgPairPtr [[ !{xchg_pair}  ]] }} in 
+    refine ( let xchg_pair_ptr := {{ IXchgPairPtr [[ !{xchg_pair}  ]] }} in 
               {{ {xchg_pair_ptr} with [$ (#{listing_cfg}) ↑ ListingConfig.pair_deploy_value ⇒ { Messsage_ι_value } ;
                                          (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags } ;
-                                         FALSE ⇒ { Messsage_ι_bounce } $] ⤳ ._create ( {_} ) ; {_} }} ).   *)
+                                         FALSE ⇒ { Messsage_ι_bounce } $] ⤳ XchgPair.deploy ( !{state_init} ) ; {_} }} ).  
 
 
-(*  	 	 refine {{ xchg_pair.deploy ( state_init , Grams ( listing_cfg . pair_deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , ) . onDeploy ( req_info . min_amount , listing_cfg . pair_keep_balance , req_info . notify_addr ) ; { _ } }} .  *)
+ 	 	 (* refine {{ xchg_pair.deploy ( state_init , Grams ( listing_cfg . pair_deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , ) .
+        onDeploy ( req_info . min_amount , listing_cfg . pair_keep_balance , req_info . notify_addr ) ; { _ } }} .   *)
  	 	 refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := !{req_info} ↑ XchgPairListingRequest.client_funds - 
                                                                      ( #{listing_cfg} ) ↑ ListingConfig.register_pair_cost  ; { _ } }} . 
      refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_addr ]]
@@ -469,6 +500,8 @@ UExpression xchg_pairs_map true .
           ( (!{req_info}) ↑ XchgPairListingRequest.client_funds )
                  - ( (#{listing_cfg}) ↑ ListingConfig.reject_pair_cost ) ; { _ } }} . 
 (*  	 	 refine {{ IListingAnswerPtr( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onXchgPairRejected ( pubkey ) ; { _ } }} .  *)
+refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_addr ]]
+          with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onXchgPairRejected ( #{pubkey} ) ; {_} }}.  
  	 	 refine {{ return_ #{xchg_pair_listing_requests} }} . 
  Defined . 
  
@@ -633,6 +666,15 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
               #{ext_wallet_code} , 
               #{workchain_id} ) ; { _ } }} . 
  refine {{ new 'wallet_addr : raw_address @ "wallet_addr" := {} ; { _ } }} .
+
+          
+refine ( let wallet_addr_ptr := {{ ITONTokenWalletPtr [[ !{wallet_addr}  ]] }} in 
+              {{ {wallet_addr_ptr} with [$ (#{listing_cfg}) ↑ ListingConfig.ext_wallet_balance ⇒ { Messsage_ι_value }  $] 
+                                         ⤳ TONTokenWallet.deploy_noop ( !{wallet_init} ) ; {_} }} ).  
+refine ( let wallet_addr_ptr := {{ ITONTokenWalletPtr [[ !{wallet_addr}  ]] }} in 
+              {{ {wallet_addr_ptr} with [$ (#{listing_cfg}) ↑ ListingConfig.wrapper_deploy_value ⇒ { Messsage_ι_value }  $] 
+                                         ⤳ TONTokenWallet.deploy ( !{wallet_init} ) ; {_} }} ). (* Тут должен быть init, который делаент непонятно что *)  
+
 (*  	 	 refine {{ ITONTokenWalletPtr wallet_addr ( address : : make_std ( workchain_id , wallet_hash_addr ) ) ; { _ } }} .  *)
 (*  	 	 refine {{ wallet_addr.deploy_noop ( wallet_init , Grams ( listing_cfg . ext_wallet_balance . get ( ) ) ) ; { _ } }} . 
  	 	 refine {{ wrapper_addr.deploy ( wrapper_init , Grams ( listing_cfg . wrapper_deploy_value . get ( ) ) ) . init ( wallet_addr . get ( ) ) ; { _ } }} . 
@@ -678,6 +720,8 @@ Definition rejectWrapperImpl
               ( (!{req_info}) ↑ WrapperListingRequest.client_funds ) - 
                 ( (#{listing_cfg}) ↑ ListingConfig.reject_wrapper_cost ) ; { _ } }} . 
 (*  	 	 refine {{ IListingAnswerPtr( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onWrapperRejected ( pubkey ) ; { _ } }} .  *)
+refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_addr ]]
+          with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onWrapperRejected ( #{pubkey} ) ; {_} }}.  
  	 	 refine {{ return_ (#{wrapper_listing_requests}) }} . 
  Defined .
  

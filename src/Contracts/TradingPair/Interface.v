@@ -40,7 +40,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print PublicInterfaceP. *)
-Definition ITradingPair : Type := ITradingPairP XUInteger128 XAddress InitialStateLRecord.
+Definition ITradingPair : Type := ITradingPairP XUInteger128 XAddress StateInitLRecord.
 
 (* Print Iconstructor. *)
 Arguments IonDeploy {_} {_} {_}.

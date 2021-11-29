@@ -667,13 +667,13 @@ Notation " '.lendOwnership' ( x , y , z , t , u , v , w ) " := (IlendOwnership_r
 
 
 
-Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue ITONTokenWallet a1.
+Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue ITONTokenWallet a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : ITONTokenWallet)): URValue _ _).
  rewrite right_or_false in X.
  refine X.
 Defined.
 
 Notation " 'TONTokenWallet.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
- 
+Notation " 'TONTokenWallet.deploy_noop' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
 
 End ClassTypesNotations.

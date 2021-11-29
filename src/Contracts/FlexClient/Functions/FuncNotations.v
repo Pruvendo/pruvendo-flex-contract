@@ -35,7 +35,7 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module TradingPairPublicInterface := Contracts.TradingPair.Interface.PublicInterface xt sm.
+Module TradingPairPublicInterfaceModule := Contracts.TradingPair.Interface.PublicInterface xt sm.
 Module XchgPairPublicInterface    := Contracts.XchgPair.Interface.PublicInterface xt sm.
 Module PricePublicInterface       := Contracts.Price.Interface.PublicInterface xt sm.
 Module TokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
@@ -54,6 +54,11 @@ Import UrsusNotations.
 Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
 
+Definition ITradingPairPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITradingPair ) : 
+                                   ULValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair )) )) . 
+Definition ITradingPairPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITradingPair ) : 
+                                   URValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair ))) false) . 
+Notation " 'ITradingPairPtr' " := ( ITradingPairPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 
  Definition owner__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_owner_ ) : ULValue uint256 ) . 

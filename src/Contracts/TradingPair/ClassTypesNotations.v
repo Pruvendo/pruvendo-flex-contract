@@ -71,10 +71,10 @@ Definition IonDeploy_right { a1 a2 a3 }  ( min_amount : URValue XUInteger128 a1 
  refine X.
 Defined.
 
-Notation " '.onDeploy' ( x , y , z ) " := (IonDeploy_right x y z)
+Notation " 'TradingPair.onDeploy' ( x , y , z ) " := (IonDeploy_right x y z)
 (in custom URValue at level 0 , x custom URValue at level 0 , y custom URValue at level 0 , z custom URValue at level 0 ) : ursus_scope .
  
-Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue ITradingPair a1.
+Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue ITradingPair a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : ITradingPair)): URValue _ _).
  rewrite right_or_false in X.
  refine X.

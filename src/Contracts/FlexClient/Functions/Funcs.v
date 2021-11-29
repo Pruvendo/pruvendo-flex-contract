@@ -227,7 +227,7 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm_accept () ; { _ } }} .  
        refine {{ new 'pair_data : TradingPairClassTypes.DTradingPairLRecord @ "pair_data" := 
-       DTradingPairInsert [$ _flex_ ⇒ { DTradingPair_ι_flex_addr_ } ; 
+                              [$ _flex_ ⇒ { DTradingPair_ι_flex_addr_ } ; 
                               ( #{tip3_root} ) ⇒ { DTradingPair_ι_tip3_root_ } ;
                               0 ⇒ { DTradingPair_ι_notify_addr_ }  $] ; {_} }}.  
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=

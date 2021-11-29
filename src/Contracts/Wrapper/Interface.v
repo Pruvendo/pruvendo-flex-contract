@@ -48,7 +48,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IWrapperP. *)
-Definition IWrapper: Type := IWrapperP XAddress XUInteger128 XUInteger256 XCell InitialStateLRecord.
+Definition IWrapper: Type := IWrapperP XAddress XUInteger128 XUInteger256 XCell StateInitLRecord.
 
 
 Arguments Iinit {_} {_} {_} {_} {_}.

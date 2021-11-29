@@ -101,7 +101,7 @@ Notation " a '↑' 'DRootTokenContract.start_balance_' " := ( DRootTokenContract
 Notation " a '↑' 'DRootTokenContract.start_balance_' " := ( DRootTokenContract_ι_start_balance__left a ) (in custom ULValue at level 0) : ursus_scope.
 
 
-Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IRootTokenContract a1.
+Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue IRootTokenContract a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IRootTokenContract)): URValue _ _).
  rewrite right_or_false in X.
  refine X.

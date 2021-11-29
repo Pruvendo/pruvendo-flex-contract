@@ -136,7 +136,7 @@ Notation " '.setFlexCfg' ( x , y  ) " := (IsetFlexCfg_right x y)
 (in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope .
 
 
-Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IFlexClient a1.
+Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue IFlexClient a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IFlexClient)): URValue _ _).
  rewrite right_or_false in X.
  refine X.

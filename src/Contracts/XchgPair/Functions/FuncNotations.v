@@ -81,7 +81,7 @@ Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in 
 
 Notation " 'IXchgPairPtr' " := ( self_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
 
-Check {{ IXchgPairPtr [[ {_} ]] with { _ } ⤳ .onDeploy ( {} ,  {} ,  {} ) }}.
+Check {{ IXchgPairPtr [[ {_} ]] with { _ } ⤳ XchgPair.onDeploy ( {} ,  {} ,  {} ) }}.
 
 
 Module Calls (tc : SpecSig).

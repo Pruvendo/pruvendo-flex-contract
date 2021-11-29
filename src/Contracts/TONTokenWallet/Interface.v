@@ -59,7 +59,7 @@ Arguments IonTip3LendOwnership {_} {_} {_} {_} {_}.
 Arguments IonTip3Transfer {_} {_} {_} {_} {_}.
 
 (* Print ITONTokenWalletP. *)
-Definition ITONTokenWallet : Type := ITONTokenWalletP XAddress XUInteger128 XUInteger32 XUInteger256 XCell XBool InitialStateLRecord.
+Definition ITONTokenWallet : Type := ITONTokenWalletP XAddress XUInteger128 XUInteger32 XUInteger256 XCell XBool StateInitLRecord.
 
 Arguments ItransferWithNotify  {_} {_} {_} {_} {_} {_} {_}.
 Arguments ItransferToRecipient {_} {_} {_} {_} {_} {_} {_}. 

@@ -583,7 +583,7 @@ Notation " a '↑' 'DFlex.xchg_pair_listing_requests_' " := ( DFlex_ι_xchg_pair
 | IapproveWrapper : XUInteger256 -> IFlexP
 | IrejectWrapper : XUInteger256 -> IFlexP 
 
-| _Icreate : InitialStateLRecord -> IFlexP  *)
+| _Icreate : StateInitLRecord -> IFlexP  *)
 
 (* Iconstructor : XUInteger256 -> XString -> XMaybe XAddress -> TonsConfigLRecord -> 
                                           XUInteger8 -> ListingConfigLRecord -> IFlexP *)
@@ -751,8 +751,8 @@ Defined.
 
 Notation " '.rejectWrapper' ( x ) " := (IrejectWrapper_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
 
-(* | _Icreate : InitialStateLRecord -> IFlexP *)
-Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IFlex a1.
+(* | _Icreate : StateInitLRecord -> IFlexP *)
+Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue IFlex a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IFlex)): URValue _ _).
  rewrite right_or_false in X.
  refine X.

@@ -47,7 +47,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IPriceXchgP.  *)
-Definition IPriceXchg : Type := IPriceXchgP XUInteger128 XUInteger32 XUInteger256 XAddress XCell InitialStateLRecord.
+Definition IPriceXchg : Type := IPriceXchgP XUInteger128 XUInteger32 XUInteger256 XAddress XCell StateInitLRecord.
 
 Arguments IonTip3LendOwnership {_} {_} {_} {_} {_} {_} . 
 Arguments IprocessQueue {_} {_} {_} {_} {_} {_} . 

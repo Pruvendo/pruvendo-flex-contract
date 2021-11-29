@@ -71,7 +71,7 @@ Definition IonDeploy_right { a1 a2 a3 }  ( min_amount : URValue XUInteger128 a1 
  refine X.
 Defined.
 
-Notation " '.onDeploy' ( x , y , z ) " := (IonDeploy_right x y z)
+Notation " 'XchgPair.onDeploy' ( x , y , z ) " := (IonDeploy_right x y z)
 (in custom URValue at level 0 , x custom URValue at level 0 , y custom URValue at level 0 , z custom URValue at level 0 ) : ursus_scope .
  
 Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue IXchgPair a1.

@@ -51,7 +51,7 @@ Module TokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes xt sm
 Import xt.
 
 Definition MessagesAndEventsL : list Type := 
- [ ( XQueue FlexClientPublicInterfaceModule.OutgoingMessage ) : Type ; 
+ [ ( XQueue (OutgoingMessage FlexClientPublicInterfaceModule.IFlexClient) ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .

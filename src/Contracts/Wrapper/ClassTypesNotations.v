@@ -321,7 +321,7 @@ Defined.
 
 Notation " '.hasInternalWalletCode' '()' " := (IhasInternalWalletCode_right) (in custom URValue at level 0 ) : ursus_scope .
  
-Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URValue IWrapper a1.
+Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue IWrapper a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IWrapper)): URValue _ _).
  rewrite right_or_false in X.
  refine X.

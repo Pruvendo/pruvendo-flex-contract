@@ -44,7 +44,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IFlexClientP. *)
-Definition IFlexClient : Type := IFlexClientP XAddress XUInteger256 XCell TonsConfigLRecord InitialStateLRecord.
+Definition IFlexClient : Type := IFlexClientP XAddress XUInteger256 XCell TonsConfigLRecord StateInitLRecord.
 
 (* Print Iconstructor. *)
 

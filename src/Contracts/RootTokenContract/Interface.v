@@ -45,7 +45,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IRootTokenContractP. *)
-Definition IRootTokenContract : Type := IRootTokenContractP XAddress XUInteger128 XUInteger256 XString XUInteger8 InitialStateLRecord .
+Definition IRootTokenContract : Type := IRootTokenContractP XAddress XUInteger128 XUInteger256 XString XUInteger8 StateInitLRecord .
 
 Arguments Iconstructor {_} {_} {_} {_} {_} {_} .
 Arguments IdeployWallet {_} {_} {_} {_} {_} {_}.
