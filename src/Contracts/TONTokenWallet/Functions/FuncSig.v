@@ -24,7 +24,7 @@ Local Open Scope ucpp_scope.
 
 Notation address_t := XAddress.
 
-Notation lend_ownership_map := (mapping addr_std_fixedLRecord (addr_std_fixedLRecord # lend_recordLRecord)).
+Notation lend_ownership_map := (mapping addr_std_fixedLRecord lend_recordLRecord).
 Notation lend_ownership_array := (mapping uint lend_array_recordLRecord).
 
 
@@ -33,10 +33,10 @@ Module Type SpecSig.
 
 
 
-Parameter transfer : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> UExpression PhantomType false . 
- Parameter transferWithNotify : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType false . 
- Parameter transferToRecipient : ( ( XAddress ) ) -> ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression PhantomType false . 
- Parameter transferToRecipientWithNotify : ( ( XAddress ) ) -> ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType false . 
+Parameter transfer : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> UExpression PhantomType true . 
+ Parameter transferWithNotify : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
+ Parameter transferToRecipient : ( ( XAddress ) ) -> ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression PhantomType true . 
+ Parameter transferToRecipientWithNotify : ( ( XAddress ) ) -> ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
  Parameter requestBalance : UExpression XUInteger128 false . 
  Parameter accept : ( ( XUInteger128 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) ) -> UExpression XBool true . 
  Parameter internalTransfer : ( ( XUInteger128 ) ) -> ( ( XAddress ) ) -> ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
@@ -68,7 +68,7 @@ Parameter transfer : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) 
  Parameter get_owner_addr : UExpression XAddress false . 
  Parameter fixup_answer_addr : ( ( XAddress ) ) -> UExpression XAddress false . 
  Parameter check_transfer_requires : ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression XUInteger128 true . 
- Parameter prepare_transfer_message_flags : ( ( XUInteger128 ) ) -> UExpression XUInteger false . 
+ Parameter prepare_transfer_message_flags : ( ULValue ( XUInteger128 ) ) -> UExpression XUInteger false . 
  Parameter update_spent_balance : ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> UExpression PhantomType false . 
  Parameter optional_owner : ( ( XAddress ) ) -> UExpression ( XMaybe XAddress ) false . 
  Parameter calc_wallet_init_hash : ( ( XUInteger256 ) ) -> ( ( XAddress ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false . 
@@ -79,7 +79,7 @@ Parameter transfer : ( ( XAddress ) ) -> ( ( XAddress ) ) -> ( ( XUInteger128 ) 
  Parameter is_internal_owner : UExpression XBool false . 
  Parameter check_internal_owner : ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression XUInteger128 true . 
  Parameter check_external_owner : UExpression XUInteger128 true . 
- Parameter check_owner : ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression XUInteger128 false . 
+ Parameter check_owner : ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression XUInteger128 true . 
 
 End SpecSig.
 

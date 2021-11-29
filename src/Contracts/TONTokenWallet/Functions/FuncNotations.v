@@ -509,14 +509,20 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , tokens custom URValue at level 0 
  , grams custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_transfer_message_flags_right { a1 }  ( (* & *) grams : URValue ( XUInteger128 ) a1 ) : URValue XUInteger a1 := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) prepare_transfer_message_flags 
+
+Notation "'λ1l'" := ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0) (at level 0) : ursus_scope.
+ 
+ Definition prepare_transfer_message_flags_right  ( (* & *) grams : ULValue ( XUInteger128 ) ) : URValue XUInteger false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1l ) prepare_transfer_message_flags 
  grams ) . 
  
  Notation " 'prepare_transfer_message_flags_' '(' grams ')' " := 
  ( prepare_transfer_message_flags_right 
  grams ) 
  (in custom URValue at level 0 , grams custom URValue at level 0 ) : ursus_scope . 
+
+
+
  
  Definition update_spent_balance_left { R a1 a2 }  ( tokens : URValue ( XUInteger128 ) a1 ) ( return_ownership : URValue ( XBool ) a2 ) : UExpression R ( orb a2 a1 ) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) update_spent_balance 
@@ -604,7 +610,8 @@ Definition is_internal_owner_right  : URValue XBool false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition check_owner_right { a1 a2 }  ( original_owner_only : URValue ( XBool ) a1 ) ( allowed_in_lend_state : URValue ( XBool ) a2 ) : URValue XUInteger128 ( orb a2 a1 ) := 
+ Definition check_owner_right { a1 a2 }  ( original_owner_only : URValue ( XBool ) a1 ) ( allowed_in_lend_state : URValue ( XBool ) a2 ) 
+: URValue XUInteger128 true (* ( orb a2 a1 ) *) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) check_owner 
  original_owner_only allowed_in_lend_state ) . 
  
