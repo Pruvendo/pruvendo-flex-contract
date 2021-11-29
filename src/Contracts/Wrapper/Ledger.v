@@ -13,6 +13,7 @@ Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require Import Project.CommonTypes. 
+Require  Import Contracts.TONTokenWallet.ClassTypes.
 
 Require Import Wrapper.ClassTypes.
 Require Import Wrapper.Interface.
@@ -34,6 +35,8 @@ Module WrapperPublicInterfaceModule := Wrapper.Interface.PublicInterface xt sm.
 Module Export VMStateModule := VMStateModule xt sm. 
 Module Export TypesModuleForLedger := Wrapper.ClassTypes.ClassTypes xt sm .
 Import xt.
+Module TONTonkenWalletModuleForPrice := 
+                      Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm .
 
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
@@ -122,17 +125,17 @@ GeneratePruvendoRecord LocalState01110L LocalStateFields01110I .
 Opaque LocalState01110LRecord . 
  
 Inductive LocalStateFields01111I := | ι011110 | ι011111 . 
-Definition LocalState01111L := [ ( XHMap (string*nat) XUInteger (* record1 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState01111L := [ ( XHMap (string*nat) TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord (* record1 *) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState01111L LocalStateFields01111I . 
 Opaque LocalState01111LRecord . 
 
 Inductive LocalStateFields10000I := | ι100000 | ι100001 . 
-Definition LocalState10000L := [ ( XHMap (string*nat) XUInteger (* record2 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10000L := [ ( XHMap (string*nat) FlexDeployWalletArgsLRecord (* record2 *) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10000L LocalStateFields10000I . 
 Opaque LocalState10000LRecord . 
 
 Inductive LocalStateFields10001I := | ι100010 | ι100011 . 
-Definition LocalState10001L := [ ( XHMap (string*nat) XUInteger (* record3 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10001L := [ ( XHMap (string*nat) DWrapperLRecord (* record3 *) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10001L LocalStateFields10001I . 
 Opaque LocalState10001LRecord . 
 
@@ -625,7 +628,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01110 : typeclass_instances. 
- #[global, program] Instance LocalStateField01111 : LocalStateField XUInteger (* record *).
+ #[global, program] Instance LocalStateField01111 : LocalStateField TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord (* record *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -645,7 +648,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01111 : typeclass_instances. 
- #[global, program] Instance LocalStateField10000 : LocalStateField XUInteger (* record *).
+ #[global, program] Instance LocalStateField10000 : LocalStateField FlexDeployWalletArgsLRecord (* record *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι1000). 
@@ -661,7 +664,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10000 : typeclass_instances. 
- #[global, program] Instance LocalStateField10001 : LocalStateField XUInteger (* record *).
+ #[global, program] Instance LocalStateField10001 : LocalStateField DWrapperLRecord (* record *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι1000). 

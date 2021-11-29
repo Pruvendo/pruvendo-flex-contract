@@ -64,6 +64,13 @@ Parameter message_sender_is_not_good_wallet : XUInteger.
 Parameter cant_override_external_wallet : XUInteger.
 Parameter only_flex_may_deploy_me : XUInteger.
 
+Parameter error_code_ι_cant_override_external_wallet : XUInteger .
+Parameter error_code_ι_bad_incoming_msg : XUInteger .
+Parameter error_code_ι_unexpected_refs_count_in_code : XUInteger .
+Parameter error_code_ι_only_flex_may_deploy_me : XUInteger . 
+Parameter error_code_ι_not_my_wallet_notifies : XUInteger .
+Parameter error_code_ι_burn_unallocated : XUInteger .
+Parameter error_code_ι_message_sender_is_not_good_wallet : XUInteger .
 
 Parameter deals_limit : XUInteger.
 Parameter different_workchain_id : XUInteger.

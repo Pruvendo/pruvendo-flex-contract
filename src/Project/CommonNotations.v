@@ -245,12 +245,20 @@ Definition OrderRet_processed_left  (x: ULValue OrderRetLRecord): ULValue XUInte
 Definition OrderRet_enqueued_left  (x: ULValue OrderRetLRecord): ULValue XUInteger128 :=
     {{ {x} ^^ {OrderRet_ι_enqueued} }} : _ .    
 
- Notation " a '↑' 'OrderRet.err_code' " := ( OrderRet_err_code_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation " a '↑' 'OrderRet.err_code' " := ( OrderRet_err_code_right a) (in custom URValue at level 0) : ursus_scope. 
- Notation " a '↑' 'OrderRet.processed' " := ( OrderRet_processed_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation " a '↑' 'OrderRet.processed' " := ( OrderRet_processed_right a) (in custom URValue at level 0) : ursus_scope. 
- Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_left a) (in custom ULValue at level 0) : ursus_scope. 
- Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'OrderRet.err_code' " := ( OrderRet_err_code_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'OrderRet.err_code' " := ( OrderRet_err_code_right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'OrderRet.processed' " := ( OrderRet_processed_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'OrderRet.processed' " := ( OrderRet_processed_right a) (in custom URValue at level 0) : ursus_scope. 
+Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_left a) (in custom ULValue at level 0) : ursus_scope. 
+Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_right a) (in custom URValue at level 0) : ursus_scope. 
+
+
+Tactic Notation "vararg" ident(x) constr(ss) := 
+let s := fresh x in 
+let T := type of x in 
+refine {{new 'x : T @ ss := {} ; {_} }} ;
+refine {{ {x} := #{s} ; {_} }} ;
+clear s.
 
 End CommonNotations.
 

@@ -16,3 +16,4 @@ CoqMakefile.conf
 *.cache
 _build/*
 .DS_Store
+.vscode

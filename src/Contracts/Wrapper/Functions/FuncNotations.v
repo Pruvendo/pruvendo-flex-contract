@@ -14,6 +14,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
+Require Import CommonNotations.
 Require Import Contracts.Wrapper.Ledger.
 Require Import Contracts.Wrapper.Functions.FuncSig.
 Require Import Contracts.Wrapper.ClassTypes.
@@ -27,8 +28,13 @@ Module FuncNotations (xt: XTypesSig)
                      (dc : ConstsTypesSig xt sm ).
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
+<<<<<<< HEAD
+
+Import xt. Export dc. 
+=======
 Export dc.
 Import xt.
+>>>>>>> 9043f6d409a7ae511a8d4095191064d6e258d97d
 Module WrapperPublicInterface := Contracts.Wrapper.Interface.PublicInterface xt sm.
 
 Import UrsusNotations.
@@ -85,6 +91,26 @@ Definition external_wallet__right := ( URState (f:=_Contract) (H:=ContractLEmbed
 Notation " '_external_wallet_' " := ( external_wallet__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_external_wallet_' " := ( external_wallet__right ) (in custom URValue at level 0) : ursus_scope. 
 
+<<<<<<< HEAD
+Locate error_code_ι_cant_override_external_wallet.
+
+Notation " 'error_code::cant_override_external_wallet' " := (sInject error_code_ι_cant_override_external_wallet) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::bad_incoming_msg' " := (sInject error_code_ι_bad_incoming_msg) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::unexpected_refs_count_in_code' " := (sInject error_code_ι_unexpected_refs_count_in_code) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::only_flex_may_deploy_me' " := (sInject error_code_ι_only_flex_may_deploy_me) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::internal_owner_disabled' " := (sInject error_code_ι_internal_owner_disabled) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject error_code_ι_message_sender_is_not_my_owner) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::internal_owner_enabled' " := (sInject error_code_ι_internal_owner_enabled) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::not_my_wallet_notifies' " := (sInject error_code_ι_not_my_wallet_notifies) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::burn_unallocated' " := (sInject error_code_ι_burn_unallocated) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::message_sender_is_not_good_wallet' " := (sInject error_code_ι_message_sender_is_not_good_wallet) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrong_bounced_header' " := (sInject error_code_ι_wrong_bounced_header) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::wrong_bounced_args' " := (sInject error_code_ι_wrong_bounced_args) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::cant_override_external_wallet' " := (sInject error_code_ι_cant_override_external_wallet) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::cant_override_wallet_code' " := (sInject error_code_ι_cant_override_wallet_code) (in custom URValue at level 0) : ursus_scope. 
+
+=======
 
 Notation " 'error_code::message_sender_is_not_my_owner' " := (sInject message_sender_is_not_my_owner) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::not_enough_balance' " := (sInject error_code_ι_not_enough_balance) (in custom URValue at level 0) : ursus_scope. 
@@ -103,6 +129,7 @@ Notation " 'error_code::only_flex_may_deploy_me' " := (sInject only_flex_may_dep
 Notation " 'error_code::unexpected_refs_count_in_code' " := (sInject unexpected_refs_count_in_code) (in custom URValue at level 0) : ursus_scope. 
 
 Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
+>>>>>>> 9043f6d409a7ae511a8d4095191064d6e258d97d
 
 Module Calls (tc : SpecSig).
 
@@ -116,6 +143,7 @@ Notation " 'getStateInit_' '(' msg ')' " :=
 ( getStateInit_right 
 msg ) 
 (in custom URValue at level 0 , msg custom URValue at level 0 ) : ursus_scope . 
+
 Definition init_right { a1 }  ( external_wallet : URValue ( XAddress ) a1 ) : URValue XBool true := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) init 
 external_wallet ) . 
@@ -156,7 +184,11 @@ answer_addr balance new_tokens sender_pubkey sender_owner payload )
 , sender_owner custom URValue at level 0 
 , payload custom URValue at level 0 ) : ursus_scope . 
 
-Definition burn_left { R a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( sender_pubkey : URValue ( XUInteger256 ) a2 ) ( sender_owner : URValue ( XAddress ) a3 ) ( out_pubkey : URValue ( XUInteger256 ) a4 ) ( out_internal_owner : URValue ( XAddress ) a5 ) ( tokens : URValue ( XUInteger128 ) a6 ) : UExpression R true := 
+Definition burn_left { R a1 a2 a3 a4 a5 a6 }  
+( answer_addr : URValue ( XAddress ) a1 ) ( sender_pubkey : URValue ( XUInteger256 ) a2 ) 
+( sender_owner : URValue ( XAddress ) a3 ) ( out_pubkey : URValue ( XUInteger256 ) a4 ) 
+( out_internal_owner : URValue ( XAddress ) a5 ) ( tokens : URValue ( XUInteger128 ) a6 ) 
+: UExpression R true := 
 wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) burn 
 answer_addr sender_pubkey sender_owner out_pubkey out_internal_owner tokens ) . 
 
@@ -177,6 +209,7 @@ Notation " 'requestTotalGranted_' '(' ')' " :=
 ( requestTotalGranted_right 
 ) 
 (in custom URValue at level 0 ) : ursus_scope . 
+
 Definition getDetails_right  : URValue wrapper_details_infoLRecord false := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDetails 
 ) . 
@@ -185,6 +218,7 @@ Notation " 'getDetails_' '(' ')' " :=
 ( getDetails_right 
 ) 
 (in custom URValue at level 0 ) : ursus_scope . 
+
 Definition getName_right  : URValue XString false := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getName 
 ) . 
@@ -291,6 +325,7 @@ Notation " '_fallback_' '(' cell ')' " :=
 ( _fallback_right 
 cell ) 
 (in custom URValue at level 0 , cell custom URValue at level 0 ) : ursus_scope . 
+
 Definition optional_owner_right { a1 }  ( owner : URValue ( XAddress ) a1 ) : URValue (XMaybe XAddress) a1 := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner 
 owner ) . 
@@ -299,6 +334,7 @@ Notation " 'optional_owner_' '(' owner ')' " :=
 ( optional_owner_right 
 owner ) 
 (in custom URValue at level 0 , owner custom URValue at level 0 ) : ursus_scope . 
+
 Definition expected_internal_address_right { a1 a2 }  ( sender_public_key : URValue ( XUInteger256 ) a1 ) ( sender_owner_addr : URValue ( XAddress ) a2 ) : URValue XAddress ( orb a2 a1 ) := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) expected_internal_address 
 sender_public_key sender_owner_addr ) . 
@@ -308,6 +344,7 @@ Notation " 'expected_internal_address_' '(' sender_public_key sender_owner_addr 
 sender_public_key sender_owner_addr ) 
 (in custom URValue at level 0 , sender_public_key custom URValue at level 0 
 , sender_owner_addr custom URValue at level 0 ) : ursus_scope . 
+
 Definition calc_internal_wallet_init_right { a1 a2 }  ( pubkey : URValue ( XUInteger256 ) a1 ) ( owner_addr : URValue ( XAddress ) a2 ) : URValue ( StateInitLRecord # XAddress ) ( orb a2 a1 ) := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_internal_wallet_init 
 pubkey owner_addr ) . 
@@ -317,6 +354,7 @@ Notation " 'calc_internal_wallet_init_' '(' pubkey owner_addr ')' " :=
 pubkey owner_addr ) 
 (in custom URValue at level 0 , pubkey custom URValue at level 0 
 , owner_addr custom URValue at level 0 ) : ursus_scope . 
+
 Definition is_internal_owner_right  : URValue XBool false := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) is_internal_owner 
 ) . 
