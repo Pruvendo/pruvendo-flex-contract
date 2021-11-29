@@ -123,15 +123,15 @@ Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPr
   
 
 
- Notation " 'error_code::out_of_tons' " := (sInject out_of_tons) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'error_code::deals_limit' " := (sInject deals_limit) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'error_code::not_enough_tons_to_process' " := (sInject not_enough_tons_to_process) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'error_code::not_enough_tokens_amount' " := (sInject not_enough_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'error_code::too_big_tokens_amount' " := (sInject too_big_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'error_code::different_workchain_id' " := (sInject different_workchain_id) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'error_code::unverified_tip3_wallet' " := (sInject unverified_tip3_wallet) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'error_code::canceled' " := (sInject canceled) (in custom URValue at level 0) : ursus_scope. 
- Notation " 'error_code::expired' " := (sInject expired) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::out_of_tons' " := (sInject ec_ι_out_of_tons) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::deals_limit' " := (sInject deals_limit) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::not_enough_tons_to_process' " := (sInject ec_ι_not_enough_tons_to_process) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::not_enough_tokens_amount' " := (sInject ec_ι_not_enough_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::too_big_tokens_amount' " := (sInject ec_ι_too_big_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::different_workchain_id' " := (sInject different_workchain_id) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::unverified_tip3_wallet' " := (sInject ec_ι_unverified_tip3_wallet) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::canceled' " := (sInject canceled) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::expired' " := (sInject ec_ι_expired) (in custom URValue at level 0) : ursus_scope. 
  
  
 

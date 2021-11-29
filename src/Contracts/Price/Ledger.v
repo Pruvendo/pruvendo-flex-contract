@@ -39,7 +39,7 @@ Require Contracts.TONTokenWallet.ClassTypes.
 Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ ( XQueue PricePublicInterfaceModule.OutgoingMessage ) : Type ; 
+ [ ( XQueue (OutgoingMessage PricePublicInterfaceModule.IPrice) ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .

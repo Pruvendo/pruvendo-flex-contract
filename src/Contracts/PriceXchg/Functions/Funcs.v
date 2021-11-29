@@ -135,7 +135,7 @@ Definition extract_active_order  ( cur_order : ULValue ( optional (OrderInfoXchg
 				then { { _:UEt } } ; { _ } }} . 
 			refine {{ ({all_amount}) -= ((!{ord}) ↑ OrderInfoXchg.amount) ; { _ } }} . 
 			refine {{ new 'ret : OrderRetLRecord @ "ret" := 	 	 	 	 
-		[ 1 (* ec::expired *) , ((!{ord}) ↑ OrderInfoXchg.original_amount)
+		[ ec::expired , ((!{ord}) ↑ OrderInfoXchg.original_amount)
 						- ((!{ord}) ↑ OrderInfoXchg.amount) , 0 ] ; { _ } }} . 
 	(*  	 	 	 	 refine {{ IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ord . account . get ( ) ) ) . onOrderFinished ( ret , sell ) ; { _ } }} .  *)
 			refine {{ {orders} -> pop () ; { _ } }} . 
@@ -218,7 +218,7 @@ Definition process_queue (sell_idx : uint)
          refine {{ if ( !{sell_out_of_tons} ) then { { _:UEf } } ; { _ } }} . 
          	 refine {{ _sells_ -> pop () ; { _ } }} . 
          	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 
-         	 	 	 [ 1 (*ec::out_of_tons*) , ((!{sell}) ↑ OrderInfoXchg.original_amount) - 
+         	 	 	 [ ec::out_of_tons , ((!{sell}) ↑ OrderInfoXchg.original_amount) - 
                     ((!{sell}) ↑ OrderInfoXchg.amount) , 0 ] ; { _ } }} . 
          	 refine {{ if ( (#{sell_idx}) == !{sell_idx_cur} ) then { { _:UEf } } ; { _ } }} . 
          	 	 refine {{ (* dealer.ret_ *) { ret } := !{ ret } }} . 
@@ -231,7 +231,7 @@ Definition process_queue (sell_idx : uint)
        refine {{ if ( !{ buy_out_of_tons } ) then { { _:UEf } } ; { _ } }} . 
      	 refine {{ _buys_ -> pop () ; { _ } }} . 
      	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 
-     	 	 	 [ 1 (* ec::out_of_tons *) , ((!{buy}) ↑ OrderInfoXchg.original_amount) - 
+     	 	 	 [ ec::out_of_tons , ((!{buy}) ↑ OrderInfoXchg.original_amount) - 
                                        ((!{buy}) ↑ OrderInfoXchg.amount), 0 ] ; { _ } }} . 
      	 refine {{ if ( (#{ buy_idx }) == !{ buy_idx_cur } ) then { { _:UEf } } ; { _ } }} . 
      	 	 refine {{ (* dealer.ret_ *) { ret } := !{ ret } }} . 
@@ -553,18 +553,18 @@ Definition onTip3LendOwnership ( answer_addr : raw_address )
                        ? (~( verify_tip3_addr_ ( _major_tip3cfg_ , !{ tip3_wallet } , #{ pubkey } , !{ internal_owner_std } ) ) ) 
                        : (~( verify_tip3_addr_ ( _minor_tip3cfg_ , !{ tip3_wallet } , #{ pubkey } , !{ internal_owner_std } ) ) ) )
                   then { { _:UEf } } else { { _:UEf } } }} . 
-         	 	 	 refine {{ { err } := 1 (* ec::unverified_tip3_wallet *) }} . 
+         	 	 	 refine {{ { err } :=  ec::unverified_tip3_wallet }} . 
          	 	   refine {{ if ( ~ (?(!{ minor_amount })) ) 
                          then { { _:UEf } } else { { _:UEf } } }} . 
-         	 	 	 refine {{ {err} := 1 (* ec::too_big_tokens_amount *) }} . 
+         	 	 	 refine {{ {err} :=  ec::too_big_tokens_amount  }} . 
          	 	   refine {{ if ( !{amount} < _min_amount_ ) then { { _:UEf } } else { { _:UEf } } }} . 
-         	 	 	 refine {{ { err } := 1 (* ec : : not_enough_tokens_amount *) }} . 
+         	 	 	 refine {{ { err } := ec::not_enough_tokens_amount }} . 
          	 	 refine {{ if ( (#{balance}) < 
                    ( !{ is_sell } ? !{ amount } : ((!{minor_amount}) -> get_default () ) ) ) 
                           then { { _:UEf } } else { { _:UEf } } }} . 
-         	 	 	 refine {{ { err } := 1 (* ec : : too_big_tokens_amount *) }} . 
+         	 	 	 refine {{ { err } := ec::too_big_tokens_amount  }} . 
          	 	   refine {{ if ( ~ (is_active_time_ ( #{ lend_finish_time } )) ) then { { _:UEf } } }} . 
-         	 	 	 refine {{ { err } := 1 (* ec : : expired *) }} . 
+         	 	 	 refine {{ { err } :=  ec::expired  }} . 
 
  	 	 refine {{ if ( !{ err } ) then { { _:UEf } } ; { _ } }} . 
  	 	 	 refine {{ return_ on_ord_fail_ ( !{err} , !{wallet_in} , !{amount} ) }} . 

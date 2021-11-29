@@ -27,18 +27,22 @@ Definition ContractFields := DPriceXchgFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
-Module PriceXchgPublicInterfaceModule := PublicInterface xt sm.
 
 (* Module Import BasicTypesClass := BasicTypes xt sm. *)
 Module Export VMStateModule := VMStateModule xt sm. 
 Module Export TypesModuleForLedger := ClassTypes xt sm .
 Import xt.
 Require Contracts.TONTokenWallet.ClassTypes.
+
+Module PriceXchgPublicInterfaceModule := PublicInterface xt sm.
+
 Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
+
+
 Local Open Scope ursus_scope.
 
 Definition MessagesAndEventsL : list Type := 
- [ ( XQueue PriceXchgPublicInterfaceModule.OutgoingMessage ) : Type ; 
+ [ ( XQueue (OutgoingMessage PriceXchgPublicInterfaceModule.IPriceXchg) ) : Type ; 
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
