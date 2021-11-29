@@ -758,7 +758,7 @@ Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URVal
  refine X.
 Defined.
 
-Notation " 'Flex.create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+Notation " 'Flex.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
 
 
 (*  | IonWrapperApproved : XUInteger256 -> XAddress -> IListingAnswerP *)

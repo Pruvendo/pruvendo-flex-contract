@@ -327,7 +327,7 @@ Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URVal
  refine X.
 Defined.
 
-Notation " 'Wrapper.create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+Notation " 'Wrapper.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
  
 
 End ClassTypesNotations.

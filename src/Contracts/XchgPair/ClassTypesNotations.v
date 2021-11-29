@@ -80,7 +80,7 @@ Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue 
  refine X.
 Defined.
 
-Notation " 'XchgPair.create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+Notation " 'XchgPair.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
  
 
 End ClassTypesNotations.

@@ -473,7 +473,7 @@ Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URVal
  refine X.
 Defined.
 
-Notation " 'PriceXchg.create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+Notation " 'PriceXchg.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
  
 (* IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> IPriceXchgP *)
 
