@@ -1,4 +1,4 @@
-Require Import FinProof.ProgrammingWith. 
+Require Import FinProof.ProgrammingWith.
 
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
