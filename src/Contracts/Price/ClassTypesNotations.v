@@ -65,6 +65,35 @@ Definition dealer_ret__left (x: ULValue dealerLRecord): ULValue (XMaybe OrderRet
 Notation " a '↑' 'dealer.ret_' " := (dealer_ret__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'dealer.ret_' " := (dealer_ret__left a ) (in custom ULValue at level 0) : ursus_scope.
 
+Definition dealer_deals_limit__right {b} (x: URValue dealerLRecord b): URValue XUInteger b :=
+|| {x} ^^ {dealer_ι_deals_limit_} || : _.
+
+Definition dealer_deals_limit__left (x: ULValue dealerLRecord): ULValue XUInteger :=
+{{ {x} ^^ {dealer_ι_deals_limit_} }} : _.
+
+Notation " a '↑' 'dealer.deals_limit_' " := (dealer_deals_limit__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'dealer.deals_limit_' " := (dealer_deals_limit__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition dealer_tons_cfg__right {b} (x: URValue dealerLRecord b): URValue TonsConfigLRecord b :=
+|| {x} ^^ {dealer_ι_tons_cfg_} || : _.
+
+Definition dealer_tons_cfg__left (x: ULValue dealerLRecord): ULValue TonsConfigLRecord :=
+{{ {x} ^^ {dealer_ι_tons_cfg_} }} : _.
+
+Notation " a '↑' 'dealer.tons_cfg_' " := (dealer_tons_cfg__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'dealer.tons_cfg_' " := (dealer_tons_cfg__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition dealer_price__right {b} (x: URValue dealerLRecord b): URValue XUInteger128 b :=
+|| {x} ^^ {dealer_ι_price_} || : _.
+
+Definition dealer_price__left (x: ULValue dealerLRecord): ULValue XUInteger128 :=
+{{ {x} ^^ {dealer_ι_price_} }} : _.
+
+Notation " a '↑' 'dealer.price_' " := (dealer_price__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'dealer.price_' " := (dealer_price__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
 (**************************************************************************************************************)
 (*SellArgs*)
 
