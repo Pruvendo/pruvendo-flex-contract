@@ -174,7 +174,7 @@ Definition prepare_wallet_data (name:XString)(symbol:XString)(decimals:XUInteger
 UExpression TONTokenWalletClassTypes.DTONTokenWalletLRecord false.
  	 refine {{ return_ [ #{name} , #{symbol} , #{decimals} , 0 , 
                        #{root_public_key} , #{wallet_public_key} , 
-                       #{root_address} , #{owner_address} , 
+                       #{root_address} , #{owner_address} , {} ,
                        #{code} , {} , #{workchain_id} ] }} .
 Defined .
 

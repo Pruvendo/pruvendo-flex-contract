@@ -122,6 +122,20 @@ Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPr
  Notation " '_buys_' " := ( buys__right ) (in custom URValue at level 0) : ursus_scope. 
   
 
+
+ Notation " 'ec::out_of_tons' " := (sInject ec_ι_out_of_tons) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::deals_limit' " := (sInject deals_limit) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::not_enough_tons_to_process' " := (sInject ec_ι_not_enough_tons_to_process) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::not_enough_tokens_amount' " := (sInject ec_ι_not_enough_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::too_big_tokens_amount' " := (sInject ec_ι_too_big_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::different_workchain_id' " := (sInject different_workchain_id) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::unverified_tip3_wallet' " := (sInject ec_ι_unverified_tip3_wallet) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::canceled' " := (sInject canceled) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec::expired' " := (sInject ec_ι_expired) (in custom URValue at level 0) : ursus_scope. 
+ 
+ 
+ Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
+
 Module Calls (tc : SpecSig).
 
 Export tc.
@@ -129,7 +143,7 @@ Export tc.
 Local Open Scope string_scope.
 
 (**************************************************************************************************)
-Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
+
 
 Definition make_deal_right  
 ( sell : ULValue ( OrderInfoXchgLRecord ) ) 

@@ -43,7 +43,7 @@ GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
 
 Definition ContractLRecord := DRootTokenContractLRecord . 
-Definition ContractLEmbeddedType := RootTokenContractClassTypesModule.DRootTokenContractLEmbeddedType.
+Definition ContractLEmbeddedType := DRootTokenContractLEmbeddedType.
 
 Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Definition LocalState00000L := [ ( XHMap (string*nat) ( StateInitLRecord * XUInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 

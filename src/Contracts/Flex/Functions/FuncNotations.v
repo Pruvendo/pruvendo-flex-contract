@@ -185,6 +185,8 @@ Notation " 'error_code::costs_inconsistency' " := (sInject costs_inconsistency) 
 Notation " 'error_code::wrapper_with_such_pubkey_already_requested' " := (sInject wrapper_with_such_pubkey_already_requested) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::trading_pair_with_such_pubkey_already_requested' " := (sInject trading_pair_with_such_pubkey_already_requested) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::xchg_pair_with_such_pubkey_already_requested' " := (sInject xchg_pair_with_such_pubkey_already_requested) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
+
 
 Module Calls (tc : SpecSig).
 
