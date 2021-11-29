@@ -28,17 +28,17 @@ Notation OrderInfoXchgWithIdx := (uint # OrderInfoXchgLRecord).
 Module Type SpecSig.
 
 
-Parameter make_deal : ULValue OrderInfoXchgLRecord -> ULValue OrderInfoXchgLRecord -> UExpression ( boolean # (boolean # uint128) ) false . 
-
+(* Parameter make_deal : ULValue OrderInfoXchgLRecord -> ULValue OrderInfoXchgLRecord -> UExpression ( boolean # (boolean # uint128) ) false . 
+ *)
 (* static std::tuple<std::optional<OrderInfoXchgWithIdx>, big_queue<OrderInfoXchg>, uint128>
   extract_active_order(std::optional<OrderInfoXchgWithIdx> cur_order,
                        big_queue<OrderInfoXchg> orders, uint128 all_amount, bool_t sell) *)
 (*Error: not ULValue !!!*)
-Parameter extract_active_order : ULValue ( optional OrderInfoXchgWithIdx ) -> 
+(* Parameter extract_active_order : ULValue ( optional OrderInfoXchgWithIdx ) -> 
                                  ULValue ( queue OrderInfoXchgLRecord )  -> 
                                  ULValue ( uint128 ) -> boolean -> 
-          UExpression ( optional OrderInfoXchgWithIdx # ((queue OrderInfoXchgLRecord) # uint128) )  true . 
-Parameter process_queue : uint -> uint -> UExpression PhantomType true . 
+          UExpression ( optional OrderInfoXchgWithIdx # ((queue OrderInfoXchgLRecord) # uint128) )  true .  *)
+(* Parameter process_queue : uint -> uint -> UExpression PhantomType true .  *)
 Parameter onTip3LendOwnership : raw_address -> uint128 -> uint32 -> uint256 -> raw_address -> TvmCell -> UExpression OrderRetLRecord true . 
 Parameter processQueue : UExpression PhantomType false . 
 Parameter cancelSell : UExpression PhantomType false . 
