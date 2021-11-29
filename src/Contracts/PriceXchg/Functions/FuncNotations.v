@@ -134,7 +134,7 @@ Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPr
  Notation " 'ec::expired' " := (sInject ec_ι_expired) (in custom URValue at level 0) : ursus_scope. 
  
  
-
+ Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
 
 Module Calls (tc : SpecSig).
 
@@ -143,7 +143,7 @@ Export tc.
 Local Open Scope string_scope.
 
 (**************************************************************************************************)
-Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
+
 
 Definition make_deal_right  
 ( sell : ULValue ( OrderInfoXchgLRecord ) ) 

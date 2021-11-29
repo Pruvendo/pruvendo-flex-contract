@@ -142,7 +142,7 @@ Definition _Icreate_right { a1 }  ( x : URValue InitialStateLRecord a1 ) : URVal
  refine X.
 Defined.
 
-Notation " '._create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+Notation " 'FlexClient.create' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
 
 Definition IsetFlexWrapperCode_right { a1 }  ( x : URValue XCell a1 ) : URValue IFlexClient a1.
  pose proof (urvalue_bind x (fun x' => #(IsetFlexWrapperCode x' : IFlexClient)): URValue _ _).

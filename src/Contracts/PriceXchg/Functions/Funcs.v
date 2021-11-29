@@ -98,8 +98,6 @@ Definition make_deal ( sell : ULValue OrderInfoXchgLRecord) ( buy : ULValue Orde
 	refine {{ return_ [ FALSE , FALSE , !{ deal_amount } ] }} . 
 Defined. 
 
-Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
- 
 Definition make_deal_right (sell : ULValue OrderInfoXchgLRecord) 
 						   (buy : ULValue OrderInfoXchgLRecord) : URValue ( boolean # (boolean # uint128) ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LL ) make_deal sell buy ). 
@@ -145,7 +143,7 @@ Definition extract_active_order  ( cur_order : ULValue ( optional (OrderInfoXchg
  refine {{ return_ [ !{ cur_order } , !{ orders } , !{ all_amount } ] }} . 
 Defined . 
  
-(* Notation "'λ4LLLR'" :=   ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ3) (at level 0) : ursus_scope. (*move 2 sml*) *)
+(* (*move 2 sml*) *)
 
 (* Definition extract_active_order_right { (* a2 a3 a4 *) a5 }  
 ( cur_order : ULValue ( optional (uint # OrderInfoXchgLRecord ) ) ) 
@@ -460,7 +458,7 @@ Definition on_ord_fail (ec: uint) (wallet_in : raw_address (* ITONTokenWalletPtr
 	refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
 		refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS | DELETE_ME_IF_I_AM_EMPTY *) }} . 
 	refine {{ new 'incoming_value : uint @ "incoming_value" := int_value ( ) ; { _ } }} . 
-	refine {{ tvm_rawreserve (tvm_balance () - !{incoming_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} . 
+	refine {{ tvm_rawreserve (tvm_balance () - !{incoming_value} , rawreserve_flag::up_to ) ; { _ } }} . 
 	refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) }} . 
 	refine {{ return_ [ 1 (* ec *) , {} , {} ] }} . 
 Defined . 
@@ -548,7 +546,7 @@ Definition onTip3LendOwnership ( answer_addr : raw_address )
                    (*  Std :: get < addr_std > ( internal_owner ^^ raw_address:val ( ) ) . address *) ; { _ } }} . 
 
  	 	 refine {{ if ( (!{value}) < !{min_value} ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
- 	 	 	 refine {{ {err} := 1 (* ec : : not_enough_tons_to_process *) }} . 
+ 	 	 	 refine {{ {err} := ec::not_enough_tons_to_process }} . 
  	 	   refine {{ if ( (!{is_sell}) 
                        ? (~( verify_tip3_addr_ ( _major_tip3cfg_ , !{ tip3_wallet } , #{ pubkey } , !{ internal_owner_std } ) ) ) 
                        : (~( verify_tip3_addr_ ( _minor_tip3cfg_ , !{ tip3_wallet } , #{ pubkey } , !{ internal_owner_std } ) ) ) )

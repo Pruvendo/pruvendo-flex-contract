@@ -48,6 +48,7 @@ Local Open Scope xlist_scope.
 (*MOVE SOMEWHERE*)
 Existing Instance LedgerPruvendoRecord.
 
+
 (***************************************************************************)						   
 
 Definition calc_cost ( amount : uint128 ) ( price : uint128 ) : UExpression (optional uint128) false . 
@@ -219,7 +220,7 @@ Definition process_queue ( sell_idx : uint ) ( buy_idx : uint ) : UExpression Ph
  refine {{ if ( !{buy_out_of_tons} ) then { { _:UEf } } ; { _ } }} . 
  	 (* refine {{ { dealer.buys_ -> pop () ; { _ } }} .  *)
  	 refine {{ new 'ret : OrderRetLRecord @ "ret" := 	 
- 	 	 	                      [ 1 (*ec::out_of_tons*), !{buy} ↑ OrderInfo.original_amount - 
+ 	 	 	                      [ ec::out_of_tons, !{buy} ↑ OrderInfo.original_amount - 
                                     !{buy} ↑ OrderInfo.amount , 0 ] ; { _ } }} .
  	 refine {{ if ( #{buy_idx} == !{buy_idx_cur} ) then { { _:UEf } } ; { _ } }} . 
  	 	 refine {{ (* dealer.ret_ *) { ret } := !{ ret } }} . 
@@ -422,7 +423,7 @@ Definition on_sell_fail ( ec : uint ) ( wallet_in : ( raw_address (* ITONTokenWa
              else { { _: UEf } } ; { _ } }} .
  	 refine {{ set_int_return_flag_  ( ) (* SEND_ALL_GAS | DELETE_ME_IF_I_AM_EMPTY *) }} . 
  	 refine {{ new 'incoming_value : uint @ "incoming_value" := int_value ( ) (* ( ) . get ( ) *) ; { _ } }} . 
-  	 refine {{ tvm_rawreserve ( tvm_balance () - !{incoming_value} , 1 (* rawreserve_flag::up_to *) ) ; { _ } }} .
+  	 refine {{ tvm_rawreserve ( tvm_balance () - !{incoming_value} ,  rawreserve_flag::up_to) ; { _ } }} .
  	 refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) }} . 
  refine {{ return_ [ #{ec} , {} , {} ] }} . 
 Defined . 
@@ -553,12 +554,12 @@ Notation " 'set_int_return_value_' '(' ')' " :=
 Definition buyTip3 ( amount : uint128 ) ( receive_tip3_wallet : raw_address ) ( order_finish_time : uint32 ) : 
 					UExpression OrderRetLRecord true . 
 	refine {{ new ( 'sender : raw_address , 'value_gr : uint ) @ ( "sender" , "value_gr" ) := int_sender_and_value_ ( ) ; { _ } }} . 
-	refine {{ require_ ( ( (#{ amount }) >= _min_amount_ ) , 1 (* ec::not_enough_tokens_amount *) ) ; { _ } }} . 
+	refine {{ require_ ( ( (#{ amount }) >= _min_amount_ ) ,  ec::not_enough_tokens_amount  ) ; { _ } }} . 
 	refine {{ new 'cost :  optional uint  @ "cost" := calc_cost_ ( #{ amount } , _price_ ) ; { _ } }} . 
 	refine {{ require_ ( !{cost} , ec::too_big_tokens_amount ) ; { _ } }} . 
 	refine {{ require_ ( !{value_gr} > buyTip3MinValue_ ( !{cost} -> get_default () )  , 
 						ec::not_enough_tons_to_process ) ; { _ } }} . 
-	refine {{ require_ ( is_active_time_ ( #{ order_finish_time } ) , 1 (* ec::expired *) ) ; { _ } }} . 
+	refine {{ require_ ( is_active_time_ ( #{ order_finish_time } ) ,  ec::expired  ) ; { _ } }} . 
 	refine {{ set_int_return_value_ ( ) (* tons_cfg_ . order_answer . get ( ) *) ; { _ } }} . 
 	refine {{ new 'account : uint128 @ "account" := !{value_gr} - _tons_cfg_ ↑ TonsConfig.process_queue 
 																- _tons_cfg_ ↑ TonsConfig.order_answer ; { _ } }} . 

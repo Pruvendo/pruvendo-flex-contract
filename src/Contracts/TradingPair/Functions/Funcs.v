@@ -57,7 +57,7 @@ Definition onDeploy ( min_amount : uint128 ) ( deploy_value : uint128 ) ( notify
 	refine {{ require_ ( ( #{ min_amount } ) > 0 ,  error_code::zero_min_amount ) ; { _ } }} . 
 	refine {{ _min_amount_ := (#{ min_amount }) ; { _ } }} . 
 	refine {{ _notify_addr_ := (#{ notify_addr }) ; { _ } }} . 
-	refine {{ tvm_rawreserve ( #{deploy_value} , 1 ) ; (* (* rawreserve_flag::up_to *) ) ; *) { _ } }} .  
+	refine {{ tvm_rawreserve ( #{deploy_value} , rawreserve_flag::up_to  ) ; { _ } }} .  
 	refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
 	refine {{ return_ TRUE }} .
 Defined.

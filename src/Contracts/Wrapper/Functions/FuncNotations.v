@@ -102,7 +102,7 @@ Notation " 'error_code::cant_override_external_wallet' " := (sInject cant_overri
 Notation " 'error_code::only_flex_may_deploy_me' " := (sInject only_flex_may_deploy_me) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::unexpected_refs_count_in_code' " := (sInject unexpected_refs_count_in_code) (in custom URValue at level 0) : ursus_scope. 
 
-
+Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
 
 Module Calls (tc : SpecSig).
 

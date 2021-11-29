@@ -75,7 +75,7 @@ Definition self_messages_right := ( URState (f:=_MessagesAndEvents) (H:=Messages
 Notation " 'error_code::not_enough_tons' " := (sInject not_enough_tons) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::double_deploy' " := (sInject double_deploy) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::zero_min_amount' " := (sInject zero_min_amount) (in custom URValue at level 0) : ursus_scope. 
-
+Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
 
 
 

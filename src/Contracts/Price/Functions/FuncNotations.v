@@ -135,7 +135,7 @@ Export tc.
 Local Open Scope string_scope.
 
 (**************************************************************************************************)
-Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
+
 
 Definition make_deal_right 
 ( sell : ULValue ( OrderInfoLRecord ) ) 
@@ -149,11 +149,6 @@ Definition make_deal_right
  sell buy ) 
  (in custom URValue at level 0 , sell custom URValue at level 0 
  , buy custom URValue at level 0 ) : ursus_scope .
-
-Notation "'λ1LLL'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
-                       ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
-                       ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ1))) 
-                       (at level 0) : ursus_scope.
 
 
  Definition extract_active_order_right { a4 }  

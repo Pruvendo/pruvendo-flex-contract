@@ -104,7 +104,7 @@ refine {{ require_ ( ( ~ _external_wallet_ ) , 1(* error_code::cant_override_ext
  	 	 refine {{ _internal_wallet_code_ := (#{ wallet_code } ->set()) ; {_} }} . 
  	 	 refine {{ if ( #{Internal} ) then { {_:UEf} }; {_} }} . 
  	 	 	 refine {{ new 'value_gr : XUInteger256 @ "value_gr" := int_value () ; {_} }} . 
- 	 	 	 refine {{ tvm_rawreserve (( tvm_balance () - !{value_gr} ) , 1 (* rawreserve_flag::up_to *) )(* ;  {_} }} . 
+ 	 	 	 refine {{ tvm_rawreserve (( tvm_balance () - !{value_gr} ) ,  rawreserve_flag::up_to  )(* ;  {_} }} . 
  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) *) }} . 
  	 refine {{ return_  TRUE  }} . 
  
@@ -116,7 +116,7 @@ refine {{ require_ ( ( ~ _external_wallet_ ) , 1(* error_code::cant_override_ext
 (*  Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( XAddress ) ) ( grams : ( XUInteger128 ) ) : UExpression XAddress false . 
  refine {{ new 'value_gr : ( uint256 ) @ "value_gr" := {} ; {_} }} . 
 		refine {{ { value_gr } := int_value () ; {_} }} . 
-		refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , 1(* rawreserve_flag::up_to *) ) ; {_} }} . 
+		refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
 		refine {{ wallet_init : ( uint256 ) @ "wallet_init" ; {_} }} . 
 		refine {{ dest : ( raw_address ) @ "dest" ; {_} }} . 
 		(* refine {{ [ wallet_init , dest ] := calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; _ }} .  *)
@@ -151,7 +151,7 @@ Notation " 'set_int_return_flag_' '(' ')' " :=
 		(* refine {{ new 'args : ( auto ) @ "args" := {} ; {_} }} . 
 		refine {{ { args } := parse ( (#{ payload }) . ctos () ) ; _ }} .  *)
 		refine {{ new 'value_gr : ( uint256 ) @ "value_gr" := int_value () ; {_} }} . 
-		refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , 1 (* rawreserve_flag::up_to *) ) ; {_} }} . 
+		refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  ,rawreserve_flag::up_to  ) ; {_} }} . 
 		(* refine {{ wallet_init : ( auto ) @ "wallet_init" ; _ }} . 
 		refine {{ dest : ( auto ) @ "dest" ; _ }} . 
 		refine {{ [ wallet_init , dest ] := calc_internal_wallet_init_ ( (!{ args }) . pubkey , (!{ args }) . internal_owner ) ; _ }} . 
@@ -170,7 +170,7 @@ refine {{ require_ ( ( _total_granted_ >= (#{ tokens }) ) , 1(* error_code::burn
  	 	 refine {{ new 'value_gr  : uint  @ "value_gr" := {} ; {_} }} . 
  	 	 (* refine {{ [ { sender } , { value_gr } ] := int_sender_and_value () ; {_} }} .  *)
  	 	 (* refine {{ require_ ( ( !{sender} == expected_internal_address_ ( (#{ sender_pubkey }) ) , (#{ sender_owner }) ) ; _ }} .  *)
- 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , 1(* rawreserve_flag::up_to *) ) ; {_} }} . 
+ 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  ,  rawreserve_flag::up_to  ) ; {_} }} . 
  	 	 (* refine {{ ( *external_wallet_ ) ( Grams ( 0 ) , SEND_ALL_GAS ) . transferToRecipient ( (#{ answer_addr }) , (#{ out_pubkey }) , (#{ out_internal_owner }) , (#{ tokens }) , uint128 ( 0 ) ,  TRUE ,  FALSE ) ; _ }} .  *)
  	 	 refine {{ _total_granted_ -= (#{ tokens }) }} . 
  Defined . 
@@ -181,7 +181,7 @@ refine {{ require_ ( ( _total_granted_ >= (#{ tokens }) ) , 1(* error_code::burn
  Definition requestTotalGranted : UExpression XUInteger128 false . 
  refine {{ new 'value_gr : ( uint256 ) @ "value_gr" := {} ; {_} }} . 
  	 	 refine {{ { value_gr } := int_value () ; {_} }} . 
- 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , 1 (* rawreserve_flag::up_to  *)) ; {_} }} . 
+ 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  ,  rawreserve_flag::up_to  ) ; {_} }} . 
  	 	 (* refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; _ }} .  *)
  	 	 refine {{ return_ _total_granted_ }} . 
  Defined . 

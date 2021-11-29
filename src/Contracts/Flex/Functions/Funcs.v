@@ -323,7 +323,7 @@ Notation " 'approveTradingPairImpl_' '(' pubkey , trading_pair_listing_requests 
  	 	 refine {{ _trading_pair_listing_requests_ := !{new_trading_pair_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value ()  ; { _ } }} . 
-  	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {} ) (* {} (* rawreserve_flag::up_to *) ) *) (* ; { _ } *) }} .
+  	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  )  (* ; { _ } *) }} .
 (*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ !{ trade_pair } }} . 
 Defined .
@@ -363,7 +363,7 @@ Definition rejectTradingPairImpl_right { a1 a2 a3 }  ( pubkey : URValue  uint256
  	 	refine {{ _trading_pair_listing_requests_ := 
               rejectTradingPairImpl_ ( #{pubkey} , _trading_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-  	refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {} (* , rawreserve_flag : : up_to *) ) ; { _ } }} .
+  	refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , rawreserve_flag::up_to  ) ; { _ } }} .
  	 	refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	  refine {{ {value_gr} := int_value () (* ; { _ } *) }} .  	 	 	 
 (*    refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -725,7 +725,7 @@ Definition rejectWrapperImpl
  	 	 refine {{ _xchg_pair_listing_requests_ := !{xchg_pair_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .  
+  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .  
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ !{ xchg_pair } }} . 
  Defined . 
@@ -736,7 +736,7 @@ Definition rejectXchgPair ( pubkey : uint256 ) : UExpression XBool true .
           rejectXchgPairImpl_ ( #{pubkey} , _xchg_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {} (* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
  Defined . 
@@ -782,7 +782,7 @@ Definition registerWrapper ( pubkey :  uint256 ) ( tip3cfg :  ( Tip3ConfigLRecor
  	 	 refine {{ _wrapper_listing_requests_ := !{new_wrapper_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 refine {{new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {}(* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
+  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ !{ wrapper_addr } }} . 
 Defined . 
@@ -795,7 +795,7 @@ Defined .
             rejectWrapperImpl_ ( #{pubkey} , _wrapper_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , {}(* , rawreserve_flag : : up_to *) ) (* ; { _ } *) }} .
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
 Defined . 

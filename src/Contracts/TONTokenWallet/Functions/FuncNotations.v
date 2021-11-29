@@ -523,10 +523,10 @@ Local Open Scope string_scope.
  , grams custom URValue at level 0 ) : ursus_scope . 
 
 
-Notation "'λ1l'" := ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0) (at level 0) : ursus_scope.
+
  
  Definition prepare_transfer_message_flags_right  ( (* & *) grams : ULValue ( XUInteger128 ) ) : URValue XUInteger false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1l ) prepare_transfer_message_flags 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1L ) prepare_transfer_message_flags 
  grams ) . 
  
  Notation " 'prepare_transfer_message_flags_' '(' grams ')' " := 
