@@ -1,6 +1,8 @@
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
+Require Import UrsusTVM.Cpp.tvmFunc.
+
 Module Type CompilerOptions.
 
 Parameter Internal: bool .
@@ -19,6 +21,7 @@ Module Types (xt: XTypesSig) (sm: StateMonadSig).
 Export xt. 
 
 Module Export BasicTypesModule := BasicTypes xt sm.
+Module Export CommonVMStateModule := VMStateModule xt sm.
 Local Open Scope glist_scope.
 
 (* 1 *) Definition TonsConfigL : list Type := 
@@ -35,10 +38,10 @@ Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields .
  ( XBool ) : Type ] .
 Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
  
-(* 3 *)Definition addr_std_fixedL : list Type := 
+(* 3 *)(* Definition addr_std_fixedL : list Type := 
  [ ( XUInteger8 ) : Type ; 
  ( XUInteger256 ) : Type ] .
-Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields . 
+Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields .  *)
 
 (* 4 *)Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
@@ -66,17 +69,19 @@ Elpi GeneratePruvendoRecord OrderRetL OrderRetFields .
 
 
  (*NOT here!*)
-Definition IFlexNotifyPtr := XAddress. 
+(* Definition IFlexNotifyPtr := XAddress. 
 Definition ITONTokenWalletPtr := XAddress. 
 Definition IPricePtr := XAddress. 
-Definition IWrapperPtr := XAddress .
+Definition IWrapperPtr := XAddress . *)
 (******************************************)
 Definition TokensType := XUInteger256. 
 Definition WalletGramsType := XUInteger128. 
-Definition Grams := XUInteger16 . 
-Definition addr_std_compact := XAddress . 
+Definition Grams := XUInteger16 .
+Definition address := addr_stdLRecord. 
+Definition addr_std_compact := addr_stdLRecord .
+Definition addr_std_fixed := addr_stdLRecord .
+Definition address_t := address .
 (*what is this?*)
 Definition varuint32 := XUInteger32 .
-Definition address_t := XAddress.
 
 End Types.

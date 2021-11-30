@@ -19,15 +19,6 @@ Notation UE := (UExpression _ _) (only parsing).
 Notation UEf := (UExpression _ false) (only parsing).
 Notation UEt := (UExpression _ true) (only parsing).
 
-Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
-Notation "'λ4LLLR'" :=  ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
-                       ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _
-                       ( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ1))) 
-                       (at level 0) : ursus_scope.
-(* Notation "'λ2LL'" := (@UExpression_Next_LedgerableWithLArgs _ _ _ _ _( @UExpression_Next_LedgerableWithLArgs _ _ _ _ _ λ0)) (at level 0) : ursus_scope.
- *)
-
-
 Notation " 'public' x " := ( x ) (at level 12, left associativity, only parsing) : ursus_scope .
 Notation " 'private' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
 
