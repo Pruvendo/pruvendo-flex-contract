@@ -19,9 +19,9 @@ Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModul
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-Notation wrappers_map := ( mapping uint256 (uint256 # WrapperListingRequestLRecord) ).
-Notation trading_pairs_map := ( mapping uint256 (uint256 # TradingPairListingRequestLRecord) ).
-Notation xchg_pairs_map := ( mapping uint256 (uint256 # XchgPairListingRequestLRecord) ).
+Notation wrappers_map := ( mapping uint256 ((* uint256 # *) WrapperListingRequestLRecord) ).
+Notation trading_pairs_map := ( mapping uint256 ((* uint256 # *) TradingPairListingRequestLRecord) ).
+Notation xchg_pairs_map := ( mapping uint256 ((* uint256 # *) XchgPairListingRequestLRecord) ).
 
 Module Type SpecSig.
 
