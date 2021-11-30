@@ -17,10 +17,10 @@ Module Export InterfaceModule := PublicInterface xt sm.
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 
-Definition lend_array_record_ι_lend_addr_right {b} (x: URValue lend_array_recordLRecord b): URValue XAddress b :=
+Definition lend_array_record_ι_lend_addr_right {b} (x: URValue lend_array_recordLRecord b): URValue address b :=
     || {x} ^^ {lend_array_record_ι_lend_addr} || : _.
     
-Definition lend_array_record_ι_lend_addr_left (x: ULValue lend_array_recordLRecord): ULValue XAddress :=
+Definition lend_array_record_ι_lend_addr_left (x: ULValue lend_array_recordLRecord): ULValue address :=
     {{ {x} ^^ {lend_array_record_ι_lend_addr} }} : _.
     
 Notation " a '↑' 'lend_array_record.lend_addr' " := ( lend_array_record_ι_lend_addr_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -98,19 +98,19 @@ Definition DTONTokenWallet_ι_wallet_public_key__left (x: ULValue DTONTokenWalle
 Notation " a '↑' 'DTONTokenWallet.wallet_public_key_' " := ( DTONTokenWallet_ι_wallet_public_key__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWallet.wallet_public_key_' " := ( DTONTokenWallet_ι_wallet_public_key__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWallet_ι_root_address__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XAddress b :=
+Definition DTONTokenWallet_ι_root_address__right {b} (x: URValue DTONTokenWalletLRecord b): URValue address b :=
     || {x} ^^ {DTONTokenWallet_ι_root_address_} || : _.
     
-Definition DTONTokenWallet_ι_root_address__left (x: ULValue DTONTokenWalletLRecord): ULValue XAddress :=
+Definition DTONTokenWallet_ι_root_address__left (x: ULValue DTONTokenWalletLRecord): ULValue address :=
     {{ {x} ^^ {DTONTokenWallet_ι_root_address_} }} : _.
     
 Notation " a '↑' 'DTONTokenWallet.root_address_' " := ( DTONTokenWallet_ι_root_address__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWallet.root_address_' " := ( DTONTokenWallet_ι_root_address__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWallet_ι_owner_address__right {b} (x: URValue DTONTokenWalletLRecord b): URValue ( XMaybe XAddress ) b :=
+Definition DTONTokenWallet_ι_owner_address__right {b} (x: URValue DTONTokenWalletLRecord b): URValue ( XMaybe address ) b :=
     || {x} ^^ {DTONTokenWallet_ι_owner_address_} || : _.
     
-Definition DTONTokenWallet_ι_owner_address__left (x: ULValue DTONTokenWalletLRecord): ULValue ( XMaybe XAddress ) :=
+Definition DTONTokenWallet_ι_owner_address__left (x: ULValue DTONTokenWalletLRecord): ULValue ( XMaybe address ) :=
     {{ {x} ^^ {DTONTokenWallet_ι_owner_address_} }} : _.
     
 Notation " a '↑' 'DTONTokenWallet.owner_address_' " := ( DTONTokenWallet_ι_owner_address__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -197,19 +197,19 @@ Definition DTONTokenWalletExternal_ι_wallet_public_key__left (x: ULValue DTONTo
 Notation " a '↑' 'DTONTokenWalletExternal.wallet_public_key_' " := ( DTONTokenWalletExternal_ι_wallet_public_key__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWalletExternal.wallet_public_key_' " := ( DTONTokenWalletExternal_ι_wallet_public_key__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWalletExternal_ι_root_address__right {b} (x: URValue DTONTokenWalletExternalLRecord b): URValue XAddress b :=
+Definition DTONTokenWalletExternal_ι_root_address__right {b} (x: URValue DTONTokenWalletExternalLRecord b): URValue address b :=
     || {x} ^^ {DTONTokenWalletExternal_ι_root_address_} || : _.
     
-Definition DTONTokenWalletExternal_ι_root_address__left (x: ULValue DTONTokenWalletExternalLRecord): ULValue XAddress :=
+Definition DTONTokenWalletExternal_ι_root_address__left (x: ULValue DTONTokenWalletExternalLRecord): ULValue address :=
     {{ {x} ^^ {DTONTokenWalletExternal_ι_root_address_} }} : _.
     
 Notation " a '↑' 'DTONTokenWalletExternal.root_address_' " := ( DTONTokenWalletExternal_ι_root_address__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWalletExternal.root_address_' " := ( DTONTokenWalletExternal_ι_root_address__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWalletExternal_ι_owner_address__right {b} (x: URValue DTONTokenWalletExternalLRecord b): URValue ( XMaybe XAddress ) b :=
+Definition DTONTokenWalletExternal_ι_owner_address__right {b} (x: URValue DTONTokenWalletExternalLRecord b): URValue ( XMaybe address ) b :=
     || {x} ^^ {DTONTokenWalletExternal_ι_owner_address_} || : _.
     
-Definition DTONTokenWalletExternal_ι_owner_address__left (x: ULValue DTONTokenWalletExternalLRecord): ULValue ( XMaybe XAddress ) :=
+Definition DTONTokenWalletExternal_ι_owner_address__left (x: ULValue DTONTokenWalletExternalLRecord): ULValue ( XMaybe address ) :=
     {{ {x} ^^ {DTONTokenWalletExternal_ι_owner_address_} }} : _.
     
 Notation " a '↑' 'DTONTokenWalletExternal.owner_address_' " := ( DTONTokenWalletExternal_ι_owner_address__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -298,19 +298,19 @@ Definition DTONTokenWalletInternal_ι_wallet_public_key__left (x: ULValue DTONTo
 Notation " a '↑' 'DTONTokenWalletInternal.wallet_public_key_' " := ( DTONTokenWalletInternal_ι_wallet_public_key__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWalletInternal.wallet_public_key_' " := ( DTONTokenWalletInternal_ι_wallet_public_key__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWalletInternal_ι_root_address__right {b} (x: URValue DTONTokenWalletInternalLRecord b): URValue XAddress b :=
+Definition DTONTokenWalletInternal_ι_root_address__right {b} (x: URValue DTONTokenWalletInternalLRecord b): URValue address b :=
     || {x} ^^ {DTONTokenWalletInternal_ι_root_address_} || : _.
     
-Definition DTONTokenWalletInternal_ι_root_address__left (x: ULValue DTONTokenWalletInternalLRecord): ULValue XAddress :=
+Definition DTONTokenWalletInternal_ι_root_address__left (x: ULValue DTONTokenWalletInternalLRecord): ULValue address :=
     {{ {x} ^^ {DTONTokenWalletInternal_ι_root_address_} }} : _.
     
 Notation " a '↑' 'DTONTokenWalletInternal.root_address_' " := ( DTONTokenWalletInternal_ι_root_address__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWalletInternal.root_address_' " := ( DTONTokenWalletInternal_ι_root_address__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWalletInternal_ι_owner_address__right {b} (x: URValue DTONTokenWalletInternalLRecord b): URValue ( XMaybe XAddress ) b :=
+Definition DTONTokenWalletInternal_ι_owner_address__right {b} (x: URValue DTONTokenWalletInternalLRecord b): URValue ( XMaybe address ) b :=
     || {x} ^^ {DTONTokenWalletInternal_ι_owner_address_} || : _.
     
-Definition DTONTokenWalletInternal_ι_owner_address__left (x: ULValue DTONTokenWalletInternalLRecord): ULValue ( XMaybe XAddress ) :=
+Definition DTONTokenWalletInternal_ι_owner_address__left (x: ULValue DTONTokenWalletInternalLRecord): ULValue ( XMaybe address ) :=
     {{ {x} ^^ {DTONTokenWalletInternal_ι_owner_address_} }} : _.
     
 Notation " a '↑' 'DTONTokenWalletInternal.owner_address_' " := ( DTONTokenWalletInternal_ι_owner_address__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -325,10 +325,10 @@ Definition DTONTokenWalletInternal_ι_code__left (x: ULValue DTONTokenWalletInte
 Notation " a '↑' 'DTONTokenWalletInternal.code_' " := ( DTONTokenWalletInternal_ι_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWalletInternal.code_' " := ( DTONTokenWalletInternal_ι_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWalletInternal_ι_lend_ownership__right {b} (x: URValue DTONTokenWalletInternalLRecord b): URValue ( XHMap addr_std_fixedLRecord lend_recordLRecord ) b :=
+Definition DTONTokenWalletInternal_ι_lend_ownership__right {b} (x: URValue DTONTokenWalletInternalLRecord b): URValue ( XHMap addr_std_fixed lend_recordLRecord ) b :=
     || {x} ^^ {DTONTokenWalletInternal_ι_lend_ownership_} || : _.
     
-Definition DTONTokenWalletInternal_ι_lend_ownership__left (x: ULValue DTONTokenWalletInternalLRecord): ULValue ( XHMap addr_std_fixedLRecord lend_recordLRecord ) :=
+Definition DTONTokenWalletInternal_ι_lend_ownership__left (x: ULValue DTONTokenWalletInternalLRecord): ULValue ( XHMap addr_std_fixed lend_recordLRecord ) :=
     {{ {x} ^^ {DTONTokenWalletInternal_ι_lend_ownership_} }} : _.
     
 Notation " a '↑' 'DTONTokenWalletInternal.lend_ownership_' " := ( DTONTokenWalletInternal_ι_lend_ownership__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -397,19 +397,19 @@ Definition details_info_ι_wallet_public_key_left (x: ULValue details_infoLRecor
 Notation " a '↑' 'details_info.wallet_public_key' " := ( details_info_ι_wallet_public_key_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'details_info.wallet_public_key' " := ( details_info_ι_wallet_public_key_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_root_address_right {b} (x: URValue details_infoLRecord b): URValue XAddress b :=
+Definition details_info_ι_root_address_right {b} (x: URValue details_infoLRecord b): URValue address b :=
     || {x} ^^ {details_info_ι_root_address} || : _.
     
-Definition details_info_ι_root_address_left (x: ULValue details_infoLRecord): ULValue XAddress :=
+Definition details_info_ι_root_address_left (x: ULValue details_infoLRecord): ULValue address :=
     {{ {x} ^^ {details_info_ι_root_address} }} : _.
     
 Notation " a '↑' 'details_info.root_address' " := ( details_info_ι_root_address_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'details_info.root_address' " := ( details_info_ι_root_address_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_owner_address_right {b} (x: URValue details_infoLRecord b): URValue XAddress b :=
+Definition details_info_ι_owner_address_right {b} (x: URValue details_infoLRecord b): URValue address b :=
     || {x} ^^ {details_info_ι_owner_address} || : _.
     
-Definition details_info_ι_owner_address_left (x: ULValue details_infoLRecord): ULValue XAddress :=
+Definition details_info_ι_owner_address_left (x: ULValue details_infoLRecord): ULValue address :=
     {{ {x} ^^ {details_info_ι_owner_address} }} : _.
     
 Notation " a '↑' 'details_info.owner_address' " := ( details_info_ι_owner_address_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -460,10 +460,10 @@ Definition details_info_ι_workchain_id_left (x: ULValue details_infoLRecord): U
 Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition allowance_info_ι_spender_right {b} (x: URValue allowance_infoLRecord b): URValue XAddress b :=
+Definition allowance_info_ι_spender_right {b} (x: URValue allowance_infoLRecord b): URValue address b :=
     || {x} ^^ {allowance_info_ι_spender} || : _.
     
-Definition allowance_info_ι_spender_left (x: ULValue allowance_infoLRecord): ULValue XAddress :=
+Definition allowance_info_ι_spender_left (x: ULValue allowance_infoLRecord): ULValue address :=
     {{ {x} ^^ {allowance_info_ι_spender} }} : _.
     
 Notation " a '↑' 'allowance_info.spender' " := ( allowance_info_ι_spender_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -499,12 +499,12 @@ Notation " a '↑' 'lend_record.lend_finish_time' " := ( lend_record_ι_lend_fin
 
 
 
-(* IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> ITONTokenWalletNotifyP *)
-Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+(* IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> ITONTokenWalletNotifyP *)
+Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger128 a2) 
                                                  (z : URValue XUInteger32 a3)
                                                  (t : URValue XUInteger256 a4)
-                                                 (u : URValue XAddress a5)
+                                                 (u : URValue address a5)
                                                  (v : URValue XCell a6) : URValue ITONTokenWalletNotify (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
@@ -521,12 +521,12 @@ Notation " '.onTip3LendOwnership' ( x , y , z , t , u , v ) " := (IonTip3LendOwn
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
 
-(* | IonTip3Transfer : XAddress -> XUInteger128 -> XUInteger128 -> XUInteger256 -> XAddress -> XCell -> ITONTokenWalletNotifyP. *)
-Definition IonTip3Transfer_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+(* | IonTip3Transfer : address -> XUInteger128 -> XUInteger128 -> XUInteger256 -> address -> XCell -> ITONTokenWalletNotifyP. *)
+Definition IonTip3Transfer_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger128 a2) 
                                                  (z : URValue XUInteger128 a3)
                                                  (t : URValue XUInteger256 a4)
-                                                 (u : URValue XAddress a5)
+                                                 (u : URValue address a5)
                                                  (v : URValue XCell a6) : URValue ITONTokenWalletNotify (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
@@ -547,18 +547,18 @@ Notation " '.onTip3Transfer' ( x , y , z , t , u , v ) " := (IonTip3Transfer_rig
 
 (*
 Inductive ITONTokenWalletP :=
-| ItransferWithNotify : XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XBool -> XCell -> ITONTokenWalletP
-| ItransferToRecipient : XAddress -> XUInteger256 -> XAddress -> 
+| ItransferWithNotify : address -> address -> XUInteger128 -> XUInteger128 -> XBool -> XCell -> ITONTokenWalletP
+| ItransferToRecipient : address -> XUInteger256 -> address -> 
                          XUInteger128 -> XUInteger128 -> XBool -> XBool -> ITONTokenWalletP
-| ItransferToRecipientWithNotify : XAddress -> XUInteger256 -> XAddress -> 
+| ItransferToRecipientWithNotify : address -> XUInteger256 -> address -> 
                          XUInteger128 -> XUInteger128 -> XBool -> XBool -> XCell -> ITONTokenWalletP
-| IlendOwnership : XAddress -> XUInteger128 -> XUInteger256 -> XUInteger128 -> 
+| IlendOwnership : address -> XUInteger128 -> XUInteger256 -> XUInteger128 -> 
                          XUInteger32 -> XCell -> XCell -> ITONTokenWalletP
 | _Icreate : InitialState -> ITONTokenWalletP.
  *)
 
-Definition ItransferWithNotify_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
-                                                 (y : URValue XAddress a2) 
+Definition ItransferWithNotify_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 ) 
+                                                 (y : URValue address a2) 
                                                  (z : URValue XUInteger128 a3)
                                                  (t : URValue XUInteger128 a4)
                                                  (u : URValue XBool a5)
@@ -578,12 +578,12 @@ Notation " '.transferWithNotify' ( x , y , z , t , u , v ) " := (ItransferWithNo
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
 
-(* ItransferToRecipient : XAddress -> XUInteger256 -> XAddress -> 
+(* ItransferToRecipient : address -> XUInteger256 -> address -> 
                          XUInteger128 -> XUInteger128 -> XBool -> XBool -> ITONTokenWalletP *)
 
-Definition ItransferToRecipient_right { a1 a2 a3 a4 a5 a6 a7}  (x : URValue XAddress a1 ) 
+Definition ItransferToRecipient_right { a1 a2 a3 a4 a5 a6 a7}  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger256 a2) 
-                                                 (z : URValue XAddress a3)
+                                                 (z : URValue address a3)
                                                  (t : URValue XUInteger128 a4)
                                                  (u : URValue XUInteger128 a5)
                                                  (v : URValue XBool a6)
@@ -606,12 +606,12 @@ Notation " '.transferToRecipient' ( x , y , z , t , u , v , w ) " := (ItransferT
  t custom URValue at level 0 , u custom URValue at level 0, 
  v custom URValue at level 0, w custom URValue at level 0 ) : ursus_scope .
 
-(*  ItransferToRecipientWithNotify : XAddress -> XUInteger256 -> XAddress -> 
+(*  ItransferToRecipientWithNotify : address -> XUInteger256 -> address -> 
                          XUInteger128 -> XUInteger128 -> XBool -> XBool -> XCell -> ITONTokenWalletP *)
 
-Definition ItransferToRecipientWithNotify_right { a1 a2 a3 a4 a5 a6 a7 a8}  (x : URValue XAddress a1 ) 
+Definition ItransferToRecipientWithNotify_right { a1 a2 a3 a4 a5 a6 a7 a8}  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger256 a2) 
-                                                 (z : URValue XAddress a3)
+                                                 (z : URValue address a3)
                                                  (t : URValue XUInteger128 a4)
                                                  (u : URValue XUInteger128 a5)
                                                  (v : URValue XBool a6)
@@ -637,10 +637,10 @@ Notation " '.ItransferToRecipientWithNotify' ( x , y , z , t , u , v , w , q ) "
  v custom URValue at level 0, w custom URValue at level 0 , q custom URValue at level 0) : ursus_scope .
 
 
-(* | IlendOwnership : XAddress -> XUInteger128 -> XUInteger256 -> XUInteger128 -> 
+(* | IlendOwnership : address -> XUInteger128 -> XUInteger256 -> XUInteger128 -> 
                          XUInteger32 -> XCell -> XCell -> ITONTokenWalletP *)
 
-Definition IlendOwnership_right { a1 a2 a3 a4 a5 a6 a7}  (x : URValue XAddress a1 ) 
+Definition IlendOwnership_right { a1 a2 a3 a4 a5 a6 a7}  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger128 a2) 
                                                  (z : URValue XUInteger256 a3)
                                                  (t : URValue XUInteger128 a4)

@@ -13,7 +13,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XAddress XUInteger128 : Type.
+Variables address XUInteger128 : Type.
 
 Inductive VarInitFields      := | VarInit_ι_DXchgPair | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
@@ -21,7 +21,7 @@ Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | Ini
 Variable InitialState : Type.
 
 Inductive IXchgPairP :=
-    | IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> IXchgPairP
+    | IonDeploy : XUInteger128 -> XUInteger128 -> address -> IXchgPairP
     | IgetFlexAddr : IXchgPairP
     | IgetTip3MajorRoot : IXchgPairP
     | IgetTip3MinorRoot : IXchgPairP
@@ -44,7 +44,7 @@ GeneratePruvendoRecord VarInitL VarInitFields.
 Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
-Definition IXchgPair: Type := IXchgPairP XAddress XUInteger128 (* StateInitLRecord *) StateInitLRecord.
+Definition IXchgPair: Type := IXchgPairP address XUInteger128 (* StateInitLRecord *) StateInitLRecord.
 
 Arguments IonDeploy {_} {_} {_}.
 Arguments IgetFlexAddr {_} {_} {_}.

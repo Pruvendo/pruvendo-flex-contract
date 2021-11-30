@@ -62,10 +62,10 @@ Definition DFlexClient_ι_tons_cfg__left (x: ULValue DFlexClientLRecord): ULValu
 Notation " a '↑' 'DFlexClient.tons_cfg_' " := ( DFlexClient_ι_tons_cfg__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlexClient.tons_cfg_' " := ( DFlexClient_ι_tons_cfg__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlexClient_ι_flex__right {b} (x: URValue DFlexClientLRecord b): URValue XAddress b :=
+Definition DFlexClient_ι_flex__right {b} (x: URValue DFlexClientLRecord b): URValue address b :=
     || {x} ^^ {DFlexClient_ι_flex_} || : _.
     
-Definition DFlexClient_ι_flex__left (x: ULValue DFlexClientLRecord): ULValue XAddress :=
+Definition DFlexClient_ι_flex__left (x: ULValue DFlexClientLRecord): ULValue address :=
     {{ {x} ^^ {DFlexClient_ι_flex_} }} : _.
     
 Notation " a '↑' 'DFlexClient.flex_' " := ( DFlexClient_ι_flex__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -101,7 +101,7 @@ Notation " a '↑' 'DFlexClient.flex_wrapper_code_' " := ( DFlexClient_ι_flex_w
 (*interface*)
 (* Inductive IFlexClientP :=
 | Iconstructor : XUInteger256 -> XCell -> XCell -> IFlexClientP
-| IsetFlexCfg   : TonsConfigLRecord -> XAddress -> IFlexClientP
+| IsetFlexCfg   : TonsConfigLRecord -> address -> IFlexClientP
 | IsetExtWalletCode : XCell -> IFlexClientP
 | IsetFlexWalletCode : XCell -> IFlexClientP
 | IsetFlexWrapperCode : XCell -> IFlexClientP
@@ -126,7 +126,7 @@ Notation " '.contructor' ( x , y , z  ) " := (Iconstructor_right x y z)
  y custom URValue at level 0 , z custom URValue at level 0) : ursus_scope .
 
 Definition IsetFlexCfg_right { a1 a2 } (x : URValue TonsConfigLRecord a1 ) 
-                                       (y : URValue XAddress a2) 
+                                       (y : URValue address a2) 
                                         : URValue IFlexClient (orb a1 a2).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' => #(IsetFlexCfg x' y'  : IFlexClient))): URValue _ _).

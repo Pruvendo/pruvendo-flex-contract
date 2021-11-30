@@ -73,7 +73,7 @@ msg )
 
 Declare Instance asdfasdf : LocalStateField PhantomType.
  
-Definition init ( external_wallet : ( XAddress ) ) : UExpression XBool true . 
+Definition init ( external_wallet : ( address ) ) : UExpression XBool true . 
      refine {{ require_ ( ( ~ _external_wallet_ ) , error_code::cant_override_external_wallet ) ; {_} }} . 
  	 	 refine {{ new 'parsed_msg : ( PhantomType(* auto *) ) @ "parsed_msg" := {}
                    (* parse ( parser ( msg_slice () ) , error_code::bad_incoming_msg ) *) ; {_} }} . 
@@ -89,7 +89,7 @@ Definition init ( external_wallet : ( XAddress ) ) : UExpression XBool true .
  	 	 refine {{ mycode_parser ^^ ldref () ; {_} }} .  *)
  	 	 refine {{ new 'mycode_salt : ( PhantomType(* auto *) ) @ "mycode_salt" := {} 
                               (* (!{mycode_parser}) ldrefrtos () *) ; {_} }} . 
- 	 	 refine {{ new 'flex_addr : ( XAddress ) @ "flex_addr" := {} 
+ 	 	 refine {{ new 'flex_addr : ( address ) @ "flex_addr" := {} 
                               (*  parse ( (!{ mycode_salt }) ) *) ; {_} }} . 
  	 	 refine {{ require_ ( ( (!{ flex_addr }) == int_sender () ) , error_code::only_flex_may_deploy_me ) ; {_} }} . 
  	 	 refine {{ _external_wallet_ := (#{ external_wallet }) -> set () ; {_} }} . 
@@ -186,8 +186,8 @@ wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_pers
 
 Definition prepare_internal_wallet_state_init_and_addr ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
- 														( wallet_public_key : uint256 ) ( root_address : raw_address ) 
-														( owner_address : optional raw_address ) ( code : TvmCell ) 
+ 														( wallet_public_key : uint256 ) ( root_address : address ) 
+														( owner_address : optional address ) ( code : TvmCell ) 
 														( workchain_id : uint8 ) : UExpression ( StateInitLRecord * uint256 ) false .
  	 	 refine {{ new 'wallet_data : TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord @ "wallet_data" := 
                  [ #{name} , #{symbol} , #{decimals} , 0 , #{root_public_key} , 
@@ -206,8 +206,8 @@ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6
 																							( decimals : URValue uint8 a3 ) 
 																							( root_public_key : URValue uint256 a4 ) 
 																							( wallet_public_key : URValue uint256 a5 ) 
-																							( root_address : URValue raw_address a6 ) 
-																							( owner_address : URValue ( optional raw_address ) a7 ) 
+																							( root_address : URValue address a6 ) 
+																							( owner_address : URValue ( optional address ) a7 ) 
 																							( code : URValue TvmCell a8 ) 
 																							( workchain_id : URValue uint8 a9 ) : URValue ( StateInitLRecord * uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
 	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr 
@@ -219,11 +219,11 @@ Notation " 'prepare_internal_wallet_state_init_and_addr_' '(' name ',' symbol ',
  	 root_public_key custom URValue at level 0 , wallet_public_key custom URValue at level 0 , root_address custom URValue at level 0 , 
 	 owner_address custom URValue at level 0 , code custom URValue at level 0 , workchain_id custom URValue at level 0 ) : ursus_scope . 
 
-Definition optional_owner ( owner : ( XAddress ) ) : UExpression (XMaybe XAddress) false . 
+Definition optional_owner ( owner : ( address ) ) : UExpression (XMaybe address) false . 
      refine  {{ return_ {} (* Std :: get < addr_std > ( (#{ owner }) () ) . address ? std::optional ( (#{ owner }) ) : std::optional () *) }} . 
 Defined . 
  
-Definition optional_owner_right { a1 }  ( owner : URValue ( XAddress ) a1 ) : URValue (XMaybe XAddress) a1 := 
+Definition optional_owner_right { a1 }  ( owner : URValue ( address ) a1 ) : URValue (XMaybe address) a1 := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner 
 owner ) . 
 
@@ -232,19 +232,19 @@ Notation " 'optional_owner_' '(' owner ')' " :=
 owner ) 
 (in custom URValue at level 0 , owner custom URValue at level 0 ) : ursus_scope . 
 
-Definition calc_internal_wallet_init ( pubkey : ( XUInteger256 ) ) ( owner_addr : ( XAddress ) ) : UExpression ( StateInitLRecord # XAddress ) true . 
+Definition calc_internal_wallet_init ( pubkey : ( XUInteger256 ) ) ( owner_addr : ( address ) ) : UExpression ( StateInitLRecord # address ) true . 
 		refine {{ wallet_init : ( StateInitLRecord ) @ "wallet_init" ; {_} }} . 
- 	 	 refine {{ dest_addr : ( raw_address ) @ "dest_addr" ; {_} }} . 
- 	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:raw_address ) @
+ 	 	 refine {{ dest_addr : ( address ) @ "dest_addr" ; {_} }} . 
+ 	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:address ) @
                    ( "wallet_init" , "dest_addr" ) := 
          prepare_internal_wallet_state_init_and_addr_ ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , tvm_myaddr () , optional_owner_ ( (#{ owner_addr }) ) , _internal_wallet_code_ -> get () , _workchain_id_ ) ; {_} }} . 
- 	 	 refine {{ new 'dest : ( XAddress ) @ "dest" := {} 
+ 	 	 refine {{ new 'dest : ( address ) @ "dest" := {} 
                       (* Address :: make_std ( _workchain_id_ , dest_addr ) *) ; {_} }} . 
  	 	 refine {{ return_ {} (* [ wallet_init , (!{ dest }) ] *) }} . 
  Defined . 
  
-Definition calc_internal_wallet_init_right { a1 a2 }  ( pubkey : URValue ( XUInteger256 ) a1 ) ( owner_addr : URValue ( XAddress ) a2 ) 
-: URValue ( StateInitLRecord # XAddress ) true (* orb a2 a1 *) := 
+Definition calc_internal_wallet_init_right { a1 a2 }  ( pubkey : URValue ( XUInteger256 ) a1 ) ( owner_addr : URValue ( address ) a2 ) 
+: URValue ( StateInitLRecord # address ) true (* orb a2 a1 *) := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_internal_wallet_init 
 pubkey owner_addr ) . 
 
@@ -254,10 +254,10 @@ pubkey owner_addr )
 (in custom URValue at level 0 , pubkey custom URValue at level 0 
 , owner_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( XAddress ) ) ( grams : ( XUInteger128 ) ) : UExpression XAddress true . 
+ Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( address ) ) ( grams : ( XUInteger128 ) ) : UExpression address true . 
     refine {{ new 'value_gr : ( uint256 ) @ "value_gr" := int_value () ; {_} }} . 
 		refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
-    refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:raw_address ) @
+    refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:address ) @
                   ( "wallet_init" , "dest" ) := 
        calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} .  
 (*  refine {{ ITONTokenWalletPtr dest_handle ( dest ) ; {_} }} .  *)
@@ -266,12 +266,12 @@ pubkey owner_addr )
 		refine {{ return_ !{dest} }} . 
  Defined . 
  
-(*  Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( XAddress ) ) ( grams : ( XUInteger128 ) ) : UExpression XAddress false . 
+(*  Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( address ) ) ( grams : ( XUInteger128 ) ) : UExpression address false . 
  refine {{ new 'value_gr : ( uint256 ) @ "value_gr" := {} ; {_} }} . 
 		refine {{ { value_gr } := int_value () ; {_} }} . 
 		refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
 		refine {{ wallet_init : ( uint256 ) @ "wallet_init" ; {_} }} . 
-		refine {{ dest : ( raw_address ) @ "dest" ; {_} }} . 
+		refine {{ dest : ( address ) @ "dest" ; {_} }} . 
 		(* refine {{ [ wallet_init , dest ] := calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; _ }} .  *)
 		(* refine {{ ITONTokenWalletPtr dest_handle ( dest ) ; _ }} .  *)
 		refine {{ dest_handle ^^ deploy_noop ( wallet_init , Grams ( (#{ grams }) . get () ) ) ; _ }} . 
@@ -297,16 +297,16 @@ Notation " 'set_int_return_flag_' '(' ')' " :=
 
 Definition expected_internal_address 
 ( sender_public_key : ( XUInteger256 ) ) 
-( sender_owner_addr : ( XAddress ) ) 
-: UExpression XAddress (* true *) false . 
+( sender_owner_addr : ( address ) ) 
+: UExpression address (* true *) false . 
 refine  {{ new 'hash_addr : ( XUInteger256 ) @ "hash_addr" := 
   second(prepare_internal_wallet_state_init_and_addr_ ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ sender_public_key }) , tvm_myaddr () , optional_owner_ ( (#{ sender_owner_addr }) ) , 
     (* TODO!!!!!! *)            _internal_wallet_code_ -> get_default () , _workchain_id_ )); {_} }} .
  	 	 refine {{ return_ {} (* Address :: make_std ( _workchain_id_ , (!{ hash_addr }) ) *) }} . 
  Defined .
 
-Definition expected_internal_address_right { a1 a2 }  ( sender_public_key : URValue ( XUInteger256 ) a1 ) ( sender_owner_addr : URValue ( XAddress ) a2 ) 
-: URValue XAddress (* true *) (orb a2 a1) := 
+Definition expected_internal_address_right { a1 a2 }  ( sender_public_key : URValue ( XUInteger256 ) a1 ) ( sender_owner_addr : URValue ( address ) a2 ) 
+: URValue address (* true *) (orb a2 a1) := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) expected_internal_address 
 sender_public_key sender_owner_addr ) . 
 
@@ -316,7 +316,7 @@ sender_public_key sender_owner_addr )
 (in custom URValue at level 0 , sender_public_key custom URValue at level 0 
 , sender_owner_addr custom URValue at level 0 ) : ursus_scope . 
 
-Definition onTip3Transfer ( answer_addr : ( XAddress ) ) ( balance : ( XUInteger128 ) ) ( new_tokens : ( XUInteger128 ) ) ( sender_pubkey : ( XUInteger256 ) ) ( sender_owner : ( XAddress ) ) ( payload : ( XCell ) ) : UExpression WrapperRetLRecord true . 
+Definition onTip3Transfer ( answer_addr : ( address ) ) ( balance : ( XUInteger128 ) ) ( new_tokens : ( XUInteger128 ) ) ( sender_pubkey : ( XUInteger256 ) ) ( sender_owner : ( address ) ) ( payload : ( XCell ) ) : UExpression WrapperRetLRecord true . 
  		refine {{ require_ ( ( int_sender () == _external_wallet_ -> get_default () ) , error_code::not_my_wallet_notifies ) ; {_} }}. 
 		refine {{ set_int_sender_ ( (* ( (* #{ answer_addr } *) ) *) ) ; {_} }} . 
 		refine {{ set_int_return_value_ ( (* 0 *) ) ; {_} }} . 
@@ -325,7 +325,7 @@ Definition onTip3Transfer ( answer_addr : ( XAddress ) ) ( balance : ( XUInteger
                         (* parse ( (#{ payload }) . ctos () ) *) ; {_} }} . 
 		refine {{ new 'value_gr : ( uint256 ) @ "value_gr" := int_value () ; {_} }} . 
 		refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
-		refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:raw_address ) @
+		refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:address ) @
                   ( "wallet_init" , "dest" ) := 
                calc_internal_wallet_init_ ( (!{ args }) ↑ FlexDeployWalletArgs.pubkey , 
                                             (!{ args }) ↑ FlexDeployWalletArgs.internal_owner ) ; {_} }} . 
@@ -338,12 +338,12 @@ Definition onTip3Transfer ( answer_addr : ( XAddress ) ) ( balance : ( XUInteger
  
 Parameter int_value_ : uint (*Grams*) .
 
-Definition int_sender_and_value : UExpression ( XAddress # uint (*Grams*)) false .
-  refine {{ new 'sender : XAddress @ "sender" := int_sender() ; { _ } }} .
+Definition int_sender_and_value : UExpression ( address # uint (*Grams*)) false .
+  refine {{ new 'sender : address @ "sender" := int_sender() ; { _ } }} .
   refine {{ return_ [ !{sender} , #{int_value_} ] }} .
 Defined.
 
-Definition int_sender_and_value_right : URValue ( XAddress # uint (*Grams*)) false := 
+Definition int_sender_and_value_right : URValue ( address # uint (*Grams*)) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) int_sender_and_value ) . 
 
  Notation " 'int_sender_and_value_' '(' ')' " := 
@@ -351,15 +351,15 @@ Definition int_sender_and_value_right : URValue ( XAddress # uint (*Grams*)) fal
  (in custom URValue at level 0 ) : ursus_scope . 
 
 Definition burn 
-( answer_addr : ( XAddress ) ) 
+( answer_addr : ( address ) ) 
 ( sender_pubkey : ( XUInteger256 ) ) 
-( sender_owner : ( XAddress ) ) 
+( sender_owner : ( address ) ) 
 ( out_pubkey : ( XUInteger256 ) ) 
-( out_internal_owner : ( XAddress ) ) 
+( out_internal_owner : ( address ) ) 
 ( tokens : ( XUInteger128 ) ) 
 : UExpression PhantomType true . 
      refine {{ require_ ( ( _total_granted_ >= (#{ tokens }) ) , error_code::burn_unallocated ) ; {_} }} . 
- 	 	 refine {{ new ( 'sender:XAddress , 'value_gr:uint ) @
+ 	 	 refine {{ new ( 'sender:address , 'value_gr:uint ) @
                      ( "sender" , "value_gr" ) :=
                     int_sender_and_value_ ( ) ; {_} }} .  
 (* TODO: this require has a "true" functions of expected_internal_address *)
@@ -406,15 +406,15 @@ refine  {{ return_ ? ~ ~ _internal_wallet_code_  }} .
 refine  {{ return_ _internal_wallet_code_ -> get () }} . 
  Defined . 
  
- Definition getOwnerAddress : UExpression XAddress true . 
+ Definition getOwnerAddress : UExpression address true . 
 refine  {{ return_ (_owner_address_->has_value()) ? _owner_address_ ->get() : {}(* Address :: make_std ( 0 , 0 ) *) }} . 
  Defined . 
  
- Definition getExternalWallet : UExpression XAddress true . 
+ Definition getExternalWallet : UExpression address true . 
 refine {{ return_ _external_wallet_ -> get () }} . 
  Defined . 
  
- Definition getWalletAddress ( pubkey : ( XUInteger256 ) ) ( owner : ( XAddress ) ) : UExpression XAddress true . 
+ Definition getWalletAddress ( pubkey : ( XUInteger256 ) ) ( owner : ( address ) ) : UExpression address true . 
 refine {{ return_ second ( calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ owner }) ) ) }} . 
  Defined . 
  
@@ -470,7 +470,7 @@ Notation " 'getInternalWalletCode_' '(' ')' " :=
 ) 
 (in custom URValue at level 0 ) : ursus_scope . 
 
-Definition getOwnerAddress_right  : URValue XAddress true := 
+Definition getOwnerAddress_right  : URValue address true := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwnerAddress 
 ) . 
 
@@ -479,7 +479,7 @@ Notation " 'getOwnerAddress_' '(' ')' " :=
 ) 
 (in custom URValue at level 0 ) : ursus_scope . 
 
-Definition getExternalWallet_right  : URValue XAddress true := 
+Definition getExternalWallet_right  : URValue address true := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getExternalWallet 
 ) . 
 

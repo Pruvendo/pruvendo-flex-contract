@@ -42,13 +42,13 @@ Local Open Scope ucpp_scope.
 (********************************************************************************************************************)
 (*state fields*)
 
-Definition flex_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_flex_addr_ ) : ULValue XAddress ) . 
-Definition flex_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_flex_addr_ ) : URValue XAddress false ) . 
+Definition flex_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_flex_addr_ ) : ULValue address ) . 
+Definition flex_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_flex_addr_ ) : URValue address false ) . 
 Notation " '_flex_addr_' " := ( flex_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_flex_addr_' " := ( flex_addr__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition tip3_root__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_tip3_root_ ) : ULValue XAddress ) . 
-Definition tip3_root__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_tip3_root_ ) : URValue XAddress false ) . 
+Definition tip3_root__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_tip3_root_ ) : ULValue address ) . 
+Definition tip3_root__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_tip3_root_ ) : URValue address false ) . 
 Notation " '_tip3_root_' " := ( tip3_root__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_tip3_root_' " := ( tip3_root__right ) (in custom URValue at level 0) : ursus_scope. 
 
@@ -57,15 +57,15 @@ Definition min_amount__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedTy
 Notation " '_min_amount_' " := ( min_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_min_amount_' " := ( min_amount__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_notify_addr_ ) : ULValue XAddress ) . 
-Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_notify_addr_ ) : URValue XAddress false ) . 
+Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_notify_addr_ ) : ULValue address ) . 
+Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTradingPair_ι_notify_addr_ ) : URValue address false ) . 
 Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
 
 Definition self_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TradingPair ) : 
-                                   ULValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterface.ITradingPair )))) . 
+                                   ULValue ( mapping address (queue (OutgoingMessage TradingPairPublicInterface.ITradingPair )))) . 
 Definition self_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TradingPair ) : 
-                                   URValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterface.ITradingPair ))) false) . 
+                                   URValue ( mapping address (queue (OutgoingMessage TradingPairPublicInterface.ITradingPair ))) false) . 
 
 Notation " 'error_code::not_enough_tons' " := (sInject not_enough_tons) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::double_deploy' " := (sInject double_deploy) (in custom URValue at level 0) : ursus_scope. 
@@ -75,7 +75,7 @@ Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in 
 
 Notation " 'ITradingPairPtr' " := ( self_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
 
-Check {{ ITradingPairPtr [[ {_} ]] with { _ } ⤳ .onDeploy ( {} ,  {} ,  {} ) }}.
+(* Check {{ ITradingPairPtr [[ {_} ]] with { _ } ⤳ .onDeploy ( {} ,  {} ,  {} ) }}. *)
 
 
 Module Calls (tc : SpecSig).
@@ -85,7 +85,7 @@ Export tc.
 Local Open Scope string_scope.
 
 
-Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) ( deploy_value : URValue ( uint128 ) a2 ) ( notify_addr : URValue ( XAddress ) a3 ) : URValue XBool true := 
+Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) ( deploy_value : URValue ( uint128 ) a2 ) ( notify_addr : URValue ( address ) a3 ) : URValue XBool true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) onDeploy 
  min_amount deploy_value notify_addr ) . 
  
@@ -95,7 +95,7 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) 
  (in custom URValue at level 0 , min_amount custom URValue at level 0 
  , deploy_value custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
- Definition getFlexAddr_right  : URValue XAddress false := 
+ Definition getFlexAddr_right  : URValue address false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getFlexAddr 
  ) . 
  
@@ -103,7 +103,7 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) 
  ( getFlexAddr_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getTip3Root_right  : URValue XAddress false := 
+ Definition getTip3Root_right  : URValue address false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTip3Root 
  ) . 
  
@@ -119,7 +119,7 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) 
  ( getMinAmount_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getNotifyAddr_right  : URValue XAddress false := 
+ Definition getNotifyAddr_right  : URValue address false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getNotifyAddr 
  ) . 
  

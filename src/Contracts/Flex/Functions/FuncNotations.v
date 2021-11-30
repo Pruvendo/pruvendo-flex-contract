@@ -58,33 +58,33 @@ Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope. 
 Locate _OutgoingMessages_ITradingPair.
 Definition IXchgPairPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IXchgPair ) : 
-                                   ULValue ( mapping raw_address (queue (OutgoingMessage XchgPairPublicInterfaceModule.IXchgPair )) )) . 
+                                   ULValue ( mapping address (queue (OutgoingMessage XchgPairPublicInterfaceModule.IXchgPair )) )) . 
 Definition IXchgPairPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IXchgPair ) : 
-                                   URValue ( mapping raw_address (queue (OutgoingMessage XchgPairPublicInterfaceModule.IXchgPair ))) false) . 
+                                   URValue ( mapping address (queue (OutgoingMessage XchgPairPublicInterfaceModule.IXchgPair ))) false) . 
 Notation " 'IXchgPairPtr' " := ( IXchgPairPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
 
 Definition ITradingPairPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITradingPair ) : 
-                                   ULValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair )) )) . 
+                                   ULValue ( mapping address (queue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair )) )) . 
 Definition ITradingPairPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITradingPair ) : 
-                                   URValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair ))) false) . 
+                                   URValue ( mapping address (queue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair ))) false) . 
 Notation " 'ITradingPairPtr' " := ( ITradingPairPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 Definition IWrapperPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IWrapper ) : 
-                                   ULValue ( mapping raw_address (queue (OutgoingMessage WrapperPublicInterfaceModule.IWrapper )) )) . 
+                                   ULValue ( mapping address (queue (OutgoingMessage WrapperPublicInterfaceModule.IWrapper )) )) . 
 Definition IWrapperPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IWrapper ) : 
-                                   URValue ( mapping raw_address (queue (OutgoingMessage WrapperPublicInterfaceModule.IWrapper ))) false) . 
+                                   URValue ( mapping address (queue (OutgoingMessage WrapperPublicInterfaceModule.IWrapper ))) false) . 
 Notation " 'IWrapperPtr' " := ( IWrapperPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 Definition ITONTokenWalletPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
-                                   ULValue ( mapping raw_address (queue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWallet )) )) . 
+                                   ULValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWallet )) )) . 
 Definition ITONTokenWalletPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
-                                   URValue ( mapping raw_address (queue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWallet ))) false) . 
+                                   URValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWallet ))) false) . 
 Notation " 'ITONTokenWalletPtr' " := ( ITONTokenWalletPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 Definition IListingAnswerPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IListingAnswer ) : 
-                                   ULValue ( mapping raw_address (queue (OutgoingMessage FlexPublicInterfaceModule.IListingAnswer )) )) . 
+                                   ULValue ( mapping address (queue (OutgoingMessage FlexPublicInterfaceModule.IListingAnswer )) )) . 
 Definition IListingAnswerPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IListingAnswer ) : 
-                                   URValue ( mapping raw_address (queue (OutgoingMessage FlexPublicInterfaceModule.IListingAnswer ))) false) . 
+                                   URValue ( mapping address (queue (OutgoingMessage FlexPublicInterfaceModule.IListingAnswer ))) false) . 
 Notation " 'IListingAnswerPtr' " := ( IListingAnswerPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 
@@ -103,8 +103,8 @@ Definition ownership_description__right := ( URState (f:=_Contract) (H:=Contract
 Notation " '_ownership_description_' " := ( ownership_description__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_ownership_description_' " := ( ownership_description__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition owner_address__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_owner_address_ ) : ULValue ( XMaybe XAddress ) ) . 
-Definition owner_address__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_owner_address_ ) : URValue ( XMaybe XAddress ) false ) . 
+Definition owner_address__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_owner_address_ ) : ULValue ( XMaybe address ) ) . 
+Definition owner_address__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_owner_address_ ) : URValue ( XMaybe address ) false ) . 
 Notation " '_owner_address_' " := ( owner_address__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_owner_address_' " := ( owner_address__right ) (in custom URValue at level 0) : ursus_scope. 
 
@@ -199,7 +199,7 @@ Local Open Scope string_scope.
  Definition constructor_left { R a1 a2 a3 a4 a5 a6 }  
 ( deployer_pubkey : URValue ( uint256 ) a1 ) 
 ( ownership_description : URValue ( XString ) a2 ) 
-( owner_address : URValue ( XMaybe XAddress ) a3 ) 
+( owner_address : URValue ( XMaybe address ) a3 ) 
 ( tons_cfg : URValue ( TonsConfigLRecord ) a4 ) 
 ( deals_limit : URValue ( uint8 ) a5 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a6 ) 
@@ -290,7 +290,7 @@ Local Open Scope string_scope.
  code ) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition transfer_left { R a1 a2 }  ( tto : URValue ( XAddress ) a1 ) ( tons : URValue ( uint128 ) a2 ) : UExpression R true (* ( orb a2 a1 ) *) := 
+ Definition transfer_left { R a1 a2 }  ( tto : URValue ( address ) a1 ) ( tons : URValue ( uint128 ) a2 ) : UExpression R true (* ( orb a2 a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) transfer 
  tto tons ) . 
  
@@ -299,7 +299,7 @@ Local Open Scope string_scope.
  tto tons ) 
  (in custom ULValue at level 0 , tto custom URValue at level 0 
  , tons custom URValue at level 0 ) : ursus_scope . 
- Definition registerTradingPair_right { a1 a2 a3 a4 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3_root : URValue ( XAddress ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( notify_addr : URValue ( XAddress ) a4 ) : URValue XAddress true := 
+ Definition registerTradingPair_right { a1 a2 a3 a4 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3_root : URValue ( address ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( notify_addr : URValue ( address ) a4 ) : URValue address true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) registerTradingPair 
  pubkey tip3_root min_amount notify_addr ) . 
  
@@ -311,7 +311,7 @@ Local Open Scope string_scope.
  , min_amount custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveTradingPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue XAddress true (* a1 *) := 
+ Definition approveTradingPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue address true (* a1 *) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveTradingPair 
  pubkey ) .  
  
@@ -329,7 +329,7 @@ Local Open Scope string_scope.
  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
- Definition registerXchgPair_right { a1 a2 a3 a4 a5 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3_major_root : URValue ( XAddress ) a2 ) ( tip3_minor_root : URValue ( XAddress ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( notify_addr : URValue ( XAddress ) a5 ) : URValue XAddress true := 
+ Definition registerXchgPair_right { a1 a2 a3 a4 a5 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3_major_root : URValue ( address ) a2 ) ( tip3_minor_root : URValue ( address ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( notify_addr : URValue ( address ) a5 ) : URValue address true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) registerXchgPair 
  pubkey tip3_major_root tip3_minor_root min_amount notify_addr ) . 
  
@@ -342,7 +342,7 @@ Local Open Scope string_scope.
  , min_amount custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveXchgPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue XAddress true (* a1 *) := 
+ Definition approveXchgPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue address true (* a1 *) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveXchgPair 
  pubkey ) . 
  
@@ -360,7 +360,7 @@ Local Open Scope string_scope.
  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
- Definition registerWrapper_right { a1 a2 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a2 ) : URValue XAddress true := 
+ Definition registerWrapper_right { a1 a2 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a2 ) : URValue address true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) registerWrapper 
  pubkey tip3cfg ) . 
  
@@ -370,7 +370,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , tip3cfg custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveWrapper_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue XAddress true (* a1 *) := 
+ Definition approveWrapper_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue address true (* a1 *) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveWrapper 
  pubkey ) . 
  
@@ -436,7 +436,7 @@ Local Open Scope string_scope.
  ( getXchgPairCode_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getSellPriceCode_right { a1 }  ( tip3_addr : URValue ( XAddress ) a1 ) : URValue XCell true := 
+ Definition getSellPriceCode_right { a1 }  ( tip3_addr : URValue ( address ) a1 ) : URValue XCell true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) getSellPriceCode 
  tip3_addr ) . 
  
@@ -444,7 +444,7 @@ Local Open Scope string_scope.
  ( getSellPriceCode_right 
  tip3_addr ) 
  (in custom URValue at level 0 , tip3_addr custom URValue at level 0 ) : ursus_scope . 
- Definition getXchgPriceCode_right { a1 a2 }  ( tip3_addr1 : URValue ( XAddress ) a1 ) ( tip3_addr2 : URValue ( XAddress ) a2 ) : URValue XCell true := 
+ Definition getXchgPriceCode_right { a1 a2 }  ( tip3_addr1 : URValue ( address ) a1 ) ( tip3_addr2 : URValue ( address ) a2 ) : URValue XCell true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) getXchgPriceCode 
  tip3_addr1 tip3_addr2 ) . 
  
@@ -453,7 +453,7 @@ Local Open Scope string_scope.
  tip3_addr1 tip3_addr2 ) 
  (in custom URValue at level 0 , tip3_addr1 custom URValue at level 0 
  , tip3_addr2 custom URValue at level 0 ) : ursus_scope . 
- Definition getSellTradingPair_right { a1 }  ( tip3_root : URValue ( XAddress ) a1 ) : URValue XAddress a1 := 
+ Definition getSellTradingPair_right { a1 }  ( tip3_root : URValue ( address ) a1 ) : URValue address a1 := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) getSellTradingPair 
  tip3_root ) . 
  
@@ -461,7 +461,7 @@ Local Open Scope string_scope.
  ( getSellTradingPair_right 
  tip3_root ) 
  (in custom URValue at level 0 , tip3_root custom URValue at level 0 ) : ursus_scope . 
- Definition getXchgTradingPair_right { a1 a2 }  ( tip3_major_root : URValue ( XAddress ) a1 ) ( tip3_minor_root : URValue ( XAddress ) a2 ) : URValue XAddress ( orb a2 a1 ) := 
+ Definition getXchgTradingPair_right { a1 a2 }  ( tip3_major_root : URValue ( address ) a1 ) ( tip3_minor_root : URValue ( address ) a2 ) : URValue address ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) getXchgTradingPair 
  tip3_major_root tip3_minor_root ) . 
  
@@ -548,7 +548,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , flex_data custom URValue at level 0 
  , flex_code custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_external_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( XAddress ) a6 ) ( owner_address : URValue ( XMaybe XAddress ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( uint8 ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition prepare_external_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( uint8 ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_external_wallet_state_init_and_addr 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
@@ -565,7 +565,7 @@ Local Open Scope string_scope.
  , code custom URValue at level 0 
  , workchain_id custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( XAddress ) a6 ) ( owner_address : URValue ( XMaybe XAddress ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( uint8 ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( uint8 ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
@@ -591,7 +591,7 @@ Local Open Scope string_scope.
  pair_data pair_code ) 
  (in custom URValue at level 0 , pair_data custom URValue at level 0 
  , pair_code custom URValue at level 0 ) : ursus_scope . 
- Definition prepare_trading_pair_right { a1 a2 a3 }  ( flex : URValue ( XAddress ) a1 ) ( tip3_root : URValue ( XAddress ) a2 ) ( pair_code : URValue ( XCell ) a3 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb a3 a2 ) a1 ) := 
+ Definition prepare_trading_pair_right { a1 a2 a3 }  ( flex : URValue ( address ) a1 ) ( tip3_root : URValue ( address ) a2 ) ( pair_code : URValue ( XCell ) a3 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) prepare_trading_pair 
  flex tip3_root pair_code ) . 
  
@@ -617,7 +617,7 @@ Local Open Scope string_scope.
 ( trading_pair_listing_requests : URValue ( XHMap uint256  TradingPairListingRequestLRecord) a2 ) 
 ( pair_code : URValue ( XCell ) a3 )
  ( workchain_id : URValue ( uint8 ) a4 ) 
-( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) : URValue (XAddress # (XHMap uint256  TradingPairListingRequestLRecord)) true := 
+( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) : URValue (address # (XHMap uint256  TradingPairListingRequestLRecord)) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveTradingPairImpl 
  pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) . 
  
@@ -652,7 +652,7 @@ Local Open Scope string_scope.
 ( xchg_pair_code : URValue ( XCell ) a3 )
  ( workchain_id : URValue ( uint8 ) a4 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) :
- URValue ( XAddress # (XHMap uint256 XchgPairListingRequestLRecord )  ) true := 
+ URValue ( address # (XHMap uint256 XchgPairListingRequestLRecord )  ) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveXchgPairImpl 
  pubkey xchg_pair_listing_requests xchg_pair_code workchain_id listing_cfg ) . 
  
@@ -689,7 +689,7 @@ Local Open Scope string_scope.
 ( flex_wallet_code : URValue ( XCell ) a5 )
  ( workchain_id : URValue ( uint8 ) a6 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a7 ) 
-: URValue ( XAddress # (XHMap uint256 WrapperListingRequestLRecord)  ) true := 
+: URValue ( address # (XHMap uint256 WrapperListingRequestLRecord)  ) true := 
 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) approveWrapperImpl 
  pubkey wrapper_listing_requests wrapper_code ext_wallet_code flex_wallet_code workchain_id listing_cfg ) . 

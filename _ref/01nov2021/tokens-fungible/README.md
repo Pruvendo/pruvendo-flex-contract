@@ -101,7 +101,7 @@ The utility generates the file that contains the key pair produced from seed phr
 ```
 * `deploy.keys.json` - the file the key pair is read from.
 * `--wc <workchain_id>` - (optional) ID of the workchain the wallet will be deployed to (-1 for masterchain, 0 for basechain). By default this value is set to 0.
-The utility displays the new token root address (Raw_address).
+The utility displays the new token root address (address).
 
 > Note: The token root address is required for any interactions with the contract.
 

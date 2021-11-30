@@ -62,10 +62,10 @@ Import xt.
 
 Definition MessagesAndEventsL : list Type := 
  [ ( XQueue (OutgoingMessage FlexClientPublicInterfaceModule.IFlexClient) ) : Type ; 
- ( XHMap XAddress (XQueue (OutgoingMessage TradingPairInterfaceModule.ITradingPair )) ) : Type ;
- ( XHMap XAddress (XQueue (OutgoingMessage XchgPairInterfaceModule.IXchgPair )) ) : Type ;
- ( XHMap XAddress (XQueue (OutgoingMessage TONTokenWalletInterfaceModule.ITONTokenWallet )) ) : Type ;
- ( XHMap XAddress (XQueue (OutgoingMessage PriceXchgInterfaceModule.IPriceXchg )) ) : Type ;
+ ( XHMap address (XQueue (OutgoingMessage TradingPairInterfaceModule.ITradingPair )) ) : Type ;
+ ( XHMap address (XQueue (OutgoingMessage XchgPairInterfaceModule.IXchgPair )) ) : Type ;
+ ( XHMap address (XQueue (OutgoingMessage TONTokenWalletInterfaceModule.ITONTokenWallet )) ) : Type ;
+ ( XHMap address (XQueue (OutgoingMessage PriceXchgInterfaceModule.IPriceXchg )) ) : Type ;
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
@@ -80,7 +80,7 @@ GeneratePruvendoRecord LocalState00000L LocalStateFields00000I .
 Opaque LocalState00000LRecord . 
 
 Inductive LocalStateFields00001I := | ι000010 | ι000011 . 
-Definition LocalState00001L := [ ( XHMap (string*nat) XAddress ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState00001L := [ ( XHMap (string*nat) address ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState00001L LocalStateFields00001I . 
 Opaque LocalState00001LRecord . 
 
@@ -145,7 +145,7 @@ GeneratePruvendoRecord LocalState01101L LocalStateFields01101I .
 Opaque LocalState01101LRecord . 
 
 Inductive LocalStateFields01110I := | ι011100 | ι011101 . 
-Definition LocalState01110L := [ ( XHMap (string*nat) ( BasicTypesClass.StateInitLRecord * XAddress * XUInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState01110L := [ ( XHMap (string*nat) ( BasicTypesClass.StateInitLRecord * address * XUInteger256 ) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState01110L LocalStateFields01110I . 
 Opaque LocalState01110LRecord . 
 
@@ -335,7 +335,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00000 : typeclass_instances. 
- #[global, program] Instance LocalStateField00001 : LocalStateField XAddress.
+ #[global, program] Instance LocalStateField00001 : LocalStateField address.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -595,7 +595,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01101 : typeclass_instances. 
- #[global, program] Instance LocalStateField01110 : LocalStateField ( BasicTypesClass.StateInitLRecord * XAddress * XUInteger256 ).
+ #[global, program] Instance LocalStateField01110 : LocalStateField ( BasicTypesClass.StateInitLRecord * address * XUInteger256 ).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 

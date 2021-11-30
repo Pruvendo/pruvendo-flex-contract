@@ -66,7 +66,7 @@ Local Open Scope ursus_scope.
 
 Definition SellArgsL : list Type := 
  [ ( XUInteger128 ) : Type ; 
- ( XAddress ) : Type ] .
+ ( address ) : Type ] .
 Elpi GeneratePruvendoRecord SellArgsL SellArgsFields . 
 
 Definition DetailsInfoL : list Type := 
@@ -80,14 +80,14 @@ Definition OrderInfoL : list Type :=
     [ ( XUInteger128 ) : Type ; 
     ( XUInteger128 ) : Type ; 
     ( XUInteger128 ) : Type ; 
-    ( addr_std_fixedLRecord ) : Type ; 
-    ( addr_std_fixedLRecord ) : Type ; 
+    ( addr_std_fixed ) : Type ; 
+    ( addr_std_fixed ) : Type ; 
     ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderInfoL OrderInfoFields . 
 
 Definition dealerL : list Type := 
- [ ( XAddress ) : Type ; 
- ( XAddress (* IFlexNotifyPtr *) ) : Type ; 
+ [ ( address ) : Type ; 
+ ( address (* IFlexNotifyPtr *) ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
@@ -102,10 +102,10 @@ Definition DPriceL : list Type :=
  [ ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
+ ( addr_std_fixed ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger8 ) : Type ; 
- ( XAddress (* IFlexNotify *) ) : Type ; 
+ ( address (* IFlexNotify *) ) : Type ; 
  ( XUInteger8 ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 

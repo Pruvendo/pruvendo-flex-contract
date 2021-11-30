@@ -281,12 +281,12 @@ Definition process_queue_left { R a1 a2 } (dealer: ULValue dealerLRecord)
 Notation " d -> 'process_queue_' '(' sell_idx ',' buy_idx ')' " := ( process_queue_left d sell_idx buy_idx ) 
  (in custom ULValue at level 0 , d custom ULValue, sell_idx custom URValue at level 0 , buy_idx custom URValue at level 0 ) : ursus_scope . 
 
-Definition int_sender_and_value : UExpression ( raw_address # Grams ) false . 
-	refine {{ new 'sender : ( raw_address ) @ "sender" :=  int_sender () ; { _ } }} . 
+Definition int_sender_and_value : UExpression ( address # Grams ) false . 
+	refine {{ new 'sender : ( address ) @ "sender" :=  int_sender () ; { _ } }} . 
 	refine {{ return_ [ !{ sender } , int_value () ] }} . 
 Defined . 
 
-Definition int_sender_and_value_right : URValue ( raw_address #  Grams ) false := 
+Definition int_sender_and_value_right : URValue ( address #  Grams ) false := 
 	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) int_sender_and_value ) . 
  
 Notation " 'int_sender_and_value_' '(' ')' " :=  ( int_sender_and_value_right ) 
@@ -349,8 +349,8 @@ Definition prepare_internal_wallet_state_init_and_addr
 											( decimals : uint8 )
 											( root_public_key : uint256 )
 											( wallet_public_key : uint256 ) 
-											( root_address : raw_address) 
-											( owner_address : optional raw_address ) 
+											( root_address : address) 
+											( owner_address : optional address ) 
 											( code : TvmCell ) 
 											( workchain_id : uint8 ) : UExpression ( StateInitLRecord # uint256 ) false .
 	refine {{ new 'wallet_data : DTONTokenWalletInternalLRecord @ "wallet_data" := 
@@ -372,8 +372,8 @@ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6
 							( decimals : URValue uint8 a3 ) 
 							( root_public_key : URValue uint256 a4 ) 
 							( wallet_public_key : URValue uint256 a5 ) 
-							( root_address : URValue raw_address a6 ) 
-							( owner_address : URValue ( optional raw_address ) a7 ) 
+							( root_address : URValue address a6 ) 
+							( owner_address : URValue ( optional address ) a7 ) 
 							( code : URValue TvmCell a8 ) 
 							( workchain_id : URValue uint8 a9 ) : URValue ( StateInitLRecord * uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 							
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr 
@@ -389,7 +389,7 @@ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6
 Definition expected_wallet_address ( cfg : Tip3ConfigLRecord ) 
 								   ( wallet_pubkey : uint256 ) 
 								   ( internal_owner : uint256 ) : UExpression uint256 false . 
-	refine {{ new 'owner_addr : optional raw_address @ "owner_addr" := {} ; { _ } }} . 
+	refine {{ new 'owner_addr : optional address @ "owner_addr" := {} ; { _ } }} . 
 	refine {{ if ( 1 (* ?(#{internal_owner}) *) ) then { { _:UEf } } ; { _ } }} . 
 		refine {{ {owner_addr} := {} (* Address :: make_std ( workchain_id_ , !{ internal_owner } ) *) }} . 
 	refine {{ return_ 
@@ -415,7 +415,7 @@ Notation " 'expected_wallet_address_' '(' cfg ',' wallet_pubkey ',' internal_own
  (in custom URValue at level 0 , cfg custom URValue at level 0 , wallet_pubkey custom URValue at level 0 , internal_owner custom URValue at level 0 ) : ursus_scope .
 
 Definition verify_tip3_addr ( cfg : Tip3ConfigLRecord ) 
-							( tip3_wallet : raw_address ) 
+							( tip3_wallet : address ) 
 							( wallet_pubkey : uint256 ) 
 							( internal_owner : uint256 ) : UExpression boolean false . 
  refine {{ new 'expected_address : ( uint256 ) @ "expected_address" := 
@@ -424,7 +424,7 @@ Definition verify_tip3_addr ( cfg : Tip3ConfigLRecord )
 Defined . 
 
 Definition verify_tip3_addr_right { a1 a2 a3 a4 } ( cfg : URValue Tip3ConfigLRecord a1 ) 
- 												  ( tip3_wallet : URValue raw_address a2 ) 
+ 												  ( tip3_wallet : URValue address a2 ) 
 												  ( wallet_pubkey : URValue uint256 a3 ) 
 												  ( internal_owner : URValue uint256 a4 ) : URValue boolean ( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) verify_tip3_addr  cfg tip3_wallet wallet_pubkey internal_owner ) . 
@@ -444,7 +444,7 @@ Notation " 'int_value' '(' ')' " :=
  ( int_value__ ) 
  (in custom URValue at level 0 ) : ursus_scope .
 
-Definition on_ord_fail (ec: uint) (wallet_in : raw_address (* ITONTokenWalletPtrLRecord *)) (amount: uint128) : UExpression OrderRetLRecord false . 
+Definition on_ord_fail (ec: uint) (wallet_in : address (* ITONTokenWalletPtrLRecord *)) (amount: uint128) : UExpression OrderRetLRecord false . 
 (*  	 	 refine {{ wallet_in(Grams(tons_cfg_.return_ownership.get())).returnOwnership(amount) ; { _ } }} .  *)
 	refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
 		refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS | DELETE_ME_IF_I_AM_EMPTY *) }} . 
@@ -455,7 +455,7 @@ Definition on_ord_fail (ec: uint) (wallet_in : raw_address (* ITONTokenWalletPtr
 Defined . 
 
 Definition on_ord_fail_right { a1 a2 a3 }  ( ec : URValue uint a1 ) 
-                                           ( wallet_in : URValue raw_address (* ITONTokenWalletPtrLRecord *) a2 ) 
+                                           ( wallet_in : URValue address (* ITONTokenWalletPtrLRecord *) a2 ) 
 										   ( amount : URValue uint128 a3 ) : URValue OrderRetLRecord ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) on_ord_fail ec wallet_in amount ) . 
  
@@ -463,9 +463,9 @@ Notation " 'on_ord_fail_' '(' ec ',' wallet_in ',' amount ')' " :=
  ( on_ord_fail_right ec wallet_in amount ) 
  (in custom URValue at level 0 , ec custom URValue at level 0 , wallet_in custom URValue at level 0 , amount custom URValue at level 0 ) : ursus_scope . 
 
-Definition process_queue_impl ( tip3root_sell : raw_address ) 
-							  ( tip3root_buy : raw_address ) 
-							  ( notify_addr : raw_address (* IFlexNotifyPtr *) ) 
+Definition process_queue_impl ( tip3root_sell : address ) 
+							  ( tip3root_buy : address ) 
+							  ( notify_addr : address (* IFlexNotifyPtr *) ) 
 							  ( price : price_t ) 
 							  ( deals_limit : uint8 ) 
 							  ( tons_cfg : TonsConfigLRecord ) 
@@ -487,9 +487,9 @@ Definition process_queue_impl ( tip3root_sell : raw_address )
 Defined . 
 
 Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 }  
-									( tip3root_sell : URValue raw_address a1 ) 
-									( tip3root_buy : URValue raw_address a2 ) 
-									( notify_addr : URValue raw_address (* IFlexNotifyPtrLRecord *) a3 ) 
+									( tip3root_sell : URValue address a1 ) 
+									( tip3root_buy : URValue address a2 ) 
+									( notify_addr : URValue address (* IFlexNotifyPtrLRecord *) a3 ) 
 									( price : URValue price_t a4 ) 
 									( deals_limit : URValue uint8 a5 ) 
 									( tons_cfg : URValue TonsConfigLRecord a6 ) 
@@ -511,15 +511,15 @@ Notation " 'process_queue_impl_' '(' tip3root_sell ',' tip3root_buy ',' notify_a
   buys custom URValue at level 0 ) : ursus_scope . 
 
 
-Definition onTip3LendOwnership ( answer_addr : raw_address ) 
+Definition onTip3LendOwnership ( answer_addr : address ) 
 							   ( balance : uint128 ) 
 							   ( lend_finish_time : uint32 )
 							   ( pubkey : uint256 )
-							   ( internal_owner : raw_address ) 
+							   ( internal_owner : address ) 
 							   ( payload : TvmCell ) : UExpression OrderRetLRecord true . 
- 	 	 refine {{ new ( 'tip3_wallet : raw_address , 'value : uint (* Grams *) ) @ 
+ 	 	 refine {{ new ( 'tip3_wallet : address , 'value : uint (* Grams *) ) @ 
                  ( "tip3_wallet" , "value" ) := int_sender_and_value_ ( ) ; { _ } }} . 
-  	 refine {{ new 'wallet_in : raw_address @ "wallet_in" (* ITONTokenWalletPtr *) := !{tip3_wallet} ; { _ } }} . 
+  	 refine {{ new 'wallet_in : address @ "wallet_in" (* ITONTokenWalletPtr *) := !{tip3_wallet} ; { _ } }} . 
  	 	 refine {{new 'ret_owner_gr : uint (* Grams *)@ "ret_owner_gr" :=
                   ( _tons_cfg_ ↑ TonsConfig.return_ownership ) ; { _ } }} . 
  	 	 refine {{ set_int_sender_ ( ) (* #{answer_addr} *) ; { _ } }} . 
@@ -534,7 +534,7 @@ Definition onTip3LendOwnership ( answer_addr : raw_address )
                              minor_cost_ ( !{ amount } , _price_ ) ; { _ } }} . 
  	 	 refine {{ new 'err : uint @ "err" := 0 ; { _ } }} . 
  	 	 refine {{ new 'internal_owner_std : uint @ "internal_owner_std" := {} 
-                   (*  Std :: get < addr_std > ( internal_owner ^^ raw_address:val ( ) ) . address *) ; { _ } }} . 
+                   (*  Std :: get < addr_std > ( internal_owner ^^ address:val ( ) ) . address *) ; { _ } }} . 
 
  	 	 refine {{ if ( (!{value}) < !{min_value} ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
  	 	 	 refine {{ {err} := ec::not_enough_tons_to_process }} . 
@@ -641,7 +641,7 @@ Definition processQueue : UExpression PhantomType true .
 Defined . 
  
 Definition cancel_order_impl ( orders : queue OrderInfoXchgLRecord ) 
-							 ( client_addr : addr_std_fixedLRecord ) 
+							 ( client_addr : addr_std_fixed ) 
 							 ( all_amount : uint128 ) 
 							 ( sell : boolean ) 
 							 ( return_ownership : Grams ) 
@@ -672,7 +672,7 @@ Defined .
  
 Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
  			( orders : URValue ( queue OrderInfoXchgLRecord ) a1 ) 
-			( client_addr : URValue addr_std_fixedLRecord a2 ) 
+			( client_addr : URValue addr_std_fixed a2 ) 
 			( all_amount : URValue uint128 a3 ) 
 			( sell : URValue boolean a4 ) 
 			( return_ownership : URValue Grams a5 )
@@ -688,7 +688,7 @@ Notation " 'cancel_order_impl_' '(' orders ',' client_addr ',' all_amount ',' se
 
 Definition cancelSell : UExpression PhantomType false . 
 	refine {{ new 'canceled_amount : ( uint128 ) @ "canceled_amount" := _sells_amount_ ; { _ } }} . 
-	refine {{ new 'client_addr : ( addr_std_fixedLRecord ) @ "client_addr" := {}
+	refine {{ new 'client_addr : ( addr_std_fixed ) @ "client_addr" := {}
 			(* int_sender_ ( ) *) ; { _ } }} . 
 	refine {{ new 'value : ( uint ) @ "value" := 
 						int_value ( ) ; { _ } }} . 
@@ -708,7 +708,7 @@ Defined .
  
 Definition cancelBuy : UExpression PhantomType false . 
 	refine {{ new 'canceled_amount : uint128 @ "canceled_amount" := _buys_amount_ ; { _ } }} . 
-	refine {{ new 'client_addr : addr_std_fixedLRecord @ "client_addr" := {} (* int_sender_ ( ) *) ; { _ } }} . 
+	refine {{ new 'client_addr : addr_std_fixed @ "client_addr" := {} (* int_sender_ ( ) *) ; { _ } }} . 
 	refine {{ new 'value : uint @ "value" := int_value ( ) ; { _ } }} . 
 	refine {{ new ( 'buys: queue OrderInfoXchgLRecord , 'buys_amount : uint128 ) @ ( "buys" , "buys_amount" ) :=
 	cancel_order_impl_ ( _buys_ , !{client_addr} , _buys_amount_ , 

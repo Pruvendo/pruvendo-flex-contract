@@ -1,5 +1,5 @@
 (coq.theory
- (name flexContract)
+ (name flexProject)
  (package pruvendo-flex-contract) 
 )
 

@@ -67,13 +67,13 @@ Definition DetailsInfoXchg_buy_amount_left  (x: ULValue DetailsInfoXchgLRecord):
  (* dealer *)
 
 
-Definition dealer_tip3root_sell__right {b} (x: URValue dealerLRecord b): URValue XAddress b :=
+Definition dealer_tip3root_sell__right {b} (x: URValue dealerLRecord b): URValue address b :=
     || {x} ^^ {dealer_ι_tip3root_sell_} || : _ .
 
-Definition dealer_tip3root_buy__right {b} (x: URValue dealerLRecord b): URValue XAddress b :=
+Definition dealer_tip3root_buy__right {b} (x: URValue dealerLRecord b): URValue address b :=
     || {x} ^^ {dealer_ι_tip3root_buy_} || : _ .
 
-Definition dealer_notify_addr__right {b} (x: URValue dealerLRecord b): URValue XAddress b :=
+Definition dealer_notify_addr__right {b} (x: URValue dealerLRecord b): URValue address b :=
     || {x} ^^ {dealer_ι_notify_addr_} || : _ .
 
 Definition dealer_price__right {b} (x: URValue dealerLRecord b): URValue RationalPriceLRecord b :=
@@ -100,13 +100,13 @@ Definition dealer_buys__right {b} (x: URValue dealerLRecord b): URValue ( XQueue
 Definition dealer_ret__right {b} (x: URValue dealerLRecord b): URValue  ( XMaybe OrderRetLRecord ) b :=
     || {x} ^^ {dealer_ι_ret_} || : _ .    
 
-Definition dealer_tip3root_sell__left  (x: ULValue dealerLRecord): ULValue XAddress :=
+Definition dealer_tip3root_sell__left  (x: ULValue dealerLRecord): ULValue address :=
     {{ {x} ^^ {dealer_ι_tip3root_sell_} }} : _ .
 
-Definition dealer_tip3root_buy__left  (x: ULValue dealerLRecord): ULValue XAddress :=
+Definition dealer_tip3root_buy__left  (x: ULValue dealerLRecord): ULValue address :=
     {{ {x} ^^ {dealer_ι_tip3root_buy_} }} : _ .
 
-Definition dealer_notify_addr__left  (x: ULValue dealerLRecord): ULValue XAddress :=
+Definition dealer_notify_addr__left  (x: ULValue dealerLRecord): ULValue address :=
     {{ {x} ^^ {dealer_ι_notify_addr_} }} : _ .
 
 Definition dealer_price__left  (x: ULValue dealerLRecord): ULValue RationalPriceLRecord :=
@@ -166,13 +166,13 @@ Definition OrderInfoXchg_amount_right {b} (x: URValue OrderInfoXchgLRecord b): U
 Definition OrderInfoXchg_account_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger128 b :=
     || {x} ^^ {OrderInfoXchg_ι_account} || : _ .
 
-Definition OrderInfoXchg_tip3_wallet_provide_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixedLRecord b :=
+Definition OrderInfoXchg_tip3_wallet_provide_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixed b :=
     || {x} ^^ {OrderInfoXchg_ι_tip3_wallet_provide} || : _ .  
 
-Definition OrderInfoXchg_tip3_wallet_receive_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixedLRecord b :=
+Definition OrderInfoXchg_tip3_wallet_receive_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixed b :=
     || {x} ^^ {OrderInfoXchg_ι_tip3_wallet_receive} || : _ .
 
-Definition OrderInfoXchg_client_addr_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixedLRecord b :=
+Definition OrderInfoXchg_client_addr_right {b} (x: URValue OrderInfoXchgLRecord b): URValue addr_std_fixed b :=
     || {x} ^^ {OrderInfoXchg_ι_client_addr} || : _ .
 
 Definition OrderInfoXchg_order_finish_time_right {b} (x: URValue OrderInfoXchgLRecord b): URValue XUInteger32 b :=
@@ -187,13 +187,13 @@ Definition OrderInfoXchg_amount_left  (x: ULValue OrderInfoXchgLRecord): ULValue
 Definition OrderInfoXchg_account_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger128 :=
     {{ {x} ^^ {OrderInfoXchg_ι_account} }} : _ .
 
-Definition OrderInfoXchg_tip3_wallet_provide_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixedLRecord :=
+Definition OrderInfoXchg_tip3_wallet_provide_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixed :=
     {{ {x} ^^ {OrderInfoXchg_ι_tip3_wallet_provide} }} : _ .  
 
-Definition OrderInfoXchg_tip3_wallet_receive_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixedLRecord :=
+Definition OrderInfoXchg_tip3_wallet_receive_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixed :=
     {{ {x} ^^ {OrderInfoXchg_ι_tip3_wallet_receive} }} : _ .
 
-Definition OrderInfoXchg_client_addr_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixedLRecord :=
+Definition OrderInfoXchg_client_addr_left  (x: ULValue OrderInfoXchgLRecord): ULValue addr_std_fixed :=
     {{ {x} ^^ {OrderInfoXchg_ι_client_addr} }} : _ .
 
 Definition OrderInfoXchg_order_finish_time_left  (x: ULValue OrderInfoXchgLRecord): ULValue XUInteger32 :=
@@ -262,10 +262,10 @@ Definition PayloadArgs_sell_right {b} (x: URValue PayloadArgsLRecord b): URValue
 Definition PayloadArgs_amount_right {b} (x: URValue PayloadArgsLRecord b): URValue XUInteger128 b :=
     || {x} ^^ {PayloadArgs_ι_amount} || : _ .
 
-Definition PayloadArgs_receive_tip3_wallet_right {b} (x: URValue PayloadArgsLRecord b): URValue addr_std_fixedLRecord b :=
+Definition PayloadArgs_receive_tip3_wallet_right {b} (x: URValue PayloadArgsLRecord b): URValue addr_std_fixed b :=
     || {x} ^^ {PayloadArgs_ι_receive_tip3_wallet} || : _ .
 
-Definition PayloadArgs_client_addr_right {b} (x: URValue PayloadArgsLRecord b): URValue addr_std_fixedLRecord b :=
+Definition PayloadArgs_client_addr_right {b} (x: URValue PayloadArgsLRecord b): URValue addr_std_fixed b :=
     || {x} ^^ {PayloadArgs_ι_client_addr} || : _ .
 
 Definition PayloadArgs_sell_left (x: ULValue PayloadArgsLRecord): ULValue XBool :=
@@ -274,10 +274,10 @@ Definition PayloadArgs_sell_left (x: ULValue PayloadArgsLRecord): ULValue XBool 
 Definition PayloadArgs_amount_left (x: ULValue PayloadArgsLRecord): ULValue XUInteger128:=
     {{ {x} ^^ {PayloadArgs_ι_amount} }} : _ .
 
-Definition PayloadArgs_receive_tip3_wallet_left (x: ULValue PayloadArgsLRecord): ULValue addr_std_fixedLRecord :=
+Definition PayloadArgs_receive_tip3_wallet_left (x: ULValue PayloadArgsLRecord): ULValue addr_std_fixed :=
     {{ {x} ^^ {PayloadArgs_ι_receive_tip3_wallet} }} : _ .
 
-Definition PayloadArgs_client_addr_left (x: ULValue PayloadArgsLRecord): ULValue addr_std_fixedLRecord :=
+Definition PayloadArgs_client_addr_left (x: ULValue PayloadArgsLRecord): ULValue addr_std_fixed :=
     {{ {x} ^^ {PayloadArgs_ι_client_addr} }} : _ .    
 
 
@@ -336,10 +336,10 @@ Definition DPriceXchg_ι_buys_amount__left (x: ULValue DPriceXchgLRecord): ULVal
 Notation " a '↑' 'DPriceXchg.buys_amount_' " := ( DPriceXchg_ι_buys_amount__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DPriceXchg.buys_amount_' " := ( DPriceXchg_ι_buys_amount__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DPriceXchg_ι_flex__right {b} (x: URValue DPriceXchgLRecord b): URValue addr_std_fixedLRecord b :=
+Definition DPriceXchg_ι_flex__right {b} (x: URValue DPriceXchgLRecord b): URValue addr_std_fixed b :=
     || {x} ^^ {DPriceXchg_ι_flex_} || : _ .
 
-Definition DPriceXchg_ι_flex__left (x: ULValue DPriceXchgLRecord): ULValue addr_std_fixedLRecord :=
+Definition DPriceXchg_ι_flex__left (x: ULValue DPriceXchgLRecord): ULValue addr_std_fixed :=
     {{ {x} ^^ {DPriceXchg_ι_flex_} }} : _ .
 
 Notation " a '↑' 'DPriceXchg.flex_' " := ( DPriceXchg_ι_flex__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -363,10 +363,10 @@ Definition DPriceXchg_ι_deals_limit__left (x: ULValue DPriceXchgLRecord): ULVal
 Notation " a '↑' 'DPriceXchg.deals_limit_' " := ( DPriceXchg_ι_deals_limit__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DPriceXchg.deals_limit_' " := ( DPriceXchg_ι_deals_limit__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DPriceXchg_ι_notify_addr__right {b} (x: URValue DPriceXchgLRecord b): URValue XUInteger8 b :=
+Definition DPriceXchg_ι_notify_addr__right {b} (x: URValue DPriceXchgLRecord b): URValue address b :=
     || {x} ^^ {DPriceXchg_ι_notify_addr_} || : _ .
 
-Definition DPriceXchg_ι_notify_addr__left (x: ULValue DPriceXchgLRecord): ULValue XUInteger8 :=
+Definition DPriceXchg_ι_notify_addr__left (x: ULValue DPriceXchgLRecord): ULValue address :=
     {{ {x} ^^ {DPriceXchg_ι_notify_addr_} }} : _ .
 
 Notation " a '↑' 'DPriceXchg.notify_addr_' " := ( DPriceXchg_ι_notify_addr__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -439,7 +439,7 @@ Notation " a '↑' 'DPriceXchg.buys_' " := ( DPriceXchg_ι_buys__left a ) (in cu
 
 (*interface*)
 (* Inductive IPriceXchgP :=
-| IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> IPriceXchgP
+| IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> IPriceXchgP
 | IprocessQueue : IPriceXchgP
 | IcancelSell : IPriceXchgP
 | IcancelBuy : IPriceXchgP
@@ -475,13 +475,13 @@ Defined.
 
 Notation " 'PriceXchg.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
  
-(* IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> IPriceXchgP *)
+(* IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> IPriceXchgP *)
 
-Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger128 a2) 
                                                  (z : URValue XUInteger32 a3)
                                                  (t : URValue XUInteger256 a4)
-                                                 (u : URValue XAddress a5)
+                                                 (u : URValue address a5)
                                                  (v : URValue XCell a6) : URValue IPriceXchg (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>

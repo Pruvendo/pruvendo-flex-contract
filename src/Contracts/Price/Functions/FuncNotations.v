@@ -61,8 +61,8 @@ Local Open Scope ucpp_scope.
  Notation " '_buys_amount_' " := ( buys_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_buys_amount_' " := ( buys_amount__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition flex__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_flex_ ) : ULValue addr_std_fixedLRecord ) . 
- Definition flex__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_flex_ ) : URValue addr_std_fixedLRecord false ) . 
+ Definition flex__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_flex_ ) : ULValue addr_std_fixed ) . 
+ Definition flex__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_flex_ ) : URValue addr_std_fixed false ) . 
  Notation " '_flex_' " := ( flex__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_' " := ( flex__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -76,8 +76,8 @@ Local Open Scope ucpp_scope.
  Notation " '_deals_limit_' " := ( deals_limit__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_deals_limit_' " := ( deals_limit__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_notify_addr_ ) : ULValue XAddress (* IFlexNotifyPtrLRecord *) ) . 
- Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_notify_addr_ ) : URValue XAddress (* IFlexNotifyPtrLRecord *) false ) . 
+ Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_notify_addr_ ) : ULValue address (* IFlexNotifyPtrLRecord *) ) . 
+ Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_notify_addr_ ) : URValue address (* IFlexNotifyPtrLRecord *) false ) . 
  Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -179,7 +179,7 @@ Definition make_deal_right
  (in custom ULValue at level 0 , sell_idx custom URValue at level 0 
  , buy_idx custom URValue at level 0 ) : ursus_scope . 
 
- Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( balance : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( pubkey : URValue ( uint256 ) a4 ) ( internal_owner : URValue ( XAddress ) a5 ) ( payload : URValue ( XCell ) a6 ) 
+ Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( address ) a1 ) ( balance : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( pubkey : URValue ( uint256 ) a4 ) ( internal_owner : URValue ( address ) a5 ) ( payload : URValue ( XCell ) a6 ) 
 : URValue OrderRetLRecord true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) onTip3LendOwnership 
  answer_addr balance lend_finish_time pubkey internal_owner payload ) . 
@@ -193,7 +193,7 @@ Definition make_deal_right
  , pubkey custom URValue at level 0 
  , internal_owner custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
- Definition buyTip3_right { a1 a2 a3 }  ( amount : URValue ( uint128 ) a1 ) ( receive_tip3_wallet : URValue ( XAddress ) a2 ) ( order_finish_time : URValue ( uint32 ) a3 ) : URValue OrderRetLRecord true := 
+ Definition buyTip3_right { a1 a2 a3 }  ( amount : URValue ( uint128 ) a1 ) ( receive_tip3_wallet : URValue ( address ) a2 ) ( order_finish_time : URValue ( uint32 ) a3 ) : URValue OrderRetLRecord true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) buyTip3 
  amount receive_tip3_wallet order_finish_time ) . 
  
@@ -328,7 +328,7 @@ Definition make_deal_right
  buy_cost ) 
  (in custom URValue at level 0 , buy_cost custom URValue at level 0 ) : ursus_scope . 
 
- Definition verify_tip3_addr_right { a1 a2 a3 }  ( tip3_wallet : URValue ( XAddress ) a1 ) ( wallet_pubkey : URValue ( uint256 ) a2 ) ( internal_owner : URValue ( uint256 ) a3 ) : URValue XBool ( orb ( orb a3 a2 ) a1 ) := 
+ Definition verify_tip3_addr_right { a1 a2 a3 }  ( tip3_wallet : URValue ( address ) a1 ) ( wallet_pubkey : URValue ( uint256 ) a2 ) ( internal_owner : URValue ( uint256 ) a3 ) : URValue XBool ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) verify_tip3_addr 
  tip3_wallet wallet_pubkey internal_owner ) . 
  
@@ -349,7 +349,7 @@ Definition make_deal_right
  (in custom URValue at level 0 , wallet_pubkey custom URValue at level 0 
  , internal_owner custom URValue at level 0 ) : ursus_scope .
 
- Definition on_sell_fail_right { a1 a2 a3 }  ( ec : URValue ( uint ) a1 ) ( wallet_in : URValue ( XAddress (* ITONTokenWalletPtrLRecord *) ) a2 ) ( amount : URValue ( uint128 ) a3 ) : URValue OrderRetLRecord ( orb ( orb a3 a2 ) a1 ) := 
+ Definition on_sell_fail_right { a1 a2 a3 }  ( ec : URValue ( uint ) a1 ) ( wallet_in : URValue ( address (* ITONTokenWalletPtrLRecord *) ) a2 ) ( amount : URValue ( uint128 ) a3 ) : URValue OrderRetLRecord ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) on_sell_fail 
  ec wallet_in amount ) . 
  
@@ -389,7 +389,7 @@ Definition make_deal_right
  (in custom URValue at level 0 , amount custom URValue at level 0 
  , price custom URValue at level 0 ) : ursus_scope . 
 
- Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  ( tip3root : URValue ( XAddress ) a1 ) ( notify_addr : URValue ( XAddress (* IFlexNotifyPtrLRecord *) ) a2 ) ( price : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( tons_cfg : URValue ( TonsConfigLRecord ) a5 ) ( sell_idx : URValue ( uint ) a6 ) ( buy_idx : URValue ( uint ) a7 ) ( sells_amount : URValue ( uint128 ) a8 ) ( sells : URValue ( XQueue OrderInfoLRecord ) a9 ) ( buys_amount : URValue ( uint128 ) a10 ) ( buys : URValue ( XQueue OrderInfoLRecord ) a11 ) : URValue process_retLRecord true 
+ Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  ( tip3root : URValue ( address ) a1 ) ( notify_addr : URValue ( address (* IFlexNotifyPtrLRecord *) ) a2 ) ( price : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( tons_cfg : URValue ( TonsConfigLRecord ) a5 ) ( sell_idx : URValue ( uint ) a6 ) ( buy_idx : URValue ( uint ) a7 ) ( sells_amount : URValue ( uint128 ) a8 ) ( sells : URValue ( XQueue OrderInfoLRecord ) a9 ) ( buys_amount : URValue ( uint128 ) a10 ) ( buys : URValue ( XQueue OrderInfoLRecord ) a11 ) : URValue process_retLRecord true 
 (* orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a11 a10 ) a9 ) a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 *) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ11 ) process_queue_impl 
  tip3root notify_addr price deals_limit tons_cfg sell_idx buy_idx sells_amount sells buys_amount buys ) . 
@@ -411,7 +411,7 @@ Definition make_deal_right
 
  Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
 ( orders : URValue ( XQueue OrderInfoLRecord ) a1 ) 
-( client_addr : URValue ( addr_std_fixedLRecord ) a2 ) 
+( client_addr : URValue ( addr_std_fixed ) a2 ) 
 ( all_amount : URValue ( uint128 ) a3 ) 
 ( sell : URValue ( XBool ) a4 ) 
 ( return_ownership : URValue ( uint (* Grams *) ) a5 ) 

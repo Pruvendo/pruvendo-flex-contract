@@ -75,7 +75,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
 ( transfer_tip3 : uint128 ) ( return_ownership : uint128 )
  ( trading_pair_deploy : uint128 ) ( order_answer : uint128 ) 
 ( process_queue : uint128 ) ( send_notify : uint128 )
- ( deals_limit : uint8 ) ( notify_addr : XAddress ) : UExpression PhantomType false . 
+ ( deals_limit : uint8 ) ( notify_addr : address ) : UExpression PhantomType false . 
          refine {{ deployer_pubkey : ( uint256 ) @ "deployer_pubkey" ; { _ } }} . 
          refine {{ transfer_tip3 : ( uint128 ) @ "transfer_tip3" ; { _ } }} . 
          refine {{ return_ownership : ( uint128 ) @ "return_ownership" ; { _ } }} . 
@@ -84,7 +84,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
          refine {{ process_queue : ( uint128 ) @ "process_queue" ; { _ } }} . 
          refine {{ send_notify : ( uint128 ) @ "send_notify" ; { _ } }} . 
          refine {{ deals_limit : ( uint8 ) @ "deals_limit" ; { _ } }} . 
-         refine {{ notify_addr : ( XAddress ) @ "notify_addr" ; { _ } }} . 
+         refine {{ notify_addr : ( address ) @ "notify_addr" ; { _ } }} . 
          refine {{ Flex.deployer_pubkey_ := !{ deployer_pubkey } ; { _ } }} . 
          refine {{ Flex.deals_limit_ := !{ deals_limit } ; { _ } }} . 
          refine {{ Flex.notify_addr_ := !{ notify_addr } ; { _ } }} . 
@@ -157,29 +157,29 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  
  
  
- Definition Flex_Ф_getSellPriceCode ( tip3_addr : XAddress ) : UExpression XCell true . 
-         refine {{ tip3_addr : ( XAddress ) @ "tip3_addr" ; { _ } }} . 
+ Definition Flex_Ф_getSellPriceCode ( tip3_addr : address ) : UExpression XCell true . 
+         refine {{ tip3_addr : ( address ) @ "tip3_addr" ; { _ } }} . 
          refine {{ require_ ( ( (* Flex.price_code_ - > ctos ( ) . srefs ( ) == 2 *) 1 == 1 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
          refine {{ (* new *) salt : ( XCell ) @"salt" ; { _ } }} . 
-         refine {{ { salt } := {} (* builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( tip3_addr ^^ XAddress:sl ( ) ) . endc ( ) *) ; { _ } }} . 
+         refine {{ { salt } := {} (* builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( tip3_addr ^^ address:sl ( ) ) . endc ( ) *) ; { _ } }} . 
          refine {{ return_ {} (* builder ( ) . stslice ( price_code_ - > ctos ( ) ) . stref ( !{ salt } ) . endc ( ) *) }} . 
  Defined . 
  
  
  
- Definition Flex_Ф_getXchgPriceCode ( tip3_addr1 : XAddress ) ( tip3_addr2 : XAddress ) : UExpression XCell true . 
-         refine {{ tip3_addr1 : ( XAddress ) @ "tip3_addr1" ; { _ } }} . 
-         refine {{ tip3_addr2 : ( XAddress ) @ "tip3_addr2" ; { _ } }} . 
+ Definition Flex_Ф_getXchgPriceCode ( tip3_addr1 : address ) ( tip3_addr2 : address ) : UExpression XCell true . 
+         refine {{ tip3_addr1 : ( address ) @ "tip3_addr1" ; { _ } }} . 
+         refine {{ tip3_addr2 : ( address ) @ "tip3_addr2" ; { _ } }} . 
          refine {{ require_ ( ( (* Flex.price_code_ - > ctos ( ) . srefs ( ) == 2 *) 1 == 1 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
-         refine {{ (* new *) keys : ( XAddress * XAddress ) @ "keys" ; { _ } }} . 
+         refine {{ (* new *) keys : ( address * address ) @ "keys" ; { _ } }} . 
          refine {{ { keys } := {} (* [ !{ tip3_addr1 } , !{ tip3_addr2 } ] *) ; { _ } }} . 
          refine {{ return_ {} (* builder ( ) . stslice ( xchg_price_code_ - > ctos ( ) ) . stref ( build ( !{ keys } ) . endc ( ) ) . endc ( )  *) }} . 
  Defined . 
  
  
- Definition Flex_Ф_getSellTradingPair ( tip3_root : XAddress ) : UExpression XAddress false . 
-         refine {{ tip3_root : ( XAddress ) @ "tip3_root" ; { _ } }} . 
-         refine {{ (* new *) myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
+ Definition Flex_Ф_getSellTradingPair ( tip3_root : address ) : UExpression address false . 
+         refine {{ tip3_root : ( address ) @ "tip3_root" ; { _ } }} . 
+         refine {{ (* new *) myaddr : ( address ) @ "myaddr" ; { _ } }} . 
          refine {{ { myaddr } := (* tvm_myaddr *) tvm_myaddr () ; { _ } }} . 
          refine {{ (* new *) pair_data : ( TradingPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_root_ = tip3_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
@@ -192,10 +192,10 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  
  
  
- Definition Flex_Ф_getXchgTradingPair ( tip3_major_root : XAddress ) ( tip3_minor_root : XAddress ) : UExpression XAddress false . 
-         refine {{ tip3_major_root : ( XAddress ) @ "tip3_major_root" ; { _ } }} . 
-         refine {{ tip3_minor_root : ( XAddress ) @ "tip3_minor_root" ; { _ } }} . 
-         refine {{ (* new *) myaddr : ( XAddress ) @ "myaddr" ; { _ } }} . 
+ Definition Flex_Ф_getXchgTradingPair ( tip3_major_root : address ) ( tip3_minor_root : address ) : UExpression address false . 
+         refine {{ tip3_major_root : ( address ) @ "tip3_major_root" ; { _ } }} . 
+         refine {{ tip3_minor_root : ( address ) @ "tip3_minor_root" ; { _ } }} . 
+         refine {{ (* new *) myaddr : ( address ) @ "myaddr" ; { _ } }} . 
          refine {{ { myaddr } := (* tvm_myaddr *) tvm_myaddr () ; { _ } }} . 
          refine {{ (* new *) pair_data : ( XchgPairStateLRecord ) @ "pair_data" ; { _ } }} . 
          refine {{ { pair_data } := {} (* NEW { . flex_addr_ = myaddr , . tip3_major_root_ = tip3_major_root , . tip3_minor_root_ = tip3_minor_root , . min_amount_ = uint128 ( 0 ) } *) ; { _ } }} . 
@@ -214,7 +214,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  
  
  
- Definition Flex_Ф_getNotifyAddr : UExpression XAddress false . 
+ Definition Flex_Ф_getNotifyAddr : UExpression address false . 
          refine {{ return_ Flex.notify_addr_ }} . 
  Defined . 
  

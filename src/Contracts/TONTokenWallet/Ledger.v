@@ -42,9 +42,9 @@ Module Export TypesModuleForLedger := (* TONTokenWallet.ClassTypes. *)ClassTypes
 Import xt.
 
 Definition MessagesAndEventsL : list Type := 
- [ XHMap XAddress ( XQueue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWalletNotify ) ) : Type ; 
-   XHMap XAddress ( XQueue (OutgoingMessage WrapperPublicInterfaceModule.IWrapper ) ) : Type ; 
-   XHMap XAddress ( XQueue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
+ [ XHMap address ( XQueue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWalletNotify ) ) : Type ; 
+   XHMap address ( XQueue (OutgoingMessage WrapperPublicInterfaceModule.IWrapper ) ) : Type ; 
+   XHMap address ( XQueue (OutgoingMessage TONTokenWalletPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
    XList TVMEvent : Type ; 
    XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
@@ -61,7 +61,7 @@ GeneratePruvendoRecord LocalState00000L LocalStateFields00000I .
 Opaque LocalState00000LRecord . 
 
 Inductive LocalStateFields00001I := | ι000010 | ι000011 . 
-Definition LocalState00001L := [ ( XHMap (string*nat) ( XMaybe XAddress ) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState00001L := [ ( XHMap (string*nat) ( XMaybe address ) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState00001L LocalStateFields00001I . 
 Opaque LocalState00001LRecord . 
 
@@ -107,7 +107,7 @@ Opaque LocalState01001LRecord .
 
 Inductive LocalStateFields01010I := | ι010100 | ι010101 . 
 (*TODO: think of IWrapperPtrLRecord*)
-Definition LocalState01010L := [ ( XHMap (string*nat) XAddress(* TODO: IWrapperPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState01010L := [ ( XHMap (string*nat) address(* TODO: IWrapperPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState01010L LocalStateFields01010I . 
 Opaque LocalState01010LRecord . 
 
@@ -137,7 +137,7 @@ GeneratePruvendoRecord LocalState01111L LocalStateFields01111I .
 Opaque LocalState01111LRecord . 
 
 Inductive LocalStateFields10000I := | ι100000 | ι100001 . 
-Definition LocalState10000L := [ ( XHMap (string*nat) XAddress ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10000L := [ ( XHMap (string*nat) address ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10000L LocalStateFields10000I . 
 Opaque LocalState10000LRecord . 
 
@@ -147,7 +147,7 @@ GeneratePruvendoRecord LocalState10001L LocalStateFields10001I .
 Opaque LocalState10001LRecord . 
 
 Inductive LocalStateFields10010I := | ι100100 | ι100101 . 
-Definition LocalState10010L := [ ( XHMap (string*nat) XAddress (* ITONTokenWalletPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10010L := [ ( XHMap (string*nat) address (* ITONTokenWalletPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10010L LocalStateFields10010I . 
 Opaque LocalState10010LRecord . 
 
@@ -157,12 +157,12 @@ GeneratePruvendoRecord LocalState10011L LocalStateFields10011I .
 Opaque LocalState10011LRecord . 
 
 Inductive LocalStateFields10100I := | ι101000 | ι101001 . 
-Definition LocalState10100L := [ ( XHMap (string*nat) ( StateInitLRecord * XAddress ) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10100L := [ ( XHMap (string*nat) ( StateInitLRecord * address ) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10100L LocalStateFields10100I . 
 Opaque LocalState10100LRecord . 
 
 Inductive LocalStateFields10101I := | ι101010 | ι101011 . 
-Definition LocalState10101L := [ ( XHMap (string*nat) ( XHMap addr_std_fixedLRecord lend_recordLRecord ) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10101L := [ ( XHMap (string*nat) ( XHMap addr_std_fixed lend_recordLRecord ) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10101L LocalStateFields10101I . 
 Opaque LocalState10101LRecord . 
 
@@ -456,7 +456,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00000 : typeclass_instances. 
- #[global, program] Instance LocalStateField00001 : LocalStateField ( XMaybe XAddress ).
+ #[global, program] Instance LocalStateField00001 : LocalStateField ( XMaybe address ).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -636,7 +636,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01001 : typeclass_instances. 
- #[global, program] Instance LocalStateField01010 : LocalStateField XAddress(* IWrapperPtrLRecord *).
+ #[global, program] Instance LocalStateField01010 : LocalStateField address(* IWrapperPtrLRecord *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -756,7 +756,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01111 : typeclass_instances. 
- #[global, program] Instance LocalStateField10000 : LocalStateField XAddress.
+ #[global, program] Instance LocalStateField10000 : LocalStateField address.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι10). 
@@ -796,7 +796,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10001 : typeclass_instances. 
- #[global, program] Instance LocalStateField10010 : LocalStateField XAddress(* ITONTokenWalletPtrLRecord *).
+ #[global, program] Instance LocalStateField10010 : LocalStateField address(* ITONTokenWalletPtrLRecord *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι10). 
@@ -836,7 +836,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10011 : typeclass_instances. 
- #[global, program] Instance LocalStateField10100 : LocalStateField ( StateInitLRecord * XAddress ).
+ #[global, program] Instance LocalStateField10100 : LocalStateField ( StateInitLRecord * address ).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι10). 
@@ -856,7 +856,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10100 : typeclass_instances. 
- #[global, program] Instance LocalStateField10101 : LocalStateField ( XHMap addr_std_fixedLRecord lend_recordLRecord ).
+ #[global, program] Instance LocalStateField10101 : LocalStateField ( XHMap addr_std_fixed lend_recordLRecord ).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι10). 

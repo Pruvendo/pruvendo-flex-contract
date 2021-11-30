@@ -70,19 +70,19 @@ Local Open Scope ucpp_scope.
  Notation " '_wallet_public_key_' " := ( wallet_public_key__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_wallet_public_key_' " := ( wallet_public_key__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition root_address__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_root_address_ ) : ULValue XAddress ) . 
- Definition root_address__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_root_address_ ) : URValue XAddress false ) . 
+ Definition root_address__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_root_address_ ) : ULValue address ) . 
+ Definition root_address__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_root_address_ ) : URValue address false ) . 
  Notation " '_root_address_' " := ( root_address__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_root_address_' " := ( root_address__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition owner_address__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_owner_address_ ) : ULValue ( XMaybe XAddress ) ) . 
- Definition owner_address__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_owner_address_ ) : URValue ( XMaybe XAddress ) false ) . 
+ Definition owner_address__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_owner_address_ ) : ULValue ( XMaybe address ) ) . 
+ Definition owner_address__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_owner_address_ ) : URValue ( XMaybe address ) false ) . 
  Notation " '_owner_address_' " := ( owner_address__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_owner_address_' " := ( owner_address__right ) (in custom URValue at level 0) : ursus_scope. 
  
 
- Definition lend_ownership__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_lend_ownership_ ) : ULValue (XHMap addr_std_fixedLRecord lend_recordLRecord) ) . 
- Definition lend_ownership__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_lend_ownership_ ) : URValue (XHMap addr_std_fixedLRecord lend_recordLRecord) false ) . 
+ Definition lend_ownership__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_lend_ownership_ ) : ULValue (XHMap addr_std_fixed lend_recordLRecord) ) . 
+ Definition lend_ownership__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_lend_ownership_ ) : URValue (XHMap addr_std_fixed lend_recordLRecord) false ) . 
  Notation " '_lend_ownership_' " := ( lend_ownership__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_lend_ownership_' " := ( lend_ownership__right ) (in custom URValue at level 0) : ursus_scope. 
 
@@ -137,7 +137,7 @@ Local Open Scope string_scope.
 
 (**************************************************************************************************)
  
- Definition transfer_left { R a1 a2 a3 a4 a5 }  ( answer_addr : URValue ( XAddress ) a1 ) ( too : URValue ( XAddress ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) ( grams : URValue ( XUInteger128 ) a4 ) ( return_ownership : URValue ( XBool ) a5 ) 
+ Definition transfer_left { R a1 a2 a3 a4 a5 }  ( answer_addr : URValue ( address ) a1 ) ( too : URValue ( address ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) ( grams : URValue ( XUInteger128 ) a4 ) ( return_ownership : URValue ( XBool ) a5 ) 
 : UExpression R true (* ( orb ( orb ( orb ( orb a5 a4 ) a3 ) a2 ) a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) transfer 
  answer_addr too tokens grams return_ownership ) . 
@@ -151,7 +151,7 @@ Local Open Scope string_scope.
  , grams custom URValue at level 0 
  , return_ownership custom URValue at level 0 ) : ursus_scope . 
  
- Definition transferWithNotify_left { R a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( too : URValue ( XAddress ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) ( grams : URValue ( XUInteger128 ) a4 ) ( return_ownership : URValue ( XBool ) a5 ) ( payload : URValue ( XCell ) a6 ) 
+ Definition transferWithNotify_left { R a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( address ) a1 ) ( too : URValue ( address ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) ( grams : URValue ( XUInteger128 ) a4 ) ( return_ownership : URValue ( XBool ) a5 ) ( payload : URValue ( XCell ) a6 ) 
 : UExpression R true (* ( orb ( orb ( orb ( orb ( orb a6 a5 ) a4 ) a3 ) a2 ) a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) transferWithNotify 
  answer_addr too tokens grams return_ownership payload ) . 
@@ -166,7 +166,7 @@ Local Open Scope string_scope.
  , return_ownership custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
  
- Definition transferToRecipient_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( XAddress ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( XAddress ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) 
+ Definition transferToRecipient_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( address ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) 
 : UExpression R true (* ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) transferToRecipient 
  answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership ) . 
@@ -182,7 +182,7 @@ Local Open Scope string_scope.
  , deploy custom URValue at level 0 
  , return_ownership custom URValue at level 0 ) : ursus_scope . 
  
- Definition transferToRecipientWithNotify_left { R a1 a2 a3 a4 a5 a6 a7 a8 }  ( answer_addr : URValue ( XAddress ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( XAddress ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) ( payload : URValue ( XCell ) a8 ) 
+ Definition transferToRecipientWithNotify_left { R a1 a2 a3 a4 a5 a6 a7 a8 }  ( answer_addr : URValue ( address ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( address ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) ( payload : URValue ( XCell ) a8 ) 
 : UExpression R true (* ( orb ( orb ( orb ( orb ( orb ( orb ( orb a8 a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ8 ) transferToRecipientWithNotify 
  answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership payload ) . 
@@ -206,7 +206,7 @@ Local Open Scope string_scope.
  ( requestBalance_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition accept_right { a1 a2 a3 }  ( tokens : URValue ( XUInteger128 ) a1 ) ( answer_addr : URValue ( XAddress ) a2 ) ( keep_grams : URValue ( XUInteger128 ) a3 ) : URValue XBool true := 
+ Definition accept_right { a1 a2 a3 }  ( tokens : URValue ( XUInteger128 ) a1 ) ( answer_addr : URValue ( address ) a2 ) ( keep_grams : URValue ( XUInteger128 ) a3 ) : URValue XBool true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) accept 
  tokens answer_addr keep_grams ) . 
  
@@ -217,7 +217,7 @@ Local Open Scope string_scope.
  , answer_addr custom URValue at level 0 
  , keep_grams custom URValue at level 0 ) : ursus_scope . 
  
- Definition internalTransfer_left { R a1 a2 a3 a4 a5 a6 }  ( tokens : URValue ( XUInteger128 ) a1 ) ( answer_addr : URValue ( XAddress ) a2 ) ( sender_pubkey : URValue ( XUInteger256 ) a3 ) ( sender_owner : URValue ( XAddress ) a4 ) ( notify_receiver : URValue ( XBool ) a5 ) ( payload : URValue ( XCell ) a6 ) : UExpression R true := 
+ Definition internalTransfer_left { R a1 a2 a3 a4 a5 a6 }  ( tokens : URValue ( XUInteger128 ) a1 ) ( answer_addr : URValue ( address ) a2 ) ( sender_pubkey : URValue ( XUInteger256 ) a3 ) ( sender_owner : URValue ( address ) a4 ) ( notify_receiver : URValue ( XBool ) a5 ) ( payload : URValue ( XCell ) a6 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) internalTransfer 
  tokens answer_addr sender_pubkey sender_owner notify_receiver payload ) . 
  
@@ -231,7 +231,7 @@ Local Open Scope string_scope.
  , notify_receiver custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
  
- Definition destroy_left { R a1 }  ( dest : URValue ( XAddress ) a1 ) : UExpression R true := 
+ Definition destroy_left { R a1 }  ( dest : URValue ( address ) a1 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) destroy 
  dest ) . 
  
@@ -240,7 +240,7 @@ Local Open Scope string_scope.
  dest ) 
  (in custom ULValue at level 0 , dest custom URValue at level 0 ) : ursus_scope . 
  
- Definition burn_left { R a1 a2 }  ( out_pubkey : URValue ( XUInteger256 ) a1 ) ( out_internal_owner : URValue ( XAddress ) a2 ) 
+ Definition burn_left { R a1 a2 }  ( out_pubkey : URValue ( XUInteger256 ) a1 ) ( out_internal_owner : URValue ( address ) a2 ) 
 : UExpression R true (* orb a2 a1 *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) burn 
  out_pubkey out_internal_owner ) . 
@@ -251,7 +251,7 @@ Local Open Scope string_scope.
  (in custom ULValue at level 0 , out_pubkey custom URValue at level 0 
  , out_internal_owner custom URValue at level 0 ) : ursus_scope . 
  
- Definition lendOwnership_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( XAddress ) a1 ) ( grams : URValue ( XUInteger128 ) a2 ) ( std_dest : URValue ( XUInteger256 ) a3 ) ( lend_balance : URValue ( XUInteger128 ) a4 ) ( lend_finish_time : URValue ( XUInteger32 ) a5 ) ( deploy_init_cl : URValue ( XCell ) a6 ) ( payload : URValue ( XCell ) a7 ) : UExpression R true := 
+ Definition lendOwnership_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( grams : URValue ( XUInteger128 ) a2 ) ( std_dest : URValue ( XUInteger256 ) a3 ) ( lend_balance : URValue ( XUInteger128 ) a4 ) ( lend_finish_time : URValue ( XUInteger32 ) a5 ) ( deploy_init_cl : URValue ( XCell ) a6 ) ( payload : URValue ( XCell ) a7 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) lendOwnership 
  answer_addr grams std_dest lend_balance lend_finish_time deploy_init_cl payload ) . 
  
@@ -330,7 +330,7 @@ Local Open Scope string_scope.
  ( getWalletKey_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getRootAddress_right  : URValue XAddress false := 
+ Definition getRootAddress_right  : URValue address false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getRootAddress 
  ) . 
  
@@ -338,7 +338,7 @@ Local Open Scope string_scope.
  ( getRootAddress_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getOwnerAddress_right  : URValue XAddress false := 
+ Definition getOwnerAddress_right  : URValue address false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwnerAddress 
  ) . 
  
@@ -364,7 +364,7 @@ Local Open Scope string_scope.
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
- Definition approve_left { R a1 a2 a3 }  ( spender : URValue ( XAddress ) a1 ) ( remainingTokens : URValue ( XUInteger128 ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) : UExpression R true := 
+ Definition approve_left { R a1 a2 a3 }  ( spender : URValue ( address ) a1 ) ( remainingTokens : URValue ( XUInteger128 ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) approve 
  spender remainingTokens tokens ) . 
  
@@ -375,7 +375,7 @@ Local Open Scope string_scope.
  , remainingTokens custom URValue at level 0 
  , tokens custom URValue at level 0 ) : ursus_scope . 
  
- Definition transferFrom_left { R a1 a2 a3 a4 a5 }  ( answer_addr : URValue ( XAddress ) a1 ) ( from : URValue ( XAddress ) a2 ) ( too : URValue ( XAddress ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) 
+ Definition transferFrom_left { R a1 a2 a3 a4 a5 }  ( answer_addr : URValue ( address ) a1 ) ( from : URValue ( address ) a2 ) ( too : URValue ( address ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) 
 : UExpression R true (* orb ( orb ( orb ( orb a5 a4 ) a3 ) a2 ) a1 *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) transferFrom 
  answer_addr from too tokens grams ) . 
@@ -389,7 +389,7 @@ Local Open Scope string_scope.
  , tokens custom URValue at level 0 
  , grams custom URValue at level 0 ) : ursus_scope . 
  
- Definition transferFromWithNotify_left { R a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( from : URValue ( XAddress ) a2 ) ( too : URValue ( XAddress ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( payload : URValue ( XCell ) a6 ) 
+ Definition transferFromWithNotify_left { R a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( address ) a1 ) ( from : URValue ( address ) a2 ) ( too : URValue ( address ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( payload : URValue ( XCell ) a6 ) 
 : UExpression R true (* ( orb ( orb ( orb ( orb ( orb a6 a5 ) a4 ) a3 ) a2 ) a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) transferFromWithNotify 
  answer_addr from too tokens grams payload ) . 
@@ -404,7 +404,7 @@ Local Open Scope string_scope.
  , grams custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
  
- Definition internalTransferFrom_left { R a1 a2 a3 a4 a5 }  ( answer_addr : URValue ( XAddress ) a1 ) ( too : URValue ( XAddress ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) ( notify_receiver : URValue ( XBool ) a4 ) ( payload : URValue ( XCell ) a5 ) : UExpression R true := 
+ Definition internalTransferFrom_left { R a1 a2 a3 a4 a5 }  ( answer_addr : URValue ( address ) a1 ) ( too : URValue ( address ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) ( notify_receiver : URValue ( XBool ) a4 ) ( payload : URValue ( XCell ) a5 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) internalTransferFrom 
  answer_addr too tokens notify_receiver payload ) . 
  
@@ -445,7 +445,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , cell custom URValue at level 0 
  , msg_body custom URValue at level 0 ) : ursus_scope . 
  
- Definition transfer_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( XAddress ) a1 ) ( too : URValue ( XAddress ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) ( grams : URValue ( XUInteger128 ) a4 ) ( return_ownership : URValue ( XBool ) a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) : UExpression R true := 
+ Definition transfer_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( too : URValue ( address ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) ( grams : URValue ( XUInteger128 ) a4 ) ( return_ownership : URValue ( XBool ) a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) transfer_impl 
  answer_addr too tokens grams return_ownership send_notify payload ) . 
  
@@ -460,7 +460,7 @@ Local Open Scope string_scope.
  , send_notify custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
  
- Definition transfer_to_recipient_impl_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( answer_addr : URValue ( XAddress ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( XAddress ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) ( send_notify : URValue ( XBool ) a8 ) ( payload : URValue ( XCell ) a9 ) 
+ Definition transfer_to_recipient_impl_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( answer_addr : URValue ( address ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( address ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) ( send_notify : URValue ( XBool ) a8 ) ( payload : URValue ( XCell ) a9 ) 
 : UExpression R true (* ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) transfer_to_recipient_impl 
  answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload ) . 
@@ -478,7 +478,7 @@ Local Open Scope string_scope.
  , send_notify custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
  
- Definition transfer_from_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( XAddress ) a1 ) ( from : URValue ( XAddress ) a2 ) ( too : URValue ( XAddress ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) 
+ Definition transfer_from_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( from : URValue ( address ) a2 ) ( too : URValue ( address ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) 
 : UExpression R true (* ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) transfer_from_impl 
  answer_addr from too tokens grams send_notify payload ) . 
@@ -494,7 +494,7 @@ Local Open Scope string_scope.
  , send_notify custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
 
- Definition get_owner_addr_right  : URValue XAddress false := 
+ Definition get_owner_addr_right  : URValue address false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) get_owner_addr 
  ) . 
  
@@ -503,7 +503,7 @@ Local Open Scope string_scope.
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition fixup_answer_addr_right { a1 }  ( answer_addr : URValue ( XAddress ) a1 ) : URValue XAddress a1 := 
+ Definition fixup_answer_addr_right { a1 }  ( answer_addr : URValue ( address ) a1 ) : URValue address a1 := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) fixup_answer_addr 
  answer_addr ) . 
  
@@ -547,7 +547,7 @@ Local Open Scope string_scope.
  (in custom ULValue at level 0 , tokens custom URValue at level 0 
  , return_ownership custom URValue at level 0 ) : ursus_scope .
 
- Definition optional_owner_right { a1 }  ( owner : URValue ( XAddress ) a1 ) : URValue (XMaybe XAddress) a1 := 
+ Definition optional_owner_right { a1 }  ( owner : URValue ( address ) a1 ) : URValue (XMaybe address) a1 := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner 
  owner ) . 
  
@@ -556,7 +556,7 @@ Local Open Scope string_scope.
  owner ) 
  (in custom URValue at level 0 , owner custom URValue at level 0 ) : ursus_scope .
 
- Definition calc_wallet_init_hash_right { a1 a2 }  ( pubkey : URValue ( XUInteger256 ) a1 ) ( internal_owner : URValue ( XAddress ) a2 ) : URValue ( StateInitLRecord # XUInteger256 ) ( orb a2 a1 ) := 
+ Definition calc_wallet_init_hash_right { a1 a2 }  ( pubkey : URValue ( XUInteger256 ) a1 ) ( internal_owner : URValue ( address ) a2 ) : URValue ( StateInitLRecord # XUInteger256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_wallet_init_hash 
  pubkey internal_owner ) . 
  
@@ -566,7 +566,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , internal_owner custom URValue at level 0 ) : ursus_scope . 
 
- Definition expected_sender_address_right { a1 a2 }  ( sender_public_key : URValue ( XUInteger256 ) a1 ) ( sender_owner : URValue ( XAddress ) a2 ) : URValue XUInteger256 ( orb a2 a1 ) := 
+ Definition expected_sender_address_right { a1 a2 }  ( sender_public_key : URValue ( XUInteger256 ) a1 ) ( sender_owner : URValue ( address ) a2 ) : URValue XUInteger256 ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) expected_sender_address 
  sender_public_key sender_owner ) . 
  
@@ -576,7 +576,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , sender_public_key custom URValue at level 0 
  , sender_owner custom URValue at level 0 ) : ursus_scope .
 
- Definition calc_wallet_init_right { a1 a2 }  ( pubkey : URValue ( XUInteger256 ) a1 ) ( internal_owner : URValue ( XAddress ) a2 ) : URValue ( StateInitLRecord # XAddress ) ( orb a2 a1 ) := 
+ Definition calc_wallet_init_right { a1 a2 }  ( pubkey : URValue ( XUInteger256 ) a1 ) ( internal_owner : URValue ( address ) a2 ) : URValue ( StateInitLRecord # address ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_wallet_init 
  pubkey internal_owner ) . 
  
@@ -586,7 +586,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , internal_owner custom URValue at level 0 ) : ursus_scope .
 
- Definition filter_lend_ownerhip_map_right  : URValue ( (XHMap addr_std_fixedLRecord lend_recordLRecord) # XUInteger128 ) false := 
+ Definition filter_lend_ownerhip_map_right  : URValue ( (XHMap addr_std_fixed lend_recordLRecord) # XUInteger128 ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) filter_lend_ownerhip_map 
  ) . 
  
@@ -634,7 +634,7 @@ Definition is_internal_owner_right  : URValue XBool false :=
  (in custom URValue at level 0 , original_owner_only custom URValue at level 0 
  , allowed_in_lend_state custom URValue at level 0 ) : ursus_scope .
 
-(* Definition prepare_wallet_data_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( XUInteger8 ) a3 ) ( root_public_key : URValue ( XUInteger256 ) a4 ) ( wallet_public_key : URValue ( XUInteger256 ) a5 ) ( root_address : URValue ( XAddress ) a6 ) ( owner_address : URValue ( XMaybe XAddress ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( XUInteger8 ) a9 ) : URValue DTONTokenWalletLRecord ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+(* Definition prepare_wallet_data_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( XUInteger8 ) a3 ) ( root_public_key : URValue ( XUInteger256 ) a4 ) ( wallet_public_key : URValue ( XUInteger256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( XUInteger8 ) a9 ) : URValue DTONTokenWalletLRecord ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_wallet_data 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
@@ -660,7 +660,7 @@ Definition is_internal_owner_right  : URValue XBool false :=
  wallet_data ) 
  (in custom URValue at level 0 , wallet_data custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_external_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( XUInteger8 ) a3 ) ( root_public_key : URValue ( XUInteger256 ) a4 ) ( wallet_public_key : URValue ( XUInteger256 ) a5 ) ( root_address : URValue ( XAddress ) a6 ) ( owner_address : URValue ( XMaybe XAddress ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( XUInteger8 ) a9 ) : URValue ( StateInitLRecord * XUInteger256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition prepare_external_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( XUInteger8 ) a3 ) ( root_public_key : URValue ( XUInteger256 ) a4 ) ( wallet_public_key : URValue ( XUInteger256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( XUInteger8 ) a9 ) : URValue ( StateInitLRecord * XUInteger256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_external_wallet_state_init_and_addr 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
@@ -676,7 +676,7 @@ Definition is_internal_owner_right  : URValue XBool false :=
  , owner_address custom URValue at level 0 
  , code custom URValue at level 0 
  , workchain_id custom URValue at level 0 ) : ursus_scope . 
- Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( XUInteger8 ) a3 ) ( root_public_key : URValue ( XUInteger256 ) a4 ) ( wallet_public_key : URValue ( XUInteger256 ) a5 ) ( root_address : URValue ( XAddress ) a6 ) ( owner_address : URValue ( XMaybe XAddress ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( XUInteger8 ) a9 ) : URValue ( StateInitLRecord * XUInteger256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( XUInteger8 ) a3 ) ( root_public_key : URValue ( XUInteger256 ) a4 ) ( wallet_public_key : URValue ( XUInteger256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( XUInteger8 ) a9 ) : URValue ( StateInitLRecord * XUInteger256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  

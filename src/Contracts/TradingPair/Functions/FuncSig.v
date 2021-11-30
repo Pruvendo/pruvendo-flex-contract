@@ -23,11 +23,11 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-Parameter onDeploy :  uint128 ->  uint128 -> raw_address -> UExpression boolean true . 
-Parameter getFlexAddr : UExpression raw_address false . 
-Parameter getTip3Root : UExpression raw_address false . 
+Parameter onDeploy :  uint128 ->  uint128 -> address -> UExpression boolean true . 
+Parameter getFlexAddr : UExpression address false . 
+Parameter getTip3Root : UExpression address false . 
 Parameter getMinAmount : UExpression uint128 false . 
-Parameter getNotifyAddr : UExpression raw_address false . 
+Parameter getNotifyAddr : UExpression address false . 
 Parameter _fallback :  TvmCell -> TvmSlice -> UExpression uint false . 
 Parameter prepare_trading_pair_state_init_and_addr :  ContractLRecord  -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
 

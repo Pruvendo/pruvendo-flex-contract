@@ -49,14 +49,14 @@ Qed.
 
 (*****************************************************************************)
 
-Lemma addr_std_fixedLRecord_getset_diff : forall (f1 f2: addr_std_fixedFields ) 
-         (v2: field_type f2) (r: addr_std_fixedLRecord) ,  
+(* Lemma addr_std_fixed_getset_diff : forall (f1 f2: addr_std_fixedFields ) 
+         (v2: field_type f2) (r: addr_std_fixed) ,  
         f1 <> f2 -> 
         f1 {$$ r with f2 := v2 $$} = f1 r.
 Proof.
   intros. 
-  proof2 f1 f2 r addr_std_fixedLRecord.  
-Qed.
+  proof2 f1 f2 r addr_std_fixed.  
+Qed. *)
 
 (*****************************************************************************)
 

@@ -50,7 +50,7 @@ Notation " 'set_int_return_flag_' '(' ')' " :=
  ( set_int_return_flag ) 
  (in custom ULValue at level 0 ) : ursus_scope .
 
-Definition onDeploy ( min_amount : uint128 ) ( deploy_value : uint128 ) ( notify_addr : raw_address ) : UExpression boolean true . 
+Definition onDeploy ( min_amount : uint128 ) ( deploy_value : uint128 ) ( notify_addr : address ) : UExpression boolean true . 
 	refine {{ require_ ( ( int_value () ) > #{ deploy_value }  ,  error_code::not_enough_tons  ) ; { _ } }} . 
 	refine {{ require_ ( ~  _min_amount_  , error_code::double_deploy  ) ; { _ } }} .
 
@@ -62,11 +62,11 @@ Definition onDeploy ( min_amount : uint128 ) ( deploy_value : uint128 ) ( notify
 	refine {{ return_ TRUE }} .
 Defined.
 
-Definition getFlexAddr : UExpression raw_address false . 
+Definition getFlexAddr : UExpression address false . 
 	refine {{ return_ _flex_addr_ }} . 
 Defined . 
  
-Definition getTip3Root : UExpression raw_address false . 
+Definition getTip3Root : UExpression address false . 
 	refine {{ return_ _tip3_root_ }} . 
 Defined . 
 
@@ -74,7 +74,7 @@ Definition getMinAmount : UExpression uint128 false .
 	refine {{ return_ _min_amount_ }} . 
 Defined . 
  
-Definition getNotifyAddr : UExpression raw_address false . 
+Definition getNotifyAddr : UExpression address false . 
 	refine {{ return_ _notify_addr_ }} . 
 Defined . 
  

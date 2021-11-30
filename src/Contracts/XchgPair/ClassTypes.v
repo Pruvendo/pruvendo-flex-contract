@@ -17,11 +17,11 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 Definition DXchgPairL : list Type := 
- [ ( XAddress ) : Type ; 
- ( XAddress ) : Type ; 
- ( XAddress ) : Type ; 
+ [ ( address ) : Type ; 
+ ( address ) : Type ; 
+ ( address ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( XAddress ) : Type ] .
+ ( address ) : Type ] .
 Elpi GeneratePruvendoRecord DXchgPairL DXchgPairFields . 
  
 Lemma DXchgPairFields_noeq : forall (f1 f2:  DXchgPairFields ) 

@@ -13,7 +13,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XAddress XUInteger128  XUInteger256  XString XUInteger8 : Type.
+Variables address XCell XUInteger128  XUInteger256  XString XUInteger8 : Type.
 
 Inductive VarInitFields      := | VarInit_ι_DRootTokenContract | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
@@ -21,11 +21,11 @@ Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | Ini
 Variable InitialState : Type.
 
 Inductive IRootTokenContractP :=
-| Iconstructor : XString -> XString -> XUInteger8 -> XUInteger256 -> XAddress -> XUInteger128 -> IRootTokenContractP
+| Iconstructor : XString -> XString -> XUInteger8 -> XUInteger256 -> address -> XUInteger128 -> IRootTokenContractP
 | IsetWalletCode : XCell -> IRootTokenContractP
-| IdeployWallet : XUInteger256 -> XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
-| IdeployEmptyWallet : XUInteger256 -> XAddress -> XUInteger128 -> IRootTokenContractP
-| Igrant : XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
+| IdeployWallet : XUInteger256 -> address -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
+| IdeployEmptyWallet : XUInteger256 -> address -> XUInteger128 -> IRootTokenContractP
+| Igrant : address -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
 | Imint : XUInteger128 -> IRootTokenContractP
 | IrequestTotalGranted : IRootTokenContractP
 | IgetName : IRootTokenContractP
@@ -37,7 +37,7 @@ Inductive IRootTokenContractP :=
 | IhasWalletCode : IRootTokenContractP
 | IgetWalletCode : IRootTokenContractP
 | IgetWalletCodeHash : IRootTokenContractP
-| IgetWalletAddress : XUInteger256 -> XAddress IRootTokenContractP
+| IgetWalletAddress : XUInteger256 -> address -> IRootTokenContractP
 | _Icreate : InitialState -> IRootTokenContractP.
 
 End InterfaceDef.
@@ -55,27 +55,28 @@ GeneratePruvendoRecord VarInitL VarInitFields.
 Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
-(* Print IRootTokenContractP. *)
-Definition IRootTokenContract : Type := IRootTokenContractP XAddress XUInteger128 XUInteger256 XString XUInteger8 StateInitLRecord .
+Print IRootTokenContractP.
+Definition IRootTokenContract : Type := IRootTokenContractP address XCell XUInteger128 XUInteger256 XString XUInteger8 StateInitLRecord .
 
-Arguments Iconstructor {_} {_} {_} {_} {_} {_} .
-Arguments IdeployWallet {_} {_} {_} {_} {_} {_}.
-Arguments IdeployEmptyWallet {_} {_} {_} {_} {_} {_}.
-Arguments Igrant {_} {_} {_} {_} {_} {_}.
-Arguments Imint {_} {_} {_} {_} {_} {_}.
-Arguments IrequestTotalGranted {_} {_} {_} {_} {_} {_}.
-Arguments IsetWalletCode {_} {_} {_} {_} {_} {_}.
-Arguments IgetName {_} {_} {_} {_} {_} {_}.
-Arguments IgetSymbol {_} {_} {_} {_} {_} {_}.
-Arguments IgetDecimals {_} {_} {_} {_} {_} {_}.
-Arguments IgetRootKey {_} {_} {_} {_} {_} {_}.
-Arguments IgetTotalSupply {_} {_} {_} {_} {_} {_}.
-Arguments IgetTotalGranted {_} {_} {_} {_} {_} {_}.
-Arguments IhasWalletCode {_} {_} {_} {_} {_} {_}.
-Arguments IgetWalletCode {_} {_} {_} {_} {_} {_}.
-Arguments IgetWalletCodeHash {_} {_} {_} {_} {_} {_}.
-Arguments IgetWalletAddress {_} {_} {_} {_} {_} {_}.
-Arguments _Icreate {_} {_} {_} {_} {_} {_}.
+Arguments Iconstructor {_} {_} {_} {_} {_} {_} {_}.
+About Iconstructor.
+Arguments IdeployWallet {_} {_} {_} {_} {_} {_} {_}.
+Arguments IdeployEmptyWallet {_} {_} {_} {_} {_} {_} {_}.
+Arguments Igrant {_} {_} {_} {_} {_} {_} {_}.
+Arguments Imint {_} {_} {_} {_} {_} {_} {_}.
+Arguments IrequestTotalGranted {_} {_} {_} {_} {_} {_} {_}.
+Arguments IsetWalletCode {_} {_} {_} {_} {_} {_} {_}.
+Arguments IgetName {_} {_} {_} {_} {_} {_} {_}.
+Arguments IgetSymbol {_} {_} {_} {_} {_} {_} {_}.
+Arguments IgetDecimals {_} {_} {_} {_} {_} {_} {_}.
+Arguments IgetRootKey {_} {_} {_} {_} {_} {_} {_}.
+Arguments IgetTotalSupply {_} {_} {_} {_} {_} {_} {_}.
+Arguments IgetTotalGranted {_} {_} {_} {_} {_} {_} {_}.
+Arguments IhasWalletCode {_} {_} {_} {_} {_} {_} {_}.
+Arguments IgetWalletCode {_} {_} {_} {_} {_} {_} {_}.
+Arguments IgetWalletCodeHash {_} {_} {_} {_} {_} {_} {_}.
+Arguments IgetWalletAddress {_} {_} {_} {_} {_} {_} {_}.
+Arguments _Icreate {_} {_} {_} {_} {_} {_} {_}.
 
 End PublicInterface.
 

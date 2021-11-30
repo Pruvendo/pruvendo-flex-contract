@@ -36,7 +36,7 @@ Module Export ClassTypesModule := ClassTypes xt sm .
 Import xt.
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ XHMap XAddress ( XQueue (OutgoingMessage TONPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
+ [ XHMap address ( XQueue (OutgoingMessage TONPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
    XList TVMEvent : Type ; 
    XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
@@ -66,12 +66,12 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState00011LRecord . 
  
  Inductive LocalStateFields00100I := | ι001000 | ι001001 . 
- Definition LocalState00100L := [ ( XHMap (string*nat) XAddress ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00100L := [ ( XHMap (string*nat) address ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00100L LocalStateFields00100I . 
  Opaque LocalState00100LRecord . 
  
  Inductive LocalStateFields00101I := | ι001010 | ι001011 . 
- Definition LocalState00101L := [ ( XHMap (string*nat) XAddress (* ITONTokenWalletPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00101L := [ ( XHMap (string*nat) address (* ITONTokenWalletPtrLRecord *) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00101L LocalStateFields00101I . 
  Opaque LocalState00101LRecord . 
  
@@ -111,7 +111,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState01100LRecord . 
  
  Inductive LocalStateFields01101I := | ι011010 | ι011011 . 
- Definition LocalState01101L := [ ( XHMap (string*nat) ( XMaybe XAddress ) ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState01101L := [ ( XHMap (string*nat) ( XMaybe address ) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState01101L LocalStateFields01101I . 
  Opaque LocalState01101LRecord . 
  
@@ -121,7 +121,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState01110LRecord . 
  
  Inductive LocalStateFields01111I := | ι011110 | ι011111 . 
- Definition LocalState01111L := [ ( XHMap (string*nat) ( StateInitLRecord * XAddress ) ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState01111L := [ ( XHMap (string*nat) ( StateInitLRecord * address ) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState01111L LocalStateFields01111I . 
  Opaque LocalState01111LRecord . 
  
@@ -435,7 +435,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00011 : typeclass_instances. 
- #[global, program] Instance LocalStateField00100 : LocalStateField XAddress.
+ #[global, program] Instance LocalStateField00100 : LocalStateField address.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -455,7 +455,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField00100 : typeclass_instances. 
- #[global, program] Instance LocalStateField00101 : LocalStateField XAddress (* ITONTokenWalletPtrLRecord *).
+ #[global, program] Instance LocalStateField00101 : LocalStateField address (* ITONTokenWalletPtrLRecord *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -615,7 +615,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01100 : typeclass_instances. 
- #[global, program] Instance LocalStateField01101 : LocalStateField ( XMaybe XAddress ).
+ #[global, program] Instance LocalStateField01101 : LocalStateField ( XMaybe address ).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 
@@ -655,7 +655,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField01110 : typeclass_instances. 
- #[global, program] Instance LocalStateField01111 : LocalStateField ( StateInitLRecord * XAddress ).
+ #[global, program] Instance LocalStateField01111 : LocalStateField ( StateInitLRecord * address ).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 

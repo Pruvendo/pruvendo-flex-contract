@@ -35,7 +35,7 @@ Module Export TypesModuleForLedger := TradingPair.ClassTypes.ClassTypes xt sm .
 Import xt. 
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ XHMap XAddress (XQueue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair)) : Type ; 
+ [ XHMap address (XQueue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair)) : Type ; 
    XList TVMEvent : Type ; 
    XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
@@ -65,7 +65,7 @@ GeneratePruvendoRecord LocalState0011L LocalStateFields0011I .
 Opaque LocalState0011LRecord . 
 
 Inductive LocalStateFields0100I := | ι01000 | ι01001 . 
-Definition LocalState0100L := [ ( XHMap (string*nat) XAddress ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState0100L := [ ( XHMap (string*nat) address ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState0100L LocalStateFields0100I . 
 Opaque LocalState0100LRecord . 
 
@@ -289,7 +289,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField0011 : typeclass_instances. 
- #[global, program] Instance LocalStateField0100 : LocalStateField XAddress.
+ #[global, program] Instance LocalStateField0100 : LocalStateField address.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι01). 

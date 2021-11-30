@@ -13,7 +13,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XAddress XBool XUInteger256 XUInteger128 XUInteger32 XUInteger8 XCell Tip3ConfigLRecord TonsConfigLRecord: Type.
+Variables address XBool XUInteger256 XUInteger128 XUInteger32 XUInteger8 XCell Tip3ConfigLRecord TonsConfigLRecord: Type.
 
 Inductive VarInitFields      := | VarInit_ι_DFlexClient  | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
@@ -22,28 +22,28 @@ Variable InitialState : Type.
 
 Inductive IFlexClientP :=
 | Iconstructor : XUInteger256 -> XCell -> XCell -> IFlexClientP
-| IsetFlexCfg   : TonsConfigLRecord -> XAddress -> IFlexClientP
+| IsetFlexCfg   : TonsConfigLRecord -> address -> IFlexClientP
 | IsetExtWalletCode : XCell -> IFlexClientP
 | IsetFlexWalletCode : XCell -> IFlexClientP
 | IsetFlexWrapperCode : XCell -> IFlexClientP
-| IdeployPriceWithSell : XUInteger128 -> XUInteger128 -> XUInteger32 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> XAddress -> XAddress -> Tip3ConfigLRecord -> XAddress -> IFlexClientP
-| IdeployPriceWithBuy : XUInteger128 -> XUInteger128 -> XUInteger32 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> XAddress -> Tip3ConfigLRecord -> XAddress -> IFlexClientP
-| IdeployPriceXchg : XBool -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger32 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> XAddress -> XAddress -> Tip3ConfigLRecord -> Tip3ConfigLRecord -> XAddress -> IFlexClientP
-| IcancelSellOrder : XUInteger128 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> Tip3ConfigLRecord -> XAddress -> IFlexClientP
-| IcancelBuyOrder : XUInteger128 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> Tip3ConfigLRecord -> XAddress -> IFlexClientP
-| IcancelXchgOrder : XBool -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> Tip3ConfigLRecord -> Tip3ConfigLRecord -> XAddress -> IFlexClientP
-| Itransfer : XAddress -> XUInteger128 -> XBool -> IFlexClientP
+| IdeployPriceWithSell : XUInteger128 -> XUInteger128 -> XUInteger32 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> address -> address -> Tip3ConfigLRecord -> address -> IFlexClientP
+| IdeployPriceWithBuy : XUInteger128 -> XUInteger128 -> XUInteger32 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> address -> Tip3ConfigLRecord -> address -> IFlexClientP
+| IdeployPriceXchg : XBool -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger32 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> address -> address -> Tip3ConfigLRecord -> Tip3ConfigLRecord -> address -> IFlexClientP
+| IcancelSellOrder : XUInteger128 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> Tip3ConfigLRecord -> address -> IFlexClientP
+| IcancelBuyOrder : XUInteger128 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> Tip3ConfigLRecord -> address -> IFlexClientP
+| IcancelXchgOrder : XBool -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger8 -> XUInteger128 -> XCell -> Tip3ConfigLRecord -> Tip3ConfigLRecord -> address -> IFlexClientP
+| Itransfer : address -> XUInteger128 -> XBool -> IFlexClientP
 | IregisterWrapper : XUInteger128 -> XUInteger128 -> Tip3ConfigLRecord -> IFlexClientP
-| IregisterTradingPair : XUInteger256 -> XUInteger128 -> XAddress -> XUInteger128 -> XAddress -> IFlexClientP
-| IregisterXchgPair : XUInteger256 -> XUInteger128 -> XAddress -> XAddress -> XAddress -> XUInteger128 -> XAddress -> IFlexClientP
+| IregisterTradingPair : XUInteger256 -> XUInteger128 -> address -> XUInteger128 -> address -> IFlexClientP
+| IregisterXchgPair : XUInteger256 -> XUInteger128 -> address -> address -> address -> XUInteger128 -> address -> IFlexClientP
 | IdeployEmptyFlexWallet : XUInteger256 -> XUInteger128 -> Tip3ConfigLRecord -> IFlexClientP
-| IburnWallet : XUInteger128 -> XUInteger256 -> XAddress -> XAddress -> IFlexClientP
+| IburnWallet : XUInteger128 -> XUInteger256 -> address -> address -> IFlexClientP
 | IgetOwner : IFlexClientP
 | IgetFlex : IFlexClientP
 | IhasExtWalletCode : IFlexClientP
 | IhasFlexWalletCode : IFlexClientP
 | IhasFlexWrapperCode : IFlexClientP
-| IgetPayloadForDeployInternalWallet : XUInteger256 -> XAddress -> XUInteger128 -> IFlexClientP
+| IgetPayloadForDeployInternalWallet : XUInteger256 -> address -> XUInteger128 -> IFlexClientP
 | _Icreate : InitialState -> IFlexClientP.
 
 End InterfaceDef.
@@ -62,7 +62,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 Print IFlexClientP.
-Definition IFlexClient : Type := IFlexClientP XAddress XBool XUInteger256 XUInteger128 XUInteger32 XUInteger8 XCell Tip3ConfigLRecord TonsConfigLRecord StateInitLRecord.
+Definition IFlexClient : Type := IFlexClientP address XBool XUInteger256 XUInteger128 XUInteger32 XUInteger8 XCell Tip3ConfigLRecord TonsConfigLRecord StateInitLRecord.
 
 (* Print Iconstructor. *)
 

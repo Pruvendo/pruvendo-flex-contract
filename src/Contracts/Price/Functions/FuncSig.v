@@ -34,8 +34,8 @@ Parameter extract_active_order : ULValue ( optional OrderInfoWithIdx ) ->
                                 UExpression ( optional OrderInfoWithIdx # (queue OrderInfoLRecord # uint128))  true . 
                                 
 Parameter process_queue : uint ->  uint  -> UExpression PhantomType true . 
-Parameter onTip3LendOwnership : raw_address -> uint128 -> uint32 -> uint256 -> raw_address -> TvmCell -> UExpression OrderRetLRecord true . 
-Parameter buyTip3 : uint128 -> raw_address -> uint32 -> UExpression OrderRetLRecord true . 
+Parameter onTip3LendOwnership : address -> uint128 -> uint32 -> uint256 -> address -> TvmCell -> UExpression OrderRetLRecord true . 
+Parameter buyTip3 : uint128 -> address -> uint32 -> UExpression OrderRetLRecord true . 
 Parameter processQueue : UExpression PhantomType true . 
 Parameter cancelSell : UExpression PhantomType false . 
 Parameter cancelBuy : UExpression PhantomType false . 
@@ -50,17 +50,17 @@ Parameter getBuyAmount : UExpression uint128 false .
 Parameter _fallback : TvmCell -> TvmSlice -> UExpression uint false . 
 Parameter onTip3LendOwnershipMinValue : UExpression uint128 false . 
 Parameter buyTip3MinValue : uint128 -> UExpression uint128 false . 
-Parameter verify_tip3_addr : raw_address -> uint256 -> uint256 -> UExpression boolean false . 
+Parameter verify_tip3_addr : address -> uint256 -> uint256 -> UExpression boolean false . 
 Parameter expected_wallet_address : uint256 -> uint256 -> UExpression uint256 false . 
-Parameter on_sell_fail : uint -> raw_address (*ITONTokenWalletPtr*) -> uint128 -> UExpression OrderRetLRecord false . 
+Parameter on_sell_fail : uint -> address (*ITONTokenWalletPtr*) -> uint128 -> UExpression OrderRetLRecord false . 
 Parameter prepare_price_state_init_and_addr : DPriceLRecord -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter is_active_time : uint32 -> UExpression boolean false . 
 Parameter calc_cost : uint128 -> uint128 -> UExpression (optional uint128) false . 
-Parameter process_queue_impl : raw_address -> raw_address (*IFlexNotifyPtr*) -> uint128 -> uint8 -> TonsConfigLRecord -> 
+Parameter process_queue_impl : address -> address (*IFlexNotifyPtr*) -> uint128 -> uint8 -> TonsConfigLRecord -> 
                                uint -> uint -> uint128 -> queue OrderInfoLRecord -> 
                                uint128 -> 
                                queue OrderInfoLRecord -> UExpression process_retLRecord true . 
-Parameter cancel_order_impl : queue OrderInfoLRecord -> addr_std_fixedLRecord -> uint128 -> boolean -> Grams -> 
+Parameter cancel_order_impl : queue OrderInfoLRecord -> addr_std_fixed -> uint128 -> boolean -> Grams -> 
                               Grams -> Grams -> UExpression ((queue OrderInfoLRecord) # uint128) false . 
 
 End SpecSig.

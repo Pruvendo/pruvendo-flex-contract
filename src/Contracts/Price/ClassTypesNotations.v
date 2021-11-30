@@ -106,10 +106,10 @@ Definition SellArgs_amount_left (x: ULValue SellArgsLRecord): ULValue XUInteger1
 Notation " a '↑' 'SellArgs.amount' " := (SellArgs_amount_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'SellArgs.amount' " := (SellArgs_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
  
-Definition SellArgs_receive_wallet_right {b} (x: URValue SellArgsLRecord b): URValue XAddress b :=
+Definition SellArgs_receive_wallet_right {b} (x: URValue SellArgsLRecord b): URValue address b :=
 || {x} ^^ {SellArgs_ι_receive_wallet} || : _.
 
-Definition SellArgs_receive_wallet_left (x: ULValue SellArgsLRecord): ULValue XAddress :=
+Definition SellArgs_receive_wallet_left (x: ULValue SellArgsLRecord): ULValue address :=
 {{ {x} ^^ {SellArgs_ι_receive_wallet} }} : _.
 
 Notation " a '↑' 'SellArgs.receive_wallet' " := (SellArgs_receive_wallet_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -204,8 +204,8 @@ Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__right a) (in custo
 (*interface*)
 
 (* Inductive IPriceP :=
-| IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> IPriceP
-| IbuyTip3 : XUInteger128 -> XAddress -> XUInteger32 -> IPriceP
+| IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> IPriceP
+| IbuyTip3 : XUInteger128 -> address -> XUInteger32 -> IPriceP
 | IprocessQueue : IPriceP
 | IcancelSell : IPriceP
 | IcancelBuy : IPriceP
@@ -241,13 +241,13 @@ Defined.
 
 Notation " 'Price.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
  
-(* | IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> IPriceP *)
+(* | IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> IPriceP *)
 
-Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger128 a2) 
                                                  (z : URValue XUInteger32 a3)
                                                  (t : URValue XUInteger256 a4)
-                                                 (u : URValue XAddress a5)
+                                                 (u : URValue address a5)
                                                  (v : URValue XCell a6) : URValue IPrice (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
@@ -265,9 +265,9 @@ Notation " '.onTip3LendOwnership' ( x , y , z , t , u , v ) " := (IonTip3LendOwn
  t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
 
 
-(*| IbuyTip3 : XUInteger128 -> XAddress -> XUInteger32 -> IPriceP*)
+(*| IbuyTip3 : XUInteger128 -> address -> XUInteger32 -> IPriceP*)
 Definition IbuyTip3_right { a1 a2 a3 } (x : URValue XUInteger128 a1 ) 
-                                       (y : URValue XAddress a2) 
+                                       (y : URValue address a2) 
                                        (z : URValue XUInteger32 a3)
                                         : URValue IPrice (orb a1 (orb a2 a3)).
  pose proof (urvalue_bind x (fun x' => 

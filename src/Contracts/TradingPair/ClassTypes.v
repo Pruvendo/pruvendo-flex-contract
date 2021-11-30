@@ -17,11 +17,11 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 Definition DTradingPairL : list Type := 
- [ ( XAddress ) : Type ; 
- ( XAddress ) : Type ; 
+ [ ( address ) : Type ; 
+ ( address ) : Type ; 
  ( XUInteger128 ) : Type ;
  ( XUInteger128 ) : Type ;
- ( XAddress ) : Type ] .
+ ( address ) : Type ] .
 
 Elpi GeneratePruvendoRecord DTradingPairL DTradingPairFields . 
 

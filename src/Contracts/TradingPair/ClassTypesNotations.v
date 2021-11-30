@@ -16,19 +16,19 @@ Module Export InterfaceModule := PublicInterface xt sm.
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 
-Definition DTradingPair_ι_flex_addr__right {b} (x: URValue DTradingPairLRecord b): URValue XAddress b :=
+Definition DTradingPair_ι_flex_addr__right {b} (x: URValue DTradingPairLRecord b): URValue address b :=
     || {x} ^^ {DTradingPair_ι_flex_addr_} || : _.
     
-Definition DTradingPair_ι_flex_addr__left (x: ULValue DTradingPairLRecord): ULValue XAddress :=
+Definition DTradingPair_ι_flex_addr__left (x: ULValue DTradingPairLRecord): ULValue address :=
     {{ {x} ^^ {DTradingPair_ι_flex_addr_} }} : _.
     
 Notation " a '↑' 'DTradingPair.flex_addr_' " := ( DTradingPair_ι_flex_addr__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTradingPair.flex_addr_' " := ( DTradingPair_ι_flex_addr__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTradingPair_ι_tip3_root__right {b} (x: URValue DTradingPairLRecord b): URValue XAddress b :=
+Definition DTradingPair_ι_tip3_root__right {b} (x: URValue DTradingPairLRecord b): URValue address b :=
     || {x} ^^ {DTradingPair_ι_tip3_root_} || : _.
     
-Definition DTradingPair_ι_tip3_root__left (x: ULValue DTradingPairLRecord): ULValue XAddress :=
+Definition DTradingPair_ι_tip3_root__left (x: ULValue DTradingPairLRecord): ULValue address :=
     {{ {x} ^^ {DTradingPair_ι_tip3_root_} }} : _.
     
 Notation " a '↑' 'DTradingPair.tip3_root_' " := ( DTradingPair_ι_tip3_root__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -52,10 +52,10 @@ Definition DTradingPair_ι_min_amount__left (x: ULValue DTradingPairLRecord): UL
 Notation " a '↑' 'DTradingPair.min_amount_' " := ( DTradingPair_ι_min_amount__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTradingPair.min_amount_' " := ( DTradingPair_ι_min_amount__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTradingPair_ι_notify_addr__right {b} (x: URValue DTradingPairLRecord b): URValue XAddress b :=
+Definition DTradingPair_ι_notify_addr__right {b} (x: URValue DTradingPairLRecord b): URValue address b :=
     || {x} ^^ {DTradingPair_ι_notify_addr_} || : _.
     
-Definition DTradingPair_ι_notify_addr__left (x: ULValue DTradingPairLRecord): ULValue XAddress :=
+Definition DTradingPair_ι_notify_addr__left (x: ULValue DTradingPairLRecord): ULValue address :=
     {{ {x} ^^ {DTradingPair_ι_notify_addr_} }} : _.
     
 Notation " a '↑' 'DTradingPair.notify_addr_' " := ( DTradingPair_ι_notify_addr__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -65,7 +65,7 @@ Notation " a '↑' 'DTradingPair.notify_addr_' " := ( DTradingPair_ι_notify_add
 (******************************************************)
 Definition IonDeploy_right { a1 a2 a3 }  ( min_amount : URValue XUInteger128 a1 ) 
                                          ( deploy_value : URValue XUInteger128 a2 ) 
-                                         ( notify_addr : URValue XAddress a3 ) : URValue ITradingPair (orb a1 (orb a2 a3)).
+                                         ( notify_addr : URValue address a3 ) : URValue ITradingPair (orb a1 (orb a2 a3)).
  pose proof (urvalue_bind min_amount (fun a => urvalue_bind deploy_value (fun b => urvalue_bind notify_addr (fun c => #(IonDeploy a b c : ITradingPair)))): URValue _ _).
  rewrite right_or_false in X.
  refine X.

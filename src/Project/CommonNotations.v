@@ -99,24 +99,24 @@ Definition TickTock_ι_tock_left (x: ULValue TickTockLRecord): ULValue XBool :=
 Notation " a '↑' 'TickTock.tock' " := ( TickTock_ι_tock_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'TickTock.tock' " := ( TickTock_ι_tock_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition addr_std_fixed_ι_workchain_id_right {b} (x: URValue addr_std_fixedLRecord b): URValue XUInteger8 b :=
+(* Definition addr_std_fixed_ι_workchain_id_right {b} (x: URValue addr_std_fixed b): URValue XUInteger8 b :=
     || {x} ^^ {addr_std_fixed_ι_workchain_id} || : _ .
     
-Definition addr_std_fixed_ι_workchain_id_left (x: ULValue addr_std_fixedLRecord): ULValue XUInteger8 :=
+Definition addr_std_fixed_ι_workchain_id_left (x: ULValue addr_std_fixed): ULValue XUInteger8 :=
     {{ {x} ^^ {addr_std_fixed_ι_workchain_id} }} : _.
     
 Notation " a '↑' 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition addr_std_fixed_ι_address_right {b} (x: URValue addr_std_fixedLRecord b): URValue XUInteger256 b :=
+Definition addr_std_fixed_ι_address_right {b} (x: URValue addr_std_fixed b): URValue XUInteger256 b :=
     || {x} ^^ {addr_std_fixed_ι_address} || : _ .
     
-Definition addr_std_fixed_ι_address_left (x: ULValue addr_std_fixedLRecord): ULValue XUInteger256 :=
+Definition addr_std_fixed_ι_address_left (x: ULValue addr_std_fixed): ULValue XUInteger256 :=
     {{ {x} ^^ {addr_std_fixed_ι_address} }} : _.
     
 Notation " a '↑' 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address_left a ) (in custom ULValue at level 0) : ursus_scope.
-
+ *)
 Definition Tip3Config_ι_name_right {b} (x: URValue Tip3ConfigLRecord b): URValue XString b :=
     || {x} ^^ {Tip3Config_ι_name} || : _ .
     
@@ -154,10 +154,10 @@ Notation " a '↑' 'Tip3Config.root_public_key' " := ( Tip3Config_ι_root_public
 Notation " a '↑' 'Tip3Config.root_public_key' " := ( Tip3Config_ι_root_public_key_left a ) (in custom ULValue at level 0) : ursus_scope.
 
 
-Definition Tip3Config_ι_root_address_right {b} (x: URValue Tip3ConfigLRecord b): URValue XAddress b :=
+Definition Tip3Config_ι_root_address_right {b} (x: URValue Tip3ConfigLRecord b): URValue address b :=
     || {x} ^^ {Tip3Config_ι_root_address} || : _ .
     
-Definition Tip3Config_ι_root_address_left (x: ULValue Tip3ConfigLRecord): ULValue XAddress :=
+Definition Tip3Config_ι_root_address_left (x: ULValue Tip3ConfigLRecord): ULValue address :=
     {{ {x} ^^ {Tip3Config_ι_root_address} }} : _.
     
 Notation " a '↑' 'Tip3Config.root_address' " := ( Tip3Config_ι_root_address_right a ) (in custom URValue at level 0) : ursus_scope.

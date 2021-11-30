@@ -40,16 +40,16 @@ Definition OrderInfoXchgL : list Type :=
     [ ( XUInteger128 ) : Type ; 
     ( XUInteger128 ) : Type ; 
     ( XUInteger128 ) : Type ; 
-    ( addr_std_fixedLRecord ) : Type ; 
-    ( addr_std_fixedLRecord ) : Type ; 
-    ( addr_std_fixedLRecord ) : Type ; 
+    ( addr_std_fixed ) : Type ; 
+    ( addr_std_fixed ) : Type ; 
+    ( addr_std_fixed ) : Type ; 
     ( XUInteger32 ) : Type ] .
 GeneratePruvendoRecord OrderInfoXchgL OrderInfoXchgFields . 
 
 Definition dealerL : list Type := 
- [ ( XAddress ) : Type ; 
- ( XAddress ) : Type ; 
- ( XAddress (* IFlexNotifyPtrLRecord *) ) : Type ; 
+ [ ( address ) : Type ; 
+ ( address ) : Type ; 
+ ( address (* IFlexNotifyPtrLRecord *) ) : Type ; 
  ( RationalPriceLRecord ) : Type ; 
  ( XUInteger ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
@@ -64,10 +64,10 @@ Definition DPriceXchgL : list Type :=
  [ ( RationalPriceLRecord ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( addr_std_fixedLRecord ) : Type ; 
+ ( addr_std_fixed ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger8 ) : Type ; 
- ( XAddress (* IFlexNotifyPtr *) ) : Type ; 
+ ( address (* IFlexNotifyPtr *) ) : Type ; 
  ( XUInteger8 ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 
@@ -86,12 +86,12 @@ Definition process_retL : list Type :=
 Elpi GeneratePruvendoRecord process_retL process_retFields . 
 
 
-Opaque addr_std_fixedLRecord.
+Opaque addr_std_fixed.
 Definition PayloadArgsL : list Type := 
 [ ( XBool ) : Type ; 
 ( XUInteger128 ) : Type ; 
-( addr_std_fixedLRecord ) : Type ; 
-( addr_std_fixedLRecord ) : Type ] .
+( addr_std_fixed ) : Type ; 
+( addr_std_fixed ) : Type ] .
 Elpi GeneratePruvendoRecord PayloadArgsL PayloadArgsFields . 
 
 End ClassTypes .

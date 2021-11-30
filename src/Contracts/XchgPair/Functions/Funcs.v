@@ -93,7 +93,7 @@ Check  {{ new 'pair_data : DXchgPairLRecord  @ "pair_data" := {};
           {pair_data} := { || [$  0 ⇒ { DXchgPair_ι_tip3_major_root_}  $] || : URValue DXchgPairLRecord false } ; { _ } }} . 
  *)
 
-Definition onDeploy (min_amount: uint128) (deploy_value: uint128) (notify_addr: raw_address) : UExpression boolean true . 
+Definition onDeploy (min_amount: uint128) (deploy_value: uint128) (notify_addr: address) : UExpression boolean true . 
     (* refine {{ new 'min_amount : uint128 @ "min_amount" := {} ;{_} }}.
     refine {{ {min_amount} := #{min_amount0}; {_} }}. *)
     (* refine ( let a := min_amount in {{  new 'min_amount : uint128 @ "min_amount" := #{a} ; {_} }} ). *)
@@ -108,15 +108,15 @@ Definition onDeploy (min_amount: uint128) (deploy_value: uint128) (notify_addr: 
     refine {{ return_ TRUE  }} . 
  Defined . 
  
-Definition getFlexAddr : UExpression raw_address false . 
+Definition getFlexAddr : UExpression address false . 
     refine {{ return_ _flex_addr_  }} . 
 Defined . 
  
-Definition getTip3MajorRoot : UExpression raw_address false . 
+Definition getTip3MajorRoot : UExpression address false . 
     refine {{ return_ _tip3_major_root_  }} . 
 Defined . 
  
-Definition getTip3MinorRoot : UExpression raw_address false . 
+Definition getTip3MinorRoot : UExpression address false . 
     refine {{ return_ _tip3_minor_root_ }} . 
 Defined . 
 
@@ -124,7 +124,7 @@ Definition getMinAmount : UExpression uint128 false .
     refine {{ return_ _min_amount_ }} . 
 Defined . 
  
-Definition getNotifyAddr : UExpression raw_address false . 
+Definition getNotifyAddr : UExpression address false . 
     refine {{ return_ _notify_addr_ }} . 
 Defined . 
  
@@ -132,13 +132,13 @@ Definition _fallback ( msg : TvmCell ) ( msg_body : TvmSlice ) : UExpression uin
  	refine {{ return_ 0 }} . 
 Defined . 
  
-Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
+Definition prepare_persistent_data { Y } (persistent_data_header : PhantomType) (* AL *) 
                                            (base : Y): UExpression TvmCell false .
     refine {{ return_ {} }} .  
 Defined .
 
-Definition prepare_persistent_data_right { X Y a1 a2 }  
-                ( persistent_data_header : URValue X a1 ) 
+Definition prepare_persistent_data_right { Y a1 a2 }  
+                ( persistent_data_header : URValue PhantomType a1 ) 
                 ( base : URValue Y a2 ) : URValue TvmCell (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
  
@@ -148,11 +148,13 @@ Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_
 Definition prepare_xchg_pair_state_init_and_addr ( pair_data : ContractLRecord ) 
                                                  ( pair_code : TvmCell ) : UExpression ( StateInitLRecord # uint256 ) false . 
     refine {{ new 'pair_data_cl : TvmCell @ "pair_data_cl" := prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
+    (*  Unshelve.  *)
     refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := 
                       [ {} , {} , ( #{pair_code} ) -> set () , ( !{pair_data_cl} ) -> set () , {} ] ; { _ } }} . 
     refine {{ new 'pair_init_cl : TvmCell @ "pair_init_cl" := {} ; { _ } }} . 
     refine {{ {pair_init_cl} := {} (* build ( !{pair_init} ) . make_cell ( ) *) ; { _ } }} . 
-    refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} )  ] }} . 
+    refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} )  ] }} .
+    (* Unshelve.  *)
 Defined . 
 
 End FuncsInternal.

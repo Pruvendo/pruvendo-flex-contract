@@ -14,7 +14,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XAddress XUInteger128 XUInteger32 XUInteger256 XCell XBool: Type.
+Variables address XUInteger128 XUInteger32 XUInteger256 XCell XBool: Type.
 
 Inductive VarInitFields      := | VarInit_ι_DPrice | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
@@ -22,30 +22,30 @@ Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | Ini
 Variable InitialState : Type. 
 
 Inductive ITONTokenWalletNotifyP :=
-| IonTip3LendOwnership : XAddress -> XUInteger128 -> XUInteger32 -> XUInteger256 -> XAddress -> XCell -> ITONTokenWalletNotifyP
-| IonTip3Transfer : XAddress -> XUInteger128 -> XUInteger128 -> XUInteger256 -> XAddress -> XCell -> ITONTokenWalletNotifyP.
+| IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> ITONTokenWalletNotifyP
+| IonTip3Transfer : address -> XUInteger128 -> XUInteger128 -> XUInteger256 -> address -> XCell -> ITONTokenWalletNotifyP.
 
 Inductive ITONTokenWalletP :=
-| Itransfer : XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XBool -> ITONTokenWalletP
-| ItransferWithNotify : XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XBool -> XCell -> ITONTokenWalletP
-| ItransferToRecipient : XAddress -> XUInteger256 -> XAddress -> 
+| Itransfer : address -> address -> XUInteger128 -> XUInteger128 -> XBool -> ITONTokenWalletP
+| ItransferWithNotify : address -> address -> XUInteger128 -> XUInteger128 -> XBool -> XCell -> ITONTokenWalletP
+| ItransferToRecipient : address -> XUInteger256 -> address -> 
                          XUInteger128 -> XUInteger128 -> XBool -> XBool -> ITONTokenWalletP
-| ItransferToRecipientWithNotify : XAddress -> XUInteger256 -> XAddress -> 
+| ItransferToRecipientWithNotify : address -> XUInteger256 -> address -> 
                          XUInteger128 -> XUInteger128 -> XBool -> XBool -> XCell -> ITONTokenWalletP
 | IrequestBalance : ITONTokenWalletP
 | Iaccept : ITONTokenWalletP
-| IinternalTransfer : XUInteger128 -> XAddress -> XUInteger256 -> XAddress -> XBool -> XCell -> ITONTokenWalletP
-| Idestroy : XAddress -> ITONTokenWalletP
-| Iburn : XUInteger256 -> XAddress -> ITONTokenWalletP 
-| IlendOwnership : XAddress -> XUInteger128 -> XUInteger256 -> XUInteger128 -> 
+| IinternalTransfer : XUInteger128 -> address -> XUInteger256 -> address -> XBool -> XCell -> ITONTokenWalletP
+| Idestroy : address -> ITONTokenWalletP
+| Iburn : XUInteger256 -> address -> ITONTokenWalletP 
+| IlendOwnership : address -> XUInteger128 -> XUInteger256 -> XUInteger128 -> 
                          XUInteger32 -> XCell -> XCell -> ITONTokenWalletP
 | IreturnOwnership : XUInteger128 -> ITONTokenWalletP
 | IgetDetails : ITONTokenWalletP
 | IgetBalance : ITONTokenWalletP
-| Iapprove : XAddress -> XUInteger128 -> XUInteger128 -> ITONTokenWalletP
-| ItransferFrom : XAddress -> XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> ITONTokenWalletP
-| ItransferFromWithNotify : XAddress -> XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XCell -> ITONTokenWalletP
-| IinternalTransferFrom : XAddress -> XAddress -> XUInteger128 -> XBool -> XCell -> ITONTokenWalletP
+| Iapprove : address -> XUInteger128 -> XUInteger128 -> ITONTokenWalletP
+| ItransferFrom : address -> address -> address -> XUInteger128 -> XUInteger128 -> ITONTokenWalletP
+| ItransferFromWithNotify : address -> address -> address -> XUInteger128 -> XUInteger128 -> XCell -> ITONTokenWalletP
+| IinternalTransferFrom : address -> address -> XUInteger128 -> XBool -> XCell -> ITONTokenWalletP
 | Idisapprove : ITONTokenWalletP
 | _Icreate : InitialState -> ITONTokenWalletP.
 
@@ -67,13 +67,13 @@ GeneratePruvendoRecord InitialStateL InitialStateFields.
 (* Check (InitState_ι_code _). *)
 
 (* Print ITONTokenWalletNotifyP. *)
-Definition ITONTokenWalletNotify : Type := ITONTokenWalletNotifyP XAddress XUInteger128 XUInteger32 XUInteger256 XCell.
+Definition ITONTokenWalletNotify : Type := ITONTokenWalletNotifyP address XUInteger128 XUInteger32 XUInteger256 XCell.
 
 Arguments IonTip3LendOwnership {_} {_} {_} {_} {_}.
 Arguments IonTip3Transfer {_} {_} {_} {_} {_}.
 
 (* Print ITONTokenWalletP. *)
-Definition ITONTokenWallet : Type := ITONTokenWalletP XAddress XUInteger128 XUInteger32 XUInteger256 XCell XBool StateInitLRecord.
+Definition ITONTokenWallet : Type := ITONTokenWalletP address XUInteger128 XUInteger32 XUInteger256 XCell XBool StateInitLRecord.
 
 Arguments ItransferWithNotify  {_} {_} {_} {_} {_} {_} {_}.
 Arguments ItransferToRecipient {_} {_} {_} {_} {_} {_} {_}. 

@@ -117,10 +117,10 @@ Definition ListingConfig_ι_register_return_value_left (x: ULValue ListingConfig
 Notation " a '↑' 'ListingConfig.register_return_value' " := ( ListingConfig_ι_register_return_value_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'ListingConfig.register_return_value' " := ( ListingConfig_ι_register_return_value_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition WrapperListingRequest_ι_client_addr_right {b} (x: URValue WrapperListingRequestLRecord b): URValue XAddress b :=
+Definition WrapperListingRequest_ι_client_addr_right {b} (x: URValue WrapperListingRequestLRecord b): URValue address b :=
     || {x} ^^ {WrapperListingRequest_ι_client_addr} || : _.
     
-Definition WrapperListingRequest_ι_client_addr_left (x: ULValue WrapperListingRequestLRecord): ULValue XAddress :=
+Definition WrapperListingRequest_ι_client_addr_left (x: ULValue WrapperListingRequestLRecord): ULValue address :=
     {{ {x} ^^ {WrapperListingRequest_ι_client_addr} }} : _.
     
 Notation " a '↑' 'WrapperListingRequest.client_addr' " := ( WrapperListingRequest_ι_client_addr_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -162,10 +162,10 @@ Definition WrapperListingRequestWithPubkey_ι_request_left (x: ULValue WrapperLi
 Notation " a '↑' 'WrapperListingRequestWithPubkey.request' " := ( WrapperListingRequestWithPubkey_ι_request_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'WrapperListingRequestWithPubkey.request' " := ( WrapperListingRequestWithPubkey_ι_request_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition TradingPairListingRequest_ι_client_addr_right {b} (x: URValue TradingPairListingRequestLRecord b): URValue XAddress b :=
+Definition TradingPairListingRequest_ι_client_addr_right {b} (x: URValue TradingPairListingRequestLRecord b): URValue address b :=
     || {x} ^^ {TradingPairListingRequest_ι_client_addr} || : _.
     
-Definition TradingPairListingRequest_ι_client_addr_left (x: ULValue TradingPairListingRequestLRecord): ULValue XAddress :=
+Definition TradingPairListingRequest_ι_client_addr_left (x: ULValue TradingPairListingRequestLRecord): ULValue address :=
     {{ {x} ^^ {TradingPairListingRequest_ι_client_addr} }} : _.
     
 Notation " a '↑' 'TradingPairListingRequest.client_addr' " := ( TradingPairListingRequest_ι_client_addr_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -180,10 +180,10 @@ Definition TradingPairListingRequest_ι_client_funds_left (x: ULValue TradingPai
 Notation " a '↑' 'TradingPairListingRequest.client_funds' " := ( TradingPairListingRequest_ι_client_funds_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'TradingPairListingRequest.client_funds' " := ( TradingPairListingRequest_ι_client_funds_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition TradingPairListingRequest_ι_tip3_root_right {b} (x: URValue TradingPairListingRequestLRecord b): URValue XAddress b :=
+Definition TradingPairListingRequest_ι_tip3_root_right {b} (x: URValue TradingPairListingRequestLRecord b): URValue address b :=
     || {x} ^^ {TradingPairListingRequest_ι_tip3_root} || : _.
     
-Definition TradingPairListingRequest_ι_tip3_root_left (x: ULValue TradingPairListingRequestLRecord): ULValue XAddress :=
+Definition TradingPairListingRequest_ι_tip3_root_left (x: ULValue TradingPairListingRequestLRecord): ULValue address :=
     {{ {x} ^^ {TradingPairListingRequest_ι_tip3_root} }} : _.
     
 Notation " a '↑' 'TradingPairListingRequest.tip3_root' " := ( TradingPairListingRequest_ι_tip3_root_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -198,10 +198,10 @@ Definition TradingPairListingRequest_ι_min_amount_left (x: ULValue TradingPairL
 Notation " a '↑' 'TradingPairListingRequest.min_amount' " := ( TradingPairListingRequest_ι_min_amount_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'TradingPairListingRequest.min_amount' " := ( TradingPairListingRequest_ι_min_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition TradingPairListingRequest_ι_notify_addr_right {b} (x: URValue TradingPairListingRequestLRecord b): URValue XAddress b :=
+Definition TradingPairListingRequest_ι_notify_addr_right {b} (x: URValue TradingPairListingRequestLRecord b): URValue address b :=
     || {x} ^^ {TradingPairListingRequest_ι_notify_addr} || : _.
     
-Definition TradingPairListingRequest_ι_notify_addr_left (x: ULValue TradingPairListingRequestLRecord): ULValue XAddress :=
+Definition TradingPairListingRequest_ι_notify_addr_left (x: ULValue TradingPairListingRequestLRecord): ULValue address :=
     {{ {x} ^^ {TradingPairListingRequest_ι_notify_addr} }} : _.
     
 Notation " a '↑' 'TradingPairListingRequest.notify_addr' " := ( TradingPairListingRequest_ι_notify_addr_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -225,10 +225,10 @@ Definition TradingPairListingRequestWithPubkey_ι_request_left (x: ULValue Tradi
 Notation " a '↑' 'TradingPairListingRequestWithPubkey.request' " := ( TradingPairListingRequestWithPubkey_ι_request_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'TradingPairListingRequestWithPubkey.request' " := ( TradingPairListingRequestWithPubkey_ι_request_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition XchgPairListingRequest_ι_client_addr_right {b} (x: URValue XchgPairListingRequestLRecord b): URValue XAddress b :=
+Definition XchgPairListingRequest_ι_client_addr_right {b} (x: URValue XchgPairListingRequestLRecord b): URValue address b :=
     || {x} ^^ {XchgPairListingRequest_ι_client_addr} || : _.
     
-Definition XchgPairListingRequest_ι_client_addr_left (x: ULValue XchgPairListingRequestLRecord): ULValue XAddress :=
+Definition XchgPairListingRequest_ι_client_addr_left (x: ULValue XchgPairListingRequestLRecord): ULValue address :=
     {{ {x} ^^ {XchgPairListingRequest_ι_client_addr} }} : _.
     
 Notation " a '↑' 'XchgPairListingRequest.client_addr' " := ( XchgPairListingRequest_ι_client_addr_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -243,19 +243,19 @@ Definition XchgPairListingRequest_ι_client_funds_left (x: ULValue XchgPairListi
 Notation " a '↑' 'XchgPairListingRequest.client_funds' " := ( XchgPairListingRequest_ι_client_funds_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'XchgPairListingRequest.client_funds' " := ( XchgPairListingRequest_ι_client_funds_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition XchgPairListingRequest_ι_tip3_major_root_right {b} (x: URValue XchgPairListingRequestLRecord b): URValue XAddress b :=
+Definition XchgPairListingRequest_ι_tip3_major_root_right {b} (x: URValue XchgPairListingRequestLRecord b): URValue address b :=
     || {x} ^^ {XchgPairListingRequest_ι_tip3_major_root} || : _.
     
-Definition XchgPairListingRequest_ι_tip3_major_root_left (x: ULValue XchgPairListingRequestLRecord): ULValue XAddress :=
+Definition XchgPairListingRequest_ι_tip3_major_root_left (x: ULValue XchgPairListingRequestLRecord): ULValue address :=
     {{ {x} ^^ {XchgPairListingRequest_ι_tip3_major_root} }} : _.
     
 Notation " a '↑' 'XchgPairListingRequest.tip3_major_root' " := ( XchgPairListingRequest_ι_tip3_major_root_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'XchgPairListingRequest.tip3_major_root' " := ( XchgPairListingRequest_ι_tip3_major_root_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition XchgPairListingRequest_ι_tip3_minor_root_right {b} (x: URValue XchgPairListingRequestLRecord b): URValue XAddress b :=
+Definition XchgPairListingRequest_ι_tip3_minor_root_right {b} (x: URValue XchgPairListingRequestLRecord b): URValue address b :=
     || {x} ^^ {XchgPairListingRequest_ι_tip3_minor_root} || : _.
     
-Definition XchgPairListingRequest_ι_tip3_minor_root_left (x: ULValue XchgPairListingRequestLRecord): ULValue XAddress :=
+Definition XchgPairListingRequest_ι_tip3_minor_root_left (x: ULValue XchgPairListingRequestLRecord): ULValue address :=
     {{ {x} ^^ {XchgPairListingRequest_ι_tip3_minor_root} }} : _.
     
 Notation " a '↑' 'XchgPairListingRequest.tip3_minor_root' " := ( XchgPairListingRequest_ι_tip3_minor_root_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -270,10 +270,10 @@ Definition XchgPairListingRequest_ι_min_amount_left (x: ULValue XchgPairListing
 Notation " a '↑' 'XchgPairListingRequest.min_amount' " := ( XchgPairListingRequest_ι_min_amount_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'XchgPairListingRequest.min_amount' " := ( XchgPairListingRequest_ι_min_amount_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition XchgPairListingRequest_ι_notify_addr_right {b} (x: URValue XchgPairListingRequestLRecord b): URValue XAddress b :=
+Definition XchgPairListingRequest_ι_notify_addr_right {b} (x: URValue XchgPairListingRequestLRecord b): URValue address b :=
     || {x} ^^ {XchgPairListingRequest_ι_notify_addr} || : _.
     
-Definition XchgPairListingRequest_ι_notify_addr_left (x: ULValue XchgPairListingRequestLRecord): ULValue XAddress :=
+Definition XchgPairListingRequest_ι_notify_addr_left (x: ULValue XchgPairListingRequestLRecord): ULValue address :=
     {{ {x} ^^ {XchgPairListingRequest_ι_notify_addr} }} : _.
     
 Notation " a '↑' 'XchgPairListingRequest.notify_addr' " := ( XchgPairListingRequest_ι_notify_addr_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -315,10 +315,10 @@ Definition FlexOwnershipInfo_ι_ownership_description_left (x: ULValue FlexOwner
 Notation " a '↑' 'FlexOwnershipInfo.ownership_description' " := ( FlexOwnershipInfo_ι_ownership_description_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'xxFlexOwnershipInfo.ownership_descriptionx' " := ( FlexOwnershipInfo_ι_ownership_description_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition FlexOwnershipInfo_ι_owner_contract_right {b} (x: URValue FlexOwnershipInfoLRecord b): URValue ( XMaybe XAddress ) b :=
+Definition FlexOwnershipInfo_ι_owner_contract_right {b} (x: URValue FlexOwnershipInfoLRecord b): URValue ( XMaybe address ) b :=
     || {x} ^^ {FlexOwnershipInfo_ι_owner_contract} || : _.
     
-Definition FlexOwnershipInfo_ι_owner_contract_left (x: ULValue FlexOwnershipInfoLRecord): ULValue ( XMaybe XAddress ) :=
+Definition FlexOwnershipInfo_ι_owner_contract_left (x: ULValue FlexOwnershipInfoLRecord): ULValue ( XMaybe address ) :=
     {{ {x} ^^ {FlexOwnershipInfo_ι_owner_contract} }} : _.
     
 Notation " a '↑' 'FlexOwnershipInfo.owner_contract' " := ( FlexOwnershipInfo_ι_owner_contract_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -441,10 +441,10 @@ Definition DFlex_ι_ownership_description__left (x: ULValue DFlexLRecord): ULVal
 Notation " a '↑' 'DFlex.ownership_description_' " := ( DFlex_ι_ownership_description__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex_.ownership_description_' " := ( DFlex_ι_ownership_description__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_owner_address__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe XAddress ) b :=
+Definition DFlex_ι_owner_address__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe address ) b :=
     || {x} ^^ {DFlex_ι_owner_address_} || : _.
     
-Definition DFlex_ι_owner_address__left (x: ULValue DFlexLRecord): ULValue ( XMaybe XAddress ) :=
+Definition DFlex_ι_owner_address__left (x: ULValue DFlexLRecord): ULValue ( XMaybe address ) :=
     {{ {x} ^^ {DFlex_ι_owner_address_} }} : _.
     
 Notation " a '↑' 'DFlex.owner_address_' " := ( DFlex_ι_owner_address__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -569,12 +569,12 @@ Notation " a '↑' 'DFlex.xchg_pair_listing_requests_' " := ( DFlex_ι_xchg_pair
 
 
 (* Inductive IFlexP :=
-| Iconstructor : XUInteger256 -> XString -> XMaybe XAddress -> TonsConfigLRecord -> 
+| Iconstructor : XUInteger256 -> XString -> XMaybe address -> TonsConfigLRecord -> 
                                           XUInteger8 -> ListingConfigLRecord -> IFlexP
 | IsetSpecificCode : XUInteger8 -> XCell -> IFlexP
-| Itransfer : XAddress -> XUInteger128 -> IFlexP
-| IregisterTradingPair : XUInteger256 -> XAddress -> XUInteger128 -> XAddress -> IFlexP
-| IregisterXchgPair : XUInteger256 -> XAddress -> XAddress -> XUInteger128 -> XAddress -> IFlexP
+| Itransfer : address -> XUInteger128 -> IFlexP
+| IregisterTradingPair : XUInteger256 -> address -> XUInteger128 -> address -> IFlexP
+| IregisterXchgPair : XUInteger256 -> address -> address -> XUInteger128 -> address -> IFlexP
 | IregisterWrapper : XUInteger256 -> Tip3ConfigLRecord -> IFlexP
 | IapproveTradingPair : XUInteger256 -> IFlexP
 | IrejectTradingPair : XUInteger256 -> IFlexP
@@ -585,11 +585,11 @@ Notation " a '↑' 'DFlex.xchg_pair_listing_requests_' " := ( DFlex_ι_xchg_pair
 
 | _Icreate : StateInitLRecord -> IFlexP  *)
 
-(* Iconstructor : XUInteger256 -> XString -> XMaybe XAddress -> TonsConfigLRecord -> 
+(* Iconstructor : XUInteger256 -> XString -> XMaybe address -> TonsConfigLRecord -> 
                                           XUInteger8 -> ListingConfigLRecord -> IFlexP *)
 Definition Iconstructor_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XUInteger256 a1 ) 
                                                  (y : URValue XString a2) 
-                                                 (z : URValue (XMaybe XAddress) a3)
+                                                 (z : URValue (XMaybe address) a3)
                                                  (t : URValue TonsConfigLRecord a4)
                                                  (u : URValue XUInteger8 a5)
                                                  (v : URValue ListingConfigLRecord a6) : URValue IFlex (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
@@ -621,8 +621,8 @@ Defined.
 Notation " '.setSpecificCode' ( x , y  ) " := (IsetSpecificCode_right x y) 
 (in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope .
 
-(* Itransfer : XAddress -> XUInteger128 -> IFlexP *)
-Definition Itransfer_right { a1 a2 } (x : URValue XAddress a1 ) 
+(* Itransfer : address -> XUInteger128 -> IFlexP *)
+Definition Itransfer_right { a1 a2 } (x : URValue address a1 ) 
                                      (y : URValue XUInteger128 a2) 
                                         : URValue IFlex (orb a1 a2).
  pose proof (urvalue_bind x (fun x' => 
@@ -634,11 +634,11 @@ Defined.
 Notation " '.transfer' ( x , y  ) " := (Itransfer_right x y) 
 (in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope .
 
-(* | IregisterTradingPair : XUInteger256 -> XAddress -> XUInteger128 -> XAddress -> IFlexP *)
+(* | IregisterTradingPair : XUInteger256 -> address -> XUInteger128 -> address -> IFlexP *)
 Definition IregisterTradingPair_right { a1 a2 a3 a4 }  (x : URValue XUInteger256 a1 ) 
-                                                 (y : URValue XAddress a2) 
+                                                 (y : URValue address a2) 
                                                  (z : URValue XUInteger128 a3)
-                                                 (t : URValue XAddress a4)
+                                                 (t : URValue address a4)
                                                   : URValue IFlex (orb a1 (orb a2 (orb a3 a4))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
@@ -653,12 +653,12 @@ Notation " '.registerTradingPair' ( x , y , z , t ) " := (IregisterTradingPair_r
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 ) : ursus_scope .
 
-(* IregisterXchgPair : XUInteger256 -> XAddress -> XAddress -> XUInteger128 -> XAddress -> IFlexP *)
+(* IregisterXchgPair : XUInteger256 -> address -> address -> XUInteger128 -> address -> IFlexP *)
 Definition IregisterXchgPair_right { a1 a2 a3 a4 a5 }  (x : URValue XUInteger256 a1 ) 
-                                                 (y : URValue XAddress a2) 
-                                                 (z : URValue XAddress a3)
+                                                 (y : URValue address a2) 
+                                                 (z : URValue address a3)
                                                  (t : URValue XUInteger128 a4)
-                                                 (u : URValue XAddress a5) : 
+                                                 (u : URValue address a5) : 
                                                  URValue IFlex (orb a1 (orb a2 (orb a3 (orb a4 a5)))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
@@ -761,10 +761,10 @@ Defined.
 Notation " 'Flex.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
 
 
-(*  | IonWrapperApproved : XUInteger256 -> XAddress -> IListingAnswerP *)
+(*  | IonWrapperApproved : XUInteger256 -> address -> IListingAnswerP *)
 
 Definition IonWrapperApproved_right { a1 a2 } (x : URValue XUInteger256 a1 ) 
-                                  (y : URValue XAddress a2) 
+                                  (y : URValue address a2) 
                                     : URValue IListingAnswer (orb a1 a2).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>  #(IonWrapperApproved x' y' : IListingAnswer))): URValue _ _).
@@ -789,10 +789,10 @@ Notation " '.onWrapperRejected' ( x ) " := (IonWrapperRejected_right x )
 (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope . 
 
 
-(*  | IonTradingPairApproved : XUInteger256 -> XAddress -> IListingAnswerP *)
+(*  | IonTradingPairApproved : XUInteger256 -> address -> IListingAnswerP *)
 
 Definition IonTradingPairApproved_right { a1 a2 } (x : URValue XUInteger256 a1 ) 
-                                  (y : URValue XAddress a2) 
+                                  (y : URValue address a2) 
                                     : URValue IListingAnswer (orb a1 a2).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>  #(IonTradingPairApproved x' y' : IListingAnswer))): URValue _ _).
@@ -816,10 +816,10 @@ Defined.
 Notation " '.onTradingPairRejected' ( x ) " := (IonTradingPairRejected_right x ) 
 (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope . 
 
-(*  | IonXchgPairApproved : XUInteger256 -> XAddress -> IListingAnswerP *)
+(*  | IonXchgPairApproved : XUInteger256 -> address -> IListingAnswerP *)
 
 Definition IonXchgPairApproved_right { a1 a2 } (x : URValue XUInteger256 a1 ) 
-                                  (y : URValue XAddress a2) 
+                                  (y : URValue address a2) 
                                     : URValue IListingAnswer (orb a1 a2).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>  #(IonXchgPairApproved x' y' : IListingAnswer))): URValue _ _).
@@ -841,9 +841,9 @@ Defined.
 Notation " '.onXchgPairRejected' ( x ) " := (IonXchgPairRejected_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
 
 (*Inductive IFlexNotifyP := *)
-(* | IonDealCompleted : XAddress -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+(* | IonDealCompleted : address -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
 
-Definition IonDealCompleted_right { a1 a2 a3 } (x : URValue XAddress a1 ) 
+Definition IonDealCompleted_right { a1 a2 a3 } (x : URValue address a1 ) 
                                                (y : URValue XUInteger128 a2) 
                                                (z : URValue XUInteger128 a3)
                                                  : URValue IFlexNotify (orb a1 (orb a2 a3)).
@@ -858,10 +858,10 @@ Notation " '.onDealCompleted' ( x , y , z  ) " := (IonDealCompleted_right x y z)
 (in custom URValue at level 0 , x custom URValue at level 0,
  y custom URValue at level 0 , z custom URValue at level 0) : ursus_scope .
 
-(* | IonXchgDealCompleted: XAddress -> XAddress ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+(* | IonXchgDealCompleted: address -> address ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
 
-Definition IonXchgDealCompleted_right { a1 a2 a3 a4 a5 } (x : URValue XAddress a1 ) 
-                                                 (y : URValue XAddress a2) 
+Definition IonXchgDealCompleted_right { a1 a2 a3 a4 a5 } (x : URValue address a1 ) 
+                                                 (y : URValue address a2) 
                                                  (z : URValue XUInteger128 a3)
                                                  (t : URValue XUInteger128 a4)
                                                  (u : URValue XUInteger128 a5) : 
@@ -881,11 +881,11 @@ Notation " '.onXchgDealCompleted' ( x , y , z , t , u  ) " := (IonXchgDealComple
  t custom URValue at level 0 , u custom URValue at level 0 ) : ursus_scope .
 
 
-(* | IonOrderAdded : XBool -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+(* | IonOrderAdded : XBool -> address -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
 
 Definition IonOrderAdded_right { a1 a2 a3 a4 a5 }  (x : URValue XBool a1 ) 
-                                                 (y : URValue XAddress a2) 
-                                                 (z : URValue XAddress a3)
+                                                 (y : URValue address a2) 
+                                                 (z : URValue XUInteger128 a3)
                                                  (t : URValue XUInteger128 a4)
                                                  (u : URValue XUInteger128 a5) : 
                                                  URValue IFlexNotify (orb a1 (orb a2 (orb a3 (orb a4 a5)))).
@@ -903,11 +903,11 @@ Notation " '.onOrderAdded' ( x , y , z , t , u  ) " := (IonOrderAdded_right x y 
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 , u custom URValue at level 0 ) : ursus_scope .
 
-(* | IonOrderCanceled : XBool -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+(* | IonOrderCanceled : XBool -> address -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
 
 Definition IonOrderCanceled_right { a1 a2 a3 a4 a5 }  (x : URValue XBool a1 ) 
-                                                 (y : URValue XAddress a2) 
-                                                 (z : URValue XAddress a3)
+                                                 (y : URValue address a2) 
+                                                 (z : URValue XUInteger128 a3)
                                                  (t : URValue XUInteger128 a4)
                                                  (u : URValue XUInteger128 a5) : 
                                                  URValue IFlexNotify (orb a1 (orb a2 (orb a3 (orb a4 a5)))).
@@ -926,11 +926,11 @@ Notation " '.onOrderCanceled' ( x , y , z , t , u  ) " := (IonOrderCanceled_righ
  t custom URValue at level 0 , u custom URValue at level 0 ) : ursus_scope .
 
 
-(* | IonXchgOrderAdded : XBool -> XAddress -> XAddress ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+(* | IonXchgOrderAdded : XBool -> address -> address ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
 
 Definition IonXchgOrderAdded_right { a1 a2 a3 a4 a5 a6 a7}  (x : URValue XBool a1 ) 
-                                                 (y : URValue XAddress a2) 
-                                                 (z : URValue XAddress a3)
+                                                 (y : URValue address a2) 
+                                                 (z : URValue address a3)
                                                  (t : URValue XUInteger128 a4)
                                                  (u : URValue XUInteger128 a5)
                                                  (v : URValue XUInteger128 a6)
@@ -953,10 +953,10 @@ Notation " '.onXchgOrderAdded' ( x , y , z , t , u , v , w ) " := (IonXchgOrderA
  t custom URValue at level 0 , u custom URValue at level 0, 
  v custom URValue at level 0, w custom URValue at level 0 ) : ursus_scope .
 
-(* | IonXchgOrderCanceled : XBool -> XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
+(* | IonXchgOrderCanceled : XBool -> address -> address -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP *)
 Definition IonXchgOrderCanceled_right { a1 a2 a3 a4 a5 a6 a7}  (x : URValue XBool a1 ) 
-                                                 (y : URValue XAddress a2) 
-                                                 (z : URValue XAddress a3)
+                                                 (y : URValue address a2) 
+                                                 (z : URValue address a3)
                                                  (t : URValue XUInteger128 a4)
                                                  (u : URValue XUInteger128 a5)
                                                  (v : URValue XUInteger128 a6)

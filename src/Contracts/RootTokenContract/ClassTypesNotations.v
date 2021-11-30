@@ -81,10 +81,10 @@ Definition DRootTokenContract_ι_wallet_code__left (x: ULValue DRootTokenContrac
 Notation " a '↑' 'DRootTokenContract.wallet_code_' " := ( DRootTokenContract_ι_wallet_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DRootTokenContract.wallet_code_' " := ( DRootTokenContract_ι_wallet_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_owner_address__right {b} (x: URValue DRootTokenContractLRecord b): URValue ( XMaybe XAddress ) b :=
+Definition DRootTokenContract_ι_owner_address__right {b} (x: URValue DRootTokenContractLRecord b): URValue ( XMaybe address ) b :=
     || {x} ^^ {DRootTokenContract_ι_owner_address_} || : _.
     
-Definition DRootTokenContract_ι_owner_address__left (x: ULValue DRootTokenContractLRecord): ULValue ( XMaybe XAddress ) :=
+Definition DRootTokenContract_ι_owner_address__left (x: ULValue DRootTokenContractLRecord): ULValue ( XMaybe address ) :=
     {{ {x} ^^ {DRootTokenContract_ι_owner_address_} }} : _.
     
 Notation " a '↑' 'DRootTokenContract_ι_owner_address_' " := ( DRootTokenContract_ι_owner_address__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -111,10 +111,10 @@ Notation " 'RootTokenWallet.deploy' ( x ) " := (_Icreate_right x) (in custom URV
  
 
 (* Inductive IRootTokenContractP :=
-6 | Iconstructor : XString -> XString -> XUInteger8 -> XUInteger256 -> XAddress -> XUInteger128 -> IRootTokenContractP
-4 | IdeployWallet : XUInteger256 -> XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
-3 | IdeployEmptyWallet : XUInteger256 -> XAddress -> XUInteger128 -> IRootTokenContractP
-3 | Igrant : XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
+6 | Iconstructor : XString -> XString -> XUInteger8 -> XUInteger256 -> address -> XUInteger128 -> IRootTokenContractP
+4 | IdeployWallet : XUInteger256 -> address -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
+3 | IdeployEmptyWallet : XUInteger256 -> address -> XUInteger128 -> IRootTokenContractP
+3 | Igrant : address -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
 1 | Imint : XUInteger128 -> IRootTokenContractP
 0 | IrequestTotalGranted : IRootTokenContractP *)
 
@@ -122,7 +122,7 @@ Definition Iconstructor_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XString a1 )
                                                  (y : URValue XString a2) 
                                                  (z : URValue XUInteger8 a3)
                                                  (t : URValue XUInteger256 a4)
-                                                 (u : URValue XAddress a5)
+                                                 (u : URValue address a5)
                                                  (v : URValue XUInteger128 a6) : URValue IRootTokenContract (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
@@ -139,9 +139,9 @@ Notation " '.constructor' ( x , y , z , t , u , v ) " := (Iconstructor_right x y
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
 
-(* | IdeployWallet : XUInteger256 -> XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP *)
+(* | IdeployWallet : XUInteger256 -> address -> XUInteger128 -> XUInteger128 -> IRootTokenContractP *)
 Definition IdeployWallet_right { a1 a2 a3 a4 }  (x : URValue XUInteger256 a1 ) 
-                                                 (y : URValue XAddress a2) 
+                                                 (y : URValue address a2) 
                                                  (z : URValue XUInteger128 a3)
                                                  (t : URValue XUInteger128 a4)
                                                   : URValue IRootTokenContract (orb a1 (orb a2 (orb a3 a4))).
@@ -158,9 +158,9 @@ Notation " '.deployWallet' ( x , y , z , t ) " := (IdeployWallet_right x y z t)
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 ) : ursus_scope .
 
-(* IdeployEmptyWallet : XUInteger256 -> XAddress -> XUInteger128 -> IRootTokenContractP *)
+(* IdeployEmptyWallet : XUInteger256 -> address -> XUInteger128 -> IRootTokenContractP *)
 Definition IdeployEmptyWallet_right { a1 a2 a3 } (x : URValue XUInteger256 a1 ) 
-                                                 (y : URValue XAddress a2) 
+                                                 (y : URValue address a2) 
                                                  (z : URValue XUInteger128 a3)
                                                  : URValue IRootTokenContract (orb a1 (orb a2 a3)).
  pose proof (urvalue_bind x (fun x' => 
@@ -174,8 +174,8 @@ Notation " '.deployEmptyWallet' ( x , y , z  ) " := (IdeployEmptyWallet_right x 
 (in custom URValue at level 0 , x custom URValue at level 0,
  y custom URValue at level 0 , z custom URValue at level 0) : ursus_scope .
 
-(* Igrant : XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP *)
-Definition Igrant_right { a1 a2 a3 } (x : URValue XAddress a1 ) 
+(* Igrant : address -> XUInteger128 -> XUInteger128 -> IRootTokenContractP *)
+Definition Igrant_right { a1 a2 a3 } (x : URValue address a1 ) 
                                      (y : URValue XUInteger128 a2) 
                                      (z : URValue XUInteger128 a3)
                                     : URValue IRootTokenContract (orb a1 (orb a2 a3)).

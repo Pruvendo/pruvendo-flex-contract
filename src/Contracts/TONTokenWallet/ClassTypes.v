@@ -37,7 +37,7 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 Definition allowance_infoL : list Type := 
- [ ( XAddress ) : Type ; 
+ [ ( address ) : Type ; 
    ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord allowance_infoL allowance_infoFields . 
 
@@ -55,16 +55,16 @@ Definition DTONTokenWalletL : list Type :=
 ( XUInteger128 ) : Type ; 
 ( XUInteger256 ) : Type ; 
 ( XUInteger256 ) : Type ; 
-( XAddress ) : Type ; 
-( ( XMaybe XAddress ) ) : Type ; 
-(XHMap addr_std_fixedLRecord lend_recordLRecord) : Type;
+( address ) : Type ; 
+( ( XMaybe address ) ) : Type ; 
+(XHMap addr_std_fixed lend_recordLRecord) : Type;
 ( XCell ) : Type ; 
 ( ( XMaybe allowance_infoLRecord ) ) : Type ; 
 ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletL DTONTokenWalletFields . 
 
 Definition lend_array_recordL : list Type := 
- [ ( XAddress ) : Type ; 
+ [ ( address ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger32 ) : Type ] .
 Elpi GeneratePruvendoRecord lend_array_recordL lend_array_recordFields . 
@@ -76,8 +76,8 @@ Definition details_infoL : list Type :=
     ( XUInteger128 ) : Type ; 
     ( XUInteger256 ) : Type ; 
     ( XUInteger256 ) : Type ; 
-    ( XAddress ) : Type ; 
-    ( XAddress ) : Type ; 
+    ( address ) : Type ; 
+    ( address ) : Type ; 
     ( ( XHMap XUInteger lend_array_recordLRecord ) ) : Type ; 
     ( XUInteger128 ) : Type ; 
     ( XCell ) : Type ; 
@@ -92,8 +92,8 @@ Definition DTONTokenWalletExternalL : list Type :=
 ( XUInteger128 ) : Type ; 
 ( XUInteger256 ) : Type ; 
 ( XUInteger256 ) : Type ; 
-( XAddress ) : Type ; 
-( ( XMaybe XAddress ) ) : Type ; 
+( address ) : Type ; 
+( ( XMaybe address ) ) : Type ; 
 ( XCell ) : Type ; 
 ( ( XMaybe allowance_infoLRecord ) ) : Type ; 
 ( XUInteger8 ) : Type ] .
@@ -106,9 +106,9 @@ Definition DTONTokenWalletInternalL : list Type :=
 ( XUInteger128 ) : Type ; 
 ( XUInteger256 ) : Type ; 
 ( XUInteger256 ) : Type ; 
-( XAddress ) : Type ; 
-( ( XMaybe XAddress ) ) : Type ; 
-( ( XHMap addr_std_fixedLRecord lend_recordLRecord ) ) : Type ;
+( address ) : Type ; 
+( ( XMaybe address ) ) : Type ; 
+( ( XHMap addr_std_fixed lend_recordLRecord ) ) : Type ;
 ( XCell ) : Type ; 
 ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 

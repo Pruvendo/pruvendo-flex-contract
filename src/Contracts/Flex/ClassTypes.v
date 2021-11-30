@@ -59,7 +59,7 @@ Elpi GeneratePruvendoRecord ListingConfigL ListingConfigFields .
 
 Opaque Tip3ConfigLRecord.
 (* 2 *) Definition WrapperListingRequestL : list Type := 
- [ ( XAddress ) : Type ; 
+ [ ( address ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( Tip3ConfigLRecord ) : Type ] .
 Elpi GeneratePruvendoRecord WrapperListingRequestL WrapperListingRequestFields . 
@@ -71,11 +71,11 @@ Opaque WrapperListingRequestLRecord.
 Elpi GeneratePruvendoRecord WrapperListingRequestWithPubkeyL WrapperListingRequestWithPubkeyFields . 
 
 (* 4 *) Definition TradingPairListingRequestL : list Type := 
- [ ( XAddress ) : Type ; 
+ [ ( address ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( XAddress ) : Type ; 
+ ( address ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( XAddress ) : Type ] .
+ ( address ) : Type ] .
 Elpi GeneratePruvendoRecord TradingPairListingRequestL TradingPairListingRequestFields .  
 
 Opaque TradingPairListingRequestLRecord.
@@ -85,12 +85,12 @@ Opaque TradingPairListingRequestLRecord.
 Elpi GeneratePruvendoRecord TradingPairListingRequestWithPubkeyL TradingPairListingRequestWithPubkeyFields . 
  
 (* 6 *) Definition XchgPairListingRequestL : list Type := 
- [ ( XAddress ) : Type ; 
+ [ ( address ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( XAddress ) : Type ; 
- ( XAddress ) : Type ; 
+ ( address ) : Type ; 
+ ( address ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( XAddress ) : Type ] .
+ ( address ) : Type ] .
 Elpi GeneratePruvendoRecord XchgPairListingRequestL XchgPairListingRequestFields . 
 
 Opaque  XchgPairListingRequestLRecord.
@@ -102,7 +102,7 @@ Elpi GeneratePruvendoRecord XchgPairListingRequestWithPubkeyL XchgPairListingReq
 (* 8 *) Definition FlexOwnershipInfoL : list Type := 
  [ ( XUInteger256 ) : Type ; 
  ( XString ) : Type ; 
- ( ( XMaybe XAddress ) ) : Type ] .
+ ( ( XMaybe address ) ) : Type ] .
 Elpi GeneratePruvendoRecord FlexOwnershipInfoL FlexOwnershipInfoFields . 
 
 (* 9 *) Definition FlexDetailsL : list Type := 
@@ -122,7 +122,7 @@ Elpi GeneratePruvendoRecord FlexDetailsL FlexDetailsFields .
  [ ( XUInteger256 ) : Type ; 
  ( XUInteger8 ) : Type ; 
  ( XString ) : Type ; 
- ( ( XMaybe XAddress ) ) : Type ; 
+ ( ( XMaybe address ) ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( ListingConfigLRecord ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 

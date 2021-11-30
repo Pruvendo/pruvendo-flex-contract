@@ -13,7 +13,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XAddress XUInteger128  XUInteger256   XCell: Type.
+Variables address XUInteger128  XUInteger256   XCell: Type.
 
 Inductive VarInitFields      := | VarInit_ι_DWrapper | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
@@ -21,17 +21,17 @@ Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | Ini
 Variable InitialState : Type.
 
 Inductive IWrapperP :=
-    | Iinit : XAddress -> IWrapperP
+    | Iinit : address -> IWrapperP
     | IsetInternalWalletCode : XCell -> IWrapperP
-    | IdeployEmptyWallet : XUInteger256 -> XAddress -> XUInteger128 -> IWrapperP
-    | IonTip3Transfer : XAddress -> XUInteger128 -> XUInteger128 -> XUInteger256 -> 
-                                                XAddress -> XCell -> IWrapperP
-    | Iburn : XAddress -> XUInteger256 -> XAddress -> XUInteger256 -> 
-                                                XAddress -> XUInteger128 -> IWrapperP
+    | IdeployEmptyWallet : XUInteger256 -> address -> XUInteger128 -> IWrapperP
+    | IonTip3Transfer : address -> XUInteger128 -> XUInteger128 -> XUInteger256 -> 
+                                                address -> XCell -> IWrapperP
+    | Iburn : address -> XUInteger256 -> address -> XUInteger256 -> 
+                                                address -> XUInteger128 -> IWrapperP
     | IrequestTotalGranted : IWrapperP
     | IgetDetails : IWrapperP
     | IhasInternalWalletCode : IWrapperP
-    | IgetWalletAddress : XUInteger256 -> XAddress -> IWrapperP
+    | IgetWalletAddress : XUInteger256 -> address -> IWrapperP
     | _Icreate : InitialState -> IWrapperP.
 
 End InterfaceDef.
@@ -50,7 +50,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IWrapperP. *)
-Definition IWrapper: Type := IWrapperP XAddress XUInteger128 XUInteger256 XCell StateInitLRecord.
+Definition IWrapper: Type := IWrapperP address XUInteger128 XUInteger256 XCell StateInitLRecord.
 
 
 Arguments Iinit {_} {_} {_} {_} {_}.

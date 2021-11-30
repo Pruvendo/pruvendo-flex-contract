@@ -13,7 +13,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XUInteger128 XAddress: Type.
+Variables XUInteger128 address: Type.
 
 Inductive VarInitFields      := | VarInit_ι_DTradingPair | VarInit_ι_pubkey. (* = DFlex *)
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
@@ -21,7 +21,7 @@ Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | Ini
 Variable InitialState : Type.
 
 Inductive ITradingPairP :=
-    | IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> ITradingPairP
+    | IonDeploy : XUInteger128 -> XUInteger128 -> address -> ITradingPairP
     | IgetFlexAddr : ITradingPairP
     | IgetTip3Root : ITradingPairP
     | IgetMinAmount : ITradingPairP
@@ -44,7 +44,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print PublicInterfaceP. *)
-Definition ITradingPair : Type := ITradingPairP XUInteger128 XAddress StateInitLRecord.
+Definition ITradingPair : Type := ITradingPairP XUInteger128 address StateInitLRecord.
 
 (* Print Iconstructor. *)
 Arguments IonDeploy {_} {_} {_}.

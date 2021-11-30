@@ -14,7 +14,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XAddress TonsConfigLRecord XUInteger8 StateInitLRecord
+Variables address TonsConfigLRecord XUInteger8 StateInitLRecord
            XCell XUInteger256 XUInteger128 XBool XString ListingConfigLRecord Tip3ConfigLRecord : Type.
 Variable XMaybe : Type -> Type .
 
@@ -22,12 +22,12 @@ Inductive VarInitFields      := | VarInit_ι_DFlex | VarInit_ι_pubkey.
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance (*debug*).
 
 Inductive IFlexP :=
-| Iconstructor : XUInteger256 -> XString -> XMaybe XAddress -> TonsConfigLRecord -> 
+| Iconstructor : XUInteger256 -> XString -> XMaybe address -> TonsConfigLRecord -> 
                                           XUInteger8 -> ListingConfigLRecord -> IFlexP
 | IsetSpecificCode : XUInteger8 -> XCell -> IFlexP
-| Itransfer : XAddress -> XUInteger128 -> IFlexP
-| IregisterTradingPair : XUInteger256 -> XAddress -> XUInteger128 -> XAddress -> IFlexP
-| IregisterXchgPair : XUInteger256 -> XAddress -> XAddress -> XUInteger128 -> XAddress -> IFlexP
+| Itransfer : address -> XUInteger128 -> IFlexP
+| IregisterTradingPair : XUInteger256 -> address -> XUInteger128 -> address -> IFlexP
+| IregisterXchgPair : XUInteger256 -> address -> address -> XUInteger128 -> address -> IFlexP
 | IregisterWrapper : XUInteger256 -> Tip3ConfigLRecord -> IFlexP
 | IapproveTradingPair : XUInteger256 -> IFlexP
 | IrejectTradingPair : XUInteger256 -> IFlexP
@@ -37,28 +37,28 @@ Inductive IFlexP :=
 | IrejectWrapper : XUInteger256 -> IFlexP
 | IisFullyInitialized : IFlexP
 | IgetDetails : IFlexP
-| IgetSellPriceCode : XAddress -> IFlexP
-| IgetXchgPriceCode : XAddress -> XAddress ->  IFlexP
-| IgetSellTradingPair : XAddress -> IFlexP
-| IgetXchgTradingPair : XAddress -> XAddress -> IFlexP
+| IgetSellPriceCode : address -> IFlexP
+| IgetXchgPriceCode : address -> address ->  IFlexP
+| IgetSellTradingPair : address -> IFlexP
+| IgetXchgTradingPair : address -> address -> IFlexP
 | _Icreate : StateInitLRecord -> IFlexP
 (* | _Itransfer : PublicInterfaceP  *).
 
 Inductive IListingAnswerP :=
-  | IonWrapperApproved : XUInteger256 -> XAddress -> IListingAnswerP
+  | IonWrapperApproved : XUInteger256 -> address -> IListingAnswerP
   | IonWrapperRejected : XUInteger256 -> IListingAnswerP
-  | IonTradingPairApproved : XUInteger256 -> XAddress -> IListingAnswerP
+  | IonTradingPairApproved : XUInteger256 -> address -> IListingAnswerP
   | IonTradingPairRejected : XUInteger256 -> IListingAnswerP
-  | IonXchgPairApproved : XUInteger256 -> XAddress -> IListingAnswerP
+  | IonXchgPairApproved : XUInteger256 -> address -> IListingAnswerP
   | IonXchgPairRejected : XUInteger256 -> IListingAnswerP.
 
 Inductive IFlexNotifyP := 
-| IonDealCompleted : XAddress -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
-| IonXchgDealCompleted: XAddress -> XAddress ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
-| IonOrderAdded : XBool -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
-| IonOrderCanceled : XBool -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
-| IonXchgOrderAdded : XBool -> XAddress -> XAddress ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
-| IonXchgOrderCanceled : XBool -> XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP  .
+| IonDealCompleted : address -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
+| IonXchgDealCompleted: address -> address ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
+| IonOrderAdded : XBool -> address -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
+| IonOrderCanceled : XBool -> address -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
+| IonXchgOrderAdded : XBool -> address -> address ->  XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP
+| IonXchgOrderCanceled : XBool -> address -> address -> XUInteger128 -> XUInteger128 -> XUInteger128 -> XUInteger128 -> IFlexNotifyP  .
 
 End InterfaceDef.
 
@@ -77,7 +77,7 @@ Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IFlexP. *)
-Definition IFlex : Type := IFlexP XAddress TonsConfigLRecord XUInteger8 StateInitLRecord XCell XUInteger256
+Definition IFlex : Type := IFlexP address TonsConfigLRecord XUInteger8 StateInitLRecord XCell XUInteger256
      XUInteger128 XString ListingConfigLRecord Tip3ConfigLRecord XMaybe  .
 
 (* __interface IFlex *)
@@ -105,7 +105,7 @@ Arguments _Icreate {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_}.
 (* Check   IregisterXchgPair. *)
 
 (* Print IListingAnswerP. *)
-Definition IListingAnswer := IListingAnswerP XAddress XUInteger256.
+Definition IListingAnswer := IListingAnswerP address XUInteger256.
 Arguments IonWrapperApproved {_} {_} .
 Arguments IonWrapperRejected {_} {_}.
 Arguments IonTradingPairApproved {_} {_}.
@@ -117,7 +117,7 @@ Arguments IonXchgPairRejected {_} {_}.
 
 (* __interface IFlexNotify *)
 Print IFlexNotifyP.
-Definition IFlexNotify := IFlexNotifyP XAddress XUInteger128 XBool.
+Definition IFlexNotify := IFlexNotifyP address XUInteger128 XBool.
 Arguments IonDealCompleted {_} {_} {_} .
 Arguments IonXchgDealCompleted {_} {_} {_} .
 Arguments IonOrderAdded {_} {_} {_} .

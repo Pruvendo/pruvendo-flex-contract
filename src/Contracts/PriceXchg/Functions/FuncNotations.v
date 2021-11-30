@@ -66,8 +66,8 @@ Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPr
  Notation " '_buys_amount_' " := ( buys_amount__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_buys_amount_' " := ( buys_amount__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition flex__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPriceXchg_ι_flex_ ) : ULValue addr_std_fixedLRecord ) . 
- Definition flex__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPriceXchg_ι_flex_ ) : URValue addr_std_fixedLRecord false ) . 
+ Definition flex__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPriceXchg_ι_flex_ ) : ULValue addr_std_fixed ) . 
+ Definition flex__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPriceXchg_ι_flex_ ) : URValue addr_std_fixed false ) . 
  Notation " '_flex_' " := ( flex__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_' " := ( flex__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -81,8 +81,8 @@ Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPr
  Notation " '_deals_limit_' " := ( deals_limit__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_deals_limit_' " := ( deals_limit__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPriceXchg_ι_notify_addr_ ) : ULValue XAddress (* IFlexNotifyPtrLRecord *) ) . 
- Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPriceXchg_ι_notify_addr_ ) : URValue XAddress (* IFlexNotifyPtrLRecord *) false ) . 
+ Definition notify_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPriceXchg_ι_notify_addr_ ) : ULValue address (* IFlexNotifyPtrLRecord *) ) . 
+ Definition notify_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DPriceXchg_ι_notify_addr_ ) : URValue address (* IFlexNotifyPtrLRecord *) false ) . 
  Notation " '_notify_addr_' " := ( notify_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_notify_addr_' " := ( notify_addr__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -187,7 +187,7 @@ false :=
  sell_idx buy_idx ) 
  (in custom ULValue at level 0 , sell_idx custom URValue at level 0 
  , buy_idx custom URValue at level 0 ) : ursus_scope . 
- Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( XAddress ) a1 ) ( balance : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( pubkey : URValue ( uint256 ) a4 ) ( internal_owner : URValue ( XAddress ) a5 ) ( payload : URValue ( XCell ) a6 ) : URValue OrderRetLRecord true := 
+ Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( address ) a1 ) ( balance : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( pubkey : URValue ( uint256 ) a4 ) ( internal_owner : URValue ( address ) a5 ) ( payload : URValue ( XCell ) a6 ) : URValue OrderRetLRecord true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) onTip3LendOwnership 
  answer_addr balance lend_finish_time pubkey internal_owner payload ) . 
  
@@ -328,7 +328,7 @@ false :=
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition verify_tip3_addr_right { a1 a2 a3 a4 }  ( cfg : URValue ( Tip3ConfigLRecord ) a1 ) ( tip3_wallet : URValue ( XAddress ) a2 ) ( wallet_pubkey : URValue ( uint256 ) a3 ) ( internal_owner : URValue ( uint256 ) a4 ) : URValue XBool ( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
+ Definition verify_tip3_addr_right { a1 a2 a3 a4 }  ( cfg : URValue ( Tip3ConfigLRecord ) a1 ) ( tip3_wallet : URValue ( address ) a2 ) ( wallet_pubkey : URValue ( uint256 ) a3 ) ( internal_owner : URValue ( uint256 ) a4 ) : URValue XBool ( orb ( orb ( orb a4 a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) verify_tip3_addr 
  cfg tip3_wallet wallet_pubkey internal_owner ) . 
  
@@ -351,7 +351,7 @@ false :=
  , wallet_pubkey custom URValue at level 0 
  , internal_owner custom URValue at level 0 ) : ursus_scope .
 
- Definition on_ord_fail_right { a1 a2 a3 }  ( ec : URValue ( uint ) a1 ) ( wallet_in : URValue ( XAddress (* ITONTokenWalletPtrLRecord *) ) a2 ) ( amount : URValue ( uint128 ) a3 ) : URValue OrderRetLRecord ( orb ( orb a3 a2 ) a1 ) := 
+ Definition on_ord_fail_right { a1 a2 a3 }  ( ec : URValue ( uint ) a1 ) ( wallet_in : URValue ( address (* ITONTokenWalletPtrLRecord *) ) a2 ) ( amount : URValue ( uint128 ) a3 ) : URValue OrderRetLRecord ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) on_ord_fail 
  ec wallet_in amount ) . 
  
@@ -392,9 +392,9 @@ false :=
  , price custom URValue at level 0 ) : ursus_scope . 
 
  Definition process_queue_impl_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 }  
-( tip3root_sell : URValue ( XAddress ) a1 ) 
-( tip3root_buy : URValue ( XAddress ) a2 ) 
-( notify_addr : URValue ( XAddress (* IFlexNotifyPtrLRecord *) ) a3 ) 
+( tip3root_sell : URValue ( address ) a1 ) 
+( tip3root_buy : URValue ( address ) a2 ) 
+( notify_addr : URValue ( address (* IFlexNotifyPtrLRecord *) ) a3 ) 
 ( price : URValue ( RationalPriceLRecord ) a4 ) 
 ( deals_limit : URValue ( uint8 ) a5 ) 
 ( tons_cfg : URValue ( TonsConfigLRecord ) a6 ) 
@@ -428,7 +428,7 @@ false :=
 
  Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
 ( orders : URValue ( XQueue OrderInfoXchgLRecord ) a1 ) 
-( client_addr : URValue ( addr_std_fixedLRecord ) a2 ) 
+( client_addr : URValue ( addr_std_fixed ) a2 ) 
 ( all_amount : URValue ( uint128 ) a3 ) 
 ( sell : URValue ( XBool ) a4 ) 
 ( return_ownership : URValue ( uint (* Grams *) ) a5 ) 
@@ -450,7 +450,7 @@ false :=
  , process_queue custom URValue at level 0 
  , incoming_val custom URValue at level 0 ) : ursus_scope .
  
- Definition int_sender_and_value_right  : URValue ( XAddress # uint (* Grams *) ) false := 
+ Definition int_sender_and_value_right  : URValue ( address # uint (* Grams *) ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) int_sender_and_value 
  ) . 
  

@@ -27,10 +27,10 @@ Definition WrapperRet_ι_err_code_left (x: ULValue WrapperRetLRecord): ULValue X
 Notation " a '↑' 'WrapperRet.err_code' " := ( WrapperRet_ι_err_code_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'WrapperRet.err_code' " := ( WrapperRet_ι_err_code_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition WrapperRet_ι_flex_wallet_right {b} (x: URValue WrapperRetLRecord b): URValue XAddress b :=
+Definition WrapperRet_ι_flex_wallet_right {b} (x: URValue WrapperRetLRecord b): URValue address b :=
     || {x} ^^ {WrapperRet_ι_flex_wallet} || : _ .
     
-Definition WrapperRet_ι_flex_wallet_left (x: ULValue WrapperRetLRecord): ULValue XAddress :=
+Definition WrapperRet_ι_flex_wallet_left (x: ULValue WrapperRetLRecord): ULValue address :=
     {{ {x} ^^ {WrapperRet_ι_flex_wallet} }} : _.
     
 Notation " a '↑' 'WrapperRet.flex_wallet' " := ( WrapperRet_ι_flex_wallet_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -45,10 +45,10 @@ Definition FlexDeployWalletArgs_ι_pubkey_left (x: ULValue FlexDeployWalletArgsL
 Notation " a '↑' 'FlexDeployWalletArgs.pubkey' " := ( FlexDeployWalletArgs_ι_pubkey_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'FlexDeployWalletArgs.pubkey' " := ( FlexDeployWalletArgs_ι_pubkey_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition FlexDeployWalletArgs_ι_internal_owner_right {b} (x: URValue FlexDeployWalletArgsLRecord b): URValue XAddress b :=
+Definition FlexDeployWalletArgs_ι_internal_owner_right {b} (x: URValue FlexDeployWalletArgsLRecord b): URValue address b :=
     || {x} ^^ {FlexDeployWalletArgs_ι_internal_owner} || : _ .
     
-Definition FlexDeployWalletArgs_ι_internal_owner_left (x: ULValue FlexDeployWalletArgsLRecord): ULValue XAddress :=
+Definition FlexDeployWalletArgs_ι_internal_owner_left (x: ULValue FlexDeployWalletArgsLRecord): ULValue address :=
     {{ {x} ^^ {FlexDeployWalletArgs_ι_internal_owner} }} : _.
     
 Notation " a '↑' 'FlexDeployWalletArgs.internal_owner' " := ( FlexDeployWalletArgs_ι_internal_owner_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -117,19 +117,19 @@ Definition wrapper_details_info_ι_wallet_code_left (x: ULValue wrapper_details_
 Notation " a '↑' 'wrapper_details_info.wallet_code' " := ( wrapper_details_info_ι_wallet_code_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'wrapper_details_info.wallet_code' " := ( wrapper_details_info_ι_wallet_code_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition wrapper_details_info_ι_owner_address_right {b} (x: URValue wrapper_details_infoLRecord b): URValue XAddress b :=
+Definition wrapper_details_info_ι_owner_address_right {b} (x: URValue wrapper_details_infoLRecord b): URValue address b :=
     || {x} ^^ {wrapper_details_info_ι_owner_address} || : _ .
     
-Definition wrapper_details_info_ι_owner_address_left (x: ULValue wrapper_details_infoLRecord): ULValue XAddress :=
+Definition wrapper_details_info_ι_owner_address_left (x: ULValue wrapper_details_infoLRecord): ULValue address :=
     {{ {x} ^^ {wrapper_details_info_ι_owner_address} }} : _.
     
 Notation " a '↑' 'wrapper_details_info.owner_address' " := ( wrapper_details_info_ι_owner_address_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'wrapper_details_info.owner_address' " := ( wrapper_details_info_ι_owner_address_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition wrapper_details_info_ι_external_wallet_right {b} (x: URValue wrapper_details_infoLRecord b): URValue XAddress b :=
+Definition wrapper_details_info_ι_external_wallet_right {b} (x: URValue wrapper_details_infoLRecord b): URValue address b :=
     || {x} ^^ {wrapper_details_info_ι_external_wallet} || : _ .
     
-Definition wrapper_details_info_ι_external_wallet_left (x: ULValue wrapper_details_infoLRecord): ULValue XAddress :=
+Definition wrapper_details_info_ι_external_wallet_left (x: ULValue wrapper_details_infoLRecord): ULValue address :=
     {{ {x} ^^ {wrapper_details_info_ι_external_wallet} }} : _.
     
 Notation " a '↑' 'wrapper_details_info.external_wallet' " := ( wrapper_details_info_ι_external_wallet_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -189,10 +189,10 @@ Definition DWrapper_ι_total_granted__left (x: ULValue DWrapperLRecord): ULValue
 Notation " a '↑' 'DWrapper.total_granted_' " := ( DWrapper_ι_total_granted__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DWrapper.total_granted_' " := ( DWrapper_ι_total_granted__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DWrapper_ι_owner_address__right {b} (x: URValue DWrapperLRecord b): URValue ( XMaybe XAddress ) b :=
+Definition DWrapper_ι_owner_address__right {b} (x: URValue DWrapperLRecord b): URValue ( XMaybe address ) b :=
     || {x} ^^ {DWrapper_ι_owner_address_} || : _ .
     
-Definition DWrapper_ι_owner_address__left (x: ULValue DWrapperLRecord): ULValue ( XMaybe XAddress ) :=
+Definition DWrapper_ι_owner_address__left (x: ULValue DWrapperLRecord): ULValue ( XMaybe address ) :=
     {{ {x} ^^ {DWrapper_ι_owner_address_} }} : _.
     
 Notation " a '↑' 'DWrapper.owner_address_' " := ( DWrapper_ι_owner_address__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -216,10 +216,10 @@ Definition DWrapper_ι_start_balance__left (x: ULValue DWrapperLRecord): ULValue
 Notation " a '↑' 'DWrapper.start_balance_' " := ( DWrapper_ι_start_balance__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DWrapper.start_balance_' " := ( DWrapper_ι_start_balance__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DWrapper_ι_external_wallet__right {b} (x: URValue DWrapperLRecord b): URValue (XMaybe XAddress) b :=
+Definition DWrapper_ι_external_wallet__right {b} (x: URValue DWrapperLRecord b): URValue (XMaybe address) b :=
     || {x} ^^ {DWrapper_ι_external_wallet_} || : _ .
     
-Definition DWrapper_ι_external_wallet__left (x: ULValue DWrapperLRecord): ULValue (XMaybe XAddress) :=
+Definition DWrapper_ι_external_wallet__left (x: ULValue DWrapperLRecord): ULValue (XMaybe address) :=
     {{ {x} ^^ {DWrapper_ι_external_wallet_} }} : _.
     
 Notation " a '↑' 'DWrapper.external_wallet_' " := ( DWrapper_ι_external_wallet__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -228,18 +228,18 @@ Notation " a '↑' 'DWrapper.external_wallet_' " := ( DWrapper_ι_external_walle
 (***************************************************************************************************)
 
 (* Inductive IWrapperP :=
-    | Iinit : XAddress -> IWrapperP
+    | Iinit : address -> IWrapperP
     | IsetInternalWalletCode : XCell -> IWrapperP
-    | IdeployEmptyWallet : XUInteger256 -> XAddress -> XUInteger128 -> IWrapperP
-    | IonTip3Transfer : XAddress -> XUInteger128 -> XUInteger128 -> XUInteger256 -> 
-                                                XAddress -> XCell -> IWrapperP
-    | Iburn : XAddress -> XUInteger256 -> XAddress -> XUInteger256 -> 
-                                                XAddress -> XUInteger128 -> IWrapperP
+    | IdeployEmptyWallet : XUInteger256 -> address -> XUInteger128 -> IWrapperP
+    | IonTip3Transfer : address -> XUInteger128 -> XUInteger128 -> XUInteger256 -> 
+                                                address -> XCell -> IWrapperP
+    | Iburn : address -> XUInteger256 -> address -> XUInteger256 -> 
+                                                address -> XUInteger128 -> IWrapperP
     | IhasInternalWalletCode : IWrapperP
 
     | _Icreate : InitialState -> IWrapperP. *)
 
-Definition Iinit_right { a1 }  ( x : URValue XAddress a1 ) : URValue IWrapper a1.
+Definition Iinit_right { a1 }  ( x : URValue address a1 ) : URValue IWrapper a1.
  pose proof (urvalue_bind x (fun x' => #(Iinit x' : IWrapper)): URValue _ _).
  rewrite right_or_false in X.
  refine X.
@@ -256,7 +256,7 @@ Defined.
 Notation " '.setInternalWalletCode' ( x ) " := (IsetInternalWalletCode_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
 
 Definition IdeployEmptyWallet_right { a1 a2 a3}  (x : URValue XUInteger256 a1 ) 
-                                                 (y : URValue XAddress a2) 
+                                                 (y : URValue address a2) 
                                                  (z : URValue XUInteger128 a3) : URValue IWrapper ( (orb  a1 (orb a2 a3)) ).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
@@ -269,12 +269,12 @@ Notation " '.deployEmptyWallet' ( x , y , z ) " := (IdeployEmptyWallet_right x y
 (in custom URValue at level 0 , x custom URValue at level 0,
  y custom URValue at level 0 , z custom URValue at level 0) : ursus_scope .
 
-(* | IonTip3Transfer : XAddress -> XUInteger128 -> XUInteger128 -> XUInteger256 -> XAddress -> XCell -> IWrapperP *)
-Definition IonTip3Transfer_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+(* | IonTip3Transfer : address -> XUInteger128 -> XUInteger128 -> XUInteger256 -> address -> XCell -> IWrapperP *)
+Definition IonTip3Transfer_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger128 a2) 
                                                  (z : URValue XUInteger128 a3)
                                                  (t : URValue XUInteger256 a4)
-                                                 (u : URValue XAddress a5)
+                                                 (u : URValue address a5)
                                                  (v : URValue XCell a6) : URValue IWrapper (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
@@ -291,13 +291,13 @@ Notation " '.onTip3Transfer' ( x , y , z , t , u , v ) " := (IonTip3Transfer_rig
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
 
-(* | Iburn : XAddress -> XUInteger256 -> XAddress -> XUInteger256 -> 
-                                                XAddress -> XUInteger128 -> IWrapperP *)
-Definition Iburn_right { a1 a2 a3 a4 a5 a6 }  (x : URValue XAddress a1 ) 
+(* | Iburn : address -> XUInteger256 -> address -> XUInteger256 -> 
+                                                address -> XUInteger128 -> IWrapperP *)
+Definition Iburn_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger256 a2) 
-                                                 (z : URValue XAddress a3)
+                                                 (z : URValue address a3)
                                                  (t : URValue XUInteger256 a4)
-                                                 (u : URValue XAddress a5)
+                                                 (u : URValue address a5)
                                                  (v : URValue XUInteger128 a6) : URValue IWrapper (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
