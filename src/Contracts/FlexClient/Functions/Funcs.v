@@ -30,13 +30,18 @@ Require Import TONTokenWallet.ClassTypes.
 
 (*********************************************)
 Require Import TradingPair.ClassTypesNotations.
+Require Import Contracts.XchgPair.ClassTypesNotations.
+Require Import Contracts.TONTokenWallet.ClassTypesNotations.
+
 (*********************************************)
 
 Module Funcs (co : CompilerOptions)(dc : ConstsTypesSig XTypesModule StateMonadModule) . 
 Import co.
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
-Module Export TradingPairClassTypesNotations := Contracts.TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule LedgerModuleForFuncSig. 
+Module Import TradingPairClassTypesNotations := Contracts.TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule LedgerModuleForFuncSig. 
+Module Import XchgPairModuleForFlexClient := Contracts.XchgPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import TONTokenWalletModuleForFlexClient := Contracts.TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
 (* Export SpecModuleForFuncNotations.CommonNotationsModule. *)
 
 Module FuncsInternal <: SpecModuleForFuncNotations.SpecSig. 
@@ -234,7 +239,21 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
             prepare_trading_pair_state_init_and_addr_ ( !{ pair_data } , _trading_pair_code_ )  ; { _ } }} . 
  	 	 refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} ; { _ } }} . 
  	 	             (*  ITradingPairPtr ( Address :: make_std ( workchain_id_ , std_addr ) )  *) 
-(*  	 	 refine {{ trade_pair.deploy ( state_init , Grams ( deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . onDeploy ( min_trade_amount , deploy_min_value , notify_addr ) ; { _ } }} .  *)
+(*  	 	 refine {{ trade_pair.deploy ( state_init , Grams ( deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . 
+onDeploy ( min_trade_amount , deploy_min_value , notify_addr ) ; { _ } }} .  *)
+
+refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
+              {{ {trade_pair_ptr} with {} ⤳ TradingPair.deploy ( !{state_init} ) ; {_} }} ).  
+
+               refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
+                  {{ {trade_pair_ptr} with [$ #{deploy_value} ⇒ { Messsage_ι_value } ;
+                                              FALSE  ⇒ { Messsage_ι_bounce } ;
+                                  (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags }  $] 
+                                  ⤳ TradingPair.onDeploy (#{min_trade_amount} , 
+                                                          #{deploy_min_value} , 
+                                                          #{notify_addr} ) ; { _ } }} ).
+
+
  	 	 refine {{ return_  !{trade_pair} }} . 
  Defined . 
 
@@ -310,7 +329,21 @@ Definition deployXchgPair ( tip3_major_root : ( address_t ) )
            prepare_xchg_pair_state_init_and_addr_ ( !{ pair_data } , _xchg_pair_code_ )  ; { _ } }} .   
  	 	 refine {{ new 'trade_pair : ( XAddress ) @ "trade_pair" := {} ; { _ } }} . 
  	 	 refine {{ { trade_pair } := {} (* IXchgPairPtr ( Address :: make_std ( workchain_id_ , std_addr ) ) *) ; { _ } }} . 
-(*  	 	 refine {{ trade_pair.deploy ( state_init , Grams ( deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . onDeploy ( min_trade_amount , deploy_min_value , notify_addr ) ; { _ } }} .  *)
+(*  	 	 refine {{ trade_pair.deploy ( state_init , Grams ( deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . 
+onDeploy ( min_trade_amount , deploy_min_value , notify_addr ) ; { _ } }} .  *)
+
+refine ( let trade_pair_ptr := {{ IXchgPairPtr [[ !{trade_pair}  ]] }} in 
+              {{ {trade_pair_ptr} with {} ⤳ XchgPair.deploy ( !{state_init} ) ; {_} }} ).  
+
+               refine ( let trade_pair_ptr := {{ IXchgPairPtr [[ !{trade_pair}  ]] }} in 
+                  {{ {trade_pair_ptr} with [$ #{deploy_value} ⇒ { Messsage_ι_value } ;
+                                              FALSE  ⇒ { Messsage_ι_bounce } ;
+                                  (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags }  $] 
+                                  ⤳ XchgPair.onDeploy (#{min_trade_amount} , 
+                                                          #{deploy_min_value} , 
+                                                          #{notify_addr} ) ; { _ } }} ).
+
+
  	 	 refine {{ return_ !{trade_pair} }} . 
  Defined .
  
@@ -471,7 +504,15 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
  	 	 refine {{ new 'payload : ( XCell ) @ "payload" := {} ; { _ } }} . 
  	 	 refine {{ { payload } := {} (* build ( { sell_args } ) . endc ( ) *) ; { _ } }} . 
      refine {{ new 'my_tip3 : ( XAddress ) @ "my_tip3" := #{ my_tip3_addr } ; { _ } }} .
- (* 	 	 refine {{ my_tip3 ( Grams ( tons_value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . lendOwnership ( address { tvm_myaddr ( ) } , uint128 ( 0 ) , std_addr , amount , lend_finish_time , deploy_init_cl , payload ) ; { _ } }} . *)
+ (* 	 	 refine {{ my_tip3 ( Grams ( tons_value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . lendOwnership 
+ ( address { tvm_myaddr ( ) } , uint128 ( 0 ) , std_addr , amount , lend_finish_time , deploy_init_cl , payload ) ; { _ } }} . *)
+
+ refine ( let my_tip3_ptr := {{ ITONTokenWalletPtr [[ !{my_tip3}  ]] }} in 
+            {{ {my_tip3_ptr} with [$ (#{tons_value}) ⇒ { Messsage_ι_value } ;
+                                      FALSE  ⇒ { Messsage_ι_bounce } ;
+                                  (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags }  $] 
+                            ⤳ .lendOwnership ( tvm_myaddr () , 0 , !{std_addr} , #{amount} , #{lend_finish_time} ,
+                                              !{deploy_init_cl} , !{payload} ) ; {_} }} ).   
  	 	 refine {{ return_ !{price_addr} }} . 
  Defined .
 
@@ -971,7 +1012,7 @@ Definition deployEmptyFlexWallet ( pubkey : ( uint256 ) ) ( tons_to_wallet : ( u
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( _flex_wallet_code_ ) , error_code::missed_flex_wallet_code ) ; { _ } }} . 
  	 	 refine {{ tvm_accept () ; { _ } }} . 
-     refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=  
+     refine {{ new ( 'init : StateInitLRecord , 'hash_addr : uint256 ) @ ("init", "hash_addr") :=  
                   prepare_internal_wallet_state_init_and_addr_ 
                      ( (#{tip3cfg}) ↑  Tip3Config.name , 
                        (#{tip3cfg}) ↑  Tip3Config.symbol , 
@@ -985,6 +1026,10 @@ Definition deployEmptyFlexWallet ( pubkey : ( uint256 ) ) ( tons_to_wallet : ( u
  	 	 refine {{ new 'new_wallet : ( XAddress ) @ "new_wallet" := {} ; { _ } }}.
 (*  	 	 refine {{ ITONTokenWalletPtr new_wallet ( address : : make_std ( workchain_id_ , hash_addr ) ) ; { _ } }} . 
  	 	 refine {{ new_wallet.deploy_noop ( init , Grams ( tons_to_wallet . get ( ) ) ) ; { _ } }} . *) 
+
+refine ( let new_wallet_ptr := {{ ITONTokenWalletPtr [[ !{new_wallet}  ]] }} in 
+              {{ {new_wallet_ptr} with [$ (#{tons_to_wallet}) ⇒ { Messsage_ι_value }  $]
+                                         ⤳ TONTokenWallet.deploy_noop ( !{init} ) ; {_} }} ).  
  	 	 refine {{ return_ !{new_wallet} }} . 
  Defined . 
   
@@ -1007,6 +1052,10 @@ Definition deployEmptyFlexWallet ( pubkey : ( uint256 ) ) ( tons_to_wallet : ( u
 (*  	 	 refine {{ ITONTokenWalletPtr my_tip3 ( my_tip3_addr ) ; { _ } }} . 
  	 	 refine {{ my_tip3 ( Grams ( tons_value . get ( ) ) ) . burn ( out_pubkey , out_internal_owner )   }} . 
  *) 
+(*  refine ( let my_tip3_ptr := {{ ITONTokenWalletPtr [[ !{my_tip3}  ]] }} in 
+              {{ {my_tip3_ptr} with [$ (#{tons_value}) ⇒ { Messsage_ι_value }  $]
+                                         ⤳ .burn ( #{out_pubkey} #{out_internal_owner} ) ; {_} }} ).  
+ *)
 refine {{ {my_tip3} := !{my_tip3} }} .
 Defined . 
  
@@ -1117,9 +1166,9 @@ Definition hasFlexWrapperCode : UExpression XBool false .
  , msg_body custom URValue at level 0 ) : ursus_scope . 
 
  Definition registerWrapper ( wrapper_pubkey : ( uint256 ) ) ( value : ( uint128 ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) (* ; { _ } }} . 
- 	 	 refine {{ tvm_accept () ; { _ } }} . 
- 	 	 refine {{ IFlexPtr ( flex_ ) ( Grams ( value . get ( ) ) ) . registerWrapper ( wrapper_pubkey , tip3cfg ) *) }} . 
+ 	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () (* ; { _ } *) }} . 
+ 	 	 (* refine {{ IFlexPtr ( flex_ ) ( Grams ( value . get ( ) ) ) . registerWrapper ( wrapper_pubkey , tip3cfg ) }} .  *)
  Defined . 
 
  Definition registerTradingPair ( request_pubkey : ( uint256 ) ) ( value : ( uint128 ) ) ( tip3_root : ( XAddress ) ) ( min_amount : ( uint128 ) ) ( notify_addr : ( XAddress ) ) : UExpression PhantomType true . 

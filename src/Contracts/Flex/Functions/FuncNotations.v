@@ -47,6 +47,7 @@ Module TradingPairClassTypesModule     := TradingPair.ClassTypes.ClassTypes xt s
 Module XchgPairClassTypesModule        := XchgPair.ClassTypes.ClassTypes xt sm.
 Module WrapperClassTypesModule         := Wrapper.ClassTypes.ClassTypes xt sm.
 Module TONTokenWalletClassTypesModule  := TONTokenWallet.ClassTypes.ClassTypes xt sm.
+Locate ListingConfigLRecord.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
@@ -55,7 +56,7 @@ Import xt.
 Import UrsusNotations.
 Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope. 
-
+Locate _OutgoingMessages_ITradingPair.
 Definition IXchgPairPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IXchgPair ) : 
                                    ULValue ( mapping raw_address (queue (OutgoingMessage XchgPairPublicInterfaceModule.IXchgPair )) )) . 
 Definition IXchgPairPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IXchgPair ) : 

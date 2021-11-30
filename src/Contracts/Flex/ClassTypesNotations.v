@@ -12,7 +12,7 @@ Require Import Flex.Interface.
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
 
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
-Module Export ClassTypesModule := ClassTypes xt sm.
+Module Import ClassTypesModule := ClassTypes xt sm.
 Module Export InterfaceModule := PublicInterface xt sm.
 
 Import UrsusNotations.
