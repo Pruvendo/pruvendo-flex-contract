@@ -15,5 +15,6 @@ CoqMakefile.conf
 .deps
 *.cache
 _build/*
+src/Contracts/*/_build
 .DS_Store
 .vscode
