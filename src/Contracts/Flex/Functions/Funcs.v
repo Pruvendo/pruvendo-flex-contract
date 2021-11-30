@@ -285,8 +285,16 @@ Definition prepare_trading_pair_right { a1 a2 a3 }  ( flex : URValue raw_address
                                 ( min_amount :  uint128  ) 
                                 ( notify_addr : raw_address ) : UExpression raw_address true . 
  	 	 refine {{ require_ ( ( int_value () > ( _listing_cfg_ ↑  ListingConfig.register_pair_cost) ) ,  error_code::not_enough_funds  ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ~ (_trading_pair_listing_requests_ ->contains ( #{pubkey} )) ) ,  error_code::trading_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
-(*  	 	 refine {{ trading_pair_listing_requests_.set_at ( pubkey . get ( ) , { int_sender ( ) , uint128 ( int_value ( ) . get ( ) ) - listing_cfg_ . register_return_value , tip3_root , min_amount , notify_addr } ) ; { _ } }} .  *)
+ 	 	 refine {{ require_ ( ( ~ (_trading_pair_listing_requests_ ->contains ( #{pubkey} )) ) ,  
+               error_code::trading_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
+ 
+  	 refine {{ _trading_pair_listing_requests_ -> set_at 
+               ( #{pubkey} ,  [ int_sender () , 
+                                int_value ()  - 
+                                  _listing_cfg_ ↑  ListingConfig.register_return_value , 
+                              #{tip3_root} , #{min_amount} , 
+                         #{notify_addr}  ] ) ; { _ } }} . 
+
 (*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
 
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
