@@ -34,8 +34,13 @@ Inductive IFlexP :=
 | IapproveXchgPair : XUInteger256 -> IFlexP
 | IrejectXchgPair : XUInteger256 -> IFlexP
 | IapproveWrapper : XUInteger256 -> IFlexP
-| IrejectWrapper : XUInteger256 -> IFlexP 
-
+| IrejectWrapper : XUInteger256 -> IFlexP
+| IisFullyInitialized : IFlexP
+| IgetDetails : IFlexP
+| IgetSellPriceCode : XAddress -> IFlexP
+| IgetXchgPriceCode : XAddress -> XAddress ->  IFlexP
+| IgetSellTradingPair : XAddress -> IFlexP
+| IgetXchgTradingPair : XAddress -> XAddress -> IFlexP
 | _Icreate : StateInitLRecord -> IFlexP
 (* | _Itransfer : PublicInterfaceP  *).
 
@@ -88,6 +93,13 @@ Arguments IrejectTradingPair {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
 Arguments IapproveXchgPair {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
 Arguments IrejectXchgPair {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
 Arguments IapproveWrapper {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
+Arguments IrejectWrapper {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
+Arguments IisFullyInitialized {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
+Arguments IgetDetails {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
+Arguments IgetSellPriceCode {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
+Arguments IgetXchgPriceCode {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
+Arguments IgetSellTradingPair {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
+Arguments IgetXchgTradingPair {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
 Arguments IrejectWrapper {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} .
 Arguments _Icreate {_} {_} {_} {_} {_} {_} {_} {_} {_} {_} {_}.   
 (* Check   IregisterXchgPair. *)

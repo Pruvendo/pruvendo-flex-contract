@@ -133,9 +133,9 @@ Elpi GeneratePruvendoRecord FlexDetailsL FlexDetailsFields .
  ( ( XMaybe XCell ) ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
   ( XUInteger8 ) : Type ;
- ( (XHMap XUInteger256 (XUInteger256 * WrapperListingRequestLRecord)) ) : Type ; 
- ( (XHMap XUInteger256 (XUInteger256 * TradingPairListingRequestLRecord)) ) : Type ; 
- ( (XHMap XUInteger256 (XUInteger256 * XchgPairListingRequestLRecord)) ) : Type ] .
+ ( (XHMap XUInteger256  WrapperListingRequestLRecord)) : Type ; 
+ ( (XHMap XUInteger256  TradingPairListingRequestLRecord)) : Type ; 
+ ( (XHMap XUInteger256  XchgPairListingRequestLRecord)) : Type ] .
 Elpi GeneratePruvendoRecord DFlexL DFlexFields . 
  
 End ClassTypes .

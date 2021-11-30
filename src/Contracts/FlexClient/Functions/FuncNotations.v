@@ -73,6 +73,12 @@ Definition ITONTokenWalletPtr_messages_right := ( URState (f:=_MessagesAndEvents
                                    URValue ( mapping raw_address (queue (OutgoingMessage TokenWalletPublicInterface.ITONTokenWallet ))) false) . 
 Notation " 'ITONTokenWalletPtr' " := ( ITONTokenWalletPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
+Definition PriceXchgPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IPriceXchg ) : 
+                                   ULValue ( mapping raw_address (queue (OutgoingMessage PriceXchgPublicInterface.IPriceXchg )) )) . 
+Definition PriceXchgPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IPriceXchg ) : 
+                                   URValue ( mapping raw_address (queue (OutgoingMessage PriceXchgPublicInterface.IPriceXchg ))) false) . 
+Notation " 'IPriceXchgPtr' " := ( PriceXchgPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
 
  Definition owner__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_owner_ ) : ULValue uint256 ) . 
  Definition owner__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_owner_ ) : URValue uint256 false ) . 

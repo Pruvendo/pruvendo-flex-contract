@@ -540,28 +540,28 @@ Definition DFlex_ι_deals_limit__left (x: ULValue DFlexLRecord): ULValue XUInteg
 Notation " a '↑' 'DFlex.deals_limit_' " := ( DFlex_ι_deals_limit__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.deals_limit_' " := ( DFlex_ι_deals_limit__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_wrapper_listing_requests__right {b} (x: URValue DFlexLRecord b): URValue (XHMap XUInteger256 (XUInteger256 * WrapperListingRequestLRecord)) b :=
+Definition DFlex_ι_wrapper_listing_requests__right {b} (x: URValue DFlexLRecord b): URValue (XHMap XUInteger256 WrapperListingRequestLRecord) b :=
     || {x} ^^ {DFlex_ι_wrapper_listing_requests_} || : _.
     
-Definition DFlex_ι_wrapper_listing_requests__left (x: ULValue DFlexLRecord): ULValue (XHMap XUInteger256 (XUInteger256 * WrapperListingRequestLRecord)) :=
+Definition DFlex_ι_wrapper_listing_requests__left (x: ULValue DFlexLRecord): ULValue (XHMap XUInteger256 WrapperListingRequestLRecord) :=
     {{ {x} ^^ {DFlex_ι_wrapper_listing_requests_} }} : _.
     
 Notation " a '↑' 'DFlex.wrapper_listing_requests_' " := ( DFlex_ι_wrapper_listing_requests__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.wrapper_listing_requests_' " := ( DFlex_ι_wrapper_listing_requests__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_trading_pair_listing_requests__right {b} (x: URValue DFlexLRecord b): URValue (XHMap XUInteger256 (XUInteger256 * TradingPairListingRequestLRecord)) b :=
+Definition DFlex_ι_trading_pair_listing_requests__right {b} (x: URValue DFlexLRecord b): URValue (XHMap XUInteger256 TradingPairListingRequestLRecord) b :=
     || {x} ^^ {DFlex_ι_trading_pair_listing_requests_} || : _.
     
-Definition DFlex_ι_trading_pair_listing_requests__left (x: ULValue DFlexLRecord): ULValue (XHMap XUInteger256 (XUInteger256 * TradingPairListingRequestLRecord)) :=
+Definition DFlex_ι_trading_pair_listing_requests__left (x: ULValue DFlexLRecord): ULValue (XHMap XUInteger256 TradingPairListingRequestLRecord) :=
     {{ {x} ^^ {DFlex_ι_trading_pair_listing_requests_} }} : _.
     
 Notation " a '↑' 'DFlex.trading_pair_listing_requests_' " := ( DFlex_ι_trading_pair_listing_requests__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.trading_pair_listing_requests_' " := ( DFlex_ι_trading_pair_listing_requests__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_xchg_pair_listing_requests__right {b} (x: URValue DFlexLRecord b): URValue (XHMap XUInteger256 (XUInteger256 * XchgPairListingRequestLRecord)) b :=
+Definition DFlex_ι_xchg_pair_listing_requests__right {b} (x: URValue DFlexLRecord b): URValue (XHMap XUInteger256 XchgPairListingRequestLRecord) b :=
     || {x} ^^ {DFlex_ι_xchg_pair_listing_requests_} || : _.
     
-Definition DFlex_ι_xchg_pair_listing_requests__left (x: ULValue DFlexLRecord): ULValue (XHMap XUInteger256 (XUInteger256 * XchgPairListingRequestLRecord)) :=
+Definition DFlex_ι_xchg_pair_listing_requests__left (x: ULValue DFlexLRecord): ULValue (XHMap XUInteger256 XchgPairListingRequestLRecord) :=
     {{ {x} ^^ {DFlex_ι_xchg_pair_listing_requests_} }} : _.
     
 Notation " a '↑' 'DFlex.xchg_pair_listing_requests_' " := ( DFlex_ι_xchg_pair_listing_requests__right a ) (in custom URValue at level 0) : ursus_scope.

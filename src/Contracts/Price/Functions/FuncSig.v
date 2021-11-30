@@ -25,7 +25,7 @@ Notation OrderInfoWithIdx := (uint # OrderInfoLRecord).
 
 Module Type SpecSig.
 
-Parameter make_deal : ULValue OrderInfoLRecord  ->  ULValue OrderInfoLRecord -> UExpression ( boolean # (boolean # uint128)) true . 
+Parameter make_deal : ULValue dealerLRecord -> ULValue OrderInfoLRecord  ->  ULValue OrderInfoLRecord -> UExpression ( boolean # (boolean # uint128)) true . 
 (*Check  ULValue !!!!*)
 Parameter extract_active_order : ULValue ( optional OrderInfoWithIdx ) -> 
                                 ULValue (queue OrderInfoLRecord ) -> 

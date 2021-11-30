@@ -22,11 +22,22 @@ Variable InitialState : Type.
 
 Inductive IRootTokenContractP :=
 | Iconstructor : XString -> XString -> XUInteger8 -> XUInteger256 -> XAddress -> XUInteger128 -> IRootTokenContractP
+| IsetWalletCode : XCell -> IRootTokenContractP
 | IdeployWallet : XUInteger256 -> XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
 | IdeployEmptyWallet : XUInteger256 -> XAddress -> XUInteger128 -> IRootTokenContractP
 | Igrant : XAddress -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
 | Imint : XUInteger128 -> IRootTokenContractP
 | IrequestTotalGranted : IRootTokenContractP
+| IgetName : IRootTokenContractP
+| IgetSymbol : IRootTokenContractP
+| IgetDecimals : IRootTokenContractP
+| IgetRootKey : IRootTokenContractP
+| IgetTotalSupply : IRootTokenContractP
+| IgetTotalGranted : IRootTokenContractP
+| IhasWalletCode : IRootTokenContractP
+| IgetWalletCode : IRootTokenContractP
+| IgetWalletCodeHash : IRootTokenContractP
+| IgetWalletAddress : XUInteger256 -> XAddress IRootTokenContractP
 | _Icreate : InitialState -> IRootTokenContractP.
 
 End InterfaceDef.
@@ -53,6 +64,17 @@ Arguments IdeployEmptyWallet {_} {_} {_} {_} {_} {_}.
 Arguments Igrant {_} {_} {_} {_} {_} {_}.
 Arguments Imint {_} {_} {_} {_} {_} {_}.
 Arguments IrequestTotalGranted {_} {_} {_} {_} {_} {_}.
+Arguments IsetWalletCode {_} {_} {_} {_} {_} {_}.
+Arguments IgetName {_} {_} {_} {_} {_} {_}.
+Arguments IgetSymbol {_} {_} {_} {_} {_} {_}.
+Arguments IgetDecimals {_} {_} {_} {_} {_} {_}.
+Arguments IgetRootKey {_} {_} {_} {_} {_} {_}.
+Arguments IgetTotalSupply {_} {_} {_} {_} {_} {_}.
+Arguments IgetTotalGranted {_} {_} {_} {_} {_} {_}.
+Arguments IhasWalletCode {_} {_} {_} {_} {_} {_}.
+Arguments IgetWalletCode {_} {_} {_} {_} {_} {_}.
+Arguments IgetWalletCodeHash {_} {_} {_} {_} {_} {_}.
+Arguments IgetWalletAddress {_} {_} {_} {_} {_} {_}.
 Arguments _Icreate {_} {_} {_} {_} {_} {_}.
 
 End PublicInterface.
