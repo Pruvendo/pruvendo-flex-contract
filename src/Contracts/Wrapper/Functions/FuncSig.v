@@ -24,7 +24,7 @@ Module Type SpecSig.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
-Parameter getStateInit : (*???????????????*) PhantomType -> UExpression StateInitLRecord false . 
+Parameter getStateInit : (*???????????????*) ULValue PhantomType -> UExpression StateInitLRecord false . 
 Parameter init : raw_address -> UExpression boolean true . 
 Parameter setInternalWalletCode : TvmCell -> UExpression boolean true . 
 Parameter deployEmptyWallet : uint256 -> raw_address -> uint128 -> UExpression raw_address false . 

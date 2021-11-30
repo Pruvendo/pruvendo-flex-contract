@@ -158,18 +158,18 @@ Definition deals_limit__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedT
 Notation " '_deals_limit_' " := ( deals_limit__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_deals_limit_' " := ( deals_limit__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition wrapper_listing_requests__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_wrapper_listing_requests_ ) : ULValue ( (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) ) ) . 
-Definition wrapper_listing_requests__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_wrapper_listing_requests_ ) : URValue ( (XHMap uint256 (uint256 * WrapperListingRequestLRecord) ) ) false ) . 
+Definition wrapper_listing_requests__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_wrapper_listing_requests_ ) : ULValue wrappers_map. 
+Definition wrapper_listing_requests__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_wrapper_listing_requests_ ) : URValue wrappers_map false ) . 
 Notation " '_wrapper_listing_requests_' " := ( wrapper_listing_requests__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_wrapper_listing_requests_' " := ( wrapper_listing_requests__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition trading_pair_listing_requests__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_trading_pair_listing_requests_ ) : ULValue ( (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) ) ). 
-Definition trading_pair_listing_requests__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_trading_pair_listing_requests_ ) : URValue ( (XHMap uint256 (uint256 * TradingPairListingRequestLRecord) ) ) false ) . 
+Definition trading_pair_listing_requests__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_trading_pair_listing_requests_ ) : ULValue trading_pairs_map. 
+Definition trading_pair_listing_requests__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_trading_pair_listing_requests_ ) : URValue trading_pairs_map false ) . 
 Notation " '_trading_pair_listing_requests_' " := ( trading_pair_listing_requests__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_trading_pair_listing_requests_' " := ( trading_pair_listing_requests__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition xchg_pair_listing_requests__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_xchg_pair_listing_requests_ ) : ULValue ( (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) ) ) . 
-Definition xchg_pair_listing_requests__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_xchg_pair_listing_requests_ ) : URValue ( (XHMap uint256 (uint256 * XchgPairListingRequestLRecord) ) ) false ) . 
+Definition xchg_pair_listing_requests__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_xchg_pair_listing_requests_ ) : ULValue xchg_pairs_map . 
+Definition xchg_pair_listing_requests__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_xchg_pair_listing_requests_ ) : URValue xchg_pairs_map false ) . 
 Notation " '_xchg_pair_listing_requests_' " := ( xchg_pair_listing_requests__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_xchg_pair_listing_requests_' " := ( xchg_pair_listing_requests__right ) (in custom URValue at level 0) : ursus_scope. 
  
