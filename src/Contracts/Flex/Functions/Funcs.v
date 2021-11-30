@@ -312,7 +312,7 @@ Definition approveTradingPairImpl ( pubkey : uint256 )
 onDeploy ( req_info . min_amount , listing_cfg . pair_keep_balance , req_info . notify_addr ) ; { _ } }} .  *)
 refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
               {{ {trade_pair_ptr} with {} ⤳ TradingPair.deploy ( !{state_init} ) ; {_} }} ).  
-Locate ListingConfigLRecord.
+Locate ListingConfigLRecord. 
               refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
                   {{ {trade_pair_ptr} with [$ (#{listing_cfg}) ↑ ListingConfig.pair_deploy_value ⇒ { Messsage_ι_value } ;
                                   (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags }  $] 
@@ -320,9 +320,9 @@ Locate ListingConfigLRecord.
                                                           !{listing_cfg} ↑ ListingConfig.pair_keep_balance, 
                                                           !{req_info} ↑ TradingPairListingRequest.notify_addr ) ; { _ } }} ).
 
-
+  
  	 	 refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := {} (*  
- 	 	   req_info.client_funds - listing_cfg ^^ ListingConfigLRecord:register_pair_cost *) ; { _ } }} . 
+ 	 	   req_info.client_funds - listing_cfg ↑ ListingConfig.register_pair_cost *) ; { _ } }} . 
 (*  	 	 refine {{ IListingAnswerPtr ( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onTradingPairApproved ( pubkey , trade_pair . get ( ) ) ; { _ } }} .  *)
 refine {{ IListingAnswerPtr [[  !{req_info} ↑ TradingPairListingRequest.client_addr ]]
           with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onTradingPairApproved ( #{pubkey} , !{trade_pair} ) ; {_} }}. 
@@ -741,7 +741,7 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_add
  , listing_cfg custom URValue at level 0 ) : ursus_scope . 
 
  Definition registerXchgPair ( pubkey :  uint256 ) ( tip3_major_root : raw_address ) ( tip3_minor_root : raw_address ) ( min_amount :  uint128 ) ( notify_addr : raw_address ) : UExpression raw_address true . 
- refine {{ require_ ( (* int_value().get() *) {} > (_listing_cfg_ ↑ ListingConfig.register_pair_cost) ,  error_code::not_enough_funds  ) ; { _ } }} . 
+ refine {{ require_ ( int_value() > (_listing_cfg_ ↑ ListingConfig.register_pair_cost) ,  error_code::not_enough_funds  ) ; { _ } }} . 
  refine {{ require_ ( ~ ( {} (* _xchg_pair_listing_requests_.contains({pubkey}) *) ) ,  error_code::xchg_pair_with_such_pubkey_already_requested  ) ; { _ } }} . 
 (*  refine {{ xchg_pair_listing_requests_.set_at ( {pubkey} , { int_sender ( ) , int_value () - listing_cfg_ . register_return_value , tip3_major_root , tip3_minor_root , min_amount , notify_addr } ) ; { _ } }} . *)
  	 	 refine {{ new 'pair_data : ( XchgPairClassTypesModule.DXchgPairLRecord ) @ "pair_data" :=  

@@ -797,8 +797,8 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( pr
                                #{xchg_price_code} , #{notify_addr} ) ; { _ } }} . 
  	 	 refine {{ new 'price_addr : ( XAddress ) @ "price_addr" := {} ; { _ } }} . 
  	 	 refine {{ if ( #{ sell } ) then { { _ } } else { { _ } } }} . 
- 	 	 	 refine {{ {price_addr} := !{price_addr} (* price_addr ( Grams ( value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . cancelSell ( )*) }} . 
- 	 	 refine {{ {price_addr} := !{price_addr} (* price_addr ( Grams ( value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . cancelBuy ( ) *) }} . 
+ 	 	 	 refine {{ (* price_addr ( Grams ( value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . cancelSell ( )*) }} . 
+ 	 	 refine {{ (* price_addr ( Grams ( value . get ( ) ) , DEFAULT_MSG_FLAGS , false ) . cancelBuy ( ) *) }} . 
  Defined . 
  
  Definition cancelXchgOrder_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( sell : URValue ( XBool ) a1 ) ( price_num : URValue ( uint128 ) a2 ) ( price_denum : URValue ( uint128 ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( deals_limit : URValue ( uint8 ) a5 ) ( value : URValue ( uint128 ) a6 ) ( xchg_price_code : URValue ( XCell ) a7 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a8 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address_t ) a10 ) : UExpression R true := 

@@ -87,6 +87,6 @@ Parameter wrong_spender : XUInteger.
 Parameter not_enough_allowance : XUInteger.
 Parameter wrong_public_call : XUInteger.
 Parameter non_zero_remaining : XUInteger.
-
+Parameter bad_incoming_msg : XUInteger .
 
 End ConstsTypesSig.

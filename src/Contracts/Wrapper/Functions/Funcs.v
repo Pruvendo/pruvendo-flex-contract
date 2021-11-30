@@ -56,15 +56,15 @@ Local Notation UEt := (UExpression _ true).
 
 Existing Instance LedgerPruvendoRecord.
 
-
-Definition getStateInit ( msg : PhantomType ) : UExpression StateInitLRecord false . 
+(* StateInit getStateInit(const message<anyval> &msg) { *)
+Definition getStateInit ( msg : ULValue PhantomType ) : UExpression StateInitLRecord false . 
  refine {{ if TRUE(* ( msg_init -> isa < ref < StateInit > > () ) *) then { {_ :UEf} } else { {_:UEf} }  }} . 
  	 	 	 refine {{ return_ {}(* msg_init -> get < ref < StateInit > > () () *) }} . 
  	 refine {{ return_  {} (* msg_init -> get < StateInit > () *) }} . 
  Defined . 
  
-Definition getStateInit_right { a1 }  ( msg : URValue (PhantomType) a1 ) : URValue StateInitLRecord a1 := 
-wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) getStateInit msg ) . 
+Definition getStateInit_right ( msg : ULValue (PhantomType) ) : URValue StateInitLRecord false := 
+wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1L ) getStateInit msg ) . 
 
 Notation " 'getStateInit_' '(' msg ')' " := 
 ( getStateInit_right 
@@ -78,8 +78,8 @@ Definition init ( external_wallet : ( XAddress ) ) : UExpression XBool true .
  	 	 refine {{ new 'parsed_msg : ( PhantomType(* auto *) ) @ "parsed_msg" := {}
                    (* parse ( parser ( msg_slice () ) , error_code::bad_incoming_msg ) *) ; {_} }} . 
  	 	 refine {{ require_ ( (* (!{parsed_msg}) ↑ ???.init *) {} , error_code::bad_incoming_msg ) ; {_} }} . 
- 	 	 refine {{ new 'init : ( StateInitLRecord ) @ "init" :=  
-                                      getStateInit_ ( (!{ parsed_msg }) ) ; {_} }} . 
+ 	 	 refine {{ new 'init : ( StateInitLRecord ) @ "init" :=    
+                                      getStateInit_ ( ({ parsed_msg }) ) ; {_} }} . 
  	 	 refine {{ require_ ( ( (!{init}) ↑ StateInit.code ) , error_code::bad_incoming_msg ) ; {_} }} . 
  	 	 refine {{ new 'mycode : ( XCell ) @ "mycode" := 
                              ((!{init}) ↑ StateInit.code ) -> get_default () ; {_} }} . 
@@ -161,9 +161,6 @@ Definition setInternalWalletCode ( wallet_code : ( XCell ) ) : UExpression XBool
  	 	 refine {{ _internal_wallet_code_ := (#{ wallet_code } ->set()) ; {_} }} . 
  	 	 refine {{ if ( #{Internal} ) then { {_:UEf} }; {_} }} . 
  	 	 	 refine {{ new 'value_gr : XUInteger256 @ "value_gr" := int_value () ; {_} }} . 
-<<<<<<< HEAD
- 	 	 	 refine {{ tvm_rawreserve (( tvm_balance () - !{value_gr} ) , rawreserve_flag::up_to )(* ;  {_} }} . 
-=======
  	 	 	 refine {{ tvm_rawreserve (( tvm_balance () - !{value_gr} ) ,  rawreserve_flag::up_to  )(* ;  {_} }} . 
 >>>>>>> 9043f6d409a7ae511a8d4095191064d6e258d97d
  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) *) }} . 
