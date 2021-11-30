@@ -22,6 +22,10 @@ Variable InitialState : Type.
 
 Inductive ITradingPairP :=
     | IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> ITradingPairP
+    | IgetFlexAddr : ITradingPairP
+    | IgetTip3Root : ITradingPairP
+    | IgetMinAmount : ITradingPairP
+    | IgetNotifyAddr : ITradingPairP
     | _Icreate : InitialState -> ITradingPairP.
 
 End InterfaceDef.
@@ -44,6 +48,10 @@ Definition ITradingPair : Type := ITradingPairP XUInteger128 XAddress StateInitL
 
 (* Print Iconstructor. *)
 Arguments IonDeploy {_} {_} {_}.
+Arguments IgetFlexAddr {_} {_} {_}.
+Arguments IgetTip3Root {_} {_} {_}.
+Arguments IgetMinAmount {_} {_} {_}.
+Arguments IgetNotifyAddr {_} {_} {_}.
 Arguments _Icreate {_} {_} {_}.
 
 End PublicInterface.

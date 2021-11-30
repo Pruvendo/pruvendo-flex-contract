@@ -141,7 +141,7 @@ Definition make_deal_right
 ( sell : ULValue ( OrderInfoLRecord ) ) 
 ( buy : ULValue ( OrderInfoLRecord ) ) :
  URValue ( XBool # (XBool # uint128) ) true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LL ) make_deal 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3LLL ) make_deal 
  sell buy ) . 
  
  Notation " 'make_deal_' '(' sell buy ')' " := 

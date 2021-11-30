@@ -108,6 +108,8 @@ Notation " a '↑' 'DFlexClient.flex_wrapper_code_' " := ( DFlexClient_ι_flex_w
 | _Icreate : InitialState -> IFlexClientP.
  *)
 
+About Iconstructor.
+Arguments Iconstructor {_} {_} {_} {_} {_} {_} {_} {_} {_} {_}.
 Definition Iconstructor_right { a1 a2 a3 } (x : URValue XUInteger256 a1 ) 
                                        (y : URValue XCell a2) 
                                        (z : URValue XCell a3)
@@ -134,7 +136,6 @@ Defined.
 
 Notation " '.setFlexCfg' ( x , y  ) " := (IsetFlexCfg_right x y) 
 (in custom URValue at level 0 , x custom URValue at level 0, y custom URValue at level 0 ) : ursus_scope .
-
 
 Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue IFlexClient a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : IFlexClient)): URValue _ _).

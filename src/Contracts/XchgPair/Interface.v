@@ -22,6 +22,11 @@ Variable InitialState : Type.
 
 Inductive IXchgPairP :=
     | IonDeploy : XUInteger128 -> XUInteger128 -> XAddress -> IXchgPairP
+    | IgetFlexAddr : IXchgPairP
+    | IgetTip3MajorRoot : IXchgPairP
+    | IgetTip3MinorRoot : IXchgPairP
+    | IgetMinAmount : IXchgPairP
+    | IgetNotifyAddr : IXchgPairP
     | _Icreate : InitialState -> IXchgPairP.
 
 End InterfaceDef.
@@ -42,6 +47,10 @@ GeneratePruvendoRecord InitialStateL InitialStateFields.
 Definition IXchgPair: Type := IXchgPairP XAddress XUInteger128 (* StateInitLRecord *) StateInitLRecord.
 
 Arguments IonDeploy {_} {_} {_}.
+Arguments IgetFlexAddr {_} {_} {_}.
+Arguments IgetTip3MajorRoot {_} {_} {_}.
+Arguments IgetMinAmount {_} {_} {_}.
+Arguments IgetNotifyAddr {_} {_} {_}.
 Arguments _Icreate {_} {_} {_}.
 
 End PublicInterface.

@@ -21,14 +21,18 @@ Require TONTokenWallet.ClassTypes.
 Require Price.ClassTypes.
 Require PriceXchg.ClassTypes.
 
+Require TradingPair.Interface.
 Require Import Contracts.FlexClient.Interface.
+Require Import Contracts.XchgPair.Interface.
+Require Import Contracts.TONTokenWallet.Interface.
+Require Import Contracts.PriceXchg.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-Inductive MessagesAndEventsFields := | _OutgoingMessages_FlexClient | _EmittedEvents | _MessagesLog.
+Inductive MessagesAndEventsFields := | _OutgoingMessages_FlexClient | _OutgoingMessages_ITradingPair | _OutgoingMessages_IXchgPair | _OutgoingMessages_ITONTokenWallet | _OutgoingMessages_IPriceXchg | _EmittedEvents | _MessagesLog.
 Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Definition ContractFields := DFlexClientFields.
@@ -48,10 +52,20 @@ Module TradingPairClassTypesModule := TradingPair.ClassTypes.ClassTypes xt sm .
 Module XchgPairClassTypesModule := XchgPair.ClassTypes.ClassTypes xt sm .
 Module TokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes xt sm .
 
+Module TradingPairInterfaceModule := TradingPair.Interface.PublicInterface xt sm .
+Module XchgPairInterfaceModule := XchgPair.Interface.PublicInterface xt sm .
+Module TONTokenWalletInterfaceModule := TONTokenWallet.Interface.PublicInterface xt sm .
+Module PriceXchgInterfaceModule := PriceXchg.Interface.PublicInterface xt sm .
+
+
 Import xt.
 
 Definition MessagesAndEventsL : list Type := 
  [ ( XQueue (OutgoingMessage FlexClientPublicInterfaceModule.IFlexClient) ) : Type ; 
+ ( XHMap XAddress (XQueue (OutgoingMessage TradingPairInterfaceModule.ITradingPair )) ) : Type ;
+ ( XHMap XAddress (XQueue (OutgoingMessage XchgPairInterfaceModule.IXchgPair )) ) : Type ;
+ ( XHMap XAddress (XQueue (OutgoingMessage TONTokenWalletInterfaceModule.ITONTokenWallet )) ) : Type ;
+ ( XHMap XAddress (XQueue (OutgoingMessage PriceXchgInterfaceModule.IPriceXchg )) ) : Type ;
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .

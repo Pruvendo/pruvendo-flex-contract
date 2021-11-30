@@ -42,6 +42,7 @@ Module TokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicIn
 Module PriceXchgPublicInterface   := Contracts.PriceXchg.Interface.PublicInterface xt sm.
 Module FlexPublicInterface        := Contracts.Flex.Interface.PublicInterface xt sm.
 Module FlexClientPublicInterface  := Contracts.FlexClient.Interface.PublicInterface xt sm.
+Module TradingPairClassTypesModule     := TradingPair.ClassTypes.ClassTypes xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
@@ -59,6 +60,24 @@ Definition ITradingPairPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H
 Definition ITradingPairPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITradingPair ) : 
                                    URValue ( mapping raw_address (queue (OutgoingMessage TradingPairPublicInterfaceModule.ITradingPair ))) false) . 
 Notation " 'ITradingPairPtr' " := ( ITradingPairPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition IXchgPairPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IXchgPair ) : 
+                                   ULValue ( mapping raw_address (queue (OutgoingMessage XchgPairPublicInterface.IXchgPair )) )) . 
+Definition IXchgPairPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IXchgPair ) : 
+                                   URValue ( mapping raw_address (queue (OutgoingMessage XchgPairPublicInterface.IXchgPair ))) false) . 
+Notation " 'IXchgPairPtr' " := ( IXchgPairPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
+
+Definition ITONTokenWalletPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   ULValue ( mapping raw_address (queue (OutgoingMessage TokenWalletPublicInterface.ITONTokenWallet )) )) . 
+Definition ITONTokenWalletPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   URValue ( mapping raw_address (queue (OutgoingMessage TokenWalletPublicInterface.ITONTokenWallet ))) false) . 
+Notation " 'ITONTokenWalletPtr' " := ( ITONTokenWalletPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition PriceXchgPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IPriceXchg ) : 
+                                   ULValue ( mapping raw_address (queue (OutgoingMessage PriceXchgPublicInterface.IPriceXchg )) )) . 
+Definition PriceXchgPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IPriceXchg ) : 
+                                   URValue ( mapping raw_address (queue (OutgoingMessage PriceXchgPublicInterface.IPriceXchg ))) false) . 
+Notation " 'IPriceXchgPtr' " := ( PriceXchgPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 
  Definition owner__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_owner_ ) : ULValue uint256 ) . 

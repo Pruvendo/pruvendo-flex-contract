@@ -28,8 +28,10 @@ Inductive IWrapperP :=
                                                 XAddress -> XCell -> IWrapperP
     | Iburn : XAddress -> XUInteger256 -> XAddress -> XUInteger256 -> 
                                                 XAddress -> XUInteger128 -> IWrapperP
+    | IrequestTotalGranted : IWrapperP
+    | IgetDetails : IWrapperP
     | IhasInternalWalletCode : IWrapperP
-
+    | IgetWalletAddress : XUInteger256 -> XAddress -> IWrapperP
     | _Icreate : InitialState -> IWrapperP.
 
 End InterfaceDef.
@@ -56,6 +58,9 @@ Arguments IsetInternalWalletCode {_} {_} {_} {_} {_}.
 Arguments IdeployEmptyWallet {_} {_} {_} {_} {_}.
 Arguments IonTip3Transfer {_} {_} {_} {_} {_}.
 Arguments Iburn {_} {_} {_} {_} {_}.
+Arguments IrequestTotalGranted {_} {_} {_} {_} {_}.
+Arguments IgetDetails {_} {_} {_} {_} {_}.
+Arguments IgetWalletAddress {_} {_} {_} {_} {_}.
 Arguments IhasInternalWalletCode {_} {_} {_} {_} {_}.
 Arguments _Icreate {_} {_} {_} {_} {_}.
 

@@ -26,13 +26,27 @@ Inductive ITONTokenWalletNotifyP :=
 | IonTip3Transfer : XAddress -> XUInteger128 -> XUInteger128 -> XUInteger256 -> XAddress -> XCell -> ITONTokenWalletNotifyP.
 
 Inductive ITONTokenWalletP :=
+| Itransfer : XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XBool -> ITONTokenWalletP
 | ItransferWithNotify : XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XBool -> XCell -> ITONTokenWalletP
 | ItransferToRecipient : XAddress -> XUInteger256 -> XAddress -> 
                          XUInteger128 -> XUInteger128 -> XBool -> XBool -> ITONTokenWalletP
 | ItransferToRecipientWithNotify : XAddress -> XUInteger256 -> XAddress -> 
                          XUInteger128 -> XUInteger128 -> XBool -> XBool -> XCell -> ITONTokenWalletP
+| IrequestBalance : ITONTokenWalletP
+| Iaccept : ITONTokenWalletP
+| IinternalTransfer : XUInteger128 -> XAddress -> XUInteger256 -> XAddress -> XBool -> XCell -> ITONTokenWalletP
+| Idestroy : XAddress -> ITONTokenWalletP
+| Iburn : XUInteger256 -> XAddress -> ITONTokenWalletP 
 | IlendOwnership : XAddress -> XUInteger128 -> XUInteger256 -> XUInteger128 -> 
                          XUInteger32 -> XCell -> XCell -> ITONTokenWalletP
+| IreturnOwnership : XUInteger128 -> ITONTokenWalletP
+| IgetDetails : ITONTokenWalletP
+| IgetBalance : ITONTokenWalletP
+| Iapprove : XAddress -> XUInteger128 -> XUInteger128 -> ITONTokenWalletP
+| ItransferFrom : XAddress -> XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> ITONTokenWalletP
+| ItransferFromWithNotify : XAddress -> XAddress -> XAddress -> XUInteger128 -> XUInteger128 -> XCell -> ITONTokenWalletP
+| IinternalTransferFrom : XAddress -> XAddress -> XUInteger128 -> XBool -> XCell -> ITONTokenWalletP
+| Idisapprove : ITONTokenWalletP
 | _Icreate : InitialState -> ITONTokenWalletP.
 
 End InterfaceDef.
@@ -65,6 +79,20 @@ Arguments ItransferWithNotify  {_} {_} {_} {_} {_} {_} {_}.
 Arguments ItransferToRecipient {_} {_} {_} {_} {_} {_} {_}. 
 Arguments ItransferToRecipientWithNotify {_} {_} {_} {_} {_} {_} {_}. 
 Arguments IlendOwnership {_} {_} {_} {_} {_} {_} {_} .
+Arguments Itransfer {_} {_} {_} {_} {_} {_} {_} .
+Arguments IrequestBalance {_} {_} {_} {_} {_} {_} {_} .
+Arguments Iaccept {_} {_} {_} {_} {_} {_} {_} .
+Arguments IinternalTransfer {_} {_} {_} {_} {_} {_} {_} .
+Arguments Idestroy {_} {_} {_} {_} {_} {_} {_} .
+Arguments Iburn {_} {_} {_} {_} {_} {_} {_} .
+Arguments IlendOwnership {_} {_} {_} {_} {_} {_} {_} .
+Arguments IreturnOwnership {_} {_} {_} {_} {_} {_} {_} .
+Arguments IgetDetails {_} {_} {_} {_} {_} {_} {_} .
+Arguments IgetBalance {_} {_} {_} {_} {_} {_} {_} .
+Arguments Iapprove {_} {_} {_} {_} {_} {_} {_} .
+Arguments ItransferFrom {_} {_} {_} {_} {_} {_} {_} .
+Arguments ItransferFromWithNotify {_} {_} {_} {_} {_} {_} {_} .
+Arguments Idisapprove {_} {_} {_} {_} {_} {_} {_} .
 Arguments _Icreate {_} {_} {_} {_} {_} {_} {_} .
 
 End PublicInterface.
