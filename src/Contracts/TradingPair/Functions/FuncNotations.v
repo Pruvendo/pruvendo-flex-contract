@@ -13,7 +13,7 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
-Require Import Project.CommonNotations.
+Require Import Project.CommonAxioms.
 
 Require Import TradingPair.ClassTypes.
 Require Import TradingPair.Ledger.

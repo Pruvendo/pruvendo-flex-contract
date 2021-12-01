@@ -21,18 +21,28 @@ Require TONTokenWallet.ClassTypes.
 Require Price.ClassTypes.
 Require PriceXchg.ClassTypes.
 
+Require Import FlexClient.Interface.
 Require TradingPair.Interface.
-Require Import Contracts.FlexClient.Interface.
-Require Import Contracts.XchgPair.Interface.
-Require Import Contracts.TONTokenWallet.Interface.
-Require Import Contracts.PriceXchg.Interface.
+Require XchgPair.Interface.
+Require TONTokenWallet.Interface.
+Require PriceXchg.Interface.
 
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-Inductive MessagesAndEventsFields := | _OutgoingMessages_FlexClient | _OutgoingMessages_ITradingPair | _OutgoingMessages_IXchgPair | _OutgoingMessages_ITONTokenWallet | _OutgoingMessages_IPriceXchg | _EmittedEvents | _MessagesLog.
+Inductive MessagesAndEventsFields := 
+  | _OutgoingMessages_FlexClient 
+  | _OutgoingMessages_ITradingPair 
+  | _OutgoingMessages_IXchgPair 
+  | _OutgoingMessages_ITONTokenWallet 
+  | _OutgoingMessages_IPriceXchg 
+  | _EmittedEvents 
+  | _GlobalParams
+  | _OutgoingMessageParams
+  | _MessagesLog.
+
 Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Definition ContractFields := DFlexClientFields.
@@ -57,7 +67,6 @@ Module XchgPairInterfaceModule := XchgPair.Interface.PublicInterface xt sm .
 Module TONTokenWalletInterfaceModule := TONTokenWallet.Interface.PublicInterface xt sm .
 Module PriceXchgInterfaceModule := PriceXchg.Interface.PublicInterface xt sm .
 
-
 Import xt.
 
 Definition MessagesAndEventsL : list Type := 
@@ -67,7 +76,9 @@ Definition MessagesAndEventsL : list Type :=
  ( XHMap address (XQueue (OutgoingMessage TONTokenWalletInterfaceModule.ITONTokenWallet )) ) : Type ;
  ( XHMap address (XQueue (OutgoingMessage PriceXchgInterfaceModule.IPriceXchg )) ) : Type ;
  ( XList TVMEvent ) : Type ; 
- ( XString ) : Type ] .
+  GlobalParamsLRecord: Type ;
+  OutgoingMessageParamsLRecord: Type ;
+  XList XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
  
@@ -651,6 +662,10 @@ Remove Hints LocalStateField10000 : typeclass_instances.
 Definition LocalStateField_XUInteger := LocalStateField00000 .
 Definition LocalStateField_XBool := LocalStateField01100 .
 Definition LocalStateField_XCell := LocalStateField00001 .
+
+Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
+Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.
+
 
 End Ledger .
 

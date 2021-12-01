@@ -15,7 +15,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 Require Import Project.CommonTypes.
-Require Import Project.CommonNotations.
+Require Import Project.CommonAxioms.
 
 (*Fully qualified name are mandatory in multi-contract environment*)
 Require Import PriceXchg.Ledger.
@@ -328,20 +328,6 @@ Definition onTip3LendOwnershipMinValue_right  : URValue uint128 false :=
  
  Notation " 'onTip3LendOwnershipMinValue_' '(' ')' " := 
  ( onTip3LendOwnershipMinValue_right ) (in custom URValue at level 0 ) : ursus_scope .
-
-Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
-                                           (base : Y): UExpression XCell false .
- refine {{ return_ {} }} .  
-Defined .
-
-Definition prepare_persistent_data_right { X Y a1 a2 }  
-                                    ( persistent_data_header : URValue X a1 ) 
-                                    ( base : URValue Y a2 ) 
-               : URValue XCell (orb a2 a1) := 
-wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
- 
-Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_data_right a b ) 
- (in custom URValue at level 0 , a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
 
 Definition prepare_internal_wallet_state_init_and_addr 
 											( name:  String ) 

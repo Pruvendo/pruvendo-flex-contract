@@ -15,7 +15,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 Require Import Project.CommonTypes.
-Require Import Project.CommonNotations.
+Require Import Project.CommonAxioms.
 
 (*Fully qualified name are mandatory in multi-contract environment*)
 Require Import Price.Ledger.
@@ -33,7 +33,7 @@ Import co.
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
-(* Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule. *)
+(* Export SpecModuleForFuncNotations(* ForFuncs *).CommonAxiomsModule. *)
 
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  
@@ -351,20 +351,8 @@ Definition onTip3LendOwnershipMinValue_right  : URValue uint128 false :=
 
 Notation " 'onTip3LendOwnershipMinValue_' '(' ')' " := ( onTip3LendOwnershipMinValue_right ) (in custom URValue at level 0 ) : ursus_scope . 
 
-Definition prepare_persistent_data { Y } (persistent_data_header : PhantomType) 
-                                         (base : Y): UExpression TvmCell false .
- refine {{ return_ {} }} .  
-Defined .
 
-Definition prepare_persistent_data_right { Y a1 a2 }  
-                                    ( persistent_data_header : URValue PhantomType a1 ) 
-                                    ( base : URValue Y a2 ) : URValue TvmCell (orb a2 a1) := 
- wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
- 
-Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_data_right a b ) 
- (in custom URValue at level 0 , a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
- 
- Definition prepare_internal_wallet_state_init_and_addr ( name :  String ) ( symbol : String )
+Definition prepare_internal_wallet_state_init_and_addr ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
 														( owner_address : optional address ) ( code : TvmCell ) 

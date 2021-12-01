@@ -36,7 +36,7 @@ Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMona
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 Module TONTokenWalletClassTypes := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule.
 
-(* Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule.
+(* Export SpecModuleForFuncNotations(* ForFuncs *).CommonAxiomsModule.
  *)
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  
@@ -206,37 +206,22 @@ Defined .
  , x8 custom URValue at level 0 
  , x9 custom URValue at level 0 ) : ursus_scope . 
 
+(*************************************************************)
+(*AL: ???????????????*)
  Definition workchain_id : UExpression XUInteger8 false . 
  	 	 	 refine {{ return_ {} (* Std :: get < addr_std > ( Address { tvm_myaddr () } () ) . workchain_id_ *) }} . 
  Defined . 
 
  Definition workchain_id_right  : URValue XUInteger8 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) workchain_id 
- ) . 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) workchain_id ) . 
  
- Notation " 'workchain_id_' '(' ')' " := 
- ( workchain_id_right 
- ) 
+ Notation " 'workchain_id_' '(' ')' " := ( workchain_id_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- 
-(* AL: change X to PhantomType , otherwise it does not know what is {} for X and XX itself *) 
-Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
-                                           (base : Y): UExpression XCell false .
- refine {{ return_ {} }} .  
-Defined .
 
-Definition prepare_persistent_data_right { X Y a1 a2 }  
-                                    ( persistent_data_header : URValue X a1 ) 
-                                    ( base : URValue Y a2 ) 
-               : URValue XCell (orb a2 a1) := 
-wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
+ (*************************************************************)
  
- Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_data_right a b ) 
- (in custom URValue at level 0 , a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
-
 Definition prepare_wallet_state_init_and_addr (wallet_data : TONTokenWalletClassTypes.DTONTokenWalletLRecord )
  : UExpression ( StateInitLRecord # uint256 ) false .
-   
 (* refine {{ if ( #{TIP3_ENABLE_EXTERNAL} )
                         then  { { _:UEf } } (* wallet_replay_protection_t::init()  *)
                         else  { { _:UEf } } ; { _ } }}. *)

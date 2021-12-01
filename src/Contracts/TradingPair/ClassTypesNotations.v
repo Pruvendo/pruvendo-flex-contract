@@ -4,12 +4,12 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import FinProof.Common.
 
-Require Import Project.CommonNotations.
+Require Import Project.CommonAxioms.
 Require Import TradingPair.ClassTypes.
 Require Import TradingPair.Interface. 
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
-Module Export CommonNotationsModule := CommonNotations xt sm cs.
+Module Export CommonAxiomsModule := CommonAxioms xt sm cs.
 Module Export ClassTypesModule := ClassTypes xt sm.
 Module Export InterfaceModule := PublicInterface xt sm.
 

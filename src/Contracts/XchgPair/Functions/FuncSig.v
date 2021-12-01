@@ -7,7 +7,7 @@ Require Import UrsusStdLib.Cpp.stdTypes.
 
 Require Import UrsusTVM.Cpp.tvmNotations.
 
-Require Import Project.CommonNotations.
+Require Import Project.CommonAxioms.
 
 Require Import XchgPair.ClassTypes.
 Require Import XchgPair.ClassTypesNotations.

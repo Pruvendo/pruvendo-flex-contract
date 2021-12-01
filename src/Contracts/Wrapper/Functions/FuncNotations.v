@@ -14,7 +14,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
-Require Import CommonNotations.
+Require Import CommonAxioms.
 Require Import Contracts.Wrapper.Ledger.
 Require Import Contracts.Wrapper.Functions.FuncSig.
 Require Import Contracts.Wrapper.ClassTypes.

@@ -22,7 +22,12 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_Price | _EmittedEvents | _MessagesLog.
+(* 1 *) Inductive MessagesAndEventsFields := 
+  | _OutgoingMessages_Price 
+  | _EmittedEvents 
+  | _GlobalParams
+  | _OutgoingMessageParams
+  | _MessagesLog.
 
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 Definition ContractFields := DPriceFields. 
@@ -39,11 +44,13 @@ Require Contracts.TONTokenWallet.ClassTypes.
 Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ ( XQueue (OutgoingMessage PricePublicInterfaceModule.IPrice) ) : Type ; 
- ( XList TVMEvent ) : Type ; 
- ( XString ) : Type ] .
+ [ XQueue (OutgoingMessage PricePublicInterfaceModule.IPrice) : Type ; 
+   XList TVMEvent : Type ; 
+   GlobalParamsLRecord: Type ;
+   OutgoingMessageParamsLRecord: Type ;
+   XList XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
-  Opaque MessagesAndEventsLRecord .
+Opaque MessagesAndEventsLRecord .
  
 (* 2 *) Definition ContractLRecord := DPriceLRecord.
 
@@ -973,57 +980,7 @@ Definition LocalStateField_XUInteger := LocalStateField01110 .
 Definition LocalStateField_XBool := LocalStateField00011 .
 Definition LocalStateField_XCell := LocalStateField00000 .
 
-
-Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
-         (v2: field_type f2) (r :  MessagesAndEventsLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= MessagesAndEventsLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
-
-(* Lemma SelfDeployerFields_noeq : forall (f1 f2:  ContractFields ) 
-         (v2: field_type f2) (r :  DPriceLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= DPriceLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed . *)
-
-(* Lemma LocalFields_noeq : forall (f1 f2:  LocalFieldsI ) 
-         (v2: field_type f2) (r :  LocalStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= LocalStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed . *)
-
-(* Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
-         (v2: field_type f2) (r :  LedgerLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= LedgerLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed . *)
+Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
+Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.
 
 End Ledger .

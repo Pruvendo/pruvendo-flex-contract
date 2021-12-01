@@ -13,8 +13,8 @@ Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require Import Project.CommonTypes. 
-Require  Import Contracts.TONTokenWallet.ClassTypes.
 
+Require TONTokenWallet.ClassTypes.
 Require Import Wrapper.ClassTypes.
 Require Import Wrapper.Interface.
 
@@ -23,7 +23,12 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 (*TONTokenWallet only*)
-Inductive MessagesAndEventsFields := | _OutgoingMessages_Wrapper | _EmittedEvents | _MessagesLog.
+Inductive MessagesAndEventsFields := 
+  | _OutgoingMessages_Wrapper 
+  | _EmittedEvents
+  | _GlobalParams
+  | _OutgoingMessageParams
+  | _MessagesLog.
 Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Definition ContractFields := DWrapperFields.
@@ -36,13 +41,15 @@ Module Export VMStateModule := VMStateModule xt sm.
 Module Export TypesModuleForLedger := Wrapper.ClassTypes.ClassTypes xt sm .
 Import xt.
 Module TONTonkenWalletModuleForPrice := 
-                      Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm .
+                      TONTokenWallet.ClassTypes.ClassTypes xt sm .
 
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
  [ XHMap address ( XQueue (OutgoingMessage  WrapperPublicInterfaceModule.IWrapper ) ) : Type ; 
    XList TVMEvent : Type ; 
-   XString : Type ] .
+   GlobalParamsLRecord: Type ;
+   OutgoingMessageParamsLRecord: Type ;
+   XList XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
  
@@ -716,5 +723,8 @@ Remove Hints LocalStateField10011 : typeclass_instances.
 Definition LocalStateField_XUInteger := LocalStateField01110 .
 Definition LocalStateField_XBool := LocalStateField00011 .
 Definition LocalStateField_XCell := LocalStateField00000 .
+
+Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
+Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.
 
 End Ledger .
