@@ -10,6 +10,7 @@ Require Import FinProof.ProgrammingWith.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 
+Require Import UrsusTVM.Cpp.tvmTypes.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
@@ -30,39 +31,24 @@ Require Import XchgPair.ClassTypes.
 Require Import Wrapper.ClassTypes.
 Require Import TONTokenWallet.ClassTypes.
 
-Require Import Contracts.XchgPair.ClassTypesNotations.
-Require Import Contracts.TradingPair.ClassTypesNotations.
-Require Import Contracts.TONTokenWallet.ClassTypesNotations.
-Require Import Contracts.Wrapper.ClassTypesNotations.
-
-
-
+Require Import XchgPair.ClassTypesNotations.
+Require Import TradingPair.ClassTypesNotations.
+Require Import TONTokenWallet.ClassTypesNotations.
+Require Import Wrapper.ClassTypesNotations.
 
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
-
 
 Module Funcs (co : CompilerOptions)(dc : ConstsTypesSig XTypesModule StateMonadModule) .
 Import co.
 
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 
-(* Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
- *)
+Module Import XchgPairModuleForFlex := XchgPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import TradingPairModuleForFlex := TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import TONTokenWalletModuleForFlex := TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import WrapperModuleForFlex := Wrapper.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
 
-Module Import XchgPairModuleForFlex := Contracts.XchgPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module Import TradingPairModuleForFlex := Contracts.TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module Import TONTokenWalletModuleForFlex := Contracts.TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module Import WrapperModuleForFlex := Contracts.Wrapper.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-
-
-
-(* Module TradingPairClassTypes := TradingPair.ClassTypes.ClassTypes XTypesModule StateMonadModule.
-Module XchgPairClassTypes := XchgPair.ClassTypes.ClassTypes XTypesModule StateMonadModule.
-Module WrapperClassTypesModule := Wrapper.ClassTypes.ClassTypes XTypesModule StateMonadModule.
-Module TONTokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule. *)
-(* Export SpecModuleForFuncNotations(* ForFuncs *).tvmNotationsModule.
- *)
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
 
 Import UrsusNotations.
@@ -146,14 +132,14 @@ Defined.
   }
 } *)
 
-Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
+Definition prepare_persistent_data { Y } (persistent_data_header : PhantomType) 
                                            (base : Y): UExpression XCell false .
  refine {{ return_ {} }} .  
 Defined .
 
-Definition prepare_persistent_data_right { X Y a1 a2 }  
-                                        ( persistent_data_header : URValue ( X ) a1 ) 
-                                        ( base : URValue ( Y ) a2 ) : URValue TvmCell (orb a2 a1) := 
+Definition prepare_persistent_data_right { Y a1 a2 }  
+                                        ( persistent_data_header : URValue PhantomType a1 ) 
+                                        ( base : URValue Y a2 ) : URValue TvmCell (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
  
 Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_data_right  a b ) 
@@ -272,7 +258,7 @@ Definition prepare_trading_pair ( flex : address )
                	 	 [$ tvm_myaddr () ⇒ { DTradingPair_ι_flex_addr_ } ; 
                       #{tip3_root} ⇒ { DTradingPair_ι_tip3_root_ } ; 
                       0 ⇒ { DTradingPair_ι_min_amount_ } ; 
-                      (* 0 *) {} ⇒ { DTradingPair_ι_notify_addr_ }  $] ; { _ } }} . 
+                      [ #{0%Z}, 0 ]  ⇒ { DTradingPair_ι_notify_addr_  }  $] ; { _ } }} . 
  	 	 refine {{ return_ ( prepare_trading_pair_state_init_and_addr_ ( !{ pair_data } , #{pair_code} ) ) }} . 
 Defined .
  
@@ -329,8 +315,8 @@ refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in
               {{ {trade_pair_ptr} with {} ⤳ TradingPair.deploy ( !{state_init} ) ; {_} }} ).  
 
       refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
-        {{ {trade_pair_ptr} with [$ ((#{listing_cfg}) ↑ ListingConfig.pair_deploy_value) ⇒ { Messsage_ι_value } ;
-                        DEFAULT_MSG_FLAGS ⇒ { Messsage_ι_flags }  $] 
+        {{ {trade_pair_ptr} with [$ (#{listing_cfg}) ↑ ListingConfig.pair_deploy_value ⇒ { Messsage_ι_value } ;
+                                     DEFAULT_MSG_FLAGS ⇒ { Messsage_ι_flags }  $] 
                         ⤳ TradingPair.onDeploy (!{req_info} ↑ TradingPairListingRequest.min_amount , 
                                                 (#{listing_cfg}) ↑ ListingConfig.pair_keep_balance , 
                                                 !{req_info} ↑ TradingPairListingRequest.notify_addr ) ; { _ } }} ).
@@ -458,7 +444,7 @@ Definition approveXchgPairImpl ( pubkey :  uint256 ) ( xchg_pair_listing_request
                       !{req_info} ↑ XchgPairListingRequest.tip3_major_root ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
                       !{req_info} ↑ XchgPairListingRequest.tip3_minor_root ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
                       0 ⇒ { DXchgPair_ι_min_amount_ } ; 
-           #{MonadTransformers21.xpair 0%Z 0} ⇒ { DXchgPair_ι_notify_addr_ } $] ; { _ } }} . (*45''*) 
+                  [ #{0%Z} , 0 ] ⇒ { DXchgPair_ι_notify_addr_ } $] ; { _ } }} . (*45''*) 
 
  	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ( "state_init" , "std_addr" ) := prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , #{xchg_pair_code} ) ; { _ } }} . 
       refine {{ new 'xchg_pair : address @ "xchg_pair" := {}  ; {_} }}. (*12''*)
@@ -779,12 +765,13 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_add
                       (#{tip3_major_root}) ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
                       (#{tip3_minor_root}) ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
                       0 ⇒ { DXchgPair_ι_min_amount_ }   ; 
-   #{MonadTransformers21.xpair 0%Z 0} ⇒ { DXchgPair_ι_notify_addr_ }  
+                     [ # {0%Z} , 0 ]  ⇒ { DXchgPair_ι_notify_addr_ }  
                    $] ; { _ } }} . 
  	 	 (* refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} . *) 
  	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ( "state_init" , "std_addr" )  := 
        prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , _xchg_pair_code_ -> get_default () ) ; { _ } }} . 
- 	 	 refine {{ return_ {} (* [ _workchain_id_ , !{std_addr} ] *) }} . 
+     (* AL: change workchain_id type *)  
+ 	 	 refine {{ return_ [ (* _workchain_id_ *) #{ (-1)%Z } , !{std_addr} ] }} . 
  Defined . 
 
  Definition approveXchgPair ( pubkey :  uint256 ) : UExpression address true . 
@@ -1071,7 +1058,7 @@ Defined .
                         (#{tip3_major_root}) ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
                         (#{tip3_minor_root}) ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
                                           0  ⇒ { DXchgPair_ι_min_amount_ } ; 
-          #{MonadTransformers21.xpair 0%Z 0} ⇒ { DXchgPair_ι_notify_addr_ }  
+          [#{0%Z} , 0] ⇒ { DXchgPair_ι_notify_addr_ }  
                    $] ; { _ } }} . 
  	 	 refine {{ new 'std_addr : uint256 @ "std_addr" := 
            second ( prepare_xchg_pair_state_init_and_addr_ ( !{ pair_data } , _xchg_pair_code_ -> get_default () ) ); { _ } }} . 
@@ -1119,11 +1106,7 @@ Defined .
  	 	 refine {{ new 'wallet_init_cl : TvmCell @ "wallet_init_cl" := {}  
  	 	            (*  build ( !{ wallet_init } ) . make_cell ( ) *) ; { _ } }} . 
  	 	 refine {{ return_ [ !{ wallet_init } ,  tvm_hash ( !{wallet_init_cl} )  ] }} . 
- Defined . 
-
- 
-
-
+Defined . 
 
 End FuncsInternal.
 End Funcs.

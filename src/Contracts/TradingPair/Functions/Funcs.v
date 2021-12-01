@@ -82,13 +82,13 @@ Definition _fallback ( _ : TvmCell ) ( _ : TvmSlice ) : UExpression uint false .
 	refine {{ return_ 0 }} . 
 Defined . 
  
-Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
+Definition prepare_persistent_data { Y } (persistent_data_header : PhantomType) 
                                            (base : Y): UExpression TvmCell false .
 	refine {{ return_ {} }} .  
 Defined .
 
-Definition prepare_persistent_data_right { X Y a1 a2 }  
-                                    ( persistent_data_header : URValue X a1 ) 
+Definition prepare_persistent_data_right { Y a1 a2 }  
+                                    ( persistent_data_header : URValue PhantomType a1 ) 
                                     ( base : URValue Y a2 ) : URValue TvmCell (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
  

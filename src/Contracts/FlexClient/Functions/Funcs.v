@@ -10,6 +10,7 @@ Require Import FinProof.ProgrammingWith.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 
+Require Import UrsusTVM.Cpp.tvmTypes.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
@@ -80,13 +81,13 @@ Existing Instance LedgerPruvendoRecord.
     return build(chain_tup).make_cell();
   }
 } *)
-Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
-                                           (base : Y): UExpression XCell false .
+Definition prepare_persistent_data {Y } (persistent_data_header : PhantomType) 
+                                        (base : Y): UExpression XCell false .
  refine {{ return_ {} }} .  
 Defined .
 
-Definition prepare_persistent_data_right { X Y a1 a2 }  
-                                    ( persistent_data_header : URValue ( X ) a1 ) 
+Definition prepare_persistent_data_right { Y a1 a2 }  
+                                    ( persistent_data_header : URValue PhantomType a1 ) 
                                     ( base : URValue ( Y ) a2 ) 
                : URValue ( XCell ) (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data 
@@ -237,7 +238,7 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (p
        refine {{ new 'pair_data : TradingPairClassTypes.DTradingPairLRecord @ "pair_data" := 
                               [$ _flex_ ⇒ { DTradingPair_ι_flex_addr_ } ; 
                               ( #{tip3_root} ) ⇒ { DTradingPair_ι_tip3_root_ } ;
-                              0 ⇒ { DTradingPair_ι_notify_addr_ }  $] ; {_} }}.  
+                              [ #{0%Z}, 0]  ⇒ { DTradingPair_ι_notify_addr_ }  $] ; {_} }}.  
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
             prepare_trading_pair_state_init_and_addr_ ( !{ pair_data } , _trading_pair_code_ )  ; { _ } }} . 
  	 	 refine {{ new 'trade_pair : ( address ) @ "trade_pair" := {} ; { _ } }} . 
@@ -301,14 +302,6 @@ Notation " 'prepare_xchg_pair_state_init_and_addr_' '(' x0 ',' x1 ')' " := (prep
     x0 custom URValue at level 0,
     x1 custom URValue at level 0) : ursus_scope.
 
-(* Arguments urgenerate_field {_} {_} {_} _ {_} & _.   *)  
-
-Check {{ new 'pair_data : ( XchgPairClassTypes.DXchgPairLRecord ) @ "pair_data" :=  
-               	 	 [$  _flex_  ⇒ { DXchgPair_ι_flex_addr_ } ; 
-                      { || #{ 0 } || : URValue _ false} ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
-                      { || #{ 0 } || : URValue _ false} ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
-                      { || #{ 0 } || : URValue _ false } ⇒ { DXchgPair_ι_notify_addr_ } $] ; {_} }}.
-
 Definition deployXchgPair ( tip3_major_root : ( address_t ) ) 
                            ( tip3_minor_root : ( address_t ) ) 
                            ( deploy_min_value : ( uint128 ) ) 
@@ -318,15 +311,11 @@ Definition deployXchgPair ( tip3_major_root : ( address_t ) )
                             : UExpression address true . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _owner_ ) , error_code::message_sender_is_not_my_owner ) ; { _ } }} . 
  	 	 refine {{ tvm_accept () ; { _ } }} .
-
-     (* Compute field_type DXchgPair_ι_tip3_major_root_.
-     Check ( || #{ tip3_major_root } || : URValue _ false ) : URValue (field_type DXchgPair_ι_tip3_major_root_) false. *) 
-
  	 	 refine {{ new 'pair_data : ( XchgPairClassTypes.DXchgPairLRecord ) @ "pair_data" :=  
                	 	 [$  _flex_  ⇒ { DXchgPair_ι_flex_addr_ } ; 
                        #{ tip3_major_root }  ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
                        #{ tip3_minor_root }  ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
-                       #{0} ⇒ { DXchgPair_ι_notify_addr_ } $] ; { _ } }} . 
+                       [ #{ 0%Z } , 0 ] ⇒ { DXchgPair_ι_notify_addr_ } $] ; { _ } }} . 
 
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
            prepare_xchg_pair_state_init_and_addr_ ( !{ pair_data } , _xchg_pair_code_ )  ; { _ } }} .   
@@ -1199,11 +1188,3 @@ Definition hasFlexWrapperCode : UExpression XBool false .
 
 End FuncsInternal.
 End Funcs.
-
-
-
-
-
-
-
-

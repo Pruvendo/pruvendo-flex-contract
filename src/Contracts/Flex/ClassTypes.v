@@ -70,6 +70,7 @@ Opaque WrapperListingRequestLRecord.
  ( WrapperListingRequestLRecord ) : Type ] .
 Elpi GeneratePruvendoRecord WrapperListingRequestWithPubkeyL WrapperListingRequestWithPubkeyFields . 
 
+Opaque addr_stdLRecord address.
 (* 4 *) Definition TradingPairListingRequestL : list Type := 
  [ ( address ) : Type ; 
  ( XUInteger128 ) : Type ; 

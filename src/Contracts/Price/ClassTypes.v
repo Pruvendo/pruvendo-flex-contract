@@ -64,6 +64,7 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 Local Open Scope ursus_scope.
 
+Opaque addr_stdLRecord address.
 Definition SellArgsL : list Type := 
  [ ( XUInteger128 ) : Type ; 
  ( address ) : Type ] .
