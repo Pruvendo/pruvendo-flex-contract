@@ -423,10 +423,10 @@ Definition DFlex_ι_deployer_pubkey__left (x: ULValue DFlexLRecord): ULValue XUI
 Notation " a '↑' 'DFlex.deployer_pubkey_' " := ( DFlex_ι_deployer_pubkey__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.deployer_pubkey_' " := ( DFlex_ι_deployer_pubkey__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_workchain_id__right {b} (x: URValue DFlexLRecord b): URValue XUInteger8 b :=
+Definition DFlex_ι_workchain_id__right {b} (x: URValue DFlexLRecord b): URValue XInteger (* XUInteger8 *) b :=
     || {x} ^^ {DFlex_ι_workchain_id_} || : _.
     
-Definition DFlex_ι_workchain_id__left (x: ULValue DFlexLRecord): ULValue XUInteger8 :=
+Definition DFlex_ι_workchain_id__left (x: ULValue DFlexLRecord): ULValue XInteger (* XUInteger8 *) :=
     {{ {x} ^^ {DFlex_ι_workchain_id_} }} : _.
     
 Notation " a '↑' 'DFlex.workchain_id_' " := ( DFlex_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.

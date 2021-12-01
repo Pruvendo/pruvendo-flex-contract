@@ -66,25 +66,25 @@ Parameter prepare_wrapper_state_init_and_addr : TvmCell -> WrapperClassTypesModu
 Parameter prepare_flex_state_init_and_addr : ContractLRecord -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
 
 Parameter prepare_external_wallet_state_init_and_addr : String -> String -> uint8 -> uint256 -> uint256 -> address -> 
-                                                        optional address -> TvmCell -> uint8 -> UExpression ( StateInitLRecord # uint256 ) false . 
+                                                        optional address -> TvmCell -> int -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter prepare_internal_wallet_state_init_and_addr : String -> String -> uint8 -> uint256 -> uint256 -> address -> 
-                                                        optional address -> TvmCell -> uint8 -> UExpression ( StateInitLRecord # uint256 ) false . 
+                                                        optional address -> TvmCell -> int -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter prepare_trading_pair_state_init_and_addr : TradingPairClassTypesModule.DTradingPairLRecord -> TvmCell ->
                                                      UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter prepare_trading_pair : address -> address -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter prepare_xchg_pair_state_init_and_addr : XchgPairClassTypesModule.DXchgPairLRecord -> TvmCell -> 
                                                   UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter approveTradingPairImpl : uint256 -> trading_pairs_map -> 
-                                   TvmCell -> uint8 -> ListingConfigLRecord -> 
+                                   TvmCell -> int -> ListingConfigLRecord -> 
                                    UExpression ( address # trading_pairs_map ) true .
 Parameter rejectTradingPairImpl : uint256 -> trading_pairs_map-> 
                                   ListingConfigLRecord -> UExpression trading_pairs_map true . 
-Parameter approveXchgPairImpl : uint256 -> xchg_pairs_map -> TvmCell -> uint8 -> 
+Parameter approveXchgPairImpl : uint256 -> xchg_pairs_map -> TvmCell -> int -> 
                                 ListingConfigLRecord -> UExpression ( address # xchg_pairs_map ) true . 
 Parameter rejectXchgPairImpl : uint256 -> xchg_pairs_map -> ListingConfigLRecord -> 
                                UExpression xchg_pairs_map true . 
 Parameter approveWrapperImpl : uint256 -> wrappers_map -> TvmCell -> TvmCell -> 
-                               TvmCell -> uint8 -> ListingConfigLRecord -> 
+                               TvmCell -> int -> ListingConfigLRecord -> 
                                UExpression ( address # wrappers_map )  true . 
 Parameter rejectWrapperImpl : uint256 -> wrappers_map ->
                               ListingConfigLRecord -> UExpression wrappers_map true . 

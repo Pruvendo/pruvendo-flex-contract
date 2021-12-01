@@ -94,8 +94,8 @@ Definition deployer_pubkey__right := ( URState (f:=_Contract) (H:=ContractLEmbed
 Notation " '_deployer_pubkey_' " := ( deployer_pubkey__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_deployer_pubkey_' " := ( deployer_pubkey__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_workchain_id_ ) : ULValue uint8 ) . 
-Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_workchain_id_ ) : URValue uint8 false ) . 
+Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_workchain_id_ ) : ULValue int (* uint8 *) ) . 
+Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_workchain_id_ ) : URValue int (* uint8 *) false ) . 
 Notation " '_workchain_id_' " := ( workchain_id__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_workchain_id_' " := ( workchain_id__right ) (in custom URValue at level 0) : ursus_scope. 
 
@@ -549,7 +549,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , flex_data custom URValue at level 0 
  , flex_code custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_external_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( uint8 ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition prepare_external_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( int ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_external_wallet_state_init_and_addr 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
@@ -566,7 +566,7 @@ Local Open Scope string_scope.
  , code custom URValue at level 0 
  , workchain_id custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( uint8 ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( int ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
@@ -617,7 +617,7 @@ Local Open Scope string_scope.
 ( pubkey : URValue ( uint256 ) a1 ) 
 ( trading_pair_listing_requests : URValue ( XHMap uint256  TradingPairListingRequestLRecord) a2 ) 
 ( pair_code : URValue ( XCell ) a3 )
- ( workchain_id : URValue ( uint8 ) a4 ) 
+ ( workchain_id : URValue ( int ) a4 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) : URValue (address # (XHMap uint256  TradingPairListingRequestLRecord)) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveTradingPairImpl 
  pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) . 
@@ -651,7 +651,7 @@ Local Open Scope string_scope.
 ( pubkey : URValue ( uint256 ) a1 )
  ( xchg_pair_listing_requests : URValue ( XHMap uint256 XchgPairListingRequestLRecord) a2 ) 
 ( xchg_pair_code : URValue ( XCell ) a3 )
- ( workchain_id : URValue ( uint8 ) a4 ) 
+ ( workchain_id : URValue ( int ) a4 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) :
  URValue ( address # (XHMap uint256 XchgPairListingRequestLRecord )  ) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveXchgPairImpl 
@@ -688,7 +688,7 @@ Local Open Scope string_scope.
 ( wrapper_code : URValue ( XCell ) a3 ) 
 ( ext_wallet_code : URValue ( XCell ) a4 ) 
 ( flex_wallet_code : URValue ( XCell ) a5 )
- ( workchain_id : URValue ( uint8 ) a6 ) 
+ ( workchain_id : URValue ( int ) a6 ) 
 ( listing_cfg : URValue ( ListingConfigLRecord ) a7 ) 
 : URValue ( address # (XHMap uint256 WrapperListingRequestLRecord)  ) true := 
 
