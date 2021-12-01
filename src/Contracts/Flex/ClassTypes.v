@@ -121,7 +121,7 @@ Elpi GeneratePruvendoRecord FlexDetailsL FlexDetailsFields .
  
 (* 10 *) Definition DFlexL : list Type := 
  [ ( XUInteger256 ) : Type ; 
- ( XUInteger8 ) : Type ; 
+ ( XInteger (* XUInteger8 *) ) : Type ; (* _workchain_id_ *)
  ( XString ) : Type ; 
  ( ( XMaybe address ) ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 

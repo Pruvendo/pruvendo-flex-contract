@@ -162,10 +162,10 @@ Definition DWrapper_ι_decimals__left (x: ULValue DWrapperLRecord): ULValue XUIn
 Notation " a '↑' 'DWrapper.decimals_' " := ( DWrapper_ι_decimals__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DWrapper.decimals_' " := ( DWrapper_ι_decimals__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DWrapper_ι_workchain_id__right {b} (x: URValue DWrapperLRecord b): URValue XUInteger8 b :=
+Definition DWrapper_ι_workchain_id__right {b} (x: URValue DWrapperLRecord b): URValue XInteger (* XUInteger8 *) b :=
     || {x} ^^ {DWrapper_ι_workchain_id_} || : _ .
     
-Definition DWrapper_ι_workchain_id__left (x: ULValue DWrapperLRecord): ULValue XUInteger8 :=
+Definition DWrapper_ι_workchain_id__left (x: ULValue DWrapperLRecord): ULValue XInteger (* XUInteger8 *) :=
     {{ {x} ^^ {DWrapper_ι_workchain_id_} }} : _.
     
 Notation " a '↑' 'DWrapper.workchain_id_' " := ( DWrapper_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.

@@ -18,8 +18,7 @@ Local Open Scope xlist_scope.
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
-
-Opaque addr_stdLRecord address.
+Opaque address .
 (* 2 *) Definition WrapperRetL : list Type := 
  [ ( XUInteger32 ) : Type ; 
  ( address ) : Type ] .
@@ -49,7 +48,7 @@ Elpi GeneratePruvendoRecord wrapper_details_infoL wrapper_details_infoFields .
  [ ( XString ) : Type ; 
  ( XString ) : Type ; 
  ( XUInteger8 ) : Type ; 
- ( XUInteger8 ) : Type ; 
+ ( XInteger (* XUInteger8 *) ) : Type ; (* DWrapper_ι_workchain_id_ *)
  ( XUInteger256 ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 

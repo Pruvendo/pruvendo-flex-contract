@@ -77,6 +77,8 @@ Definition constructor ( deployer_pubkey :  uint256 ) ( ownership_description : 
 refine {{ return_ {} }} .
 Defined . 
 
+Print constructor .
+
 Definition constructor_left { R a1 a2 a3 a4 a5 a6 }  ( deployer_pubkey : URValue uint256 a1 ) 
                                                       ( ownership_description : URValue ( XString ) a2 ) 
                                                       ( owner_address : URValue ( optional address ) a3 ) 
@@ -290,13 +292,13 @@ Definition prepare_trading_pair_right { a1 a2 a3 }  ( flex : URValue address a1 
 
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
                 prepare_trading_pair_ ( tvm_myaddr () , #{tip3_root} , _pair_code_ -> get_default () ) ; { _ } }} .
- 	 	 refine {{ return_ {} (* [ _workchain_id_ , !{std_addr} ) *) }} . 
+ 	 	 refine {{ return_ [ _workchain_id_ , !{std_addr} ]  }} . 
  Defined .
  
 Definition approveTradingPairImpl ( pubkey : uint256 )
                                   ( trading_pair_listing_requests : trading_pairs_map ) 
                                   ( pair_code : TvmCell ) 
-                                  ( workchain_id : uint8 ) 
+                                  ( workchain_id : int ) 
                                   ( listing_cfg : ListingConfigLRecord ) : UExpression ( address * (trading_pairs_map ) ) true . 
  	 	 refine {{ new 'opt_req_info : optional TradingPairListingRequestLRecord @ "opt_req_info" := 
                 (#{trading_pair_listing_requests}) -> extract ( #{pubkey} ) ; {_} }} .
@@ -334,7 +336,7 @@ Defined .
 Definition approveTradingPairImpl_right { a1 a2 a3 a4 a5 } ( pubkey : URValue uint256 a1 ) 
                                                            ( trading_pair_listing_requests : URValue trading_pairs_map a2 ) 
                                                            ( pair_code : URValue TvmCell a3 )
-                                                           ( workchain_id : URValue uint8 a4 ) 
+                                                           ( workchain_id : URValue int a4 ) 
                                                            ( listing_cfg : URValue ListingConfigLRecord a5 ) 
                                                            : URValue ( address # trading_pairs_map )  true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveTradingPairImpl pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) . 
@@ -346,7 +348,7 @@ Notation " 'approveTradingPairImpl_' '(' pubkey , trading_pair_listing_requests 
 
  Definition approveTradingPair ( pubkey :  uint256 ) : UExpression address true . 
   	 refine {{ check_owner_ ( ) ; { _ } }} .
- 	 	 refine {{ tvm_accept () ; { _ } }} . 
+ 	 	 refine {{ tvm_accept () ; { _ } }} .
  	 	 refine {{ new ( 'trade_pair : address , 'new_trading_pair_listing_requests : trading_pairs_map ) 
                     @ ("trade_pair", "new_trading_pair_listing_requests")  := 
             approveTradingPairImpl_ ( #{pubkey} , _trading_pair_listing_requests_ , _pair_code_ -> get_default () , _workchain_id_ , _listing_cfg_ ) ; { _ } }} . 
@@ -431,7 +433,7 @@ Notation " 'prepare_xchg_pair_state_init_and_addr_' '(' pair_data , pair_code ')
  (in custom URValue at level 0 , pair_data custom URValue at level 0 , pair_code custom URValue at level 0 ) : ursus_scope .
 
 Definition approveXchgPairImpl ( pubkey :  uint256 ) ( xchg_pair_listing_requests :  xchg_pairs_map ) 
-                               ( xchg_pair_code :  TvmCell ) ( workchain_id :  uint8 ) ( listing_cfg :  ListingConfigLRecord ) 
+                               ( xchg_pair_code :  TvmCell ) ( workchain_id :  int ) ( listing_cfg :  ListingConfigLRecord ) 
                                : UExpression ( address # xchg_pairs_map )  true . 
 
  	 	 refine {{ new 'opt_req_info : ( optional XchgPairListingRequestLRecord ) @ "opt_req_info" := 
@@ -475,9 +477,9 @@ Definition approveXchgPairImpl ( pubkey :  uint256 ) ( xchg_pair_listing_request
  Definition approveXchgPairImpl_right { a1 a2 a3 a4 a5 }  
 ( pubkey : URValue uint256 a1 ) 
 ( xchg_pair_listing_requests : URValue xchg_pairs_map a2 ) 
-( xchg_pair_code : URValue TvmCell a3 ) ( workchain_id : URValue uint8 a4 ) 
+( xchg_pair_code : URValue TvmCell a3 ) ( workchain_id : URValue int a4 ) 
 ( listing_cfg : URValue ListingConfigLRecord a5 ) 
-: URValue ( address * xchg_pairs_map ) true := 
+: URValue ( address # xchg_pairs_map ) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveXchgPairImpl 
  pubkey xchg_pair_listing_requests xchg_pair_code workchain_id listing_cfg ) . 
  
@@ -564,8 +566,8 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_ad
 ( root_address : address ) 
 ( owner_address :  ( optional address ) ) 
 ( code :  TvmCell ) 
-( workchain_id :  uint8 ) 
-: UExpression ( StateInitLRecord * uint256 )  false .
+( workchain_id :  int ) 
+: UExpression ( StateInitLRecord # uint256 )  false .
 
 refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExternalLRecord ) @ "wallet_data" := 
                  [$ 
@@ -606,7 +608,7 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
 ( root_address : URValue address a6 ) 
 ( owner_address : URValue ( optional address ) a7 )
  ( code : URValue TvmCell a8 ) 
-( workchain_id : URValue uint8 a9 ) 
+( workchain_id : URValue int a9 ) 
 : URValue ( StateInitLRecord * uint256 )  ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_external_wallet_state_init_and_addr 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
@@ -630,12 +632,12 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
 ( wrapper_code :  TvmCell ) 
 ( ext_wallet_code :  TvmCell ) 
 ( flex_wallet_code :  TvmCell ) 
-( workchain_id :  uint8 ) 
+( workchain_id :  int ) 
 ( listing_cfg :  ListingConfigLRecord ) 
 : UExpression ( address # ( wrappers_map ) )  true . 
 
- refine {{ new 'opt_req_info : ( optional WrapperListingRequestLRecord ) @ "opt_req_info" := {}
-       (* wrapper_listing_requests.extract ( pubkey ^^ uint256:get ( ) ) *) ; { _ } }} . 
+ refine {{ new 'opt_req_info : ( optional WrapperListingRequestLRecord ) @ "opt_req_info" := 
+             (#{wrapper_listing_requests}) -> extract ( #{pubkey} ) ; { _ } }} . 
  refine {{ require_ ( !{ opt_req_info }  ,  error_code::wrapper_not_requested  ) ; { _ } }} . 
  refine {{ new 'req_info : ( WrapperListingRequestLRecord ) @ "req_info" := 
                (!{opt_req_info}) -> get_default () ; { _ } }} . 
@@ -685,14 +687,14 @@ refine ( let wallet_addr_ptr := {{ IWrapperPtr [[ !{wallet_addr}  ]] }} in
  	 	 refine {{ wrapper_addr ( Grams ( listing_cfg . set_internal_wallet_value . get ( ) ) ) . setInternalWalletCode ( flex_wallet_code ) ; { _ } }} . 
  *) 	 	 refine {{ return_ [ !{wrapper_addr} , #{wrapper_listing_requests} ] }} . 
  Defined .
-
+ 
  Definition approveWrapperImpl_right { a1 a2 a3 a4 a5 a6 a7 }  
 ( pubkey : URValue uint256 a1 ) 
 ( wrapper_listing_requests : URValue (wrappers_map ) a2 )
 ( wrapper_code : URValue TvmCell a3 ) 
 ( ext_wallet_code : URValue TvmCell a4 ) 
 ( flex_wallet_code : URValue TvmCell a5 )
- ( workchain_id : URValue uint8 a6 ) 
+ ( workchain_id : URValue int a6 ) 
 ( listing_cfg : URValue ListingConfigLRecord a7 ) 
 : URValue ( address * (wrappers_map ) )  true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) approveWrapperImpl 
@@ -771,7 +773,7 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_add
  	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ( "state_init" , "std_addr" )  := 
        prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , _xchg_pair_code_ -> get_default () ) ; { _ } }} . 
      (* AL: change workchain_id type *)  
- 	 	 refine {{ return_ [ (* _workchain_id_ *) #{ (-1)%Z } , !{std_addr} ] }} . 
+ 	 	 refine {{ return_ [ _workchain_id_  , !{std_addr} ] }} . 
  Defined . 
 
  Definition approveXchgPair ( pubkey :  uint256 ) : UExpression address true . 
@@ -812,7 +814,7 @@ Definition registerWrapper
  	 	 refine {{ _wrapper_listing_requests_ -> set_at ( #{pubkey} , 
                                [ int_sender () , 
                                  int_value () - _listing_cfg_ ↑ ListingConfig.register_return_value , 
-                                 #{tip3cfg} ] ) ; { _ } }} .
+                                 #{tip3cfg} ] ) ; { _ } }} . 
  	 	 refine {{ new 'wrapper_data : ( WrapperClassTypesModule.DWrapperLRecord ) @ "wrapper_data" := 
  	 	 [$ ((#{tip3cfg}) ↑ Tip3Config.name) ⇒ { DWrapper_ι_name_ } ; 
         ((#{tip3cfg}) ↑ Tip3Config.symbol) ⇒ { DWrapper_ι_symbol_ } ; 
@@ -830,7 +832,7 @@ Definition registerWrapper
 (*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
  	 	 refine {{ new ( 'wrapper_init :StateInitLRecord , 'wrapper_hash_addr : uint256 ) @ ( "wrapper_init" , "wrapper_hash_addr" ) := 
                prepare_wrapper_state_init_and_addr_ ( _wrapper_code_ -> get_default () , !{wrapper_data} ) ; { _ } }} . 
- 	 	 refine {{ return_  {} (* [ _workchain_id_ , !{wrapper_hash_addr} ] *) }} . 
+ 	 	 refine {{ return_  [ _workchain_id_ , !{wrapper_hash_addr} ] }} . 
  Defined . 
  
  Definition approveWrapper ( pubkey :  uint256 ) : UExpression address true . 
@@ -1093,7 +1095,7 @@ Defined .
 ( root_address : address ) 
 ( owner_address :  ( optional address ) ) 
 ( code :  TvmCell ) 
-( workchain_id :  uint8 ) 
+( workchain_id :  int ) 
 : UExpression ( StateInitLRecord * uint256 ) false . 
  	 	 refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletInternalLRecord ) @ "wallet_data" := 
                  [ #{name} , #{symbol} , #{decimals} , 0 , #{root_public_key} , 
