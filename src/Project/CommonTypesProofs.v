@@ -8,9 +8,6 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import CommonTypes.
 
-(* Require Import Contracts.PriceXchg.ClassTypes.
-Require Import Contracts.PriceXchg.Ledger . *)
-
 Module CommonTypesProofs (xt: XTypesSig) (sm: StateMonadSig).
 Module Export CommonTypes := Types xt sm.
 

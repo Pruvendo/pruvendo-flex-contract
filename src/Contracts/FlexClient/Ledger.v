@@ -22,6 +22,7 @@ Require Price.ClassTypes.
 Require PriceXchg.ClassTypes.
 Require Flex.ClassTypes.
 
+Require Import FlexClient.Interface.
 Require TradingPair.Interface.
 Require Import Contracts.FlexClient.Interface.
 Require Import Contracts.XchgPair.Interface.
@@ -70,7 +71,6 @@ Module TONTokenWalletInterfaceModule := TONTokenWallet.Interface.PublicInterface
 Module PriceXchgInterfaceModule := PriceXchg.Interface.PublicInterface xt sm .
 Module PriceInterfaceModule := Price.Interface.PublicInterface xt sm .
 Module FlexInterfaceModule := Flex.Interface.PublicInterface xt sm .
-
 
 Import xt.
 
@@ -667,6 +667,10 @@ Remove Hints LocalStateField10000 : typeclass_instances.
 Definition LocalStateField_XUInteger := LocalStateField00000 .
 Definition LocalStateField_XBool := LocalStateField01100 .
 Definition LocalStateField_XCell := LocalStateField00001 .
+
+Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
+Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.
+
 
 End Ledger .
 

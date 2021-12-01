@@ -14,7 +14,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
-Require Import CommonNotations.
+Require Import CommonAxioms.
 Require Import Contracts.Price.Ledger.
 Require Import Contracts.Price.Functions.FuncSig.
 Require Import Contracts.Price.ClassTypes.

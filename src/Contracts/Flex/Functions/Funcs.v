@@ -119,36 +119,6 @@ Definition setSpecificCode ( type :  uint8 ) ( code :  TvmCell ) : UExpression P
  	 	 refine {{ return_ {} }} .
 Defined.
 
-(* inline cell prepare_persistent_data(persistent_data_header_t<IContract, ReplayAttackProtection> persistent_data_header,
-                                    DContract base) {
-  using namespace schema;
-  auto data_tup = to_std_tuple(base);
-  if constexpr (persistent_header_info<IContract, ReplayAttackProtection>::non_empty) {
-    auto data_tup_combined = std::tuple_cat(std::make_tuple(bool_t(false), persistent_data_header), data_tup);
-    auto chain_tup = make_chain_tuple(data_tup_combined);
-    return build(chain_tup).make_cell();
-  } else {
-    auto data_tup_combined = std::tuple_cat(std::make_tuple(bool_t(false)), data_tup);
-    auto chain_tup = make_chain_tuple(data_tup_combined);
-    return build(chain_tup).make_cell();
-  }
-} *)
-
-Definition prepare_persistent_data { Y } (persistent_data_header : PhantomType) 
-                                           (base : Y): UExpression XCell false .
- refine {{ return_ {} }} .  
-Defined .
-
-Definition prepare_persistent_data_right { Y a1 a2 }  
-                                        ( persistent_data_header : URValue PhantomType a1 ) 
-                                        ( base : URValue Y a2 ) : URValue TvmCell (orb a2 a1) := 
- wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
- 
-Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_data_right  a b ) 
- (in custom URValue at level 0 , a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
-
-
-
 Definition setPairCode ( code :  TvmCell ) : UExpression PhantomType true . 
   refine {{ require_ ( ( ~ _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
   refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 

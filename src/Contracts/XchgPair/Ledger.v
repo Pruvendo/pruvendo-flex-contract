@@ -21,7 +21,12 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-Inductive MessagesAndEventsFields := | _OutgoingMessages_XchgPair | _EmittedEvents | _MessagesLog.
+Inductive MessagesAndEventsFields := 
+  | _OutgoingMessages_XchgPair 
+  | _EmittedEvents 
+  | _GlobalParams
+  | _OutgoingMessageParams
+  | _MessagesLog.
 Definition ContractFields := DXchgPairFields.
 
 Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
@@ -37,7 +42,9 @@ Import xt.
 Definition MessagesAndEventsL : list Type := 
  [ XHMap address (XQueue (OutgoingMessage XchgPairPublicInterfaceModule.IXchgPair )) : Type ; 
    XList TVMEvent : Type ; 
-   XString : Type ] .
+   GlobalParamsLRecord: Type ;
+   OutgoingMessageParamsLRecord: Type ;
+   XList XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
  
@@ -426,6 +433,9 @@ Remove Hints LocalStateField1010 : typeclass_instances.
 Definition LocalStateField_XUInteger := LocalStateField0110 .
 Definition LocalStateField_XBool := LocalStateField0011 .
 Definition LocalStateField_XCell := LocalStateField0001 .
+
+Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
+Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.
 
 End Ledger .
 

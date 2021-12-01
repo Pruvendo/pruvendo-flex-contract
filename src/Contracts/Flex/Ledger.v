@@ -36,6 +36,8 @@ Inductive MessagesAndEventsFields := | _OutgoingMessages_IListingAnswer
                                      | _OutgoingMessages_IWrapper
                                      | _OutgoingMessages_ITONTokenWallet
                                      | _EmittedEvents 
+                                     | _GlobalParams
+                                     | _OutgoingMessageParams
                                      | _MessagesLog.
 
 Inductive LedgerFieldsI := | _Contract 
@@ -74,7 +76,9 @@ Definition MessagesAndEventsL : list Type :=
    ( XHMap address (XQueue (OutgoingMessage WrapperInterfaceModule.IWrapper )) ) : Type ;
    ( XHMap address (XQueue (OutgoingMessage TONTonkenWalletInterfaceModule.ITONTokenWallet )) ) : Type ;
    ( XList TVMEvent ) : Type ; 
-   ( XString ) : Type ] .
+   GlobalParamsLRecord: Type ;
+   OutgoingMessageParamsLRecord: Type ;
+   XList XString : Type ] .
    
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
@@ -1508,6 +1512,8 @@ Definition LocalStateField_XUInteger := LocalStateField011100 .
 Definition LocalStateField_XBool := LocalStateField010001 .
 Definition LocalStateField_XCell := LocalStateField000001 .
 
+Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
+Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.
 
 
 End Ledger .

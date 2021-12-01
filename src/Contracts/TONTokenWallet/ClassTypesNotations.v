@@ -3,14 +3,14 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 
-Require Import Project.CommonNotations.
+Require Import Project.CommonAxioms.
 Require Import Project.CommonTypes.
 
 Require Import TONTokenWallet.ClassTypes.
 Require Import TONTokenWallet.Interface.
 
 Module ClassTypesNotations (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm).
-Module Export CommonNotationsModule := CommonNotations xt sm cs.
+Module Export CommonAxiomsModule := CommonAxioms xt sm cs.
 Module Export ClassTypesModule := (* TONTokenWallet.ClassTypes. *)ClassTypes xt sm.
 Module Export InterfaceModule := PublicInterface xt sm.
 

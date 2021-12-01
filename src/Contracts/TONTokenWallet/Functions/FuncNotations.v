@@ -14,7 +14,7 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
 
-Require Import CommonNotations.
+Require Import CommonAxioms.
 Require Import Contracts.TONTokenWallet.Ledger.
 Require Import Contracts.TONTokenWallet.Functions.FuncSig.
 Require Import Contracts.TONTokenWallet.ClassTypes.

@@ -5,7 +5,7 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmNotations.
 
-Require Import Project.CommonNotations.
+Require Import Project.CommonAxioms.
 Require Import Flex.ClassTypesNotations.
 Require Import Flex.ClassTypes.
 Require Import Flex.Ledger.

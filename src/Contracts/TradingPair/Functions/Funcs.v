@@ -15,7 +15,7 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonTypes.
-Require Import Project.CommonNotations.
+Require Import Project.CommonAxioms.
 Require Import Project.CommonConstSig.
 
 (*Fully qualified name are mandatory in multi-contract environment*)
@@ -82,19 +82,6 @@ Definition _fallback ( _ : TvmCell ) ( _ : TvmSlice ) : UExpression uint false .
 	refine {{ return_ 0 }} . 
 Defined . 
  
-Definition prepare_persistent_data { Y } (persistent_data_header : PhantomType) 
-                                           (base : Y): UExpression TvmCell false .
-	refine {{ return_ {} }} .  
-Defined .
-
-Definition prepare_persistent_data_right { Y a1 a2 }  
-                                    ( persistent_data_header : URValue PhantomType a1 ) 
-                                    ( base : URValue Y a2 ) : URValue TvmCell (orb a2 a1) := 
- wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
- 
-Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_data_right a b ) 
- (in custom URValue at level 0 , a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
-
 Definition prepare_trading_pair_state_init_and_addr ( pair_data : ContractLRecord) ( pair_code : TvmCell ) 
 													: UExpression ( StateInitLRecord * uint256 ) false . 
 	refine {{ new 'pair_data_cl : TvmCell @ "pair_data_cl" := 

@@ -21,7 +21,12 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 (* TONTokenWallet, *)
-Inductive MessagesAndEventsFields := | _OutgoingMessages_PriceXchg | _EmittedEvents | _MessagesLog.
+Inductive MessagesAndEventsFields := 
+  | _OutgoingMessages_PriceXchg 
+  | _EmittedEvents 
+  | _GlobalParams
+  | _OutgoingMessageParams
+  | _MessagesLog.
 Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 Definition ContractFields := DPriceXchgFields.
 
@@ -42,9 +47,11 @@ Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.Clas
 Local Open Scope ursus_scope.
 
 Definition MessagesAndEventsL : list Type := 
- [ ( XQueue (OutgoingMessage PriceXchgPublicInterfaceModule.IPriceXchg) ) : Type ; 
- ( XList TVMEvent ) : Type ; 
- ( XString ) : Type ] .
+ [ XQueue (OutgoingMessage PriceXchgPublicInterfaceModule.IPriceXchg) : Type ; 
+   XList TVMEvent : Type ; 
+   GlobalParamsLRecord: Type ;
+   OutgoingMessageParamsLRecord: Type ; 
+   XList XString  : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
  
@@ -934,6 +941,10 @@ Remove Hints LocalStateField11010 : typeclass_instances.
 Definition LocalStateField_XUInteger := LocalStateField01110 .
 Definition LocalStateField_XBool := LocalStateField00011 .
 Definition LocalStateField_XCell := LocalStateField00000 .
+
+Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
+Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.
+
 
 End Ledger .
 

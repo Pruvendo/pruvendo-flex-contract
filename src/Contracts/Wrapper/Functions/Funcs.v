@@ -16,17 +16,12 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import Project.CommonConstSig.
 Require Import Project.CommonTypes.
 
-Require Import Contracts.Wrapper.Ledger.
-Require Import Contracts.Wrapper.Functions.FuncSig.
-Require Import Contracts.Wrapper.Functions.FuncNotations.
-Require Import Contracts.Wrapper.Interface.
+Require Import Wrapper.Ledger.
+Require Import Wrapper.Functions.FuncSig.
+Require Import Wrapper.Functions.FuncNotations.
+Require Import Wrapper.Interface.
 
-(* Require  Import Contracts.TradingPair.ClassTypes.
-Require  Import Contracts.PriceXchg.ClassTypes.
-Require  Import Contracts.XchgPair.ClassTypes.
-Require  Import Contracts.Price.ClassTypes.
-Require  Import Contracts.Wrapper.ClassTypes. *)
-Require  Import Contracts.TONTokenWallet.ClassTypes.
+Require Import TONTokenWallet.ClassTypes.
 
 (*********************************************)
 (* Require Import TradingPair.ClassTypesNotations. *)
@@ -170,25 +165,11 @@ Definition setInternalWalletCode ( wallet_code : ( XCell ) ) : UExpression XBool
  	 refine {{ return_  TRUE  }} . 
 Defined . 
 
-Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
-                                           (base : Y): UExpression XCell false .
- refine {{ return_ {} }} .  
-Defined .
-
-Definition prepare_persistent_data_right { X Y a1 a2 }  
-                                    ( persistent_data_header : URValue X a1 ) 
-                                    ( base : URValue Y a2 ) 
-               : URValue XCell (orb a2 a1) := 
-wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
- 
- Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_data_right a b ) 
- (in custom URValue at level 0 , a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
-
 Definition prepare_internal_wallet_state_init_and_addr ( name :  String ) ( symbol : String )
- 														( decimals : uint8 ) ( root_public_key : uint256 )
- 														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
-														( workchain_id : uint8 ) : UExpression ( StateInitLRecord * uint256 ) false .
+ 													   ( decimals : uint8 ) ( root_public_key : uint256 )
+ 													   ( wallet_public_key : uint256 ) ( root_address : address ) 
+													   ( owner_address : optional address ) ( code : TvmCell ) 
+													   ( workchain_id : uint8 ) : UExpression ( StateInitLRecord * uint256 ) false .
  	 	 refine {{ new 'wallet_data : TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord @ "wallet_data" := 
                  [ #{name} , #{symbol} , #{decimals} , 0 , #{root_public_key} , 
                    #{wallet_public_key} , #{root_address} , #{owner_address} , 
@@ -210,8 +191,7 @@ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6
 																							( owner_address : URValue ( optional address ) a7 ) 
 																							( code : URValue TvmCell a8 ) 
 																							( workchain_id : URValue uint8 a9 ) : URValue ( StateInitLRecord * uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
-	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr 
-	name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
+	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
 Notation " 'prepare_internal_wallet_state_init_and_addr_' '(' name ',' symbol ',' decimals ',' root_public_key ',' wallet_public_key ',' root_address ',' owner_address ',' code ',' workchain_id ')' " := 
  ( prepare_internal_wallet_state_init_and_addr_right name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) 
@@ -224,62 +204,43 @@ Definition optional_owner ( owner : ( address ) ) : UExpression (XMaybe address)
 Defined . 
  
 Definition optional_owner_right { a1 }  ( owner : URValue ( address ) a1 ) : URValue (XMaybe address) a1 := 
-wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner 
-owner ) . 
+wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner owner ) . 
 
 Notation " 'optional_owner_' '(' owner ')' " := 
 ( optional_owner_right 
 owner ) 
 (in custom URValue at level 0 , owner custom URValue at level 0 ) : ursus_scope . 
 
-Definition calc_internal_wallet_init ( pubkey : ( XUInteger256 ) ) ( owner_addr : ( address ) ) : UExpression ( StateInitLRecord # address ) true . 
-		refine {{ wallet_init : ( StateInitLRecord ) @ "wallet_init" ; {_} }} . 
- 	 	 refine {{ dest_addr : ( address ) @ "dest_addr" ; {_} }} . 
- 	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:address ) @
-                   ( "wallet_init" , "dest_addr" ) := 
-         prepare_internal_wallet_state_init_and_addr_ ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , tvm_myaddr () , optional_owner_ ( (#{ owner_addr }) ) , _internal_wallet_code_ -> get () , _workchain_id_ ) ; {_} }} . 
- 	 	 refine {{ new 'dest : ( address ) @ "dest" := {} 
-                      (* Address :: make_std ( _workchain_id_ , dest_addr ) *) ; {_} }} . 
- 	 	 refine {{ return_ {} (* [ wallet_init , (!{ dest }) ] *) }} . 
- Defined . 
+Definition calc_internal_wallet_init ( pubkey : ( XUInteger256 ) ) ( owner_addr : ( address ) ) : UExpression ( StateInitLRecord # address ) true . 		
+	refine {{ new ( 'wallet_init : StateInitLRecord , 'dest_addr : uint256 ) @ ( "wallet_init" , "dest_addr" ) := 
+	prepare_internal_wallet_state_init_and_addr_ ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , tvm_myaddr () , optional_owner_ ( (#{ owner_addr }) ) , _internal_wallet_code_ -> get () , _workchain_id_ ) ; {_} }} . 
+	refine {{ new 'dest : address @ "dest" := {} 
+				(* Address :: make_std ( _workchain_id_ , dest_addr ) *) ; {_} }} . 
+	refine {{ return_ [ !{wallet_init} , (!{ dest }) ] }} . 
+Defined . 
  
-Definition calc_internal_wallet_init_right { a1 a2 }  ( pubkey : URValue ( XUInteger256 ) a1 ) ( owner_addr : URValue ( address ) a2 ) 
-: URValue ( StateInitLRecord # address ) true (* orb a2 a1 *) := 
-wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_internal_wallet_init 
-pubkey owner_addr ) . 
+Definition calc_internal_wallet_init_right { a1 a2 }  ( pubkey : URValue uint256 a1 ) 
+												      ( owner_addr : URValue address a2 ) 
+                                           : URValue ( StateInitLRecord # address ) true (* orb a2 a1 *) := 
+	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_internal_wallet_init pubkey owner_addr ) . 
 
-Notation " 'calc_internal_wallet_init_' '(' pubkey ',' owner_addr ')' " := 
-( calc_internal_wallet_init_right 
-pubkey owner_addr ) 
-(in custom URValue at level 0 , pubkey custom URValue at level 0 
-, owner_addr custom URValue at level 0 ) : ursus_scope . 
+Notation " 'calc_internal_wallet_init_' '(' pubkey ',' owner_addr ')' " := ( calc_internal_wallet_init_right pubkey owner_addr ) 
+(in custom URValue at level 0 , pubkey custom URValue at level 0 , owner_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( address ) ) ( grams : ( XUInteger128 ) ) : UExpression address true . 
-    refine {{ new 'value_gr : ( uint256 ) @ "value_gr" := int_value () ; {_} }} . 
-		refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
-    refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:address ) @
-                  ( "wallet_init" , "dest" ) := 
-       calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} .  
+Definition deployEmptyWallet ( pubkey : uint256 ) 
+ 						      ( internal_owner : address ) 
+							  ( grams : uint128 ) : UExpression address true . 
+    refine {{ new 'value_gr : uint256 @ "value_gr" := int_value () ; {_} }} . 
+	refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
+    refine {{ new ( 'wallet_init : StateInitLRecord , 'dest:address ) @
+                  ( "wallet_init" , "dest" ) := calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} .  
 (*  refine {{ ITONTokenWalletPtr dest_handle ( dest ) ; {_} }} .  *)
 (* 		refine {{ dest_handle ^^ deploy_noop ( wallet_init , Grams ( (#{ grams }) . get () ) ) ; {_} }} .  *)
 (* 		refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; {_} }} .  *)
-		refine {{ return_ !{dest} }} . 
- Defined . 
+	refine {{ return_ !{dest} }} . 
+Defined . 
  
-(*  Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( address ) ) ( grams : ( XUInteger128 ) ) : UExpression address false . 
- refine {{ new 'value_gr : ( uint256 ) @ "value_gr" := {} ; {_} }} . 
-		refine {{ { value_gr } := int_value () ; {_} }} . 
-		refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
-		refine {{ wallet_init : ( uint256 ) @ "wallet_init" ; {_} }} . 
-		refine {{ dest : ( address ) @ "dest" ; {_} }} . 
-		(* refine {{ [ wallet_init , dest ] := calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; _ }} .  *)
-		(* refine {{ ITONTokenWalletPtr dest_handle ( dest ) ; _ }} .  *)
-		refine {{ dest_handle ^^ deploy_noop ( wallet_init , Grams ( (#{ grams }) . get () ) ) ; _ }} . 
-		refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; _ }} . 
-		refine {{ return_ dest }} . 
- Defined .  *)
- 
- Parameter set_int_sender : UExpression WrapperRetLRecord false .
+Parameter set_int_sender : UExpression WrapperRetLRecord false .
 
 Notation " 'set_int_sender_' '(' ')' " := 
  ( set_int_sender ) 

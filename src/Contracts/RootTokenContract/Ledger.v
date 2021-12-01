@@ -22,7 +22,12 @@ Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-(* 1 *) Inductive MessagesAndEventsFields := | _OutgoingMessages_ITONTokenWallet | _EmittedEvents | _MessagesLog.
+(* 1 *) Inductive MessagesAndEventsFields := 
+  | _OutgoingMessages_ITONTokenWallet 
+  | _EmittedEvents 
+  | _GlobalParams
+  | _OutgoingMessageParams
+  | _MessagesLog.
 (* 1 *) Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
@@ -37,8 +42,10 @@ Import xt.
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
  [ XHMap address ( XQueue (OutgoingMessage TONPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
-   XList TVMEvent : Type ; 
-   XString : Type ] .
+   XList TVMEvent : Type ;
+   GlobalParamsLRecord: Type ;
+   OutgoingMessageParamsLRecord: Type ; 
+   XList XString : Type ] .
 GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
 
@@ -836,5 +843,9 @@ Proof.
                cbv;
                first [reflexivity| contradiction]).
 Qed .
+
+Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
+Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.
+
 
 End Ledger .
