@@ -423,8 +423,8 @@ Notation " 'rejectTradingPair_' '(' pubkey ')' " := ( rejectTradingPair_right pu
 
 Definition prepare_xchg_pair_state_init_and_addr ( pair_data :  XchgPairClassTypesModule.DXchgPairLRecord ) 
                                                  ( pair_code :  TvmCell ) : UExpression ( StateInitLRecord # uint256 )  false . 
-  refine {{ new 'pair_data_cl : TvmCell @ "pair_data_cl" := {}
-              (* prepare_persistent_data_ ( {} , #{pair_data} ) *)  ; { _ } }} . 
+  refine {{ new 'pair_data_cl : TvmCell @ "pair_data_cl" := 
+                  prepare_persistent_data_ ( {} , #{pair_data} )   ; { _ } }} . 
   refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := 
             [$ {} ⇒ { StateInit_ι_split_depth } ; 
                {} ⇒ { StateInit_ι_special } ; 
@@ -433,7 +433,7 @@ Definition prepare_xchg_pair_state_init_and_addr ( pair_data :  XchgPairClassTyp
                {} ⇒ { StateInit_ι_library } $] ; { _ } }} . 
   refine {{ new 'pair_init_cl : TvmCell @ "pair_init_cl" := {} 
             (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
-  refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} )  ] }} . 
+  refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} )  ] }} .
 Defined .
 
 Definition prepare_xchg_pair_state_init_and_addr_right { a1 a2 } ( pair_data : URValue XchgPairClassTypesModule.DXchgPairLRecord a1 ) 
