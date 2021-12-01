@@ -187,7 +187,7 @@ Notation " 'error_code::wrapper_with_such_pubkey_already_requested' " := (sInjec
 Notation " 'error_code::trading_pair_with_such_pubkey_already_requested' " := (sInject trading_pair_with_such_pubkey_already_requested) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::xchg_pair_with_such_pubkey_already_requested' " := (sInject xchg_pair_with_such_pubkey_already_requested) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
-
+Notation " 'DEFAULT_MSG_FLAGS' " := (sInject DEFAULT_MSG_FLAGS ) (in custom URValue at level 0) : ursus_scope. 
 
 Module Calls (tc : SpecSig).
 

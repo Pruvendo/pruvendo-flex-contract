@@ -90,4 +90,6 @@ Parameter non_zero_remaining : ErrorType.
 Parameter bad_incoming_msg : ErrorType .
 Parameter internal_owner_disabled : ErrorType .
 
+Parameter DEFAULT_MSG_FLAGS : ErrorType .
+
 End ConstsTypesSig.
