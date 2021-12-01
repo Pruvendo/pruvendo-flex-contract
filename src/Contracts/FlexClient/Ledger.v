@@ -36,11 +36,6 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
-
-Fail Check  ttt.
-
-
-
 Inductive MessagesAndEventsFields := | _OutgoingMessages_FlexClient 
 | _OutgoingMessages_ITradingPair 
 | _OutgoingMessages_IXchgPair 
