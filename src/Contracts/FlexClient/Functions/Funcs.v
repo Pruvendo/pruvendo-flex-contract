@@ -76,8 +76,9 @@ Definition constructor ( pubkey : ( uint256 ) ) ( trading_pair_code : ( XCell ) 
  	 	 refine {{ _owner_ := #{pubkey} ; { _ } }} . 
  	 	 refine {{ _trading_pair_code_ := #{ trading_pair_code } ; { _ } }} . 
  	 	 refine {{ _xchg_pair_code_ := #{ xchg_pair_code } ; { _ } }} . 
- 	 	 refine {{ _workchain_id_ := {} (* Std :: get < addr_std > ( Address { tvm_myaddr ( ) } . val ( ) ) . workchain_id *) ; { _ } }} . 
- 	 	 refine {{ _flex_ := {} (* Address :: make_std ( 0 , 0 ) *) }} . 
+ 	 	 refine {{ _workchain_id_ := (tvm_myaddr ()) ↑ address.workchain_id ; { _ } }} . 
+ 	 	 refine {{ _flex_ := [ #{0%Z} , 0 ] ; {_} }} . 
+     refine {{ return_ {} }}.
  Defined .
  
 Definition constructor_left { R a1 a2 a3 }  
@@ -218,12 +219,10 @@ refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in
                refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
                   {{ {trade_pair_ptr} with [$ #{deploy_value} ⇒ { Messsage_ι_value } ;
                                               FALSE  ⇒ { Messsage_ι_bounce } ;
-                                  (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags }  $] 
+                                   DEFAULT_MSG_FLAGS ⇒ { Messsage_ι_flags }  $] 
                                   ⤳ TradingPair.onDeploy (#{min_trade_amount} , 
                                                           #{deploy_min_value} , 
                                                           #{notify_addr} ) ; { _ } }} ).
-
-
  	 	 refine {{ return_  !{trade_pair} }} . 
  Defined . 
 
@@ -294,7 +293,7 @@ refine ( let trade_pair_ptr := {{ IXchgPairPtr [[ !{trade_pair}  ]] }} in
                refine ( let trade_pair_ptr := {{ IXchgPairPtr [[ !{trade_pair}  ]] }} in 
                   {{ {trade_pair_ptr} with [$ #{deploy_value} ⇒ { Messsage_ι_value } ;
                                               FALSE  ⇒ { Messsage_ι_bounce } ;
-                                  (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags }  $] 
+                                   DEFAULT_MSG_FLAGS ⇒ { Messsage_ι_flags }  $] 
                                   ⤳ XchgPair.onDeploy (#{min_trade_amount} , 
                                                           #{deploy_min_value} , 
                                                           #{notify_addr} ) ; { _ } }} ).
@@ -389,7 +388,7 @@ Definition preparePrice (price min_amount : uint128 ) (deals_limit : uint8 )
            (#{price})  ⇒ { DPrice_ι_price_ } ;
            0  ⇒ { DPrice_ι_sells_amount_ } ;
            0  ⇒ { DPrice_ι_buys_amount_ } ;
-          (*  _flex_  ⇒ { DPrice_ι_flex_ } ; *)
+            _flex_  ⇒ { DPrice_ι_flex_ } ; 
            (#{min_amount})  ⇒ { DPrice_ι_min_amount_ } ;
            (#{deals_limit})  ⇒ { DPrice_ι_deals_limit_ } ;
            (#{notify_addr})  ⇒ { DPrice_ι_notify_addr_ } ;
@@ -402,7 +401,7 @@ Definition preparePrice (price min_amount : uint128 ) (deals_limit : uint8 )
          $] ; { _ } }} .
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
            prepare_price_state_init_and_addr_ ( !{ price_data } , #{price_code} ) ; { _ } }} .   
- 	 	 refine {{ new 'addr : address @ "addr" := {} (* address::make_std(workchain_id_, std_addr) *) ; { _ } }} .
+ 	 	 refine {{ new 'addr : address @ "addr" := [ _workchain_id_, !{std_addr} ] ; { _ } }} .
  	 	 refine {{ return_ [ !{state_init} , !{addr} , !{std_addr} ] }} .
 Defined.
 
@@ -463,7 +462,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
  refine ( let my_tip3_ptr := {{ ITONTokenWalletPtr [[ !{my_tip3}  ]] }} in 
             {{ {my_tip3_ptr} with [$ (#{tons_value}) ⇒ { Messsage_ι_value } ;
                                       FALSE  ⇒ { Messsage_ι_bounce } ;
-                                  (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags }  $] 
+                                  DEFAULT_MSG_FLAGS ⇒ { Messsage_ι_flags }  $] 
                             ⤳ .lendOwnership ( tvm_myaddr () , 0 , !{std_addr} , #{amount} , #{lend_finish_time} ,
                                               !{deploy_init_cl} , !{payload} ) ; {_} }} ).   
  	 	 refine {{ return_ !{price_addr} }} . 
@@ -519,7 +518,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
 
   refine ( let price_addr_ptr := {{ IPricePtr [[ !{price_addr}  ]] }} in 
 {{ {price_addr_ptr} with [$ (#{deploy_value}) ⇒ { Messsage_ι_value } ;
-                       (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags } ;
+                       DEFAULT_MSG_FLAGS ⇒ { Messsage_ι_flags } ;
                        FALSE  ⇒ { Messsage_ι_bounce } $]
                            ⤳ .buyTip3 ( #{amount} , #{my_tip3_addr} , #{order_finish_time} ) ; {_} }} ).
  	 	 refine {{ return_ !{price_addr} }} . 
@@ -559,7 +558,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
 refine {{ {price_addr} := !{price_addr} ; {_} }} .
 refine ( let price_addr_ptr := {{ IPricePtr [[ !{price_addr}  ]] }} in 
 {{ {price_addr_ptr} with [$ (#{value}) ⇒ { Messsage_ι_value } ;
-                       (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags } ;
+                       DEFAULT_MSG_FLAGS ⇒ { Messsage_ι_flags } ;
                        FALSE  ⇒ { Messsage_ι_bounce } $]
                            ⤳ Price.cancelSell ()  }} ).  
  Defined .
@@ -593,7 +592,7 @@ Definition cancelBuyOrder ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) (
  	 	 refine {{ {price_addr} := !{price_addr} (* What ? *) ; {_} }} . 
        refine ( let price_addr_ptr := {{ IPricePtr [[ !{price_addr}  ]] }} in 
 {{ {price_addr_ptr} with [$ (#{value}) ⇒ { Messsage_ι_value } ;
-                       (* DEFAULT_MSG_FLAGS *) 0 ⇒ { Messsage_ι_flags } ;
+                       DEFAULT_MSG_FLAGS ⇒ { Messsage_ι_flags } ;
                        FALSE  ⇒ { Messsage_ι_bounce } $]
                            ⤳ Price.cancelBuy ()  }} ).  
 
@@ -657,7 +656,7 @@ Notation " 'prepare_price_xchg_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
 ( deals_limit : ( uint8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( XCell ) )
  ( notify_addr : ( address_t ) ) 
-: UExpression ( StateInitLRecord # ( address # uint256 ) ) false . 
+: UExpression ( StateInitLRecord # ( address # uint256 ) ) true .
  	 	 refine {{ new 'price_data : ( PriceXchgClassTypesModule.DPriceXchgLRecord ) @ "price_data" :=  
                [$
                  [$ (#{price_num}) ⇒ {RationalPrice_ι_num} ; 
@@ -665,14 +664,14 @@ Notation " 'prepare_price_xchg_state_init_and_addr_' '(' x0 ',' x1 ')' " :=
                                      ⇒ { DPriceXchg_ι_price_ } ;
                0 ⇒ { DPriceXchg_ι_sells_amount_ } ;
                0 ⇒ { DPriceXchg_ι_buys_amount_ }  ;
-             (*   _flex_ ⇒ { DPriceXchg_ι_flex_ } ; *)
+               _flex_ ⇒ { DPriceXchg_ι_flex_ } ;
                (#{ min_amount }) ⇒ { DPriceXchg_ι_min_amount_ } ;
                (#{ deals_limit }) ⇒ { DPriceXchg_ι_deals_limit_ } ;
                (#{ notify_addr }) ⇒ { DPriceXchg_ι_notify_addr_ } ;
                _workchain_id_ ⇒ { DPriceXchg_ι_workchain_id_ } ;
                _tons_cfg_ ⇒ { DPriceXchg_ι_tons_cfg_ } ;
 
-               ( _flex_wallet_code_ -> get_default () ) ⇒ { DPriceXchg_ι_tip3_code_ } ;
+               ( _flex_wallet_code_ -> get () ) ⇒ { DPriceXchg_ι_tip3_code_ } ;
 
                (#{ major_tip3cfg }) ⇒ { DPriceXchg_ι_major_tip3cfg_ } ; 
                (#{ minor_tip3cfg }) ⇒ { DPriceXchg_ι_minor_tip3cfg_ } ; 
