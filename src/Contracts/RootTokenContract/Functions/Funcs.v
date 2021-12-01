@@ -35,9 +35,6 @@ Import co.
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 Module TONTokenWalletClassTypes := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule.
-
-(* Export SpecModuleForFuncNotations(* ForFuncs *).CommonAxiomsModule.
- *)
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  
 Import UrsusNotations.
@@ -48,107 +45,94 @@ Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
-
-Definition optional_owner ( owner : ( address ) ) : UExpression (XMaybe address) false . 
- 	 	 	 refine {{ return_ {} (* Std :: get < addr_std > ( (#{ owner }) () ) . address ? std::optional ( (#{ owner }) ) : std::optional () *) }} . 
+Definition optional_owner ( owner : address ) : UExpression (XMaybe address) false . 
+	refine {{ return_ ( ? (#{ owner }) ↑ address.address ) ? (#{owner}) -> set () : {} }} . 
 Defined . 
 
-Definition optional_owner_right { a1 }  ( owner : URValue ( address ) a1 ) : URValue (XMaybe address) a1 := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner 
- owner ) . 
+Definition optional_owner_right { a1 }  ( owner : URValue address a1 ) : URValue (optional address) a1 := 
+	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner owner ) . 
  
- Notation " 'optional_owner_' '(' owner ')' " := 
- ( optional_owner_right 
- owner ) 
+Notation " 'optional_owner_' '(' owner ')' " := ( optional_owner_right owner ) 
  (in custom URValue at level 0 , owner custom URValue at level 0 ) : ursus_scope . 
 
- Definition is_internal_owner : UExpression XBool false . 
- 	 	 	 refine {{ return_ (_owner_address_ -> has_value ()) }} . 
- Defined . 
+Definition is_internal_owner : UExpression boolean false . 
+	refine {{ return_ (_owner_address_ -> has_value ()) }} . 
+Defined. 
 
- Definition is_internal_owner_right  : URValue XBool false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) is_internal_owner 
- ) . 
+Definition is_internal_owner_right  : URValue boolean false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) is_internal_owner ) . 
  
- Notation " 'is_internal_owner_' '(' ')' " := 
- ( is_internal_owner_right 
- ) 
+Notation " 'is_internal_owner_' '(' ')' " := ( is_internal_owner_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition check_internal_owner : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( is_internal_owner_ ( ) ) , error_code::internal_owner_disabled ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( (_owner_address_ -> get_default () == int_sender ()) ) , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
-     refine {{ return_ {} }} .
- Defined . 
+Definition check_internal_owner : UExpression PhantomType true . 
+	refine {{ require_ ( ( is_internal_owner_ ( ) ) , error_code::internal_owner_disabled ) ; { _ } }} . 
+	(*AL: get under require *)
+	refine {{ require_ ( ( (_owner_address_ -> get_default () == int_sender ()) ) , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
+	refine {{ return_ {} }} .
+Defined . 
  
- Definition check_internal_owner_left { R }  : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) check_internal_owner 
- ) . 
+Definition check_internal_owner_left { R } : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) check_internal_owner ) . 
  
- Notation " 'check_internal_owner_' '(' ')' " := 
- ( check_internal_owner_left 
- ) 
+Notation " 'check_internal_owner_' '(' ')' " := ( check_internal_owner_left ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
  
- Definition check_external_owner ( allow_pubkey_owner_in_internal_node : ( XBool ) ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( (#{ allow_pubkey_owner_in_internal_node }) \\ ~ (is_internal_owner_ ( )) ) , error_code::internal_owner_enabled ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( msg_pubkey () == _root_public_key_ ) , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
-     refine {{ return_ {} }} . 
- Defined . 
+Definition check_external_owner ( allow_pubkey_owner_in_internal_node : boolean ) : UExpression PhantomType true . 
+	refine {{ require_ ( ( (#{ allow_pubkey_owner_in_internal_node }) \\ ~ (is_internal_owner_ ( )) ) , error_code::internal_owner_enabled ) ; { _ } }} . 
+	refine {{ require_ ( ( msg_pubkey () == _root_public_key_ ) , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
+	refine {{ return_ {} }} . 
+Defined . 
  
- Definition check_external_owner_left { R a1 }  ( allow_pubkey_owner_in_internal_node : URValue ( XBool ) a1 ) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) check_external_owner 
- allow_pubkey_owner_in_internal_node ) . 
+Definition check_external_owner_left { R a1 }  ( allow_pubkey_owner_in_internal_node : URValue ( boolean ) a1 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) check_external_owner allow_pubkey_owner_in_internal_node ) . 
  
- Notation " 'check_external_owner_' '(' allow_pubkey_owner_in_internal_node ')' " := 
- ( check_external_owner_left 
- allow_pubkey_owner_in_internal_node ) 
+Notation " 'check_external_owner_' '(' allow_pubkey_owner_in_internal_node ')' " := 
+ ( check_external_owner_left allow_pubkey_owner_in_internal_node ) 
  (in custom ULValue at level 0 , allow_pubkey_owner_in_internal_node custom URValue at level 0 ) : ursus_scope . 
 
- Definition check_owner ( allow_pubkey_owner_in_internal_node : XBool ) : UExpression PhantomType true . 
- 	 	 	 refine {{ if ( #{ Internal } ) then { {_:UEt} } else { {_:UEt} } ; { _ } }} . 
- 	 	 	 refine {{ check_internal_owner_ ( ) }} . 
- 	 	   refine {{ check_external_owner_ ( #{allow_pubkey_owner_in_internal_node} ) }} . 
-       refine {{ return_ {} }} .
+Definition check_owner ( allow_pubkey_owner_in_internal_node : boolean ) : UExpression PhantomType true . 
+	refine {{ if ( #{ Internal } ) then { {_:UEt} } else { {_:UEt} } ; { _ } }} . 
+	refine {{ check_internal_owner_ ( ) }} . 
+	refine {{ check_external_owner_ ( #{allow_pubkey_owner_in_internal_node} ) }} . 
+	refine {{ return_ {} }} .
 Defined .
 
- Definition check_owner_left { R a1 }  ( x : URValue XBool a1 ) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) check_owner 
- x ) . 
+Definition check_owner_left { R a1 }  ( x : URValue boolean a1 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) check_owner x ) . 
  
- Notation " 'check_owner_' '(' x ')' " := 
- ( check_owner_left 
- x ) 
+Notation " 'check_owner_' '(' x ')' " := ( check_owner_left x ) 
  (in custom ULValue at level 0 , x custom URValue at level 0 ) : ursus_scope . 
 
-
-
-Definition constructor ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( root_owner : ( address ) ) ( total_supply : ( XUInteger128 ) ) : UExpression PhantomType true . 
- 	 	 refine {{ require_ ( ( ( (#{ root_public_key }) != 0 ) \\ {} (* std::get < addr_std > ( (#{ root_owner }) () ) . address != 0 *) ) , error_code::define_pubkey_or_internal_owner ) ; { _ } }} . 
- 	 	 refine {{ require_ ( ( (#{ decimals }) < #{4} ) , error_code::too_big_decimals ) ; { _ } }} . 
- 	 	 refine {{ _name_ := (#{ name }) ; { _ } }} . 
- 	 	 refine {{ _symbol_ := (#{ symbol }) ; { _ } }} . 
- 	 	 refine {{ _decimals_ := (#{ decimals }) ; { _ } }} . 
- 	 	 refine {{ _root_public_key_ := (#{ root_public_key }) ; { _ } }} . 
- 	 	 refine {{ _total_supply_ := (#{ total_supply }) ; { _ } }} . 
- 	 	 refine {{ _total_granted_ := 0 ; { _ } }} . 
- 	 	 refine {{ _owner_address_ := optional_owner_ ( (#{ root_owner }) ) ; { _ } }} . 
- 	 	 refine {{ _start_balance_ := tvm_balance () ; {_} }} . 
-refine {{ return_ {} }} .
- Defined . 
+Definition constructor ( name : String ) ( symbol : String ) ( decimals : uint8 ) 
+					   ( root_public_key : uint256 ) ( root_owner : address ) 
+					   ( total_supply : uint128 ) : UExpression PhantomType true . 
+	refine {{ require_ ( (#{ root_public_key } != 0) \\ 
+						 (#{ root_owner }) ↑ address.address != 0 , error_code::define_pubkey_or_internal_owner ) ; { _ } }} . 
+	refine {{ require_ ( (#{ decimals }) < #{4} , error_code::too_big_decimals ) ; { _ } }} . 
+	refine {{ _name_ := #{ name } ; { _ } }} . 
+	refine {{ _symbol_ := #{ symbol } ; { _ } }} . 
+	refine {{ _decimals_ := #{ decimals } ; { _ } }} . 
+	refine {{ _root_public_key_ := #{ root_public_key } ; { _ } }} . 
+	refine {{ _total_supply_ := #{ total_supply } ; { _ } }} . 
+	refine {{ _total_granted_ := 0 ; { _ } }} . 
+	refine {{ _owner_address_ := optional_owner_ ( #{ root_owner } ) ; { _ } }} . 
+	refine {{ _start_balance_ := tvm_balance () ; {_} }} . 
+	refine {{ return_ {} }} .
+Defined . 
  
 
- Definition setWalletCode ( wallet_code : ( XCell ) ) : UExpression XBool true . 
- 	 	 	 refine {{ check_owner_ ( TRUE ) ; { _ } }} . 
- 	 	 refine {{ tvm_accept () ; { _ } }} . 
- 	 	 refine {{ require_ ( ( ~ _wallet_code_ ) , error_code::cant_override_wallet_code ) ; { _ } }} . 
- 	 	 refine {{ _wallet_code_ := ( (#{ wallet_code }) -> set () ) ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { {_:UEf} } ; { _ } }} . 
- 	 	 	 refine {{ new 'value_gr : XUInteger @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm_rawreserve ( (tvm_balance ()) - (!{value_gr}) , rawreserve_flag::up_to ) }} . 
-(*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
- 	 refine {{ return_ TRUE }} . 
- Defined . 
+Definition setWalletCode ( wallet_code : TvmCell ) : UExpression boolean true . 
+	refine {{ check_owner_ ( TRUE ) ; { _ } }} . 
+	refine {{ tvm_accept () ; { _ } }} . 
+	refine {{ require_ ( ( ~ _wallet_code_ ) , error_code::cant_override_wallet_code ) ; { _ } }} . 
+	refine {{ _wallet_code_ := ( (#{ wallet_code }) -> set () ) ; { _ } }} . 
+	refine {{ if ( #{Internal} ) then { {_:UEf} } ; { _ } }} . 
+	refine {{ new 'value_gr : XUInteger @ "value_gr" := int_value () ; { _ } }} . 
+	refine {{ tvm_rawreserve ( (tvm_balance ()) - (!{value_gr}) , rawreserve_flag::up_to ) }} . 	
+	refine {{ set_int_return_flag ( SEND_ALL_GAS ) }} . 
+	refine {{ return_ TRUE }} . 
+Defined . 
 
 (* DTONTokenWallet prepare_wallet_data(
   string name, string symbol, uint8 decimals, uint256 root_public_key,
@@ -336,7 +320,7 @@ refine {{ new 'grams_:XUInteger128 @ "grams_" := #{grams} ; { _ } }}.
      refine {{ return_ {} }} . 
  Defined . 
  
-Definition mint ( tokens : ( XUInteger128 ) ) : UExpression XBool true . 
+Definition mint ( tokens : ( XUInteger128 ) ) : UExpression boolean true . 
  	 	 refine {{ check_owner_ ( FALSE ) ; { _ } }} .  
  	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { {_:UEf} } ; { _ } }} . 
@@ -402,7 +386,7 @@ Defined .
  
  
  
- Definition hasWalletCode : UExpression XBool false . 
+ Definition hasWalletCode : UExpression boolean false . 
  	 	 	 refine {{ return_ (? _wallet_code_) }} . 
  Defined . 
  

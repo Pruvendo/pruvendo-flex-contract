@@ -43,7 +43,10 @@ Inductive MessagesAndEventsFields := | _OutgoingMessages_FlexClient
 | _OutgoingMessages_IPriceXchg 
 | _OutgoingMessages_IFlex 
 | _OutgoingMessages_IPrice 
+| _GlobalParams
+| _OutgoingMessageParams
 | _EmittedEvents | _MessagesLog.
+
 Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Definition ContractFields := DFlexClientFields.
@@ -81,6 +84,8 @@ Definition MessagesAndEventsL : list Type :=
  ( XHMap address (XQueue (OutgoingMessage PriceXchgInterfaceModule.IPriceXchg )) ) : Type ;
  ( XHMap address (XQueue (OutgoingMessage FlexInterfaceModule.IFlex )) ) : Type ;
  ( XHMap address (XQueue (OutgoingMessage PriceInterfaceModule.IPrice )) ) : Type ;
+  GlobalParamsLRecord: Type ;
+  OutgoingMessageParamsLRecord: Type ;
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
  GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
