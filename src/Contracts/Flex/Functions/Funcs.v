@@ -108,7 +108,7 @@ Definition constructor_left { R a1 a2 a3 a4 a5 a6 }  ( deployer_pubkey : URValue
  *)
 
 Definition setSpecificCode ( type :  uint8 ) ( code :  TvmCell ) : UExpression PhantomType false .
-(*   refine {{ switch_ ( {} ) with { { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } } ) }}.
+   (* refine {{ switch_ ( {} ) with { { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } } ) }}.
   refine {{ case_ trade_pair_code => setPairCode(code) ; return_ {} }}.
   refine {{ case_ xchg_pair_code => setPairCode(code) ; return_ {} }}.
   refine {{ case_ wrapper_code => setPairCode(code) ; return_ {} }}.

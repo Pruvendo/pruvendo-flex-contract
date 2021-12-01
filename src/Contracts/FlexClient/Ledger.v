@@ -10,7 +10,7 @@ Require Import UMLang.UrsusLib.
 Require Import UMLang.BasicModuleTypes. 
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
-Require Import UrsusTVM.Cpp.tvmFunc. 
+Require Import UrsusTVM.Cpp.tvmFunc.
 
 Require Import Project.CommonTypes. 
 
@@ -35,6 +35,10 @@ Require Import Contracts.Flex.Interface.
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
+
+
+Fail Check  ttt.
+
 
 
 Inductive MessagesAndEventsFields := | _OutgoingMessages_FlexClient 

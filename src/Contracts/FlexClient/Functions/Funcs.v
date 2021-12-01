@@ -77,7 +77,7 @@ Definition constructor ( pubkey : ( uint256 ) ) ( trading_pair_code : ( XCell ) 
  	 	 refine {{ _trading_pair_code_ := #{ trading_pair_code } ; { _ } }} . 
  	 	 refine {{ _xchg_pair_code_ := #{ xchg_pair_code } ; { _ } }} . 
  	 	 refine {{ _workchain_id_ := {} (* Std :: get < addr_std > ( Address { tvm_myaddr ( ) } . val ( ) ) . workchain_id *) ; { _ } }} . 
- 	 	 refine {{ _flex_ := {} (* Address :: make_std ( 0 , 0 ) *) }} . 
+ 	 	 refine {{ _flex_ := [ #{0%Z} , 0 ) }} . 
  Defined .
  
 Definition constructor_left { R a1 a2 a3 }  
