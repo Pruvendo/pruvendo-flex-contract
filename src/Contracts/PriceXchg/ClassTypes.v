@@ -68,7 +68,7 @@ Definition DPriceXchgL : list Type :=
  ( XUInteger128 ) : Type ; 
  ( XUInteger8 ) : Type ; 
  ( address (* IFlexNotifyPtr *) ) : Type ; 
- ( XUInteger8 ) : Type ; 
+ ( XInteger (* XUInteger8 *) ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 

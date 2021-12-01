@@ -372,10 +372,10 @@ Definition DPriceXchg_ι_notify_addr__left (x: ULValue DPriceXchgLRecord): ULVal
 Notation " a '↑' 'DPriceXchg.notify_addr_' " := ( DPriceXchg_ι_notify_addr__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DPriceXchg.notify_addr_' " := ( DPriceXchg_ι_notify_addr__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DPriceXchg_ι_workchain_id__right {b} (x: URValue DPriceXchgLRecord b): URValue XUInteger8 b :=
+Definition DPriceXchg_ι_workchain_id__right {b} (x: URValue DPriceXchgLRecord b): URValue XInteger (* XUInteger8 *) b :=
     || {x} ^^ {DPriceXchg_ι_workchain_id_} || : _ .
 
-Definition DPriceXchg_ι_workchain_id__left (x: ULValue DPriceXchgLRecord): ULValue XUInteger8 :=
+Definition DPriceXchg_ι_workchain_id__left (x: ULValue DPriceXchgLRecord): ULValue XInteger (* XUInteger8 *) :=
     {{ {x} ^^ {DPriceXchg_ι_workchain_id_} }} : _ .
 
 Notation " a '↑' 'DPriceXchg.workchain_id_' " := ( DPriceXchg_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.

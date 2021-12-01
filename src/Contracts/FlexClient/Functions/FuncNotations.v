@@ -107,8 +107,8 @@ Notation " 'IPricePtr' " := ( PricePtr_messages_left ) (in custom ULValue at lev
  Notation " '_xchg_pair_code_' " := ( xchg_pair_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_xchg_pair_code_' " := ( xchg_pair_code__right ) (in custom URValue at level 0) : ursus_scope. 
 
- Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_workchain_id_ ) : ULValue uint8 ) . 
- Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_workchain_id_ ) : URValue uint8 false ) . 
+ Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_workchain_id_ ) : ULValue int (* uint8 *) ) . 
+ Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_workchain_id_ ) : URValue int (* uint8 *) false ) . 
  Notation " '_workchain_id_' " := ( workchain_id__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_workchain_id_' " := ( workchain_id__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -142,6 +142,8 @@ Notation " 'error_code::missed_ext_wallet_code' " := (sInject missed_ext_wallet_
 Notation " 'error_code::missed_flex_wallet_code' " := (sInject missed_flex_wallet_code) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::missed_flex_wrapper_code' " := (sInject missed_flex_wrapper_code) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::zero_owner_pubkey' " := (sInject zero_owner_pubkey) (in custom URValue at level 0) : ursus_scope. 
+
+Notation " 'DEFAULT_MSG_FLAGS' " := (sInject DEFAULT_MSG_FLAGS) (in custom URValue at level 0) : ursus_scope.
 
 Module Calls (tc : SpecSig).
 

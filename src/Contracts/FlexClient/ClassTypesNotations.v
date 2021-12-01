@@ -44,10 +44,10 @@ Definition DFlexClient_ι_xchg_pair_code__left (x: ULValue DFlexClientLRecord): 
 Notation " a '↑' 'DFlexClient.xchg_pair_code_' " := ( DFlexClient_ι_xchg_pair_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlexClient.xchg_pair_code_' " := ( DFlexClient_ι_xchg_pair_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlexClient_ι_workchain_id__right {b} (x: URValue DFlexClientLRecord b): URValue XUInteger8 b :=
+Definition DFlexClient_ι_workchain_id__right {b} (x: URValue DFlexClientLRecord b): URValue XInteger (* XUInteger8 *) b :=
     || {x} ^^ {DFlexClient_ι_workchain_id_} || : _.
     
-Definition DFlexClient_ι_workchain_id__left (x: ULValue DFlexClientLRecord): ULValue XUInteger8 :=
+Definition DFlexClient_ι_workchain_id__left (x: ULValue DFlexClientLRecord): ULValue XInteger (* XUInteger8 *) :=
     {{ {x} ^^ {DFlexClient_ι_workchain_id_} }} : _.
     
 Notation " a '↑' 'DFlexClient.workchain_id_' " := ( DFlexClient_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.

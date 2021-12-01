@@ -107,7 +107,7 @@ Definition DPriceL : list Type :=
  ( XUInteger128 ) : Type ; 
  ( XUInteger8 ) : Type ; 
  ( address (* IFlexNotify *) ) : Type ; 
- ( XUInteger8 ) : Type ; 
+ ( XInteger ) : Type ; (* DPrice_ι_workchain_id_ *)
  ( TonsConfigLRecord ) : Type ; 
  ( XCell ) : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 

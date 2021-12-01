@@ -20,7 +20,7 @@ Definition DFlexClientL : list Type :=
  [ ( XUInteger256 ) : Type ; 
  ( XCell ) : Type ; 
  ( XCell ) : Type ; 
- ( XUInteger8 ) : Type ; 
+ ( XInteger (* XUInteger8 *) ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( address ) : Type ; 
  ( ( XMaybe XCell ) ) : Type ; 
