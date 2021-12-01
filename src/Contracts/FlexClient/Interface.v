@@ -35,7 +35,7 @@ Inductive IFlexClientP :=
 | Itransfer : address -> XUInteger128 -> XBool -> IFlexClientP
 | IregisterWrapper : XUInteger128 -> XUInteger128 -> Tip3ConfigLRecord -> IFlexClientP
 | IregisterTradingPair : XUInteger256 -> XUInteger128 -> address -> XUInteger128 -> address -> IFlexClientP
-| IregisterXchgPair : XUInteger256 -> XUInteger128 -> address -> address -> address -> XUInteger128 -> address -> IFlexClientP
+| IregisterXchgPair : XUInteger256 -> XUInteger128 -> address -> address -> XUInteger128 -> address -> IFlexClientP
 | IdeployEmptyFlexWallet : XUInteger256 -> XUInteger128 -> Tip3ConfigLRecord -> IFlexClientP
 | IburnWallet : XUInteger128 -> XUInteger256 -> address -> address -> IFlexClientP
 | IgetOwner : IFlexClientP

@@ -457,14 +457,14 @@ Definition  IcancelSell_right : URValue IPriceXchg false.
  refine (#IcancelSell).
 Defined.
 
-Notation " '.cancelSell' '()' " := (IcancelSell_right ) 
+Notation " 'PriceXchg.cancelSell' '()' " := (IcancelSell_right ) 
 (in custom URValue at level 0 ) : ursus_scope .
 
 Definition  IcancelBuy_right : URValue IPriceXchg false.
  refine (#IcancelBuy).
 Defined.
 
-Notation " '.cancelBuy' '()' " := (IcancelBuy_right ) 
+Notation " 'PriceXchg.cancelBuy' '()' " := (IcancelBuy_right ) 
 (in custom URValue at level 0 ) : ursus_scope .
 
 Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue IPriceXchg a1.

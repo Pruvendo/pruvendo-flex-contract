@@ -648,7 +648,7 @@ Definition IregisterTradingPair_right { a1 a2 a3 a4 }  (x : URValue XUInteger256
  refine X.
 Defined.
 
-Notation " '.registerTradingPair' ( x , y , z , t ) " := (IregisterTradingPair_right x y z t) 
+Notation " 'Flex.registerTradingPair' ( x , y , z , t ) " := (IregisterTradingPair_right x y z t) 
 (in custom URValue at level 0 , x custom URValue at level 0,
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 ) : ursus_scope .
@@ -669,7 +669,7 @@ Definition IregisterXchgPair_right { a1 a2 a3 a4 a5 }  (x : URValue XUInteger256
  refine X.
 Defined.
 
-Notation " '.registerXchgPair' ( x , y , z , t , u ) " := (IregisterXchgPair_right x y z t u) 
+Notation " 'Flex.registerXchgPair' ( x , y , z , t , u ) " := (IregisterXchgPair_right x y z t u) 
 (in custom URValue at level 0 , x custom URValue at level 0,
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 , u custom URValue at level 0 ) : ursus_scope .
@@ -684,7 +684,7 @@ Definition IregisterWrapper_right { a1 a2 }  (x : URValue XUInteger256 a1 )
  refine X.
 Defined.
 
-Notation " '.registerWrapper' ( x , y  ) " := (IregisterWrapper_right x y ) 
+Notation " 'Flex.registerWrapper' ( x , y  ) " := (IregisterWrapper_right x y ) 
 (in custom URValue at level 0 , x custom URValue at level 0,y custom URValue at level 0  ) : ursus_scope .
 
 

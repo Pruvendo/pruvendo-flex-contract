@@ -217,6 +217,8 @@ Notation " 'check_owner_' '(' ')' " :=  ( check_owner_left ) (in custom ULValue 
 Definition transfer ( tto : address ) ( tons :  uint128 ) : UExpression PhantomType true . 
   	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm_accept () ; { _ } }} . 
+
+
  (*    refine {{ ⤳ Flex._transfer @ {_} with [$ {_} ⇒ {Messsage_ι_value} ;
                  {_} ⇒ {Messsage_ι_bounce} ;
                  {_} ⇒ {Messsage_ι_flags} $] }} .*)
@@ -309,8 +311,6 @@ Definition approveTradingPairImpl ( pubkey : uint256 )
                  prepare_trading_pair_ ( tvm_myaddr () , !{req_info} ↑ TradingPairListingRequest.tip3_root , #{pair_code} ) ; { _ } }} . 
  	 	 refine {{ new 'trade_pair : address @ "trade_pair" := {} (*  
  	 	  ITradingPairPtr ( Address :: make_std ( !{ workchain_id } , std_addr ) )  *); { _ } }} . 
-(* 	 	 refine {{ trade_pair.deploy ( state_init , Grams ( listing_cfg . pair_deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , ) . 
-onDeploy ( req_info . min_amount , listing_cfg . pair_keep_balance , req_info . notify_addr ) ; { _ } }} .  *)
 refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
               {{ {trade_pair_ptr} with {} ⤳ TradingPair.deploy ( !{state_init} ) ; {_} }} ).  
 
@@ -323,8 +323,6 @@ refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in
  	 	 refine {{ new 'remaining_funds : uint128 @ "remaining_funds" :=   
  	 	   !{req_info} ↑ TradingPairListingRequest.client_funds - 
             (#{listing_cfg}) ↑ ListingConfig.register_pair_cost ; { _ } }} . 
-
-(*  	 	 refine {{ IListingAnswerPtr ( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onTradingPairApproved ( pubkey , trade_pair . get ( ) ) ; { _ } }} .  *)
 refine {{ IListingAnswerPtr [[  !{req_info} ↑ TradingPairListingRequest.client_addr ]]
           with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onTradingPairApproved ( #{pubkey} , !{trade_pair} ) ; {_} }}. 
 
@@ -374,7 +372,6 @@ Definition rejectTradingPairImpl ( pubkey : uint256 )
                     (!{opt_req_info}) -> get_default ()  ; { _ } }} . 
  	 	 refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := 
             ( (!{req_info}) ↑ TradingPairListingRequest.client_funds ) - ( (#{listing_cfg}) ↑ ListingConfig.reject_pair_cost ) ; { _ } }} . 
-(*  	 	 refine {{ IListingAnswerPtr( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onTradingPairRejected ( pubkey ) ; { _ } }} .  *)
 refine {{ IListingAnswerPtr [[  !{req_info} ↑ TradingPairListingRequest.client_addr ]]
           with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onTradingPairRejected ( #{pubkey} ) ; {_} }}.                                                               
  	 	 refine {{ return_ #{trading_pair_listing_requests} }} . 
@@ -450,9 +447,6 @@ Definition approveXchgPairImpl ( pubkey :  uint256 ) ( xchg_pair_listing_request
       refine {{ new 'xchg_pair : address @ "xchg_pair" := {}  ; {_} }}. (*12''*)
                 (* IXchgPairPtr ( Address :: make_std ( !{ workchain_id } , std_addr ) ) *) (* ; { _ } }} .
  *)
-    (* xchg_pair.deploy(state_init, Grams(listing_cfg.pair_deploy_value.get()), DEFAULT_MSG_FLAGS, false).
-    onDeploy(req_info.min_amount, listing_cfg.pair_keep_balance, req_info.notify_addr); *)
-
     refine ( let xchg_pair_ptr := {{ IXchgPairPtr [[ !{xchg_pair}  ]] }} in 
               {{ {xchg_pair_ptr} with {} ⤳ XchgPair.deploy ( !{state_init} ) ; {_} }} ).  
 
@@ -463,8 +457,6 @@ Definition approveXchgPairImpl ( pubkey :  uint256 ) ( xchg_pair_listing_request
                         ⤳ XchgPair.onDeploy (!{req_info} ↑ XchgPairListingRequest.min_amount , 
                                 (#{listing_cfg}) ↑ ListingConfig.pair_keep_balance , 
                                 !{req_info} ↑ XchgPairListingRequest.notify_addr ) ; { _ } }} ).
- 	 	 (* refine {{ xchg_pair.deploy ( state_init , Grams ( listing_cfg . pair_deploy_value . get ( ) ) , DEFAULT_MSG_FLAGS , ) .
-        onDeploy ( req_info . min_amount , listing_cfg . pair_keep_balance , req_info . notify_addr ) ; { _ } }} .   *)
  	 	 refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := !{req_info} ↑ XchgPairListingRequest.client_funds - 
                                                                      ( #{listing_cfg} ) ↑ ListingConfig.register_pair_cost  ; { _ } }} . 
      refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_addr ]]
@@ -503,7 +495,6 @@ UExpression xchg_pairs_map true .
  	 	 refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := 
           ( (!{req_info}) ↑ XchgPairListingRequest.client_funds )
                  - ( (#{listing_cfg}) ↑ ListingConfig.reject_pair_cost ) ; { _ } }} . 
-(*  	 	 refine {{ IListingAnswerPtr( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onXchgPairRejected ( pubkey ) ; { _ } }} .  *)
 refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_addr ]]
           with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onXchgPairRejected ( #{pubkey} ) ; {_} }}.  
  	 	 refine {{ return_ #{xchg_pair_listing_requests} }} . 
@@ -679,11 +670,7 @@ refine ( let wallet_addr_ptr := {{ IWrapperPtr [[ !{wallet_addr}  ]] }} in
               {{ {wallet_addr_ptr} with [$ ((#{listing_cfg}) ↑ ListingConfig.wrapper_deploy_value) ⇒ { Messsage_ι_value }  $] 
                                          ⤳ Wrapper.deploy ( !{wrapper_init} ) ; {_} }} ). (* Тут должен быть init, который делаент непонятно что *)  
 
-(*  	 	 refine {{ ITONTokenWalletPtr wallet_addr ( address : : make_std ( workchain_id , wallet_hash_addr ) ) ; { _ } }} .  *)
-(*  	 	 refine {{ wallet_addr.deploy_noop ( wallet_init , Grams ( listing_cfg . ext_wallet_balance . get ( ) ) ) ; { _ } }} . 
- 	 	 refine {{ wrapper_addr.deploy ( wrapper_init , Grams ( listing_cfg . wrapper_deploy_value . get ( ) ) ) . init ( wallet_addr . get ( ) ) ; { _ } }} . 
- 	 	 refine {{ wrapper_addr ( Grams ( listing_cfg . set_internal_wallet_value . get ( ) ) ) . setInternalWalletCode ( flex_wallet_code ) ; { _ } }} . 
- *) 	 	 refine {{ return_ [ !{wrapper_addr} , #{wrapper_listing_requests} ] }} . 
+ 	 	 refine {{ return_ [ !{wrapper_addr} , #{wrapper_listing_requests} ] }} . 
  Defined .
 
  Definition approveWrapperImpl_right { a1 a2 a3 a4 a5 a6 a7 }  
@@ -723,7 +710,6 @@ Definition rejectWrapperImpl
  	 	 refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := 
               ( (!{req_info}) ↑ WrapperListingRequest.client_funds ) - 
                 ( (#{listing_cfg}) ↑ ListingConfig.reject_wrapper_cost ) ; { _ } }} . 
-(*  	 	 refine {{ IListingAnswerPtr( req_info . client_addr ) ( Grams ( remaining_funds . get ( ) ) ) . onWrapperRejected ( pubkey ) ; { _ } }} .  *)
 refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_addr ]]
           with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onWrapperRejected ( #{pubkey} ) ; {_} }}.  
  	 	 refine {{ return_ (#{wrapper_listing_requests}) }} . 

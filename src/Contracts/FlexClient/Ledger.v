@@ -20,19 +20,30 @@ Require XchgPair.ClassTypes.
 Require TONTokenWallet.ClassTypes.
 Require Price.ClassTypes.
 Require PriceXchg.ClassTypes.
+Require Flex.ClassTypes.
 
 Require TradingPair.Interface.
 Require Import Contracts.FlexClient.Interface.
 Require Import Contracts.XchgPair.Interface.
 Require Import Contracts.TONTokenWallet.Interface.
 Require Import Contracts.PriceXchg.Interface.
+Require Import Contracts.Price.Interface.
+Require Import Contracts.Flex.Interface.
+
 
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
 
-Inductive MessagesAndEventsFields := | _OutgoingMessages_FlexClient | _OutgoingMessages_ITradingPair | _OutgoingMessages_IXchgPair | _OutgoingMessages_ITONTokenWallet | _OutgoingMessages_IPriceXchg | _EmittedEvents | _MessagesLog.
+Inductive MessagesAndEventsFields := | _OutgoingMessages_FlexClient 
+| _OutgoingMessages_ITradingPair 
+| _OutgoingMessages_IXchgPair 
+| _OutgoingMessages_ITONTokenWallet 
+| _OutgoingMessages_IPriceXchg 
+| _OutgoingMessages_IFlex 
+| _OutgoingMessages_IPrice 
+| _EmittedEvents | _MessagesLog.
 Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Definition ContractFields := DFlexClientFields.
@@ -51,11 +62,14 @@ Module PriceXchgClassTypesModule := PriceXchg.ClassTypes.ClassTypes xt sm .
 Module TradingPairClassTypesModule := TradingPair.ClassTypes.ClassTypes xt sm .
 Module XchgPairClassTypesModule := XchgPair.ClassTypes.ClassTypes xt sm .
 Module TokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes xt sm .
+Module FlexClassTypesModule := Flex.ClassTypes.ClassTypes xt sm .
 
 Module TradingPairInterfaceModule := TradingPair.Interface.PublicInterface xt sm .
 Module XchgPairInterfaceModule := XchgPair.Interface.PublicInterface xt sm .
 Module TONTokenWalletInterfaceModule := TONTokenWallet.Interface.PublicInterface xt sm .
 Module PriceXchgInterfaceModule := PriceXchg.Interface.PublicInterface xt sm .
+Module PriceInterfaceModule := Price.Interface.PublicInterface xt sm .
+Module FlexInterfaceModule := Flex.Interface.PublicInterface xt sm .
 
 
 Import xt.
@@ -66,9 +80,11 @@ Definition MessagesAndEventsL : list Type :=
  ( XHMap address (XQueue (OutgoingMessage XchgPairInterfaceModule.IXchgPair )) ) : Type ;
  ( XHMap address (XQueue (OutgoingMessage TONTokenWalletInterfaceModule.ITONTokenWallet )) ) : Type ;
  ( XHMap address (XQueue (OutgoingMessage PriceXchgInterfaceModule.IPriceXchg )) ) : Type ;
+ ( XHMap address (XQueue (OutgoingMessage FlexInterfaceModule.IFlex )) ) : Type ;
+ ( XHMap address (XQueue (OutgoingMessage PriceInterfaceModule.IPrice )) ) : Type ;
  ( XList TVMEvent ) : Type ; 
  ( XString ) : Type ] .
-GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
+ GeneratePruvendoRecord MessagesAndEventsL MessagesAndEventsFields .
 Opaque MessagesAndEventsLRecord .
  
 Definition ContractLRecord := FlexClientClassTypesModule.DFlexClientLRecord.

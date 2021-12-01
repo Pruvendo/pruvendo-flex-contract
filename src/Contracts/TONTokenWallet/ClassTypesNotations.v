@@ -666,6 +666,21 @@ Notation " '.lendOwnership' ( x , y , z , t , u , v , w ) " := (IlendOwnership_r
  v custom URValue at level 0, w custom URValue at level 0 ) : ursus_scope .
 
 
+ Definition Iburn_right { a1 a2}  (x : URValue XUInteger256 a1 ) 
+ (y : URValue address a2) 
+ : URValue ITONTokenWallet (orb a1 a2 ).
+pose proof ((urvalue_bind x (fun x' => 
+urvalue_bind y (fun y' =>
+  #(Iburn x' y' : ITONTokenWallet)))): URValue _ _).
+rewrite right_or_false in X.
+refine X.
+Defined.
+
+Notation " '.burn' ( x , y ) " := (Iburn_right x y) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+y custom URValue at level 0 ) : ursus_scope .
+
+
 
 Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue ITONTokenWallet a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : ITONTokenWallet)): URValue _ _).
