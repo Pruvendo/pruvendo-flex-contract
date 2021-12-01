@@ -19,6 +19,7 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
+Opaque addr_stdLRecord address.
 (* 2 *) Definition WrapperRetL : list Type := 
  [ ( XUInteger32 ) : Type ; 
  ( address ) : Type ] .

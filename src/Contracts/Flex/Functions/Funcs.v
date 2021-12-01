@@ -146,14 +146,14 @@ Defined.
   }
 } *)
 
-Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
+Definition prepare_persistent_data { Y } (persistent_data_header : PhantomType) 
                                            (base : Y): UExpression XCell false .
  refine {{ return_ {} }} .  
 Defined .
 
-Definition prepare_persistent_data_right { X Y a1 a2 }  
-                                        ( persistent_data_header : URValue ( X ) a1 ) 
-                                        ( base : URValue ( Y ) a2 ) : URValue TvmCell (orb a2 a1) := 
+Definition prepare_persistent_data_right { Y a1 a2 }  
+                                        ( persistent_data_header : URValue PhantomType a1 ) 
+                                        ( base : URValue Y a2 ) : URValue TvmCell (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
  
 Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := ( prepare_persistent_data_right  a b ) 
@@ -264,6 +264,13 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' pair_data ',' pair_co
                   ( prepare_trading_pair_state_init_and_addr_right pair_data pair_code ) 
  (in custom URValue at level 0 , pair_data custom URValue at level 0 , pair_code custom URValue at level 0 ) : ursus_scope . 
 
+(* Definition foo: XDefault address := xxprod_default.
+Existing Instance foo.
+
+Compute (field_type DTradingPair_ι_notify_addr_).
+
+Check || #{MonadTransformers21.xpair 0%Z 0}  ⇒ { DTradingPair_ι_notify_addr_  } ||.
+ *)
  Definition prepare_trading_pair ( flex : address ) 
                                  ( tip3_root : address ) 
                                  ( pair_code : TvmCell ) : UExpression ( StateInitLRecord * uint256 )  false . 
@@ -271,7 +278,7 @@ Notation " 'prepare_trading_pair_state_init_and_addr_' '(' pair_data ',' pair_co
                	 	 [$ tvm_myaddr () ⇒ { DTradingPair_ι_flex_addr_ } ; 
                       #{tip3_root} ⇒ { DTradingPair_ι_tip3_root_ } ; 
                       0 ⇒ { DTradingPair_ι_min_amount_ } ; 
-                      0 ⇒ { DTradingPair_ι_notify_addr_ }  $] ; { _ } }} . 
+                      [ #{0%Z, 0} ]  ⇒ { DTradingPair_ι_notify_addr_  }  $] ; { _ } }} . 
  	 	 refine {{ return_ ( prepare_trading_pair_state_init_and_addr_ ( !{ pair_data } , #{pair_code} ) ) }} . 
 Defined .
  

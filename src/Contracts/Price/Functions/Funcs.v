@@ -134,12 +134,12 @@ Notation " 'make_deal_' '(' sell ',' buy ')' " := ( make_deal_right sell buy )
 
 (* Locate "vararg". *)
 
-Tactic Notation "vararg" ident(x) constr(ss) := 
+(* Tactic Notation "vararg" ident(x) constr(ss) := 
 let s := fresh x in 
 let T := type of x in 
 refine {{new 'x : T @ ss := {} ; {_} }} ;
 refine {{ {x} := #{s} ; {_} }} ;
-clear s. 
+clear s.  *)
 
 (* static std::tuple<std::optional<OrderInfoWithIdx>, queue<OrderInfo>, uint128>
   extract_active_order(std::optional<OrderInfoWithIdx> cur_order,
@@ -153,7 +153,7 @@ Definition extract_active_order ( cur_order : optional OrderInfoWithIdx )
 	vararg all_amount "all_amount".
 	vararg sell "sell".
 
-	refine {{ if ( !{ cur_order } ) then { { _:UEt  } } ; { _ } }} .
+	refine {{ if !{ cur_order } then { { _:UEt  } } ; { _ } }} .
 	refine {{ exit_ [ !{ cur_order } , !{ orders } , !{ all_amount } ] }} .
 	refine {{ while ~ (!{orders} -> empty()) do { { _:UEt } } ; { _ } }} . 
 	refine {{ {cur_order} := ( !{orders} ) -> front_with_idx_opt () ; { _ } }} .
@@ -351,13 +351,13 @@ Definition onTip3LendOwnershipMinValue_right  : URValue uint128 false :=
 
 Notation " 'onTip3LendOwnershipMinValue_' '(' ')' " := ( onTip3LendOwnershipMinValue_right ) (in custom URValue at level 0 ) : ursus_scope . 
 
-Definition prepare_persistent_data { X Y } (persistent_data_header : X) 
-                                           (base : Y): UExpression TvmCell false .
+Definition prepare_persistent_data { Y } (persistent_data_header : PhantomType) 
+                                         (base : Y): UExpression TvmCell false .
  refine {{ return_ {} }} .  
 Defined .
 
-Definition prepare_persistent_data_right { X Y a1 a2 }  
-                                    ( persistent_data_header : URValue X a1 ) 
+Definition prepare_persistent_data_right { Y a1 a2 }  
+                                    ( persistent_data_header : URValue PhantomType a1 ) 
                                     ( base : URValue Y a2 ) : URValue TvmCell (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
  
@@ -495,6 +495,9 @@ Notation " 'process_queue_impl_' '(' tip3root ',' notify_addr ',' price ',' deal
  price custom URValue at level 0 , deals_limit custom URValue at level 0 , tons_cfg custom URValue at level 0 , 
  sell_idx custom URValue at level 0 , buy_idx custom URValue at level 0 , sells_amount custom URValue at level 0 , 
  sells custom URValue at level 0 , buys_amount custom URValue at level 0 , buys custom URValue at level 0 ) : ursus_scope . 
+
+(*AL: TODO*)
+Declare Instance LocalStateField_SellArgsLRecord: LocalStateField SellArgsLRecord.
 
 Definition onTip3LendOwnership ( answer_addr : address ) ( balance : uint128 ) ( lend_finish_time : uint32 ) 
 							   ( pubkey : uint256 ) ( internal_owner : address ) 

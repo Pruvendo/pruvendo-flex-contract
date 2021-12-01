@@ -27,13 +27,13 @@ Module Type SpecSig.
 
 Parameter make_deal : ULValue dealerLRecord -> ULValue OrderInfoLRecord  ->  ULValue OrderInfoLRecord -> UExpression ( boolean # (boolean # uint128)) true . 
 (*Check  ULValue !!!!*)
-Parameter extract_active_order : ULValue ( optional OrderInfoWithIdx ) -> 
-                                ULValue (queue OrderInfoLRecord ) -> 
-                                ULValue uint128 -> 
-                                boolean -> 
-                                UExpression ( optional OrderInfoWithIdx # (queue OrderInfoLRecord # uint128))  true . 
-                                
-Parameter process_queue : uint ->  uint  -> UExpression PhantomType true . 
+Parameter extract_active_order : optional OrderInfoWithIdx -> 
+                                 queue OrderInfoLRecord -> 
+                                 uint128 -> 
+                                 boolean -> 
+                                 UExpression ( optional OrderInfoWithIdx # ((queue OrderInfoLRecord) # uint128))  true .                                 
+Parameter process_queue : ULValue dealerLRecord ->  uint ->  uint  -> UExpression PhantomType true . 
+
 Parameter onTip3LendOwnership : address -> uint128 -> uint32 -> uint256 -> address -> TvmCell -> UExpression OrderRetLRecord true . 
 Parameter buyTip3 : uint128 -> address -> uint32 -> UExpression OrderRetLRecord true . 
 Parameter processQueue : UExpression PhantomType true . 
@@ -55,7 +55,7 @@ Parameter expected_wallet_address : uint256 -> uint256 -> UExpression uint256 fa
 Parameter on_sell_fail : uint -> address (*ITONTokenWalletPtr*) -> uint128 -> UExpression OrderRetLRecord false . 
 Parameter prepare_price_state_init_and_addr : DPriceLRecord -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter is_active_time : uint32 -> UExpression boolean false . 
-Parameter calc_cost : uint128 -> uint128 -> UExpression (optional uint128) false . 
+Parameter calc_cost : uint128 -> uint128 -> UExpression (optional uint128) true . 
 Parameter process_queue_impl : address -> address (*IFlexNotifyPtr*) -> uint128 -> uint8 -> TonsConfigLRecord -> 
                                uint -> uint -> uint128 -> queue OrderInfoLRecord -> 
                                uint128 -> 

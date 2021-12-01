@@ -16,6 +16,7 @@ Local Open Scope record.
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
 
+Opaque addr_stdLRecord address.
 Definition DXchgPairL : list Type := 
  [ ( address ) : Type ; 
  ( address ) : Type ; 
