@@ -16,7 +16,6 @@ Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import Project.CommonTypes.
 Require Import Project.CommonConstSig.
 
-(*Fully qualified name are mandatory in multi-contract environment*)
 Require Import TONTokenWallet.Ledger.
 Require Import TONTokenWallet.ClassTypesNotations.
 Require Import TONTokenWallet.ClassTypes.
@@ -43,10 +42,7 @@ Module TradingPairClassTypes := TradingPair.ClassTypes.ClassTypes XTypesModule S
 Module XchgPairClassTypes := XchgPair.ClassTypes.ClassTypes XTypesModule StateMonadModule.
 Module WrapperClassTypesModule := Wrapper.ClassTypes.ClassTypes XTypesModule StateMonadModule.
 Module TONTokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule.
-(* Module RootTokenClassTypesModule := RootTokenContract.ClassTypes.ClassTypes XTypesModule StateMonadModule. *)
 
-(* Export SpecModuleForFuncNotations(* ForFuncs *).tvmNotationsModule.
- *)
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  
 Import UrsusNotations.
@@ -110,7 +106,7 @@ Definition check_internal_owner ( original_owner_only : boolean ) ( allowed_for_
  refine {{ return_ _balance_ }} .  
 Defined . 
 
- Definition check_internal_owner_right { a1 a2 }  ( original_owner_only : URValue ( XBool ) a1 ) ( allowed_for_original_owner_in_lend_state : URValue ( XBool ) a2 ) : URValue XUInteger128 true := 
+ Definition check_internal_owner_right { a1 a2 }  ( original_owner_only : URValue ( XBool ) a1 ) ( allowed_for_original_owner_in_lend_state : URValue ( XBool ) a2 ) : URValue uint128 true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) check_internal_owner 
  original_owner_only allowed_for_original_owner_in_lend_state ) . 
  
@@ -121,17 +117,17 @@ Defined .
  , allowed_for_original_owner_in_lend_state custom URValue at level 0 ) : ursus_scope . 
 
 
-Definition check_external_owner : UExpression XUInteger128 true . 
+Definition check_external_owner : UExpression uint128 true . 
  	 	 refine {{ require_ ( ( ~ (is_internal_owner_ ( )) ) ,  error_code::internal_owner_enabled  ) ; {_} }} . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _wallet_public_key_ ) , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
- 	 	 refine {{ new ( 'filtered_map:(XHMap addr_std_fixed lend_recordLRecord) , 'lend_balance:XUInteger128 ) @
+ 	 	 refine {{ new ( 'filtered_map:(XHMap addr_std_fixed lend_recordLRecord) , 'lend_balance:uint128 ) @
                    ( "filtered_map" , "lend_balance" ) := filter_lend_ownerhip_map_ ( ) ; {_} }} . 
  	 	 refine {{ require_ ( ( (!{filtered_map}) -> empty () ) ,  error_code::wallet_in_lend_owneship  ) ; {_} }} . 
  	 	 refine {{ return_ _balance_ }} . 
 Defined . 
  
- Definition check_external_owner_right  : URValue XUInteger128 true := 
+ Definition check_external_owner_right  : URValue uint128 true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) check_external_owner 
  ) . 
  
@@ -140,14 +136,14 @@ Defined .
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
-Definition check_owner ( original_owner_only : ( XBool ) ) ( allowed_in_lend_state : ( XBool ) ) : UExpression XUInteger128 true . 
+Definition check_owner ( original_owner_only : ( XBool ) ) ( allowed_in_lend_state : ( XBool ) ) : UExpression uint128 true . 
  	 	refine {{ if ( (#{Internal}) ) then { {_:UEt} } else { {_:UEt} } }} . 
  	 	 refine {{ return_ (check_internal_owner_ ( (#{ original_owner_only }) , 
                                                 (#{ allowed_in_lend_state }) ) ) }} . 
  	 	 refine {{ return_ (check_external_owner_ ( )) }} . 
 Defined .
 
- Definition check_owner_right { a1 a2 }  ( original_owner_only : URValue ( XBool ) a1 ) ( allowed_in_lend_state : URValue ( XBool ) a2 ) : URValue XUInteger128 true := 
+ Definition check_owner_right { a1 a2 }  ( original_owner_only : URValue ( XBool ) a1 ) ( allowed_in_lend_state : URValue ( XBool ) a2 ) : URValue uint128 true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) check_owner 
  original_owner_only allowed_in_lend_state ) . 
  
@@ -169,17 +165,16 @@ Defined .
  (in custom ULValue at level 0 , original_owner_only custom URValue at level 0 
  , allowed_in_lend_state custom URValue at level 0 ) : ursus_scope .
 
-Definition check_transfer_requires ( tokens : ( XUInteger128 ) ) ( grams : ( XUInteger128 ) ) : UExpression XUInteger128 true . 
- 	 	 refine {{ new 'active_balance : ( XUInteger128 ) @ "active_balance" := 
-                             check_owner_ ( FALSE , FALSE ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( (#{ tokens }) <= (!{ active_balance }) ) , error_code::not_enough_balance ) ; {_} }} . 
- 	 	 refine {{ if ( (#{Internal}) ) then { {_:UEt} } else { {_:UEt} } ; {_} }} . 
- 	 	 	 refine {{ require_ ( ( ( int_value () ) >= 1 (* min_transfer_costs *) ) ,  error_code::not_enough_tons_to_process  ) }} . 
- 	 	   refine {{ require_ ( ( ((#{ grams }) >= 1 (* min_transfer_costs *)) && (tvm_balance () > (#{ grams }) ) ) , 1 (*  error_code::not_enough_tons_to_process *) ) }} . 
- 	 	 refine {{ return_ (!{ active_balance }) }} . 
+Definition check_transfer_requires ( tokens : uint128 ) ( grams : uint128 ) : UExpression uint128 true . 
+	refine {{ new 'active_balance : uint128 @ "active_balance" := 	check_owner_ ( FALSE , FALSE ) ; {_} }} . 
+	refine {{ require_ ( (#{ tokens }) <= !{ active_balance } , error_code::not_enough_balance ) ; {_} }} . 
+	refine {{ { ( if Internal then _ else _ ) } ; { _ } }} . 
+	refine {{ require_ ( ( ( int_value () ) >= 1 (* min_transfer_costs *) ) ,  error_code::not_enough_tons_to_process  ) }} . 
+	refine {{ require_ ( ( ((#{ grams }) >= 1 (* min_transfer_costs *)) && (tvm_balance () > (#{ grams }) ) ) , 1 (*  error_code::not_enough_tons_to_process *) ) }} . 
+	refine {{ return_ (!{ active_balance }) }} . 
 Defined . 
  
- Definition check_transfer_requires_right { a1 a2 }  ( tokens : URValue ( XUInteger128 ) a1 ) ( grams : URValue ( XUInteger128 ) a2 ) : URValue XUInteger128 true := 
+ Definition check_transfer_requires_right { a1 a2 }  ( tokens : URValue uint128 a1 ) ( grams : URValue uint128 a2 ) : URValue uint128 true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) check_transfer_requires 
  tokens grams ) . 
  
@@ -205,7 +200,7 @@ Defined .
  answer_addr ) 
  (in custom URValue at level 0 , answer_addr custom URValue at level 0 ) : ursus_scope . 
 
-  Definition prepare_transfer_message_flags ( (* & *) grams : ULValue ( XUInteger128 ) ) : UExpression XUInteger false . 
+  Definition prepare_transfer_message_flags ( (* & *) grams : ULValue uint128 ) : UExpression XUInteger false . 
  	 	 refine {{ new 'msg_flags : ( XUInteger ) @ "msg_flags" := 1 (* IGNORE_ACTION_ERRORS *) ; {_} }} . 
  	 	 refine {{ if ( (#{Internal}) ) then { {_:UEf} } ; {_} }} . 
  	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - int_value () , rawreserve_flag::up_to ) ; {_} }} . 
@@ -216,7 +211,7 @@ Defined .
 
 
  
- Definition prepare_transfer_message_flags_right  ( (* & *) grams : ULValue ( XUInteger128 ) ) : URValue XUInteger false := 
+ Definition prepare_transfer_message_flags_right  ( (* & *) grams : ULValue uint128 ) : URValue XUInteger false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1L ) prepare_transfer_message_flags 
  grams ) . 
  
@@ -227,7 +222,7 @@ Defined .
  
 Compute address.
 
- Definition update_spent_balance ( tokens : ( XUInteger128 ) ) ( return_ownership : ( XBool ) ) : UExpression PhantomType false . 
+ Definition update_spent_balance ( tokens : uint128 ) ( return_ownership : ( XBool ) ) : UExpression PhantomType false . 
  	 	 refine {{ _balance_ -= (#{ tokens }) ; {_} }} . 
  	 	 refine {{ if ( _lend_ownership_ -> empty () ) then { return_ {} } ; {_} }} . 
  	 	 refine {{ new 'sender : ( address (* address *) ) @ "sender" := int_sender () ; {_} }} . 
@@ -240,7 +235,7 @@ Compute address.
        refine {{ _lend_ownership_ -> set_at ( {} (*!{ sender }*) , !{v} ) }} . 
 Defined . 
 
- Definition update_spent_balance_left { R a1 a2 }  ( tokens : URValue ( XUInteger128 ) a1 ) ( return_ownership : URValue ( XBool ) a2 ) : UExpression R ( orb a2 a1 ) := 
+ Definition update_spent_balance_left { R a1 a2 }  ( tokens : URValue uint128 a1 ) ( return_ownership : URValue ( XBool ) a2 ) : UExpression R ( orb a2 a1 ) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) update_spent_balance 
  tokens return_ownership ) . 
  
@@ -253,19 +248,19 @@ Defined .
 Definition transfer_impl 
 ( answer_addr : ( address ) ) 
 ( too : ( address ) ) 
-( tokens : ( XUInteger128 ) ) 
-( grams : ( XUInteger128 ) ) 
+( tokens : uint128 ) 
+( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
 ( payload : ( XCell ) ) 
 : UExpression PhantomType true . 
- 	 	 refine {{ new 'active_balance : ( XUInteger128 ) @ "active_balance" := 
+ 	 	 refine {{ new 'active_balance : uint128 @ "active_balance" := 
                          check_transfer_requires_ ( (#{ tokens }) , (#{ grams }) ) ; {_} }} . 
  	 	 refine {{ require_ ( (#{ too }) != 0 ,  error_code::transfer_to_zero_address ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
  	 	 refine {{ new 'answer_addr_fxd : ( address ) @ "answer_addr_fxd" := 
                          fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} . 
-     refine {{ new 'grams_ : XUInteger128 @ "grams_" := #{grams} ; {_} }} .
+     refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
  	 	 refine {{ new 'msg_flags : ( XUInteger ) @ "msg_flags" := 
                          prepare_transfer_message_flags_ ( {grams_} ) ; {_} }} . 
 (*  	 	 refine {{ ITONTokenWalletPtr dest_wallet ( (#{ too }) ) ; {_} }} .  *)
@@ -273,7 +268,7 @@ Definition transfer_impl
  	 	 refine {{ update_spent_balance_ ( (#{ tokens }) , (#{ return_ownership }) ) }} . 
  Defined . 
 
- Definition transfer_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( too : URValue ( address ) a2 ) ( tokens : URValue ( XUInteger128 ) a3 ) ( grams : URValue ( XUInteger128 ) a4 ) ( return_ownership : URValue ( XBool ) a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) : UExpression R true := 
+ Definition transfer_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( too : URValue ( address ) a2 ) ( tokens : URValue uint128 a3 ) ( grams : URValue uint128 a4 ) ( return_ownership : URValue ( XBool ) a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) transfer_impl 
  answer_addr too tokens grams return_ownership send_notify payload ) . 
  
@@ -288,15 +283,15 @@ Definition transfer_impl
  , send_notify custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
 
-Definition transfer ( answer_addr : ( address ) ) ( too : ( address ) ) ( tokens : ( XUInteger128 ) ) ( grams : ( XUInteger128 ) ) ( return_ownership : ( XBool ) ) : UExpression PhantomType true . 
+Definition transfer ( answer_addr : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( return_ownership : ( XBool ) ) : UExpression PhantomType true . 
  refine {{ transfer_impl_ ( (#{ answer_addr }) , (#{ too }) , (#{ tokens }) , (#{ grams }) , (#{ return_ownership }) , FALSE , {} (* builder () . endc () *) ) }} . 
 Defined . 
  
 Definition transferWithNotify 
 ( answer_addr : ( address ) ) 
 ( too : ( address ) ) 
-( tokens : ( XUInteger128 ) ) 
-( grams : ( XUInteger128 ) ) 
+( tokens : uint128 ) 
+( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
 ( payload : ( XCell ) ) 
 : UExpression PhantomType true . 
@@ -432,19 +427,19 @@ Definition transfer_to_recipient_impl
 ( answer_addr : ( address ) ) 
 ( recipient_public_key : ( XUInteger256 ) ) 
 ( recipient_internal_owner : ( address ) ) 
-( tokens : ( XUInteger128 ) ) 
-( grams : ( XUInteger128 ) ) 
+( tokens : uint128 ) 
+( grams : uint128 ) 
 ( deploy : ( XBool ) ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
 ( payload : ( XCell ) ) 
 : UExpression PhantomType true . 
- refine {{ new 'active_balance : ( XUInteger128 ) @ "active_balance" :=
+ refine {{ new 'active_balance : uint128 @ "active_balance" :=
                           check_transfer_requires_ ( (#{ tokens }) , (#{ grams }) ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
  	 	 refine {{ new 'answer_addr_fxd : ( address ) @ "answer_addr_fxd" := 
                           fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} .
-     refine {{ new 'grams_ : XUInteger128 @ "grams_" := #{grams} ; {_} }} .
+     refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
  	 	 refine {{ new 'msg_flags : ( XUInteger ) @ "msg_flags" := 
                      prepare_transfer_message_flags_ ( ({ grams_ }) ) ; {_} }} . 
  	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:address ) @
@@ -458,7 +453,7 @@ Definition transfer_to_recipient_impl
  refine {{ update_spent_balance_ ( (#{ tokens }) , (#{ return_ownership }) ) }} . 
 Defined . 
 
- Definition transfer_to_recipient_impl_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( answer_addr : URValue ( address ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( address ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) ( send_notify : URValue ( XBool ) a8 ) ( payload : URValue ( XCell ) a9 ) 
+ Definition transfer_to_recipient_impl_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( answer_addr : URValue ( address ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( address ) a3 ) ( tokens : URValue uint128 a4 ) ( grams : URValue uint128 a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) ( send_notify : URValue ( XBool ) a8 ) ( payload : URValue ( XCell ) a9 ) 
 : UExpression R true
 (* ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) transfer_to_recipient_impl 
@@ -482,8 +477,8 @@ Definition transferToRecipient
 ( answer_addr : ( address ) ) 
 ( recipient_public_key : ( XUInteger256 ) ) 
 ( recipient_internal_owner : ( address ) ) 
-( tokens : ( XUInteger128 ) ) 
-( grams : ( XUInteger128 ) ) 
+( tokens : uint128 ) 
+( grams : uint128 ) 
 ( deploy : ( XBool ) ) 
 ( return_ownership : ( XBool ) ) 
 : UExpression PhantomType true . 
@@ -494,8 +489,8 @@ Definition transferToRecipientWithNotify
 ( answer_addr : ( address ) ) 
 ( recipient_public_key : ( XUInteger256 ) ) 
 ( recipient_internal_owner : ( address ) ) 
-( tokens : ( XUInteger128 ) ) 
-( grams : ( XUInteger128 ) ) 
+( tokens : uint128 ) 
+( grams : uint128 ) 
 ( deploy : ( XBool ) ) 
 ( return_ownership : ( XBool ) ) 
 ( payload : ( XCell ) ) 
@@ -504,7 +499,7 @@ Definition transferToRecipientWithNotify
  	 	 refine {{ transfer_to_recipient_impl_ ( (#{ answer_addr }) , (#{ recipient_public_key }) , (#{ recipient_internal_owner }) , (#{ tokens }) , (#{ grams }) , (#{ deploy }) , (#{ return_ownership }) , TRUE , (#{ payload }) ) }} . 
  Defined . 
  
-Definition requestBalance : UExpression XUInteger128 false . 
+Definition requestBalance : UExpression uint128 false . 
 (*  	 	 refine {{ tvm_rawreserve ( tvm_balance () - int_value () . get () , rawreserve_flag::up_to ) ; {_} }} .  *)
 (*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; {_} }} .  *)
  	 	 refine {{ return_ _balance_ }} . 
@@ -537,7 +532,7 @@ Notation " 'set_int_return_value_' '(' ')' " :=
  (in custom ULValue at level 0 ) : ursus_scope .
 
 
-Definition accept ( tokens : ( XUInteger128 ) ) ( answer_addr : ( address ) ) ( keep_grams : ( XUInteger128 ) ) : UExpression XBool true . 
+Definition accept ( tokens : uint128 ) ( answer_addr : ( address ) ) ( keep_grams : uint128 ) : UExpression XBool true . 
  	 	 refine {{ new ( 'sender:address , 'value_gr:uint ) @
                    ( "sender" , "value_gr" ) := int_sender_and_value_ ( ) ; {_} }} . 
  	 	 refine {{ require_ ( ( _root_address_ == !{sender} ) , error_code::message_sender_is_not_my_root ) ; {_} }} . 
@@ -551,7 +546,7 @@ Definition accept ( tokens : ( XUInteger128 ) ) ( answer_addr : ( address ) ) ( 
  Defined . 
 
 Definition internalTransfer 
-( tokens : ( XUInteger128 ) ) 
+( tokens : uint128 ) 
 ( answer_addr : ( address ) ) 
 ( sender_pubkey : ( XUInteger256 ) ) 
 ( sender_owner : ( address ) ) 
@@ -593,14 +588,14 @@ Defined .
 
 Definition lendOwnership 
 ( answer_addr : ( address ) ) 
-( grams : ( XUInteger128 ) ) 
+( grams : uint128 ) 
 ( std_dest : ( XUInteger256 ) ) 
-( lend_balance : ( XUInteger128 ) ) 
+( lend_balance : uint128 ) 
 ( lend_finish_time : ( XUInteger32 ) ) 
 ( deploy_init_cl : ( XCell ) ) 
 ( payload : ( XCell ) ) 
 : UExpression PhantomType true . 
- 	 	 refine {{ new 'allowed_balance : ( XUInteger128 ) @ "allowed_balance" := 
+ 	 	 refine {{ new 'allowed_balance : uint128 @ "allowed_balance" := 
                           check_owner_ ( TRUE , TRUE ) ; {_} }} . 
  	 	 refine {{ require_ ( ( ( (#{ lend_balance }) > 0 ) && ( (#{ lend_balance }) <= (!{ allowed_balance }) ) ) , error_code::not_enough_balance ) ; {_} }} . 
  	 	 refine {{ require_ ( ( (#{ lend_finish_time }) > tvm_now () ) ,  error_code::finish_time_must_be_greater_than_now  ) ; {_} }} . 
@@ -609,7 +604,7 @@ Definition lendOwnership
                            fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} . 
  	 	 refine {{ new 'dest : ( address ) @ "dest" := {} 
                      (* Address :: make_std ( _workchain_id_ , (#{ std_dest }) ) *) ; {_} }} . 
- 	 	 refine {{ new 'sum_lend_balance : ( XUInteger128 ) @ "sum_lend_balance" := 
+ 	 	 refine {{ new 'sum_lend_balance : uint128 @ "sum_lend_balance" := 
                              (#{ lend_balance }) ; {_} }} . 
  	 	 refine {{ new 'sum_lend_finish_time : ( XUInteger32 ) @ "sum_lend_finish_time" := 
                              (#{ lend_finish_time }) ; {_} }} . 
@@ -621,7 +616,7 @@ Definition lendOwnership
  	 refine {{ _lend_ownership_ -> set_at ( (*!{ dest }*) {} , [ (!{ sum_lend_balance }) , (!{ sum_lend_finish_time }) ] ) ; {_} }} . 
  	 refine {{ new 'deploy_init : ( XUInteger ) @ "deploy_init" := {}
                               (*  parse ( (#{ deploy_init_cl }) . ctos () ) *) ; {_} }} . 
-   refine {{ new 'grams_ : XUInteger128 @ "grams_" := #{grams} ; {_} }} .
+   refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
  	 refine {{ new 'msg_flags : ( XUInteger ) @ "msg_flags" := 
                                prepare_transfer_message_flags_ ( { grams_ } ) ; {_} }} . 
  	 refine {{ if ( {} (* deploy_init.code && deploy_init.data *) ) then { {_:UEf} } else { {_:UEf} } }} . 
@@ -635,7 +630,7 @@ refine{{return_{} }}.
 refine{{return_{} }}.
 Defined . 
  
- Definition filter_lend_ownerhip_array : UExpression ( lend_ownership_array # XUInteger128 ) false . 
+ Definition filter_lend_ownerhip_array : UExpression ( lend_ownership_array # uint128 ) false . 
  	 	 refine {{ if ( _lend_ownership_ -> empty () ) then { return_ {} } ; {_} }} . 
  	 	 refine {{ new 'now_v : ( XUInteger256 ) @ "now_v" := tvm_now () ; {_} }} . 
  	 	 refine {{ new 'rv : lend_ownership_array @ "rv" := {} ; {_} }} . 
@@ -649,7 +644,7 @@ Defined .
      refine {{ return_ [ !{rv} , !{lend_balance} ] }} .
 Defined . 
 
-Definition filter_lend_ownerhip_array_right  : URValue ( lend_ownership_array # XUInteger128 ) false := 
+Definition filter_lend_ownerhip_array_right  : URValue ( lend_ownership_array # uint128 ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) filter_lend_ownerhip_array 
  ) . 
  
@@ -659,7 +654,7 @@ Definition filter_lend_ownerhip_array_right  : URValue ( lend_ownership_array # 
  (in custom URValue at level 0 ) : ursus_scope . 
 
 
-Definition returnOwnership ( tokens : ( XUInteger128 ) ) : UExpression PhantomType true . 
+Definition returnOwnership ( tokens : uint128 ) : UExpression PhantomType true . 
  	 	 refine {{ check_owner_ ( FALSE , FALSE ) ; {_} }} . 
  	 	 refine {{ new 'sender : ( XUInteger ) @ "sender" := int_sender () ; {_} }} . 
  	 	 refine {{ new 'v : ( lend_recordLRecord ) @ "v" := {}
@@ -679,7 +674,7 @@ Definition getName : UExpression XString false .
  Definition getDecimals : UExpression XUInteger8 false . 
  	 refine {{ return_ _decimals_ }} . 
  Defined . 
- Definition getBalance : UExpression XUInteger128 false . 
+ Definition getBalance : UExpression uint128 false . 
  	 refine {{ return_ _balance_ }} . 
  Defined . 
  Definition getRootKey : UExpression XUInteger256 false . 
@@ -721,7 +716,7 @@ Definition getName : UExpression XString false .
  ( getDecimals_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getBalance_right  : URValue XUInteger128 false := 
+ Definition getBalance_right  : URValue uint128 false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBalance 
  ) . 
  
@@ -784,7 +779,7 @@ Definition getName : UExpression XString false .
  (in custom URValue at level 0 ) : ursus_scope . 
  
 Definition getDetails : UExpression details_infoLRecord false . 
- 	 	 refine {{ new ( 'filtered_lend_array:lend_ownership_array , 'lend_balance:XUInteger128 ) @
+ 	 	 refine {{ new ( 'filtered_lend_array:lend_ownership_array , 'lend_balance:uint128 ) @
                    ( "filtered_lend_array" , "lend_balance" ) 
                           := filter_lend_ownerhip_array_ ( ) ; {_} }} . 
  	 	 refine {{ return_ {} (* [ getName_ ( ) , getSymbol_ ( ) , getDecimals_ ( ) , 
@@ -794,7 +789,7 @@ Definition getDetails : UExpression details_infoLRecord false .
                          allowance_ ( ) , _workchain_id_ ] *) }} . 
 Defined . 
 
-Definition approve ( spender : ( address ) ) ( remainingTokens : ( XUInteger128 ) ) ( tokens : ( XUInteger128 ) ) : UExpression PhantomType true . 
+Definition approve ( spender : ( address ) ) ( remainingTokens : uint128 ) ( tokens : uint128 ) : UExpression PhantomType true . 
  	 	 refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
  	 	 refine {{ require_ ( ( (#{ tokens }) <= _balance_ ) , error_code::not_enough_balance ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
@@ -811,19 +806,19 @@ Defined .
  
  
  
- Definition transfer_from_impl ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : ( XUInteger128 ) ) ( grams : ( XUInteger128 ) ) ( send_notify : ( XBool ) ) ( payload : ( XCell ) ) : UExpression PhantomType true . 
+ Definition transfer_from_impl ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : ( XBool ) ) ( payload : ( XCell ) ) : UExpression PhantomType true . 
  	 	 refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
  	 	 refine {{ new 'answer_addr_fxd @ "answer_addr_fxd" := 
                             fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} . 
  	 	 refine {{ new 'msg_flags : ( XUInteger ) @ "msg_flags" := {} ; {_} }} . 
-     refine {{ new 'grams_ : XUInteger128 @ "grams_" := #{grams} ; {_} }} .
+     refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
  	 	 refine {{ { msg_flags } := prepare_transfer_message_flags_ ( { grams_ } ) (* ; {_} *) }} . 
 (*  	 	 refine {{ ITONTokenWalletPtr dest_wallet ( (#{ from }) ) ; {_} }} .  *)
 (*  	 	 refine {{ dest_wallet ( Grams ( (#{ grams }) . get () ) , (!{ msg_flags }) ) . internalTransferFrom_ ( (!{ answer_addr_fxd }) , (#{ too }) , (#{ tokens }) , bool_t (#{ send_notify }) , (#{ payload }) ) }} .  *)
  Defined . 
  
- Definition transfer_from_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( from : URValue ( address ) a2 ) ( too : URValue ( address ) a3 ) ( tokens : URValue ( XUInteger128 ) a4 ) ( grams : URValue ( XUInteger128 ) a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) 
+ Definition transfer_from_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( from : URValue ( address ) a2 ) ( too : URValue ( address ) a3 ) ( tokens : URValue uint128 a4 ) ( grams : URValue uint128 a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) 
 : UExpression R true (* orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) transfer_from_impl 
  answer_addr from too tokens grams send_notify payload ) . 
@@ -842,8 +837,8 @@ Defined .
 Definition transferFrom ( answer_addr : ( address ) ) 
 ( from : ( address ) ) 
 ( too : ( address ) ) 
-( tokens : ( XUInteger128 ) ) 
-( grams : ( XUInteger128 ) ) 
+( tokens : uint128 ) 
+( grams : uint128 ) 
 : UExpression PhantomType true . 
  refine {{ transfer_from_impl_ ( (#{ answer_addr }) , (#{ from }) , (#{ too }) , (#{ tokens }) , (#{ grams }) , FALSE , {} (* builder () . endc () *) ) }} . 
  Defined . 
@@ -852,8 +847,8 @@ Definition transferFrom ( answer_addr : ( address ) )
 ( answer_addr : ( address ) ) 
 ( from : ( address ) ) 
 ( too : ( address ) ) 
-( tokens : ( XUInteger128 ) )
- ( grams : ( XUInteger128 ) ) 
+( tokens : uint128 )
+ ( grams : uint128 ) 
 ( payload : ( XCell ) ) 
 : UExpression PhantomType true . 
  refine {{ transfer_from_impl_ ( (#{ answer_addr }) , 
@@ -868,7 +863,7 @@ Definition transferFrom ( answer_addr : ( address ) )
  Definition internalTransferFrom 
 ( answer_addr : ( address ) ) 
 ( too : ( address ) ) 
-( tokens : ( XUInteger128 ) ) 
+( tokens : uint128 ) 
 ( notify_receiver : ( XBool ) ) 
 ( payload : ( XCell ) ) 
 : UExpression PhantomType true . 
