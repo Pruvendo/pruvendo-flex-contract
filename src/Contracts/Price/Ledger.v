@@ -10,10 +10,14 @@ Require Import UMLang.UrsusLib.
 Require Import UMLang.BasicModuleTypes. 
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
-Require Import Project.CommonTypes. 
-Require Import Contracts.TONTokenWallet.ClassTypes.
+Require Project.CommonTypes. 
+Require Contracts.TONTokenWallet.ClassTypes.
 Require Import Contracts.Price.ClassTypes.
+Require Flex.ClassTypes.
+
 Require Import Contracts.Price.Interface.
+Require Import Contracts.Flex.Interface.
+Require Import Contracts.TONTokenWallet.Interface.
 
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
@@ -24,6 +28,9 @@ Local Open Scope glist_scope.
 
 (* 1 *) Inductive MessagesAndEventsFields := 
   | _OutgoingMessages_Price 
+  | _OutgoingMessages_ITONTokenWallet 
+  | _OutgoingMessages_IFlexNotify
+  | _OutgoingMessages_IPriceCallBack
   | _EmittedEvents 
   | _GlobalParams
   | _OutgoingMessageParams
@@ -34,17 +41,26 @@ Definition ContractFields := DPriceFields.
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
-Module PricePublicInterfaceModule := PublicInterface xt sm.
+
 
 (* Module Import BasicTypesClass := BasicTypes xt sm. *)
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Export TypesModuleForLedger := ClassTypes xt sm .
+Module Export TypesModuleForLedger := Contracts.Price.ClassTypes.ClassTypes xt sm .
 Import xt.
-Require Contracts.TONTokenWallet.ClassTypes.
-Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
+
+
+Module PricePublicInterfaceModule := Price.Interface.PublicInterface xt sm.
+Module TokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes xt sm .
+Module FlexClassTypesModule := Flex.ClassTypes.ClassTypes xt sm .
+
+Module TONTokenWalletInterfaceModule := TONTokenWallet.Interface.PublicInterface xt sm .
+Module FlexInterfaceModule := Flex.Interface.PublicInterface xt sm .
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ XQueue (OutgoingMessage PricePublicInterfaceModule.IPrice) : Type ; 
+ [  XHMap address (XQueue (OutgoingMessage PricePublicInterfaceModule.IPrice)) : Type ; 
+ ( XHMap address (XQueue (OutgoingMessage TONTokenWalletInterfaceModule.ITONTokenWallet )) ) : Type ;
+ ( XHMap address (XQueue (OutgoingMessage FlexInterfaceModule.IFlexNotify )) ) : Type ;
+ ( XHMap address (XQueue (OutgoingMessage PricePublicInterfaceModule.IPriceCallback )) ) : Type ;
    XList TVMEvent : Type ; 
    GlobalParamsLRecord: Type ;
    OutgoingMessageParamsLRecord: Type ;
@@ -182,7 +198,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState11000LRecord . 
  
  Inductive LocalStateFields11001I := | ι110010 | ι110011 . 
- Definition LocalState11001L := [ ( XHMap (string*nat) TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState11001L := [ ( XHMap (string*nat) TokenWalletClassTypesModule.DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState11001L LocalStateFields11001I . 
  Opaque LocalState11001LRecord . 
  
@@ -921,7 +937,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField11000 : typeclass_instances. 
- #[global, program] Instance LocalStateField11001 : LocalStateField TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord.
+ #[global, program] Instance LocalStateField11001 : LocalStateField TokenWalletClassTypesModule.DTONTokenWalletInternalLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι11). 

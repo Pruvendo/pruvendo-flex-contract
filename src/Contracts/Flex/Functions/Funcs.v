@@ -58,7 +58,7 @@ Local Open Scope struct_scope.
 Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
-
+Locate "Messsage_ι_value".
 Existing Instance LedgerPruvendoRecord.
 
 Definition constructor ( deployer_pubkey :  uint256 ) ( ownership_description : String ) ( owner_address :  optional address ) 

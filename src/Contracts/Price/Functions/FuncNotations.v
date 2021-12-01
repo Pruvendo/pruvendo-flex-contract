@@ -30,10 +30,10 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module PricePublicInterface := PublicInterface xt sm.
+Module PricePublicInterface := Contracts.Price.Interface.PublicInterface xt sm.
 Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
 Module FlexNotifyPublicInterface     := Contracts.Flex.Interface.PublicInterface xt sm.
-Module PriceCallbackPublicInterface  := Contracts.Price.Interface.PublicInterface xt sm.
+
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
@@ -44,6 +44,25 @@ Import UrsusNotations.
 
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
+
+Definition IPriceCallBackPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IPriceCallBack ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage PricePublicInterface.IPriceCallback )) )) . 
+Definition IPriceCallBackrPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IPriceCallBack ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage PricePublicInterface.IPriceCallback ))) false) . 
+Notation " 'IPriceCallBackPtr' " := ( IPriceCallBackPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition ITONTokenWalletPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet )) )) . 
+Definition ITONTokenWalletPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet ))) false) . 
+Notation " 'ITONTokenWalletPtr' " := ( ITONTokenWalletPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition IFlexNotifyPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IFlexNotify ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage FlexNotifyPublicInterface.IFlexNotify )) )) . 
+Definition IFlexNotifyPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IFlexNotify ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage FlexNotifyPublicInterface.IFlexNotify ))) false) . 
+Notation " 'IFlexNotifyPtr' " := ( IFlexNotifyPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
+
 
 
  Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_price_ ) : ULValue uint128 ) . 

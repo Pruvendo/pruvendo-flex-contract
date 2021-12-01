@@ -23,7 +23,7 @@ Require PriceXchg.ClassTypes.
 Require Flex.ClassTypes.
 
 Require Import FlexClient.Interface.
-Require TradingPair.Interface.
+Require Import TradingPair.Interface.
 Require Import Contracts.FlexClient.Interface.
 Require Import Contracts.XchgPair.Interface.
 Require Import Contracts.TONTokenWallet.Interface.

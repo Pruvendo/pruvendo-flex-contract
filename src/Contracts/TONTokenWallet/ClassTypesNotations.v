@@ -681,6 +681,32 @@ Notation " '.burn' ( x , y ) " := (Iburn_right x y)
 y custom URValue at level 0 ) : ursus_scope .
 
 
+(* void transfer(
+    address_t answer_addr,
+    address_t to,
+    uint128 tokens,
+    uint128 grams,
+    bool_t  return_ownership
+  ) = 10; *)
+
+  Definition Itransfer_right { a1 a2 a3 a4 a5 }  (x : URValue address a1 ) 
+  (y : URValue address a2) 
+  (z : URValue XUInteger128 a3)
+  (t : URValue XUInteger128 a4)
+  (u : URValue XBool a5) : URValue ITONTokenWallet (orb a1 (orb a2 (orb a3 (orb a4 a5 )))).
+pose proof (urvalue_bind x (fun x' => 
+urvalue_bind y (fun y' =>
+urvalue_bind z (fun z' =>  
+urvalue_bind t (fun t' =>  
+urvalue_bind u (fun u' =>  #(Itransfer x' y' z' t' u' : ITONTokenWallet)))))): URValue _ _).
+rewrite right_or_false in X.
+refine X.
+Defined.
+
+Notation " '.transfer' ( x , y , z , t , u ) " := (Itransfer_right x y z t u) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+y custom URValue at level 0 , z custom URValue at level 0, 
+t custom URValue at level 0 , u custom URValue at level 0) : ursus_scope .
 
 Definition _Icreate_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue ITONTokenWallet a1.
  pose proof (urvalue_bind x (fun x' => #(_Icreate x' : ITONTokenWallet)): URValue _ _).

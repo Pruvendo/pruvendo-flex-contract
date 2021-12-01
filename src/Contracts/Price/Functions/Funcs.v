@@ -10,6 +10,8 @@ Require Import FinProof.ProgrammingWith.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 
+Require Import UrsusTVM.Cpp.tvmTypes.
+
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
@@ -21,6 +23,7 @@ Require Import Project.CommonAxioms.
 Require Import Price.Ledger.
 Require Import Price.Functions.FuncSig.
 Require Import Price.Functions.FuncNotations.
+Require Import Contracts.TONTokenWallet.ClassTypesNotations.
 (* Require Contracts.Price.Interface. *)
 
 Unset Typeclasses Iterative Deepening.
@@ -32,7 +35,8 @@ Import co.
 
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
-Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
+Module Import TONTokenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module TONTokenWalletClassTypesModule := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
 (* Export SpecModuleForFuncNotations(* ForFuncs *).CommonAxiomsModule. *)
 
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
@@ -119,7 +123,13 @@ Definition make_deal ( sell : ULValue OrderInfoLRecord ) ( buy : ULValue OrderIn
 	refine {{ exit_ [ !{ sell_out_of_tons } , !{ buy_out_of_tons } , 0 ] }} . 
 	refine {{ ( {sell} ) ↑ OrderInfo.account -= !{sell_costs} ; { _ } }} . 
 	refine {{ ( {buy} )  ↑ OrderInfo.account -= !{buy_costs} ; { _ } }} .
-(*  	 	 refine {{ ITONTokenWalletPtr ( sell . tip3_wallet ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer ( sell . tip3_wallet , buy . tip3_wallet , deal_amount , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
+(*  	 	 refine {{ ITONTokenWalletPtr ( sell . tip3_wallet ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . transfer 
+( sell . tip3_wallet , buy . tip3_wallet , deal_amount , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
+refine ( let sell_ptr := {{ ITONTokenWalletPtr [[ (!{sell} ↑ OrderInfo.tip3_wallet)  ]] }} in 
+              {{ {sell_ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.transfer_tip3) ⇒ { Messsage_ι_value }  $] 
+                                         ⤳ .transfer ( !{sell} ↑ OrderInfo.tip3_wallet , !{buy} ↑ OrderInfo.tip3_wallet ,
+										 				 !{deal_amount} , 0 , FALSE ) ; {_} }} ).  
+
 (*  	 	 refine {{ tvm_transfer ( sell . client_addr , cost - > get ( ) , true , SENDER_WANTS_TO_PAY_FEES_SEPARATELY ) ; { _ } }} .  *)
 (*  	 	 refine {{ notify_addr_ ( Grams ( _tons_cfg_ ↑ TonsConfig.send_notify ) ) . onDealCompleted ( _tip3root_ , _price_ , !{deal_amount} ) ; { _ } }} .  *)
 	refine {{ return_ [ FALSE , FALSE , !{ deal_amount } ] }} . 
