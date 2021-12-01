@@ -51,8 +51,8 @@ Definition decimals__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType
 Notation " '_decimals_' " := ( decimals__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_decimals_' " := ( decimals__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_workchain_id_ ) : ULValue XUInteger8 ) . 
-Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_workchain_id_ ) : URValue XUInteger8 false ) . 
+Definition workchain_id__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_workchain_id_ ) : ULValue int (* XUInteger8 *) ) . 
+Definition workchain_id__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_workchain_id_ ) : URValue int (* XUInteger8 *) false ) . 
 Notation " '_workchain_id_' " := ( workchain_id__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_workchain_id_' " := ( workchain_id__right ) (in custom URValue at level 0) : ursus_scope. 
 

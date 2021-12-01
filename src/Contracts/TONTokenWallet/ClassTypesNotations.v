@@ -134,10 +134,10 @@ Definition DTONTokenWallet_ι_allowance__left (x: ULValue DTONTokenWalletLRecord
 Notation " a '↑' 'DTONTokenWallet.allowance_' " := ( DTONTokenWallet_ι_allowance__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWallet.allowance_' " := ( DTONTokenWallet_ι_allowance__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWallet_ι_workchain_id__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XUInteger8 b :=
+Definition DTONTokenWallet_ι_workchain_id__right {b} (x: URValue DTONTokenWalletLRecord b): URValue XInteger (* XUInteger8 *) b :=
     || {x} ^^ {DTONTokenWallet_ι_workchain_id_} || : _.
     
-Definition DTONTokenWallet_ι_workchain_id__left (x: ULValue DTONTokenWalletLRecord): ULValue XUInteger8 :=
+Definition DTONTokenWallet_ι_workchain_id__left (x: ULValue DTONTokenWalletLRecord): ULValue XInteger (* XUInteger8 *) :=
     {{ {x} ^^ {DTONTokenWallet_ι_workchain_id_} }} : _.
     
 Notation " a '↑' 'DTONTokenWallet.workchain_id_' " := ( DTONTokenWallet_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -233,10 +233,10 @@ Definition DTONTokenWalletExternal_ι_allowance__left (x: ULValue DTONTokenWalle
 Notation " a '↑' 'DTONTokenWalletExternal.allowance_' " := ( DTONTokenWalletExternal_ι_allowance__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWalletExternal.allowance_' " := ( DTONTokenWalletExternal_ι_allowance__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWalletExternal_ι_workchain_id__right {b} (x: URValue DTONTokenWalletExternalLRecord b): URValue XUInteger8 b :=
+Definition DTONTokenWalletExternal_ι_workchain_id__right {b} (x: URValue DTONTokenWalletExternalLRecord b): URValue XInteger (* XUInteger8 *) b :=
     || {x} ^^ {DTONTokenWalletExternal_ι_workchain_id_} || : _.
     
-Definition DTONTokenWalletExternal_ι_workchain_id__left (x: ULValue DTONTokenWalletExternalLRecord): ULValue XUInteger8 :=
+Definition DTONTokenWalletExternal_ι_workchain_id__left (x: ULValue DTONTokenWalletExternalLRecord): ULValue XInteger (* XUInteger8 *) :=
     {{ {x} ^^ {DTONTokenWalletExternal_ι_workchain_id_} }} : _.
     
 Notation " a '↑' 'DTONTokenWalletExternal.workchain_id_' " := ( DTONTokenWalletExternal_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -334,10 +334,10 @@ Definition DTONTokenWalletInternal_ι_lend_ownership__left (x: ULValue DTONToken
 Notation " a '↑' 'DTONTokenWalletInternal.lend_ownership_' " := ( DTONTokenWalletInternal_ι_lend_ownership__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWalletInternal.lend_ownership_' " := ( DTONTokenWalletInternal_ι_lend_ownership__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DTONTokenWalletInternal_ι_workchain_id__right {b} (x: URValue DTONTokenWalletInternalLRecord b): URValue XUInteger8 b :=
+Definition DTONTokenWalletInternal_ι_workchain_id__right {b} (x: URValue DTONTokenWalletInternalLRecord b): URValue XInteger (* XUInteger8 *) b :=
     || {x} ^^ {DTONTokenWalletInternal_ι_workchain_id_} || : _.
     
-Definition DTONTokenWalletInternal_ι_workchain_id__left (x: ULValue DTONTokenWalletInternalLRecord): ULValue XUInteger8 :=
+Definition DTONTokenWalletInternal_ι_workchain_id__left (x: ULValue DTONTokenWalletInternalLRecord): ULValue XInteger (* XUInteger8 *) :=
     {{ {x} ^^ {DTONTokenWalletInternal_ι_workchain_id_} }} : _.
     
 Notation " a '↑' 'DTONTokenWalletInternal.workchain_id_' " := ( DTONTokenWalletInternal_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -454,7 +454,7 @@ Notation " a '↑' 'details_info.allowance' " := ( details_info_ι_allowance_lef
 Definition details_info_ι_workchain_id_right {b} (x: URValue details_infoLRecord b): URValue XUInteger8 b :=
     || {x} ^^ {details_info_ι_workchain_id} || : _.
     
-Definition details_info_ι_workchain_id_left (x: ULValue details_infoLRecord): ULValue XUInteger8 :=
+Definition details_info_ι_workchain_id_left (x: ULValue details_infoLRecord): ULValue  XUInteger8  :=
     {{ {x} ^^ {details_info_ι_workchain_id} }} : _.
     
 Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_right a ) (in custom URValue at level 0) : ursus_scope.
