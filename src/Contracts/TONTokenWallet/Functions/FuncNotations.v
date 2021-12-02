@@ -30,6 +30,9 @@ Module FuncNotations (xt: XTypesSig)
                      (dc : ConstsTypesSig xt sm ).
 Export dc. Export xt. Export sm.
 
+Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
+Module WrapperPublicInterfaceModule         := Wrapper.Interface.PublicInterface xt sm.
+
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
 Import xt.
@@ -38,6 +41,25 @@ Import UrsusNotations.
 
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
+
+Definition ITONTokenWalletPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TONTokenWallet ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet )) )) . 
+Definition ITONTokenWalletPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TONTokenWallet ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet ))) false) . 
+Notation " 'ITONTokenWalletPtr' " := ( ITONTokenWalletPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition ITONTokenWalletNotifyPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TONTokenWalletNotify ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWalletNotify )) )) . 
+Definition ITONTokenWalletNotifyPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TONTokenWalletNotify ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWalletNotify ))) false) . 
+Notation " 'ITONTokenWalletNotifyPtr' " := ( ITONTokenWalletNotifyPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition IWrapperPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_Wrapper ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage WrapperPublicInterfaceModule.IWrapper )) )) . 
+Definition IWrapperPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_Wrapper ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage WrapperPublicInterfaceModule.IWrapper ))) false) . 
+Notation " 'IWrapperPtr' " := ( IWrapperPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
 
 
  Definition name__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DTONTokenWallet_ι_name_ ) : ULValue XString ) . 

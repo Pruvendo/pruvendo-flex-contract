@@ -30,6 +30,8 @@ Module FuncNotations (xt: XTypesSig)
                      (dc : ConstsTypesSig xt sm ).
 Export dc. Export xt. Export sm.
 
+Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
+
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
 Import xt.
@@ -38,6 +40,13 @@ Import UrsusNotations.
 
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
+
+
+Definition ITONTokenWalletPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet )) )) . 
+Definition ITONTokenWalletPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet ))) false) . 
+Notation " 'ITONTokenWalletPtr' " := ( ITONTokenWalletPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 
  Definition name__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DRootTokenContract_ι_name_ ) : ULValue XString ) . 
