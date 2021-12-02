@@ -60,7 +60,7 @@ Parameter preparePrice : uint128 ->  uint128 ->  uint8 -> TvmCell ->  Tip3Config
                          TvmCell ->  address -> UExpression ( StateInitLRecord # ( address # uint256 ) )  false . 
 Parameter preparePriceXchg :  uint128 ->  uint128 ->  uint128 ->  uint8 ->  Tip3ConfigLRecord ->  
                               Tip3ConfigLRecord ->  TvmCell ->  address -> 
-                              UExpression ( StateInitLRecord # ( address # uint256 ) )  false . 
+                              UExpression ( StateInitLRecord # ( address # uint256 ) )  true . 
 
 End SpecSig.
 

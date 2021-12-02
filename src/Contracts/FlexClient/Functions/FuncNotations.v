@@ -474,7 +474,9 @@ Local Open Scope string_scope.
  , tip3cfg custom URValue at level 0 
  , price_code custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
- Definition preparePriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 }  ( price_num : URValue ( uint128 ) a1 ) ( price_denum : URValue ( uint128 ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( notify_addr : URValue ( address ) a8 ) : URValue ( StateInitLRecord # ( address # uint256 ) ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb a8 a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition preparePriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 }  ( price_num : URValue ( uint128 ) a1 ) ( price_denum : URValue ( uint128 ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( notify_addr : URValue ( address ) a8 ) 
+: URValue ( StateInitLRecord # ( address # uint256 ) ) true
+(* orb ( orb ( orb ( orb ( orb ( orb ( orb a8 a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 *) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ8 ) preparePriceXchg 
  price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr ) . 
  
