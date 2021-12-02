@@ -50,9 +50,9 @@ Notation " 'int_value' '(' ')' " :=
  ( int_value__ ) 
  (in custom URValue at level 0 ) : ursus_scope .
 
-Parameter set_int_return_flag :UExpression XBool false .
-Notation " 'set_int_return_flag_' '(' ')' " := 
- ( set_int_return_flag ) 
+Parameter set_int_return_flag_ :UExpression XBool false .
+Notation " 'set_int_return_flag__' '(' ')' " := 
+ ( set_int_return_flag_ ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
 
 (* 
@@ -94,17 +94,13 @@ Check  {{ new 'pair_data : DXchgPairLRecord  @ "pair_data" := {};
  *)
 
 Definition onDeploy (min_amount: uint128) (deploy_value: uint128) (notify_addr: address) : UExpression boolean true . 
-    (* refine {{ new 'min_amount : uint128 @ "min_amount" := {} ;{_} }}.
-    refine {{ {min_amount} := #{min_amount0}; {_} }}. *)
-    (* refine ( let a := min_amount in {{  new 'min_amount : uint128 @ "min_amount" := #{a} ; {_} }} ). *)
-
     refine {{ require_ ( ( ( int_value ( ) ) > #{ deploy_value } ) , error_code::not_enough_tons ) ; { _ } }} . 
     refine {{ require_ ( ( _min_amount_ ) ,  error_code::double_deploy  ) ; { _ } }} .  
     refine {{ require_ ( ( #{ min_amount } ) > 0  , error_code::zero_min_amount ) ; { _ } }} . 
     refine {{ _min_amount_ := #{ min_amount } ; { _ } }} . 
     refine {{ _notify_addr_ := #{ notify_addr } ; { _ } }} . 
     refine {{ tvm_rawreserve ( #{deploy_value} , rawreserve_flag::up_to) ; { _ } }} .  
-    refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
+    refine {{ set_int_return_flag__ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
     refine {{ return_ TRUE  }} . 
  Defined . 
  
@@ -135,13 +131,11 @@ Defined .
 Definition prepare_xchg_pair_state_init_and_addr ( pair_data : ContractLRecord ) 
                                                  ( pair_code : TvmCell ) : UExpression ( StateInitLRecord # uint256 ) false . 
     refine {{ new 'pair_data_cl : TvmCell @ "pair_data_cl" := prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
-    (*  Unshelve.  *)
     refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := 
                       [ {} , {} , ( #{pair_code} ) -> set () , ( !{pair_data_cl} ) -> set () , {} ] ; { _ } }} . 
     refine {{ new 'pair_init_cl : TvmCell @ "pair_init_cl" := {} ; { _ } }} . 
     refine {{ {pair_init_cl} := {} (* build ( !{pair_init} ) . make_cell ( ) *) ; { _ } }} . 
     refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} )  ] }} .
-    (* Unshelve.  *)
 Defined . 
 
 End FuncsInternal.
