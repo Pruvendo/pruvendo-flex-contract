@@ -10,6 +10,7 @@ Require Import FinProof.ProgrammingWith.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 
+Require Import UrsusTVM.Cpp.tvmTypes.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
@@ -22,6 +23,7 @@ Require Import Wrapper.Functions.FuncNotations.
 Require Import Wrapper.Interface.
 
 Require Import TONTokenWallet.ClassTypes.
+Require Import Contracts.TONTokenWallet.ClassTypesNotations.
 
 (*********************************************)
 (* Require Import TradingPair.ClassTypesNotations. *)
@@ -36,6 +38,8 @@ Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMon
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 Module TONTonkenWalletModuleForPrice := 
                       Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
+
+Module Import TONTokenWalletModuleForRoot := Contracts.TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -214,7 +218,12 @@ Definition deployEmptyWallet ( pubkey : uint256 )
     refine {{ new ( 'wallet_init : StateInitLRecord , 'dest:address ) @
                   ( "wallet_init" , "dest" ) := calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} .  
 (*  refine {{ ITONTokenWalletPtr dest_handle ( dest ) ; {_} }} .  *)
-(* 		refine {{ dest_handle ^^ deploy_noop ( wallet_init , Grams ( (#{ grams }) . get () ) ) ; {_} }} .  *)
+(* 		refine {{ dest_handle ^^ deploy_noop 
+( wallet_init , Grams ( (#{ grams }) . get () ) ) ; {_} }} .  *)
+
+refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
+              {{ {dest_handle_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value }  $] 
+                                         ⤳ TONTokenWallet.deploy_noop (!{wallet_init}) ; {_} }} ). 
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .
 	refine {{ return_ !{dest} }} . 
 Defined . 
@@ -256,8 +265,15 @@ Definition onTip3Transfer ( answer_addr : address )
 		calc_internal_wallet_init_ ( !{ args } ↑ FlexDeployWalletArgs.pubkey , 
 									 !{ args } ↑ FlexDeployWalletArgs.internal_owner ) ; {_} }} . 
 	(* 		refine {{ ITONTokenWalletPtr dest_handle ( dest ) ; {_} }} .  *)
-	(* 		refine {{ dest_handle.deploy ( wallet_init , Grams ( (!{ args }) . grams . get () ) ) . accept ( (#{ new_tokens }) , int_sender () , (!{ args }) . grams ) ; {_} }} .  *)
-
+	(* 		refine {{ dest_handle.deploy ( wallet_init , Grams ( (!{ args }) . grams . get () ) ) 
+	. accept ( (#{ new_tokens }) , int_sender () , (!{ args }) . grams ) ; {_} }} .  *)
+	refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
+	{{ {dest_handle_ptr} with {} 
+							   ⤳ TONTokenWallet.deploy ( !{wallet_init} ) ; {_} }} ). 
+refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
+	{{ {dest_handle_ptr} with [$ (!{ args }) ↑ FlexDeployWalletArgs.grams ⇒ { Messsage_ι_value }  $] 
+							   ⤳ .accept ( #{ new_tokens } , int_sender () ,
+							   (!{ args }) ↑ FlexDeployWalletArgs.grams )  ; {_} }} ). 
 	refine {{ _total_granted_ += #{ new_tokens } ; {_} }} . 
 	refine {{ return_  [ 0 , {} (* !{dest_handle} *) ] }} . 
 Defined . 

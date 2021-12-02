@@ -16,6 +16,10 @@ Require Import Project.CommonTypes.
 Require Import PriceXchg.ClassTypes.
 Require Import PriceXchg.Interface.
 
+Require Import Contracts.Price.Interface.
+Require Import Contracts.Flex.Interface.
+Require Import Contracts.TONTokenWallet.Interface.
+
 Local Open Scope record. 
 Local Open Scope program_scope.
 Local Open Scope glist_scope.
@@ -23,6 +27,9 @@ Local Open Scope glist_scope.
 (* TONTokenWallet, *)
 Inductive MessagesAndEventsFields := 
   | _OutgoingMessages_PriceXchg 
+  | _OutgoingMessages_TONTokenWallet 
+  | _OutgoingMessages_FlexNotify 
+  | _OutgoingMessages_PriceCallBack 
   | _EmittedEvents 
   | _GlobalParams
   | _OutgoingMessageParams
@@ -35,19 +42,23 @@ Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm.
 
 (* Module Import BasicTypesClass := BasicTypes xt sm. *)
 Module Export VMStateModule := VMStateModule xt sm. 
-Module Export TypesModuleForLedger := ClassTypes xt sm .
+Module Export TypesModuleForLedger := Contracts.PriceXchg.ClassTypes.ClassTypes xt sm .
 Import xt.
 Require Contracts.TONTokenWallet.ClassTypes.
 
-Module PriceXchgPublicInterfaceModule := PublicInterface xt sm.
-
-Module TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
+Module PriceXchgPublicInterfaceModule := PriceXchg.Interface.PublicInterface xt sm.
+Module FlexInterfaceModule := Flex.Interface.PublicInterface xt sm .
+Module TONTokenWalletInterfaceModule := TONTokenWallet.Interface.PublicInterface xt sm .
+Module TONTonkenWalletModule := TONTokenWallet.ClassTypes.ClassTypes xt sm .
 
 
 Local Open Scope ursus_scope.
 
 Definition MessagesAndEventsL : list Type := 
- [ XQueue (OutgoingMessage PriceXchgPublicInterfaceModule.IPriceXchg) : Type ; 
+ [ XHMap address (XQueue (OutgoingMessage PriceXchgPublicInterfaceModule.IPriceXchg)) : Type ; 
+   XHMap address (XQueue (OutgoingMessage TONTokenWalletInterfaceModule.ITONTokenWallet)) : Type ; 
+   XHMap address (XQueue (OutgoingMessage FlexInterfaceModule.IFlexNotify)) : Type ; 
+   XHMap address (XQueue (OutgoingMessage PriceXchgPublicInterfaceModule.IPriceCallBack)) : Type ; 
    XList TVMEvent : Type ; 
    GlobalParamsLRecord: Type ;
    OutgoingMessageParamsLRecord: Type ; 
@@ -189,7 +200,7 @@ GeneratePruvendoRecord LocalState11001L LocalStateFields11001I .
 Opaque LocalState11001LRecord . 
 
 Inductive LocalStateFields11010I := | ι110100 | ι110101 . 
-Definition LocalState11010L := [ ( XHMap (string*nat) TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState11010L := [ ( XHMap (string*nat) TONTonkenWalletModule.DTONTokenWalletInternalLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState11010L LocalStateFields11010I . 
 Opaque LocalState11010LRecord . 
 
@@ -921,7 +932,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField11001 : typeclass_instances. 
- #[global, program] Instance LocalStateField11010 : LocalStateField TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord.
+ #[global, program] Instance LocalStateField11010 : LocalStateField TONTonkenWalletModule.DTONTokenWalletInternalLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι11). 
