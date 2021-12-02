@@ -297,7 +297,7 @@ refine ( let sell_ptr := {{ IPriceCallBackPtr [[ (!{sell} ↑ OrderInfo.client_a
 
  refine ( let buy_ptr := {{ IPriceCallBackPtr [[ (!{buy} ↑ OrderInfo.client_addr)  ]] }} in 
 		   {{ {buy_ptr} with [$ (!{buy} ↑ OrderInfo.account) ⇒ { Messsage_ι_value }  $] 
-									  ⤳ Price.onOrderFinished ( !{ret} , TRUE ) ; {_} }} ).
+									  ⤳ Price.onOrderFinished ( !{ret} , FALSE ) ; {_} }} ).
 	refine {{ {buy_opt} -> reset () }} .
 	refine {{ if  ? (!{sell_opt}) && 
 	              ? (second ( !{sell_opt} -> get () ) ↑ OrderInfo.amount) then { { _:UEt } } ; { _ } }} . 

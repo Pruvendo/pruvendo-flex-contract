@@ -17,7 +17,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XUInteger128 XUInteger32 XUInteger256 address XCell : Type.
+Variables XUInteger128 XUInteger32 XUInteger256 address XCell XBool OrderRet: Type.
 
 Inductive VarInitFields      := | VarInit_ι_DPriceXchg | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
@@ -30,6 +30,10 @@ Inductive IPriceXchgP :=
 | IcancelSell : IPriceXchgP
 | IcancelBuy : IPriceXchgP
 | _Icreate : InitialState -> IPriceXchgP.
+
+Inductive IPriceCallbackP :=
+| IonOrderFinished : OrderRet -> XBool -> IPriceCallbackP.
+
 
 End InterfaceDef.
 
@@ -55,7 +59,9 @@ Arguments IcancelSell {_} {_} {_} {_} {_} {_} .
 Arguments IcancelBuy {_} {_} {_} {_} {_} {_} . 
 Arguments _Icreate {_} {_} {_} {_} {_} {_} . 
 
-Arguments _Icreate {_} {_} {_} {_} {_} {_}.
+Definition IPriceCallBack := IPriceCallbackP XBool OrderRetLRecord.
+
+Arguments IonOrderFinished {_} {_}.
 
 End PublicInterface.
 

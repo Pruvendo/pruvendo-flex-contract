@@ -498,6 +498,18 @@ Notation " '.onTip3LendOwnership' ( x , y , z , t , u , v ) " := (IonTip3LendOwn
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
 
+ Definition IonOrderFinished_right { a1 a2} (x : URValue OrderRetLRecord a1 ) 
+                                       (y : URValue XBool a2) 
+                                        : URValue IPriceCallBack (orb a1 a2).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' => #(IonOrderFinished x' y'  : IPriceCallBack))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " 'PriceXchg.onOrderFinished' ( x , y  ) " := (IonOrderFinished_right x y) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0) : ursus_scope .
 
 End ClassTypesNotations.
 
