@@ -93,6 +93,7 @@ Parameter internal_owner_disabled : ErrorType .
 Parameter DEFAULT_MSG_FLAGS : XUInteger .
 
 Parameter safe_delay_period : XUInteger .
+Parameter ec_ι_deals_limit : ErrorType .
 
 Parameter ec : ErrorType .
 
