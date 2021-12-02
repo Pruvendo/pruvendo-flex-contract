@@ -189,12 +189,7 @@ Notation " 'check_owner_' '(' ')' " :=  ( check_owner_left ) (in custom ULValue 
 Definition transfer ( tto : address ) ( tons :  uint128 ) : UExpression PhantomType true . 
   	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm_accept () ; { _ } }} . 
-
-
- (*    refine {{ ⤳ Flex._transfer @ {_} with [$ {_} ⇒ {Messsage_ι_value} ;
-                 {_} ⇒ {Messsage_ι_bounce} ;
-                 {_} ⇒ {Messsage_ι_flags} $] }} .*)
- 	 	 (* refine {{ tvm_transfer ( #{tto} , #{tons}  , TRUE )  }} .  *)
+ 	 	 refine {{ tvm_transfer ( #{tto} , #{tons}  , TRUE , DEFAULT_MSG_FLAGS ) ; {_} }} . 
 refine {{ return_ {} }} .
 Defined . 
 
