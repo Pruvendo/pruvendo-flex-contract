@@ -259,7 +259,7 @@ Definition onTip3Transfer ( answer_addr : address )
 	(* 		refine {{ dest_handle.deploy ( wallet_init , Grams ( (!{ args }) . grams . get () ) ) . accept ( (#{ new_tokens }) , int_sender () , (!{ args }) . grams ) ; {_} }} .  *)
 
 	refine {{ _total_granted_ += #{ new_tokens } ; {_} }} . 
-	refine {{ return_ {}(* [ 0 , dest_handle ^^ get () ] *) }} . 
+	refine {{ return_  [ 0 , {} (* !{dest_handle} *) ] }} . 
 Defined . 
  
 Definition burn ( answer_addr : address ) ( sender_pubkey :uint256 ) 
@@ -445,7 +445,7 @@ Definition getInternalWalletCodeHash : UExpression XUInteger256 true .
 	refine  {{ return_  tvm_hash ( _internal_wallet_code_ -> get () )  }} . 
 Defined . 
  
-Definition _fallback ( cell :  (TvmCell ) ) : UExpression XUInteger false . 
+Definition _fallback (_:TvmCell) (_:XSlice) : UExpression XUInteger false . 
 	refine  {{ return_ 0 }} . 
 Defined . 
   
