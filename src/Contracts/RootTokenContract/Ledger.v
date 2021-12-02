@@ -13,6 +13,8 @@ Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 Require Import UrsusTVM.Cpp.tvmFunc. 
 
 Require TONTokenWallet.Interface.
+Require Import TONTokenWallet.ClassTypes.
+
 
 Require Import Project.CommonTypes. 
 Require Import RootTokenContract.ClassTypes.
@@ -39,6 +41,7 @@ Module Export TypesModuleForLedger := ClassTypes xt sm .
 Module Export ClassTypesModule := ClassTypes xt sm .
 
 Import xt.
+Module TONTokenWalletClassTypes := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
  [ XHMap address ( XQueue (OutgoingMessage TONPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
@@ -138,7 +141,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState10000LRecord . 
  
  Inductive LocalStateFields10001I := | ι100010 | ι100011 . 
- Definition LocalState10001L := [ ( XHMap (string*nat) XUInteger (* record1 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState10001L := [ ( XHMap (string*nat) TONTokenWalletClassTypes.DTONTokenWalletLRecord (* record1 *) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState10001L LocalStateFields10001I . 
  Opaque LocalState10001LRecord . 
  
@@ -700,7 +703,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10000 : typeclass_instances. 
- #[global, program] Instance LocalStateField10001 : LocalStateField XUInteger (* record1 *).
+ #[global, program] Instance LocalStateField10001 : LocalStateField TONTokenWalletClassTypes.DTONTokenWalletLRecord (* record1 *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι100). 
