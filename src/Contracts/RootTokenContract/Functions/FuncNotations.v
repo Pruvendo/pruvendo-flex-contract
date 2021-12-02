@@ -97,7 +97,7 @@ Notation " 'error_code::wrong_bounced_header' " := (sInject error_code_ι_wrong_
 Notation " 'error_code::wrong_bounced_args' " := (sInject error_code_ι_wrong_bounced_args) (in custom URValue at level 0) : ursus_scope. 
 
 Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
-
+Notation " 'SEND_ALL_GAS_' " := (sInject SEND_ALL_GAS) (in custom URValue at level 0) : ursus_scope.
  
 Module Calls (tc : SpecSig).
 
@@ -288,7 +288,7 @@ y custom URValue at level 0 ) : ursus_scope .
  owner ) 
  (in custom URValue at level 0 , owner custom URValue at level 0 ) : ursus_scope . 
 
- Definition workchain_id_right  : URValue XUInteger8 false := 
+ Definition workchain_id_right  : URValue int false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) workchain_id 
  ) . 
  

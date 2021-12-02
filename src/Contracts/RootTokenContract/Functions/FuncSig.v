@@ -42,7 +42,7 @@ Parameter constructor : ( ( XString ) ) -> ( ( XString ) ) -> ( ( XUInteger8 ) )
  Parameter getWalletCodeHash : UExpression XUInteger256 false . 
  Parameter _fallback : ( XCell ) -> ( ( XSlice ) ) -> UExpression XUInteger false . 
  Parameter optional_owner : ( ( address ) ) -> UExpression (XMaybe address) false . 
- Parameter workchain_id : UExpression XUInteger8 false . 
+ Parameter workchain_id : UExpression int false . 
  Parameter calc_wallet_init : ( ( XUInteger256 ) ) -> ( ( address ) ) -> UExpression ( StateInitLRecord # address ) false . 
  Parameter is_internal_owner : UExpression XBool false . 
  Parameter check_internal_owner : UExpression PhantomType true . 
