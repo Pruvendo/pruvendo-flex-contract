@@ -15,7 +15,7 @@ Local Open Scope glist_scope.
 Section InterfaceDef.
 
 Variables address TonsConfigLRecord XUInteger8 StateInitLRecord
-           cell XUInteger256 XUInteger128 XBool XString ListingConfigLRecord Tip3ConfigLRecord : Type.
+           XCell XUInteger256 XUInteger128 XBool XString ListingConfigLRecord Tip3ConfigLRecord : Type.
 Variable XMaybe : Type -> Type .
 
 Inductive VarInitFields      := | VarInit_ι_DFlex | VarInit_ι_pubkey. 
@@ -24,7 +24,7 @@ Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | Ini
 Inductive IFlexP :=
 | Iconstructor : XUInteger256 -> XString -> XMaybe address -> TonsConfigLRecord -> 
                                           XUInteger8 -> ListingConfigLRecord -> IFlexP
-| IsetSpecificCode : XUInteger8 -> cell -> IFlexP
+| IsetSpecificCode : XUInteger8 -> XCell -> IFlexP
 | Itransfer : address -> XUInteger128 -> IFlexP
 | IregisterTradingPair : XUInteger256 -> address -> XUInteger128 -> address -> IFlexP
 | IregisterXchgPair : XUInteger256 -> address -> address -> XUInteger128 -> address -> IFlexP
@@ -73,11 +73,11 @@ Local Open Scope xlist_scope.
 Definition VarInitL := [ DFlexLRecord : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
-Definition InitialStateL := [cell ; VarInitLRecord ; XUInteger128: Type].
+Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IFlexP. *)
-Definition IFlex : Type := IFlexP address TonsConfigLRecord XUInteger8 StateInitLRecord cell XUInteger256
+Definition IFlex : Type := IFlexP address TonsConfigLRecord XUInteger8 StateInitLRecord XCell XUInteger256
      XUInteger128 XString ListingConfigLRecord Tip3ConfigLRecord XMaybe  .
 
 (* __interface IFlex *)

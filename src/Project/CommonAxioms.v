@@ -37,15 +37,13 @@ Module Export CommonVMStateModule := VMStateModule xt sm.
 } *)
 
 Definition prepare_persistent_data {Y} (persistent_data_header : PhantomType) 
-                                        (base : Y): UExpression cell false .
+                                        (base : Y): UExpression XCell false .
  refine {{ return_ {} }} .  
 Qed.
 
-Print cell.
-
 Definition prepare_persistent_data_right { Y a1 a2 }  
                                     ( persistent_data_header : URValue PhantomType a1 ) 
-                                    ( base : URValue Y a2 ) : URValue cell (orb a2 a1) := 
+                                    ( base : URValue Y a2 ) : URValue XCell (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) prepare_persistent_data persistent_data_header base ) . 
  
 Notation " 'prepare_persistent_data_' '(' a ',' b ')' " := 

@@ -351,19 +351,19 @@ Definition FlexDetails_ι_listing_cfg_left (x: ULValue FlexDetailsLRecord): ULVa
 Notation " a '↑' 'FlexDetails_ι_listing_cfg' " := ( FlexDetails_ι_listing_cfg_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'FlexDetails_ι_listing_cfg' " := ( FlexDetails_ι_listing_cfg_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition FlexDetails_ι_trading_pair_code_right {b} (x: URValue FlexDetailsLRecord b): URValue cell b :=
+Definition FlexDetails_ι_trading_pair_code_right {b} (x: URValue FlexDetailsLRecord b): URValue XCell b :=
     || {x} ^^ {FlexDetails_ι_trading_pair_code} || : _.
     
-Definition FlexDetails_ι_trading_pair_code_left (x: ULValue FlexDetailsLRecord): ULValue cell :=
+Definition FlexDetails_ι_trading_pair_code_left (x: ULValue FlexDetailsLRecord): ULValue XCell :=
     {{ {x} ^^ {FlexDetails_ι_trading_pair_code} }} : _.
     
 Notation " a '↑' 'FlexDetails.trading_pair_code' " := ( FlexDetails_ι_trading_pair_code_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'FlexDetails.trading_pair_code' " := ( FlexDetails_ι_trading_pair_code_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition FlexDetails_ι_xchg_pair_code_right {b} (x: URValue FlexDetailsLRecord b): URValue cell b :=
+Definition FlexDetails_ι_xchg_pair_code_right {b} (x: URValue FlexDetailsLRecord b): URValue XCell b :=
     || {x} ^^ {FlexDetails_ι_xchg_pair_code} || : _.
     
-Definition FlexDetails_ι_xchg_pair_code_left (x: ULValue FlexDetailsLRecord): ULValue cell :=
+Definition FlexDetails_ι_xchg_pair_code_left (x: ULValue FlexDetailsLRecord): ULValue XCell :=
     {{ {x} ^^ {FlexDetails_ι_xchg_pair_code} }} : _.
     
 Notation " a '↑' 'FlexDetails.xchg_pair_code' " := ( FlexDetails_ι_xchg_pair_code_right a ) (in custom URValue at level 0) : ursus_scope.
@@ -468,64 +468,64 @@ Definition DFlex_ι_listing_cfg__left (x: ULValue DFlexLRecord): ULValue Listing
 Notation " a '↑' 'DFlex.listing_cfg_' " := ( DFlex_ι_listing_cfg__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.listing_cfg_' " := ( DFlex_ι_listing_cfg__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_pair_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe cell ) b :=
+Definition DFlex_ι_pair_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe XCell ) b :=
     || {x} ^^ {DFlex_ι_pair_code_} || : _.
     
-Definition DFlex_ι_pair_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe cell ) :=
+Definition DFlex_ι_pair_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe XCell ) :=
     {{ {x} ^^ {DFlex_ι_pair_code_} }} : _.
     
 Notation " a '↑' 'DFlex.pair_code_' " := ( DFlex_ι_pair_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.pair_code_' " := ( DFlex_ι_pair_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_xchg_pair_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe cell ) b :=
+Definition DFlex_ι_xchg_pair_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe XCell ) b :=
     || {x} ^^ {DFlex_ι_xchg_pair_code_} || : _.
     
-Definition DFlex_ι_xchg_pair_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe cell ) :=
+Definition DFlex_ι_xchg_pair_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe XCell ) :=
     {{ {x} ^^ {DFlex_ι_xchg_pair_code_} }} : _.
     
 Notation " a '↑' 'DFlex.xchg_pair_code_' " := ( DFlex_ι_xchg_pair_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.xchg_pair_code_' " := ( DFlex_ι_xchg_pair_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_price_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe cell ) b :=
+Definition DFlex_ι_price_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe XCell ) b :=
     || {x} ^^ {DFlex_ι_price_code_} || : _.
     
-Definition DFlex_ι_price_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe cell ) :=
+Definition DFlex_ι_price_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe XCell ) :=
     {{ {x} ^^ {DFlex_ι_price_code_} }} : _.
     
 Notation " a '↑' 'DFlex.price_code_' " := ( DFlex_ι_price_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.price_code_' " := ( DFlex_ι_price_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_xchg_price_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe cell ) b :=
+Definition DFlex_ι_xchg_price_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe XCell ) b :=
     || {x} ^^ {DFlex_ι_xchg_price_code_} || : _.
     
-Definition DFlex_ι_xchg_price_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe cell ) :=
+Definition DFlex_ι_xchg_price_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe XCell ) :=
     {{ {x} ^^ {DFlex_ι_xchg_price_code_} }} : _.
     
 Notation " a '↑' 'DFlex.xchg_price_code_' " := ( DFlex_ι_xchg_price_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.xchg_price_code_' " := ( DFlex_ι_xchg_price_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_ext_wallet_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe cell ) b :=
+Definition DFlex_ι_ext_wallet_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe XCell ) b :=
     || {x} ^^ {DFlex_ι_ext_wallet_code_} || : _.
     
-Definition DFlex_ι_ext_wallet_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe cell ) :=
+Definition DFlex_ι_ext_wallet_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe XCell ) :=
     {{ {x} ^^ {DFlex_ι_ext_wallet_code_} }} : _.
     
 Notation " a '↑' 'DFlex.ext_wallet_code_' " := ( DFlex_ι_ext_wallet_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.ext_wallet_code_' " := ( DFlex_ι_ext_wallet_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_flex_wallet_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe cell ) b :=
+Definition DFlex_ι_flex_wallet_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe XCell ) b :=
     || {x} ^^ {DFlex_ι_flex_wallet_code_} || : _.
     
-Definition DFlex_ι_flex_wallet_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe cell ) :=
+Definition DFlex_ι_flex_wallet_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe XCell ) :=
     {{ {x} ^^ {DFlex_ι_flex_wallet_code_} }} : _.
     
 Notation " a '↑' 'DFlex.flex_wallet_code_' " := ( DFlex_ι_flex_wallet_code__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DFlex.flex_wallet_code_' " := ( DFlex_ι_flex_wallet_code__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DFlex_ι_wrapper_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe cell ) b :=
+Definition DFlex_ι_wrapper_code__right {b} (x: URValue DFlexLRecord b): URValue ( XMaybe XCell ) b :=
     || {x} ^^ {DFlex_ι_wrapper_code_} || : _.
     
-Definition DFlex_ι_wrapper_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe cell ) :=
+Definition DFlex_ι_wrapper_code__left (x: ULValue DFlexLRecord): ULValue ( XMaybe XCell ) :=
     {{ {x} ^^ {DFlex_ι_wrapper_code_} }} : _.
     
 Notation " a '↑' 'DFlex.wrapper_code_' " := ( DFlex_ι_wrapper_code__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -571,7 +571,7 @@ Notation " a '↑' 'DFlex.xchg_pair_listing_requests_' " := ( DFlex_ι_xchg_pair
 (* Inductive IFlexP :=
 | Iconstructor : XUInteger256 -> XString -> XMaybe address -> TonsConfigLRecord -> 
                                           XUInteger8 -> ListingConfigLRecord -> IFlexP
-| IsetSpecificCode : XUInteger8 -> cell -> IFlexP
+| IsetSpecificCode : XUInteger8 -> XCell -> IFlexP
 | Itransfer : address -> XUInteger128 -> IFlexP
 | IregisterTradingPair : XUInteger256 -> address -> XUInteger128 -> address -> IFlexP
 | IregisterXchgPair : XUInteger256 -> address -> address -> XUInteger128 -> address -> IFlexP
@@ -608,9 +608,9 @@ Notation " '.constructor' ( x , y , z , t , u , v ) " := (Iconstructor_right x y
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
 
-(* IsetSpecificCode : XUInteger8 -> cell -> IFlexP *)
+(* IsetSpecificCode : XUInteger8 -> XCell -> IFlexP *)
 Definition IsetSpecificCode_right { a1 a2 } (x : URValue XUInteger8 a1 ) 
-                                            (y : URValue cell a2) 
+                                            (y : URValue XCell a2) 
                                         : URValue IFlex (orb a1 a2).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' => #(IsetSpecificCode x' y'  : IFlex))): URValue _ _).
