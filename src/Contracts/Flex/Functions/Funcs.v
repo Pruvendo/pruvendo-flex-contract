@@ -70,7 +70,7 @@ Definition constructor ( deployer_pubkey :  uint256 ) ( ownership_description : 
  	 	 refine {{ _deals_limit_ := #{ deals_limit } ; { _ } }} . 
  	 	 refine {{ _tons_cfg_ := #{ tons_cfg } ; { _ } }} . 
  	 	 refine {{ _listing_cfg_ := #{ listing_cfg } ; { _ } }} . 
- 	 	 refine {{ _workchain_id_ := {} (* get ( address { tvm_myaddr ( ) } . val ( ) ) . workchain_id *) ; { _ } }} . 
+ 	 	 refine {{ _workchain_id_ := (tvm_myaddr ()) ↑ address.workchain_id ; { _ } }} . 
  	 	 refine {{ require_ ( (((#{listing_cfg}) ↑ ListingConfig.register_pair_cost) >= 
        ( (#{listing_cfg}) ↑ ListingConfig.reject_pair_cost )
                           + ( (#{listing_cfg}) ↑ ListingConfig.register_return_value ) ) , error_code::costs_inconsistency ) ; { _ } }} . 
@@ -202,8 +202,8 @@ Definition prepare_trading_pair_state_init_and_addr
 ( pair_data :  TradingPairClassTypesModule.DTradingPairLRecord ) 
 ( pair_code :  TvmCell ) 
 : UExpression ( StateInitLRecord # uint256 )  false . 
- 	 	refine {{ new 'pair_data_cl : TvmCell @ "pair_data_cl" := {}
-                       (* prepare_persistent_data_ ( {} , #{pair_data} ) *) ; { _ } }} . 
+ 	 	refine {{ new 'pair_data_cl : TvmCell @ "pair_data_cl" := 
+                       prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
  	 	 refine {{ new 'pair_init : StateInitLRecord @ "pair_init" :=  
                  [$ {}  ⇒ {StateInit_ι_split_depth} ;
                     {}  ⇒ {StateInit_ι_special} ; 
@@ -491,8 +491,8 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_ad
 ( wrapper_code :  TvmCell ) 
 ( wrapper_data :  ( WrapperClassTypesModule.DWrapperLRecord ) ) 
 : UExpression ( StateInitLRecord * uint256 )  false . 
- 	 	 refine {{ new 'wrapper_data_cl : TvmCell @ "wrapper_data_cl" :=  {} 
-             (* prepare_persistent_data_ ( {} (* wrapper_replay_protection_t::init () *) , #{wrapper_data} ) *)  ; { _ } }} . 
+ 	 	 refine {{ new 'wrapper_data_cl : TvmCell @ "wrapper_data_cl" :=  
+             prepare_persistent_data_ ( {} (* wrapper_replay_protection_t::init () *) , #{wrapper_data} ) ; { _ } }} . 
  	 	 refine {{ new 'wrapper_init : StateInitLRecord @ "wrapper_init" := 
 
                [$ {} ⇒ { StateInit_ι_split_depth } ; 
@@ -545,8 +545,8 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
                        (#{workchain_id}) ⇒ {DTONTokenWalletExternal_ι_workchain_id_ } 
                                $] ; { _ } }} . 
 
- refine {{ new 'wallet_data_cl : TvmCell @ "wallet_data_cl" :=  {}
-             (* prepare_persistent_data_ ( {} (* external_wallet_replay_protection_t::init () *) , !{wallet_data} ) *) ; { _ } }} . 
+ refine {{ new 'wallet_data_cl : TvmCell @ "wallet_data_cl" :=
+             prepare_persistent_data_ ( {} (* external_wallet_replay_protection_t::init () *) , !{wallet_data} ) ; { _ } }} . 
  refine {{ new 'wallet_init : StateInitLRecord @ "wallet_init" := 
                [$ {} ⇒ { StateInit_ι_split_depth } ; 
                   {} ⇒ { StateInit_ι_special } ;
@@ -874,7 +874,7 @@ Definition getListingCfg : UExpression ListingConfigLRecord false .
  	 	 refine {{ return_ ( _pair_code_ -> get () ) }} . 
  Defined . 
  
-Definition getTradingPairCode_right  : URValue XCell false := 
+Definition getTradingPairCode_right  : URValue XCell true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTradingPairCode 
  ) . 
  
@@ -887,7 +887,7 @@ Definition getTradingPairCode_right  : URValue XCell false :=
  	 	 refine {{ return_ ( _xchg_pair_code_ -> get () ) }} . 
  Defined . 
 
- Definition getXchgPairCode_right  : URValue XCell false := 
+ Definition getXchgPairCode_right  : URValue XCell true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getXchgPairCode 
  ) . 
  
@@ -940,7 +940,7 @@ Defined .
 
  Definition getTradingPairListingRequests : UExpression ( XHMap uint TradingPairListingRequestWithPubkeyLRecord ) false . 
  	 	 refine {{ new 'rv :  ( XHMap uint TradingPairListingRequestWithPubkeyLRecord ) @ "rv" := {} ; { _ } }} . 
-(*  	 	 refine {{ for ( const auto &v : trading_pair_listing_requests_ ) { { _ } } ; { _ } }} . 
+ (* 	 	 refine {{ for ( const auto &v : trading_pair_listing_requests_ ) { { _ } } ; { _ } }} . 
  	 	 	 refine {{ { rv . push_back ( { v . first , v . second } ) }} . 
  *) 	 refine {{ return_ !{rv} }} . 
 Defined . 
@@ -970,7 +970,7 @@ Defined .
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getDetails : UExpression FlexDetailsLRecord false . 
+ Definition getDetails : UExpression FlexDetailsLRecord true .
  	 	 refine {{ return_ [ isFullyInitialized_ ( ) , 
                          getTonsCfg_ ( ) , 
                          getListingCfg_ ( ) , 
@@ -1020,7 +1020,7 @@ Defined .
                    $] ; { _ } }} . 
  	 	 refine {{ new 'std_addr : uint256 @ "std_addr" := 
            second ( prepare_xchg_pair_state_init_and_addr_ ( !{ pair_data } , _xchg_pair_code_ -> get () ) ); { _ } }} . 
- 	 	 refine {{ return_ {} (* Address :: make_std ( workchain_id_ , !{ std_addr } ) *) }} . 
+ 	 	 refine {{ return_ [ _workchain_id_ , !{ std_addr } ] }} . 
  Defined . 
 
  
