@@ -228,7 +228,9 @@ Definition process_queue ( sell_idx : uint ) ( buy_idx : uint ) : UExpression Ph
 	refine {{ if ~ !{sell_out_of_tons} && ~ !{buy_out_of_tons}  then { { _:UEt } } ; { _ } }} .
     refine {{ {sell} ↑ OrderInfo.account -= !{half_process_queue} ; { _ } }} . 
 	refine {{ {buy} ↑ OrderInfo.account -= !{half_process_queue} ; { _ } }} . 
-(*  	 	 	 refine {{ IPricePtr ( address { tvm_myaddr ( ) } ) ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
+refine ( let tvm_myaddr_ptr := {{ IPricePtr [[ tvm_myaddr ()  ]] }} in 
+{{ {tvm_myaddr_ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.process_queue) ⇒ { Messsage_ι_value }  $] 
+						   ⤳ .processQueue () ; {_} }} ).  
 	refine {{ if #{sell_idx} == !{sell_idx_cur} then { { _:UEf } } ; { _ } }} . 
 	refine {{ {this} ↑ dealer.ret_ -> set ( [ 1 (* ec::deals_limit *) , 
 											  !{sell} ↑ OrderInfo.original_amount - !{sell} ↑ OrderInfo.amount , 
@@ -467,7 +469,9 @@ Notation " 'int_value' '(' ')' " :=
 
 Definition on_sell_fail ( ec : uint ) ( wallet_in : ( address (* ITONTokenWalletPtrLRecord *) ) ) 
 					    ( amount : uint128 ) : UExpression OrderRetLRecord false . 
- 	 (* wallet_in(Grams(tons_cfg_.return_ownership.get())).returnOwnership(amount);  *)
+	  refine ( let wallet_in_ptr := {{ ITONTokenWalletPtr [[ #{wallet_in}  ]] }} in 
+	  {{ {wallet_in_ptr} with [$ (_tons_cfg_ ↑ TonsConfig.return_ownership) ⇒ { Messsage_ι_value }  $] 
+								  ⤳ .returnOwnership ( #{amount} ) ; {_} }} ).  
 	refine {{ if  _sells_ -> empty () && _buys_ -> empty ()  then { { _: UEf } } else { { _: UEf } } ; { _ } }} .
  	refine {{ set_int_return_flag  ( 1 ) (* SEND_ALL_GAS | DELETE_ME_IF_I_AM_EMPTY *) }} . 
  	refine {{ new 'incoming_value : uint @ "incoming_value" := int_value ( ) (* ( ) . get ( ) *) ; { _ } }} . 
@@ -557,7 +561,12 @@ refine {{ new 'wallet_in : address @ "wallet_in" := {} ; { _ } }} .
 															(* ((!{args}) ↑ SellArgs.receive_wallet) *) {} , #{lend_finish_time} ] ; { _ } }} . (*TODO!*)
 	refine {{ _sells_ -> push ( !{sell} ) ; { _ } }} . 
 	refine {{ _sells_amount_ += !{sell} ↑ OrderInfo.amount ; { _ } }} . 
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onOrderAdded ( bool_t { true } , tip3cfg_ . root_address , price_ , sell . amount , sells_amount_ ) ; { _ } }} .  *)
+refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in 
+	  {{ {notify_addr__ptr} with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
+								  ⤳ .onOrderAdded (TRUE ,  _tip3cfg_ ↑ Tip3Config.root_address ,
+								  _price_ , !{sell} ↑ OrderInfo.amount , 
+								  _sells_amount_) ; {_} }} ). 
+
 	refine {{ new ('sells_amount : uint128 , 'sells : queue OrderInfoLRecord  , 
 				'buys_amount : uint128 , 'buys : queue OrderInfoLRecord , 'ret : optional OrderRetLRecord ) @
 				( "sells_amount" , "sells" , "buys_amount" , "buys" , "ret" ) :=
@@ -618,7 +627,13 @@ Definition buyTip3 ( amount : uint128 ) ( receive_tip3_wallet : address ) ( orde
 (*TODO cannot unify "address" and "addr_std_fixed"*) (* !{sender} *) {} , #{order_finish_time} ] ; { _ } }} . 
 	refine {{ _buys_ -> push ( !{buy} ) ; { _ } }} . 
 	refine {{ _buys_amount_ += ( ( !{buy} ) ↑ OrderInfo.amount ) ; { _ } }} . 
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onOrderAdded ( bool_t { false } , tip3cfg_ . root_address , price_ , buy . amount , buys_amount_ ) ; { _ } }} .  *)
+(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) 
+. onOrderAdded ( bool_t { false } , tip3cfg_ . root_address , price_ , buy . amount , buys_amount_ ) ; { _ } }} .  *)
+refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in 
+	  {{ {notify_addr__ptr} with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
+								  ⤳ .onOrderAdded ( FALSE ,  _tip3cfg_ ↑ Tip3Config.root_address ,
+								  _price_ , !{buy} ↑ OrderInfo.amount , 
+								  _buys_amount_) ; {_} }} ). 
 	refine {{ new ('sells_amount : uint128 , 'sells : queue OrderInfoLRecord , 
 				'buys_amount:uint128 , 'buys : queue OrderInfoLRecord, 'ret : optional OrderRetLRecord ) @
 				( "sells_amount" , "sells" , "buys_amount" , "buys" , "ret" ) :=
@@ -732,7 +747,12 @@ Definition cancelSell : UExpression PhantomType false .
 	refine {{ _sells_ := !{ sells } ; { _ } }} . 
 	refine {{ _sells_amount_ := !{sells_amount} ; { _ } }} . 
 	refine {{ {canceled_amount} -= !{sells_amount} ; { _ } }} . 
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onOrderCanceled ( bool_t { true } , tip3cfg_ . root_address , price_ , canceled_amount , sells_amount_ ) ; { _ } }} .  *)
+refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in 
+	  {{ {notify_addr__ptr} with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
+								  ⤳ .onOrderCanceled ( TRUE ,  _tip3cfg_ ↑ Tip3Config.root_address ,
+								  _price_ , !{canceled_amount} , 
+								  _sells_amount_) ; {_} }} ). 
+
 	refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) then { { _: UEf } } }} . 
 		refine {{ {value} := !{value} (* suicide ( _flex_ ) *) }} . 
 Defined . 
@@ -747,7 +767,11 @@ Definition cancelBuy : UExpression PhantomType false .
 	refine {{ _buys_ := !{ buys } ; { _ } }} . 
 	refine {{ _buys_amount_ := !{buys_amount} ; { _ } }} . 
 	refine {{ { canceled_amount } -= !{buys_amount} ; { _ } }} . 
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) . onOrderCanceled ( bool_t { false } , tip3cfg_ . root_address , price_ , canceled_amount , buys_amount_ ) ; { _ } }} .  *)
+refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in 
+	  {{ {notify_addr__ptr} with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
+								  ⤳ .onOrderCanceled ( FALSE ,  _tip3cfg_ ↑ Tip3Config.root_address ,
+								  _price_ , !{canceled_amount} , 
+								  _buys_amount_) ; {_} }} ). 
 	refine {{ if  _sells_ -> empty () && _buys_ -> empty () then { { _: UEf } } }} . 
 		refine {{ _buys_ := !{ buys } (* suicide ( _flex_ ) *) }} . 
 Defined. 

@@ -63,6 +63,11 @@ Definition IFlexNotifyPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H
                                    URValue ( mapping address (queue (OutgoingMessage FlexNotifyPublicInterface.IFlexNotify ))) false) . 
 Notation " 'IFlexNotifyPtr' " := ( IFlexNotifyPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
 
+Definition IPricePtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_Price ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage PricePublicInterface.IPrice )) )) . 
+Definition IPricerPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_Price ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage PricePublicInterface.IPrice))) false) . 
+Notation " 'IPricePtr' " := ( IPricePtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 
  Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_price_ ) : ULValue uint128 ) . 
