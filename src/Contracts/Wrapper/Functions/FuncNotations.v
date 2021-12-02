@@ -66,8 +66,8 @@ Definition total_granted__right := ( URState (f:=_Contract) (H:=ContractLEmbedde
 Notation " '_total_granted_' " := ( total_granted__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_total_granted_' " := ( total_granted__right ) (in custom URValue at level 0) : ursus_scope. 
 
-Definition internal_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_internal_wallet_code_ ) : ULValue ( XMaybe XCell ) ) . 
-Definition internal_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_internal_wallet_code_ ) : URValue ( XMaybe XCell ) false ) . 
+Definition internal_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_internal_wallet_code_ ) : ULValue ( XMaybe cell ) ) . 
+Definition internal_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_internal_wallet_code_ ) : URValue ( XMaybe cell ) false ) . 
 Notation " '_internal_wallet_code_' " := ( internal_wallet_code__left ) (in custom ULValue at level 0) : ursus_scope. 
 Notation " '_internal_wallet_code_' " := ( internal_wallet_code__right ) (in custom URValue at level 0) : ursus_scope. 
 
@@ -132,7 +132,7 @@ Notation " 'init_' '(' external_wallet ')' " :=
 ( init_right 
 external_wallet ) 
 (in custom URValue at level 0 , external_wallet custom URValue at level 0 ) : ursus_scope . 
-Definition setInternalWalletCode_right { a1 }  ( wallet_code : URValue ( XCell ) a1 ) : URValue XBool true := 
+Definition setInternalWalletCode_right { a1 }  ( wallet_code : URValue cell a1 ) : URValue XBool true := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setInternalWalletCode 
 wallet_code ) . 
 
@@ -150,7 +150,7 @@ pubkey internal_owner grams )
 (in custom URValue at level 0 , pubkey custom URValue at level 0 
 , internal_owner custom URValue at level 0 
 , grams custom URValue at level 0 ) : ursus_scope . 
-Definition onTip3Transfer_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( address ) a1 ) ( balance : URValue ( XUInteger128 ) a2 ) ( new_tokens : URValue ( XUInteger128 ) a3 ) ( sender_pubkey : URValue ( XUInteger256 ) a4 ) ( sender_owner : URValue ( address ) a5 ) ( payload : URValue ( XCell ) a6 ) : URValue WrapperRetLRecord true := 
+Definition onTip3Transfer_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( address ) a1 ) ( balance : URValue ( XUInteger128 ) a2 ) ( new_tokens : URValue ( XUInteger128 ) a3 ) ( sender_pubkey : URValue ( XUInteger256 ) a4 ) ( sender_owner : URValue ( address ) a5 ) ( payload : URValue cell a6 ) : URValue WrapperRetLRecord true := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) onTip3Transfer 
 answer_addr balance new_tokens sender_pubkey sender_owner payload ) . 
 
@@ -247,7 +247,7 @@ Notation " 'hasInternalWalletCode_' '(' ')' " :=
 ( hasInternalWalletCode_right 
 ) 
 (in custom URValue at level 0 ) : ursus_scope . 
-Definition getInternalWalletCode_right  : URValue XCell false := 
+Definition getInternalWalletCode_right  : URValue cell false := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getInternalWalletCode 
 ) . 
 
@@ -280,7 +280,7 @@ Notation " 'getWalletAddress_' '(' pubkey owner ')' " :=
 pubkey owner ) 
 (in custom URValue at level 0 , pubkey custom URValue at level 0 
 , owner custom URValue at level 0 ) : ursus_scope . 
-Definition _on_bounced_right { a1 a2 }  ( cell : URValue ( XCell ) a1 )  ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger true := 
+Definition _on_bounced_right { a1 a2 }  ( cell : URValue cell a1 )  ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger true := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _on_bounced 
 cell msg_body ) . 
 
@@ -297,7 +297,7 @@ Notation " 'getInternalWalletCodeHash_' '(' ')' " :=
 ( getInternalWalletCodeHash_right 
 ) 
 (in custom URValue at level 0 ) : ursus_scope . 
-Definition _fallback_right { a1 a2 }  ( cell : URValue  ( XCell ) a1  ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger (orb a2 a1) := 
+Definition _fallback_right { a1 a2 }  ( cell : URValue  cell a1  ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger (orb a2 a1) := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
 cell msg_body) . 
 
@@ -370,7 +370,7 @@ Notation " 'check_owner_' '(' ')' " :=
 ( check_owner_left 
 ) 
 (in custom ULValue at level 0 ) : ursus_scope . 
-Definition prepare_wrapper_state_init_and_addr_right { a1 a2 }  ( wrapper_code : URValue ( XCell ) a1 ) ( wrapper_data : URValue ( DWrapperLRecord ) a2 ) : URValue ( StateInitLRecord # XUInteger256 ) ( orb a2 a1 ) := 
+Definition prepare_wrapper_state_init_and_addr_right { a1 a2 }  ( wrapper_code : URValue cell a1 ) ( wrapper_data : URValue ( DWrapperLRecord ) a2 ) : URValue ( StateInitLRecord # XUInteger256 ) ( orb a2 a1 ) := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_wrapper_state_init_and_addr 
 wrapper_code wrapper_data ) . 
 

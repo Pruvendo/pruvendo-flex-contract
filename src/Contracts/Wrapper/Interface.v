@@ -13,7 +13,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables address XUInteger128  XUInteger256   XCell: Type.
+Variables address XUInteger128  XUInteger256   cell: Type.
 
 Inductive VarInitFields      := | VarInit_ι_DWrapper | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
@@ -22,10 +22,10 @@ Variable InitialState : Type.
 
 Inductive IWrapperP :=
     | Iinit : address -> IWrapperP
-    | IsetInternalWalletCode : XCell -> IWrapperP
+    | IsetInternalWalletCode : cell -> IWrapperP
     | IdeployEmptyWallet : XUInteger256 -> address -> XUInteger128 -> IWrapperP
     | IonTip3Transfer : address -> XUInteger128 -> XUInteger128 -> XUInteger256 -> 
-                                                address -> XCell -> IWrapperP
+                                                address -> cell -> IWrapperP
     | Iburn : address -> XUInteger256 -> address -> XUInteger256 -> 
                                                 address -> XUInteger128 -> IWrapperP
     | IrequestTotalGranted : IWrapperP
@@ -46,11 +46,11 @@ Local Open Scope xlist_scope.
 Definition VarInitL := [ClassTypesForInterface.DWrapperLRecord : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
-Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
+Definition InitialStateL := [cell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IWrapperP. *)
-Definition IWrapper: Type := IWrapperP address XUInteger128 XUInteger256 XCell StateInitLRecord.
+Definition IWrapper: Type := IWrapperP address XUInteger128 XUInteger256 cell StateInitLRecord.
 
 
 Arguments Iinit {_} {_} {_} {_} {_}.

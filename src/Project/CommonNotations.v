@@ -1,3 +1,6 @@
+Require Import Strings.String.
+
+Require Import FinProof.Common.
 Require Import FinProof.ProgrammingWith.
 
 Require Import UMLang.BasicModuleTypes.
@@ -6,14 +9,17 @@ Require Import UMLang.ProofEnvironment2.
 
 Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import CommonTypes.
 
 Module CommonNotations (xt : XTypesSig) (sm : StateMonadSig) (cs : ClassSigTVM xt sm).
 Module Export tvmNotationsModule := tvmNotations xt sm cs. 
-Module Export TypesModule := Types xt sm. 
+Module Export TypesModule := Types xt sm.
+
 Import UrsusNotations.
 Local Open Scope ursus_scope.
+Local Open Scope string_scope.
 
 Notation UE := (UExpression _ _) (only parsing).
 Notation UEf := (UExpression _ false) (only parsing).
@@ -99,24 +105,6 @@ Definition TickTock_ι_tock_left (x: ULValue TickTockLRecord): ULValue XBool :=
 Notation " a '↑' 'TickTock.tock' " := ( TickTock_ι_tock_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'TickTock.tock' " := ( TickTock_ι_tock_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-(* Definition addr_std_fixed_ι_workchain_id_right {b} (x: URValue addr_std_fixed b): URValue XUInteger8 b :=
-    || {x} ^^ {addr_std_fixed_ι_workchain_id} || : _ .
-    
-Definition addr_std_fixed_ι_workchain_id_left (x: ULValue addr_std_fixed): ULValue XUInteger8 :=
-    {{ {x} ^^ {addr_std_fixed_ι_workchain_id} }} : _.
-    
-Notation " a '↑' 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'addr_std_fixed.workchain_id' " := ( addr_std_fixed_ι_workchain_id_left a ) (in custom ULValue at level 0) : ursus_scope.
-
-Definition addr_std_fixed_ι_address_right {b} (x: URValue addr_std_fixed b): URValue XUInteger256 b :=
-    || {x} ^^ {addr_std_fixed_ι_address} || : _ .
-    
-Definition addr_std_fixed_ι_address_left (x: ULValue addr_std_fixed): ULValue XUInteger256 :=
-    {{ {x} ^^ {addr_std_fixed_ι_address} }} : _.
-    
-Notation " a '↑' 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address_right a ) (in custom URValue at level 0) : ursus_scope.
-Notation " a '↑' 'addr_std_fixed.address' " := ( addr_std_fixed_ι_address_left a ) (in custom ULValue at level 0) : ursus_scope.
- *)
 Definition Tip3Config_ι_name_right {b} (x: URValue Tip3ConfigLRecord b): URValue XString b :=
     || {x} ^^ {Tip3Config_ι_name} || : _ .
     
@@ -190,35 +178,34 @@ Definition StateInit_ι_special_left (x: ULValue StateInitLRecord): ULValue ( XM
 Notation " a '↑' 'StateInit.special' " := ( StateInit_ι_special_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'StateInit.special' " := ( StateInit_ι_special_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition StateInit_ι_code_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XCell ) b :=
+Definition StateInit_ι_code_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe cell ) b :=
     || {x} ^^ {StateInit_ι_code} || : _ .
     
-Definition StateInit_ι_code_left (x: ULValue StateInitLRecord): ULValue ( XMaybe XCell ) :=
+Definition StateInit_ι_code_left (x: ULValue StateInitLRecord): ULValue ( XMaybe cell ) :=
     {{ {x} ^^ {StateInit_ι_code} }} : _.
     
 Notation " a '↑' 'StateInit.code' " := ( StateInit_ι_code_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'StateInit.code' " := ( StateInit_ι_code_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition StateInit_ι_data_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XCell ) b :=
+Definition StateInit_ι_data_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe cell ) b :=
     || {x} ^^ {StateInit_ι_data} || : _ .
     
-Definition StateInit_ι_data_left (x: ULValue StateInitLRecord): ULValue ( XMaybe XCell ) :=
+Definition StateInit_ι_data_left (x: ULValue StateInitLRecord): ULValue ( XMaybe cell ) :=
     {{ {x} ^^ {StateInit_ι_data} }} : _.
     
 Notation " a '↑' 'StateInit.data' " := ( StateInit_ι_data_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'StateInit.data' " := ( StateInit_ι_data_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition StateInit_ι_library_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe XCell ) b :=
+Definition StateInit_ι_library_right {b} (x: URValue StateInitLRecord b): URValue ( XMaybe cell ) b :=
     || {x} ^^ {StateInit_ι_library} || : _ .
     
-Definition StateInit_ι_library_left (x: ULValue StateInitLRecord): ULValue ( XMaybe XCell ) :=
+Definition StateInit_ι_library_left (x: ULValue StateInitLRecord): ULValue ( XMaybe cell ) :=
     {{ {x} ^^ {StateInit_ι_library} }} : _.
     
 Notation " a '↑' 'StateInit.library' " := ( StateInit_ι_library_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'StateInit.library' " := ( StateInit_ι_library_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-
- Definition OrderRet_err_code_right {b} (x: URValue OrderRetLRecord b): URValue XUInteger32 b :=
+Definition OrderRet_err_code_right {b} (x: URValue OrderRetLRecord b): URValue XUInteger32 b :=
     || {x} ^^ {OrderRet_ι_err_code} || : _ .
 
 Definition OrderRet_processed_right {b} (x: URValue OrderRetLRecord b): URValue XUInteger128 b :=
@@ -242,7 +229,6 @@ Notation " a '↑' 'OrderRet.processed' " := ( OrderRet_processed_left a) (in cu
 Notation " a '↑' 'OrderRet.processed' " := ( OrderRet_processed_right a) (in custom URValue at level 0) : ursus_scope. 
 Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_left a) (in custom ULValue at level 0) : ursus_scope. 
 Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_right a) (in custom URValue at level 0) : ursus_scope. 
-
 
 Tactic Notation "vararg" ident(x) constr(ss) := 
 let s := fresh x in 

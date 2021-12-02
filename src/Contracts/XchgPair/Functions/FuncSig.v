@@ -6,6 +6,7 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusStdLib.Cpp.stdTypes.
 
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonAxioms.
 
@@ -29,9 +30,9 @@ Parameter getTip3MajorRoot : UExpression address false .
 Parameter getTip3MinorRoot : UExpression address false . 
 Parameter getMinAmount : UExpression uint128 false . 
 Parameter getNotifyAddr : UExpression address false . 
-Parameter _fallback : TvmCell -> TvmSlice -> UExpression uint false . 
+Parameter _fallback : cell_ -> slice_ -> UExpression uint false . 
 
-Parameter prepare_xchg_pair_state_init_and_addr: ContractLRecord -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
+Parameter prepare_xchg_pair_state_init_and_addr: ContractLRecord -> cell_ -> UExpression ( StateInitLRecord # uint256 ) false . 
 
 End SpecSig.
 

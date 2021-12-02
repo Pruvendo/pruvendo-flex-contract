@@ -72,10 +72,10 @@ Definition DRootTokenContract_ι_total_granted__left (x: ULValue DRootTokenContr
 Notation " a '↑' 'DRootTokenContract.total_granted_' " := ( DRootTokenContract_ι_total_granted__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DRootTokenContract.total_granted_' " := ( DRootTokenContract_ι_total_granted__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DRootTokenContract_ι_wallet_code__right {b} (x: URValue DRootTokenContractLRecord b): URValue ( XMaybe XCell ) b :=
+Definition DRootTokenContract_ι_wallet_code__right {b} (x: URValue DRootTokenContractLRecord b): URValue ( XMaybe cell ) b :=
     || {x} ^^ {DRootTokenContract_ι_wallet_code_} || : _.
     
-Definition DRootTokenContract_ι_wallet_code__left (x: ULValue DRootTokenContractLRecord): ULValue ( XMaybe XCell ) :=
+Definition DRootTokenContract_ι_wallet_code__left (x: ULValue DRootTokenContractLRecord): ULValue ( XMaybe cell ) :=
     {{ {x} ^^ {DRootTokenContract_ι_wallet_code_} }} : _.
     
 Notation " a '↑' 'DRootTokenContract.wallet_code_' " := ( DRootTokenContract_ι_wallet_code__right a ) (in custom URValue at level 0) : ursus_scope.

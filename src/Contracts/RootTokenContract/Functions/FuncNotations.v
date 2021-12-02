@@ -70,8 +70,8 @@ Local Open Scope ucpp_scope.
  Notation " '_total_granted_' " := ( total_granted__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_total_granted_' " := ( total_granted__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DRootTokenContract_ι_wallet_code_ ) : ULValue (XMaybe XCell) ) . 
- Definition wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DRootTokenContract_ι_wallet_code_ ) : URValue (XMaybe XCell) false ) . 
+ Definition wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DRootTokenContract_ι_wallet_code_ ) : ULValue (XMaybe cell) ) . 
+ Definition wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DRootTokenContract_ι_wallet_code_ ) : URValue (XMaybe cell) false ) . 
  Notation " '_wallet_code_' " := ( wallet_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_wallet_code_' " := ( wallet_code__right ) (in custom URValue at level 0) : ursus_scope. 
  
@@ -120,7 +120,7 @@ Local Open Scope string_scope.
  , root_public_key custom URValue at level 0 
  , root_owner custom URValue at level 0 
  , total_supply custom URValue at level 0 ) : ursus_scope . 
- Definition setWalletCode_right { a1 }  ( wallet_code : URValue ( XCell ) a1 ) : URValue XBool true := 
+ Definition setWalletCode_right { a1 }  ( wallet_code : URValue cell a1 ) : URValue XBool true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setWalletCode 
  wallet_code ) . 
  
@@ -232,7 +232,7 @@ Local Open Scope string_scope.
  ( hasWalletCode_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getWalletCode_right  : URValue XCell true := 
+ Definition getWalletCode_right  : URValue cell true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getWalletCode 
  ) . 
  
@@ -250,7 +250,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , owner custom URValue at level 0 ) : ursus_scope . 
 
- Definition _on_bounced_right { a1 a2 }  ( msg : URValue XCell a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger true := 
+ Definition _on_bounced_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _on_bounced 
  msg msg_body ) . 
  
@@ -268,7 +268,7 @@ Local Open Scope string_scope.
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition _fallback_right { a1 a2 }  ( x : URValue XCell a1 ) ( y : URValue XSlice a2 ) : URValue XUInteger (orb a2 a1) := 
+ Definition _fallback_right { a1 a2 }  ( x : URValue cell a1 ) ( y : URValue XSlice a2 ) : URValue XUInteger (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  x y ) . 
  
@@ -343,7 +343,7 @@ y custom URValue at level 0 ) : ursus_scope .
  false ) 
  (in custom ULValue at level 0 , false custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_root_state_init_and_addr_right { a1 a2 }  ( root_code : URValue ( XCell ) a1 ) ( root_data : URValue ( DRootTokenContractLRecord ) a2 ) : URValue ( StateInitLRecord # XUInteger256 ) ( orb a2 a1 ) := 
+ Definition prepare_root_state_init_and_addr_right { a1 a2 }  ( root_code : URValue cell a1 ) ( root_data : URValue ( DRootTokenContractLRecord ) a2 ) : URValue ( StateInitLRecord # XUInteger256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_root_state_init_and_addr 
  root_code root_data ) . 
  

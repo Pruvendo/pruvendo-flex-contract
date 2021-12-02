@@ -23,7 +23,7 @@ Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
 Parameter constructor : ( ( XString ) ) -> ( ( XString ) ) -> ( ( XUInteger8 ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> UExpression PhantomType true . 
- Parameter setWalletCode : ( ( XCell ) ) -> UExpression XBool true . 
+ Parameter setWalletCode : ( cell ) -> UExpression XBool true . 
  Parameter deployWallet : ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression address true . 
  Parameter deployEmptyWallet : ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> UExpression address true . 
  Parameter grant : ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression PhantomType true . 
@@ -36,11 +36,11 @@ Parameter constructor : ( ( XString ) ) -> ( ( XString ) ) -> ( ( XUInteger8 ) )
  Parameter getTotalSupply : UExpression XUInteger128 false . 
  Parameter getTotalGranted : UExpression XUInteger128 false . 
  Parameter hasWalletCode : UExpression XBool false . 
- Parameter getWalletCode : UExpression XCell true . 
+ Parameter getWalletCode : UExpression cell true . 
  Parameter getWalletAddress : ( ( XUInteger256 ) ) -> ( ( address ) ) -> UExpression address false . 
- Parameter _on_bounced : ( XCell ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
+ Parameter _on_bounced : cell -> ( ( XSlice ) ) -> UExpression XUInteger true . 
  Parameter getWalletCodeHash : UExpression XUInteger256 false . 
- Parameter _fallback : ( XCell ) -> ( ( XSlice ) ) -> UExpression XUInteger false . 
+ Parameter _fallback : cell -> ( ( XSlice ) ) -> UExpression XUInteger false . 
  Parameter optional_owner : ( ( address ) ) -> UExpression (XMaybe address) false . 
  Parameter workchain_id : UExpression XUInteger8 false . 
  Parameter calc_wallet_init : ( ( XUInteger256 ) ) -> ( ( address ) ) -> UExpression ( StateInitLRecord # address ) false . 
@@ -48,7 +48,7 @@ Parameter constructor : ( ( XString ) ) -> ( ( XString ) ) -> ( ( XUInteger8 ) )
  Parameter check_internal_owner : UExpression PhantomType true . 
  Parameter check_external_owner : ( ( XBool ) ) -> UExpression PhantomType true . 
  Parameter check_owner : ( XBool ) -> UExpression PhantomType true . 
- Parameter prepare_root_state_init_and_addr : ( ( XCell ) ) -> ( ( DRootTokenContractLRecord ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false . 
+ Parameter prepare_root_state_init_and_addr : ( cell ) -> ( ( DRootTokenContractLRecord ) ) -> UExpression ( StateInitLRecord # XUInteger256 ) false . 
 
 
 End SpecSig.

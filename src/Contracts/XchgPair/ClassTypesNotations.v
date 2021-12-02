@@ -1,7 +1,9 @@
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
+Require Import UrsusTVM.Cpp.TvmCells.
 Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.tvmTypes.
 
 Require Import Project.CommonAxioms.
 
@@ -16,6 +18,16 @@ Module Export InterfaceModule := PublicInterface xt sm.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
+
+(* Definition builder_build {b} {X} (x : URValue X b) : URValue builder b.
+    pose proof (urvalue_bind x (fun x' => #( Build_CellSliceBuilder _Builder (build_ x')))).
+    rewrite right_or_false in X0.
+    refine X0.
+Defined.
+
+About builder_build.
+Variable x:  URValue cell false.
+Check builder_build x. *)
 
 Definition DXchgPair_ι_flex_addr__right {b} (x: URValue DXchgPairLRecord b): URValue address b :=
     || {x} ^^ {DXchgPair_ι_flex_addr_} || : _.

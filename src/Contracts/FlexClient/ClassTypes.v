@@ -18,14 +18,14 @@ Local Open Scope glist_scope.
 
 Definition DFlexClientL : list Type := 
  [ ( XUInteger256 ) : Type ; 
- ( XCell ) : Type ; 
- ( XCell ) : Type ; 
+ cell : Type ; 
+ cell : Type ; 
  ( XInteger (* XUInteger8 *) ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( address ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ] .
+ ( ( XMaybe cell ) ) : Type ; 
+ ( ( XMaybe cell ) ) : Type ; 
+ ( ( XMaybe cell ) ) : Type ] .
 Elpi GeneratePruvendoRecord DFlexClientL DFlexClientFields . 
 
 End ClassTypes .

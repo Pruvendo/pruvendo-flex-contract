@@ -12,6 +12,7 @@ Require Import UMLang.ProofEnvironment2.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonAxioms.
 Require Import Project.CommonConstSig.
@@ -42,69 +43,18 @@ Local Open Scope ucpp_scope.
 Local Open Scope struct_scope.
 Local Open Scope N_scope.
 Local Open Scope string_scope.
-Local Open Scope xlist_scope.
+Local Open Scope xlist_scope. 
 
-
-Parameter int_value__ : URValue uint false .
-Notation " 'int_value' '(' ')' " := 
- ( int_value__ ) 
- (in custom URValue at level 0 ) : ursus_scope .
-
-Parameter set_int_return_flag :UExpression XBool false .
-Notation " 'set_int_return_flag_' '(' ')' " := 
- ( set_int_return_flag ) 
- (in custom ULValue at level 0 ) : ursus_scope . 
-
-(* 
-Transparent DXchgPairLRecord.
-Check || 0 ⇒ { DXchgPair_ι_tip3_major_root_ } ||.
-
-About default_with_sigmafield.
-
-Definition default_with_sigmafield {bp br R} {F:Set}`{PruvendoRecord R F} (p: URValue { f & field_type f } bp) (r: URValue R br)
-                             : URValue R (orb bp  br).
-pose proof (                             
-    urvalue_bind p (fun p' => urvalue_bind r ( fun r' => # {$$ r' with projT1 p' := projT2 p' $$} ))).
-rewrite right_or_false in X.
-refine X.
-Defined.    *)
-
-(* Arguments default_with_sigmafield {_} {_} {_} {_} {_} _ _ &.
-
-Notation "[$ x ; .. ; y $]" := (default_with_sigmafield x .. (default_with_sigmafield y (# default)) .. ) 
-(in custom URValue at level 2 , x custom URValue, y custom URValue) : ursus_scope.
-
-Check default_with_sigmafield || 0 ⇒ { DXchgPair_ι_tip3_major_root_ } || (#default).
-Check  || [$ { || #{0} || : URValue _ _}  ⇒ { DXchgPair_ι_tip3_major_root_}  $] ||.
-
-About AssignExpression.
-(* Arguments AssignExpression  {_} {_} {_} {_} {_} {_} {_} {_} {R} (* & {_} *) {_} {_} _ & _ . *)
-
-Check || [$  0 ⇒ { DXchgPair_ι_tip3_major_root_}  $] || : URValue DXchgPairLRecord false.
-
-(* Existing Instance DXchgPairLPruvendoRecord. *)
-
-Set Typeclasses Debug.
-Import ClassTypesModule.
-Axiom foo: LocalStateField DXchgPairLRecord.
-Existing Instance foo.
-Existing Instance LedgerLPruvendoRecord.
-Check  {{ new 'pair_data : DXchgPairLRecord  @ "pair_data" := {};
-          {pair_data} := { || [$  0 ⇒ { DXchgPair_ι_tip3_major_root_}  $] || : URValue DXchgPairLRecord false } ; { _ } }} . 
- *)
 
 Definition onDeploy (min_amount: uint128) (deploy_value: uint128) (notify_addr: address) : UExpression boolean true . 
-    (* refine {{ new 'min_amount : uint128 @ "min_amount" := {} ;{_} }}.
-    refine {{ {min_amount} := #{min_amount0}; {_} }}. *)
-    (* refine ( let a := min_amount in {{  new 'min_amount : uint128 @ "min_amount" := #{a} ; {_} }} ). *)
+    refine {{ require_ ( int_value () > #{ deploy_value } , error_code::not_enough_tons ) ; { _ } }} . 
+    refine {{ require_ ( ~ _min_amount_ ,  error_code::double_deploy  ) ; { _ } }} .  
+    refine {{ require_ ( #{ min_amount } > 0  , error_code::zero_min_amount ) ; { _ } }} .
 
-    refine {{ require_ ( ( ( int_value ( ) ) > #{ deploy_value } ) , error_code::not_enough_tons ) ; { _ } }} . 
-    refine {{ require_ ( ( _min_amount_ ) ,  error_code::double_deploy  ) ; { _ } }} .  
-    refine {{ require_ ( ( #{ min_amount } ) > 0  , error_code::zero_min_amount ) ; { _ } }} . 
     refine {{ _min_amount_ := #{ min_amount } ; { _ } }} . 
     refine {{ _notify_addr_ := #{ notify_addr } ; { _ } }} . 
     refine {{ tvm_rawreserve ( #{deploy_value} , rawreserve_flag::up_to) ; { _ } }} .  
-    refine {{ set_int_return_flag_ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
+    refine {{ set_int_return_flag ( # {SEND_ALL_GAS} ) ; { _ } }} . 
     refine {{ return_ TRUE  }} . 
  Defined . 
  
@@ -128,20 +78,30 @@ Definition getNotifyAddr : UExpression address false .
     refine {{ return_ _notify_addr_ }} . 
 Defined . 
  
-Definition _fallback ( msg : TvmCell ) ( msg_body : TvmSlice ) : UExpression uint false . 
+Definition _fallback ( msg : cell_ ) ( msg_body : slice_ ) : UExpression uint false . 
  	refine {{ return_ 0 }} . 
 Defined . 
- 
+
+
+(* inline
+std::pair<StateInit, uint256> prepare_xchg_pair_state_init_and_addr(DXchgPair pair_data, cell pair_code) {
+  cell pair_data_cl = prepare_persistent_data<IXchgPair, void, DXchgPair>({}, pair_data);
+  StateInit pair_init {
+    /*split_depth*/{}, /*special*/{},
+    pair_code, pair_data_cl, /*library*/{}
+  };
+  cell pair_init_cl = build(pair_init).make_cell();
+  return { pair_init, uint256(tvm_hash(pair_init_cl)) };
+} *)
+
+(* Set Universe Polymorphism. *)
 Definition prepare_xchg_pair_state_init_and_addr ( pair_data : ContractLRecord ) 
-                                                 ( pair_code : TvmCell ) : UExpression ( StateInitLRecord # uint256 ) false . 
-    refine {{ new 'pair_data_cl : TvmCell @ "pair_data_cl" := prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
-    (*  Unshelve.  *)
+                                                 ( pair_code : cell ) : UExpression ( StateInitLRecord # uint256 ) false . 
+    refine {{ new 'pair_data_cl : cell @ "pair_data_cl" := prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
     refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := 
                       [ {} , {} , ( #{pair_code} ) -> set () , ( !{pair_data_cl} ) -> set () , {} ] ; { _ } }} . 
-    refine {{ new 'pair_init_cl : TvmCell @ "pair_init_cl" := {} ; { _ } }} . 
-    refine {{ {pair_init_cl} := {} (* build ( !{pair_init} ) . make_cell ( ) *) ; { _ } }} . 
-    refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} )  ] }} .
-    (* Unshelve.  *)
+    refine {{ new 'pair_init_cl : cell @ "pair_init_cl" :=  build ( σ !{pair_init} ) -> make_cell ()  ; { _ } }} .    
+    refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} )  ] }} .    
 Defined . 
 
 End FuncsInternal.

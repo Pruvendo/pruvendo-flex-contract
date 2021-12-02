@@ -13,7 +13,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables address XCell XUInteger128  XUInteger256  XString XUInteger8 : Type.
+Variables address cell XUInteger128  XUInteger256  XString XUInteger8 : Type.
 
 Inductive VarInitFields      := | VarInit_ι_DRootTokenContract | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
@@ -22,7 +22,7 @@ Variable InitialState : Type.
 
 Inductive IRootTokenContractP :=
 | Iconstructor : XString -> XString -> XUInteger8 -> XUInteger256 -> address -> XUInteger128 -> IRootTokenContractP
-| IsetWalletCode : XCell -> IRootTokenContractP
+| IsetWalletCode : cell -> IRootTokenContractP
 | IdeployWallet : XUInteger256 -> address -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
 | IdeployEmptyWallet : XUInteger256 -> address -> XUInteger128 -> IRootTokenContractP
 | Igrant : address -> XUInteger128 -> XUInteger128 -> IRootTokenContractP
@@ -52,11 +52,11 @@ Local Open Scope xlist_scope.
 Definition VarInitL := [DRootTokenContractLRecord : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
-Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
+Definition InitialStateL := [cell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 Print IRootTokenContractP.
-Definition IRootTokenContract : Type := IRootTokenContractP address XCell XUInteger128 XUInteger256 XString XUInteger8 StateInitLRecord .
+Definition IRootTokenContract : Type := IRootTokenContractP address cell XUInteger128 XUInteger256 XString XUInteger8 StateInitLRecord .
 
 Arguments Iconstructor {_} {_} {_} {_} {_} {_} {_}.
 About Iconstructor.

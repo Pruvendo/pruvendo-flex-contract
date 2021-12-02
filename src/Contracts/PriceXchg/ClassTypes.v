@@ -70,7 +70,7 @@ Definition DPriceXchgL : list Type :=
  ( address (* IFlexNotifyPtr *) ) : Type ; 
  ( XInteger (* XUInteger8 *) ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
- ( XCell ) : Type ; 
+ cell : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 
  ( ( XQueue OrderInfoXchgLRecord ) ) : Type ; 

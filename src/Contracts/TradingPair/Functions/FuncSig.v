@@ -28,8 +28,8 @@ Parameter getFlexAddr : UExpression address false .
 Parameter getTip3Root : UExpression address false . 
 Parameter getMinAmount : UExpression uint128 false . 
 Parameter getNotifyAddr : UExpression address false . 
-Parameter _fallback :  TvmCell -> TvmSlice -> UExpression uint false . 
-Parameter prepare_trading_pair_state_init_and_addr :  ContractLRecord  -> TvmCell -> UExpression ( StateInitLRecord # uint256 ) false . 
+Parameter _fallback :  cell -> slice -> UExpression uint false . 
+Parameter prepare_trading_pair_state_init_and_addr :  ContractLRecord  -> cell -> UExpression ( StateInitLRecord # uint256 ) false . 
 
 End SpecSig.
 

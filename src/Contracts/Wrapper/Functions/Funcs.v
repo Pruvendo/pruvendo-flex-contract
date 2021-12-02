@@ -74,7 +74,7 @@ Definition init ( external_wallet : address ) : UExpression boolean true .
 	refine {{ new 'init : ( StateInitLRecord ) @ "init" :=    
 								getStateInit_ ( ({ parsed_msg }) ) ; {_} }} . 
 	refine {{ require_ ( ( (!{init}) ↑ StateInit.code ) , error_code::bad_incoming_msg ) ; {_} }} . 
-	refine {{ new 'mycode : TvmCell @ "mycode" := 
+	refine {{ new 'mycode : cell @ "mycode" := 
 						((!{init}) ↑ StateInit.code ) -> get_default () ; {_} }} . 
 	refine {{ require_ ( ( (!{ mycode }) -> to_cell () -> refs () == #{3} ) , error_code::unexpected_refs_count_in_code ) ; {_} }} . 
 	(*  	 	 refine {{ parser mycode_parser ( (!{ mycode }) -> to_cell () ) ; {_} }} .  *)
@@ -135,7 +135,7 @@ Definition check_owner_left { R } : UExpression R true  :=
 Notation " 'check_owner_' '(' ')' " := ( check_owner_left ) 
  (in custom ULValue at level 0 ) : ursus_scope .
 
-Definition setInternalWalletCode ( wallet_code : TvmCell ) : UExpression boolean true . 
+Definition setInternalWalletCode ( wallet_code : cell ) : UExpression boolean true . 
 	refine {{ check_owner_ ( ) ; {_} }} .  
 	refine {{ tvm_accept () ; {_}  }} . 
 	refine {{ require_ ( ( ~ _internal_wallet_code_ ) , error_code::cant_override_wallet_code ) ; {_} }} . 
@@ -150,16 +150,16 @@ Defined .
 Definition prepare_internal_wallet_state_init_and_addr ( name :  String ) ( symbol : String )
  													   ( decimals : uint8 ) ( root_public_key : uint256 )
  													   ( wallet_public_key : uint256 ) ( root_address : address ) 
-													   ( owner_address : optional address ) ( code : TvmCell ) 
+													   ( owner_address : optional address ) ( code : cell ) 
 													   ( workchain_id : int ) : UExpression ( StateInitLRecord * uint256 ) false .
 	refine {{ new 'wallet_data : TONTonkenWalletModuleForPrice.DTONTokenWalletInternalLRecord @ "wallet_data" := 
 			[ #{name} , #{symbol} , #{decimals} , 0 , #{root_public_key} , 
 			#{wallet_public_key} , #{root_address} , #{owner_address} , 
 			{} , #{code} , #{workchain_id} ] ; { _ } }} . 
-	refine {{ new 'wallet_data_cl : TvmCell @ "wallet_data_cl" := 
+	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
 		      prepare_persistent_data_ ( {} , !{wallet_data} ) ; { _ } }} . 
 	refine {{ new 'wallet_init : StateInitLRecord @ "wallet_init" := [ {} , {} , (#{code}) -> set () , (!{wallet_data_cl}) -> set () , {} ] ; { _ } }} . 
-	refine {{ new 'wallet_init_cl : TvmCell @ "wallet_init_cl" := {}  
+	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {}  
 			(*  build ( !{ wallet_init } ) . make_cell ( ) *) ; { _ } }} . 
 	refine {{ return_ [ !{ wallet_init } ,  tvm_hash ( !{wallet_init_cl} )  ] }} . 
 Defined . 
@@ -171,7 +171,7 @@ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6
 																							( wallet_public_key : URValue uint256 a5 ) 
 																							( root_address : URValue address a6 ) 
 																							( owner_address : URValue ( optional address ) a7 ) 
-																							( code : URValue TvmCell a8 ) 
+																							( code : URValue cell a8 ) 
 																							( workchain_id : URValue int a9 ) : URValue ( StateInitLRecord * uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
 	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
@@ -243,7 +243,7 @@ Definition onTip3Transfer ( answer_addr : address )
 						  ( new_tokens : uint128 ) 
 						  ( sender_pubkey :uint256 ) 
 						  ( sender_owner : address ) 
-						  ( payload : TvmCell ) : UExpression WrapperRetLRecord true . 
+						  ( payload : cell ) : UExpression WrapperRetLRecord true . 
 	refine {{ require_ ( ( int_sender () == _external_wallet_ -> get_default () ) , error_code::not_my_wallet_notifies ) ; {_} }}. 
 	refine {{ set_int_sender ( #{ answer_addr } ) ; {_} }} . 
 	refine {{ set_int_return_value ( 0 ) ; {_} }} . 
@@ -307,7 +307,7 @@ Definition hasInternalWalletCode : UExpression boolean false .
 	refine  {{ return_ ? ~ ~ _internal_wallet_code_  }} . 
 Defined . 
  
-Definition getInternalWalletCode : UExpression TvmCell true . 
+Definition getInternalWalletCode : UExpression cell true . 
 	refine  {{ return_ _internal_wallet_code_ -> get () }} . 
 Defined . 
  
@@ -357,7 +357,7 @@ Notation " 'getTotalGranted_' '(' ')' " := ( getTotalGranted_right )
 Definition hasInternalWalletCode_right  : URValue boolean false := 
 	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) hasInternalWalletCode ) . 
 
-Definition getInternalWalletCode_right  : URValue TvmCell true := 
+Definition getInternalWalletCode_right  : URValue cell true := 
 	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getInternalWalletCode ) . 
 
 Notation " 'getInternalWalletCode_' '(' ')' " := ( getInternalWalletCode_right ) 
@@ -390,11 +390,11 @@ Notation " 'getDetails_' '(' ')' " := ( getDetails_right )
 (* template<class Interface, class ReplayAttackProtection, class DContract>
 inline std::tuple<persistent_data_header_t<Interface, ReplayAttackProtection>, DContract> 
 load_persistent_data() *)
-Definition load_persistent_data : UExpression ( TvmCell # DWrapperLRecord ) false .
+Definition load_persistent_data : UExpression ( cell # DWrapperLRecord ) false .
  refine {{ return_ {} }} .  
 Defined .
 
-Definition load_persistent_data_right : URValue ( TvmCell # DWrapperLRecord ) false := 
+Definition load_persistent_data_right : URValue ( cell # DWrapperLRecord ) false := 
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ0 ) load_persistent_data ) . 
  
 Notation " 'load_persistent_data_' '(' ')' " := ( load_persistent_data_right ) 
@@ -403,14 +403,14 @@ Notation " 'load_persistent_data_' '(' ')' " := ( load_persistent_data_right )
 (* void save_persistent_data(persistent_data_header_t<IContract, ReplayAttackProtection> persistent_data_header,
                                  DContract base) {
   persistent_data::set(prepare_persistent_data<IContract, ReplayAttackProtection, DContract>(persistent_data_header, base)); } *)
-Definition save_persistent_data (persistent_data_header:TvmCell) 
+Definition save_persistent_data (persistent_data_header:cell) 
                                 (base:DWrapperLRecord) 
                               : UExpression PhantomType false .
  refine {{ return_ {} }} .  
 Defined .
 
 Definition save_persistent_data_left { R a1 a2 }  
-                                  ( a : URValue TvmCell a1 ) 
+                                  ( a : URValue cell a1 ) 
                                   ( b : URValue DWrapperLRecord a2 ) 
 : UExpression R ( orb a2 a1 ) := 
  wrapULExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) save_persistent_data a b ) . 
@@ -419,7 +419,7 @@ Notation " 'save_persistent_data_' '(' a ',' b ')' " := ( save_persistent_data_l
  (in custom ULValue at level 0 ,
      a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
 
-Definition _on_bounced ( _ :  TvmCell ) ( msg_body : TvmSlice ) : UExpression XUInteger true. 
+Definition _on_bounced ( _ :  cell ) ( msg_body : slice ) : UExpression XUInteger true. 
 	refine {{ tvm_accept () ; {_} }} . 
  	refine {{ new 'Args : ( PhantomType (* auto *) ) @ "Args" := {}  
  	 	                 (* args_struct_t<&ITONTokenWallet::accept> *) ; {_} }} . 
@@ -431,7 +431,7 @@ Definition _on_bounced ( _ :  TvmCell ) ( msg_body : TvmSlice ) : UExpression XU
  	refine {{ new 'args : ( PhantomType (* auto *) ) @ "args" := {} 
                           (*  parse ( p , error_code::wrong_bounced_args ) *) ; {_} }} . 
  	refine {{ new 'bounced_val : uint128 @ "bounced_val" := {} (* (!{ args }) ↑ tokens *) ; {_} }} .
- 	refine {{ new ( 'hdr: TvmCell , 'persist: DWrapperLRecord ) @ ( "hdr" , "persist" ) := load_persistent_data_ ( )
+ 	refine {{ new ( 'hdr: cell , 'persist: DWrapperLRecord ) @ ( "hdr" , "persist" ) := load_persistent_data_ ( )
 (*                 load_persistent_data < IWrapper , wrapper_replay_protection_t , DWrapper > ()  *) ; {_} }} . 
 
 	refine {{ require_ ( !{ bounced_val } <= !{persist} ↑ DWrapper.total_granted_ , error_code::wrong_bounced_args ) ; {_} }} . 
@@ -445,16 +445,16 @@ Definition getInternalWalletCodeHash : UExpression XUInteger256 true .
 	refine  {{ return_  tvm_hash ( _internal_wallet_code_ -> get () )  }} . 
 Defined . 
  
-Definition _fallback ( cell :  (TvmCell ) ) : UExpression XUInteger false . 
+Definition _fallback ( cell :  (cell ) ) : UExpression XUInteger false . 
 	refine  {{ return_ 0 }} . 
 Defined . 
   
-Definition prepare_wrapper_state_init_and_addr ( wrapper_code : TvmCell ) ( wrapper_data : ( DWrapperLRecord ) ) : UExpression ( StateInitLRecord # XUInteger256 ) false . 
-	refine {{ new 'wrapper_data_cl : TvmCell @ "wrapper_data_cl" := {} ; {_} }} . 
+Definition prepare_wrapper_state_init_and_addr ( wrapper_code : cell ) ( wrapper_data : ( DWrapperLRecord ) ) : UExpression ( StateInitLRecord # XUInteger256 ) false . 
+	refine {{ new 'wrapper_data_cl : cell @ "wrapper_data_cl" := {} ; {_} }} . 
 	refine {{ { wrapper_data_cl } := prepare_persistent_data_ ( {} (* wrapper_replay_protection_t::init () *) , #{ wrapper_data } ) ; {_} }} . 
 	refine {{ new 'wrapper_init : ( StateInitLRecord ) @ "wrapper_init" := 	 	 
 		[ {} , {} , (#{ wrapper_code }) -> set (), !{ wrapper_data_cl } -> set () , {} ] ; {_} }} . 
-	refine {{ new 'wrapper_init_cl : TvmCell @ "wrapper_init_cl" := {} ; {_} }} . 
+	refine {{ new 'wrapper_init_cl : cell @ "wrapper_init_cl" := {} ; {_} }} . 
 	refine {{ { wrapper_init_cl } := {} (* build ( (!{ wrapper_init }) ) . make_cell () *) ; {_} }} . 
 	refine {{ return_ [ !{ wrapper_init } , tvm_hash ( !{ wrapper_init_cl } ) ] }} . 
 Defined . 

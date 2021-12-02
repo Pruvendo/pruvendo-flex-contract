@@ -23,7 +23,7 @@ Definition DRootTokenContractL : list Type :=
  ( XUInteger256 ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( ( XMaybe XCell ) ) : Type ; 
+ ( ( XMaybe cell ) ) : Type ; 
  ( ( XMaybe address ) ) : Type ; 
  ( XUInteger (* Grams *) ) : Type ] .
 Elpi GeneratePruvendoRecord DRootTokenContractL DRootTokenContractFields . 

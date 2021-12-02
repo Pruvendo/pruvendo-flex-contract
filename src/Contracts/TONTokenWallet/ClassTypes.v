@@ -58,7 +58,7 @@ Definition DTONTokenWalletL : list Type :=
 ( address ) : Type ; 
 ( ( XMaybe address ) ) : Type ; 
 (XHMap addr_std_fixed lend_recordLRecord) : Type;
-( XCell ) : Type ; 
+cell : Type ; 
 ( ( XMaybe allowance_infoLRecord ) ) : Type ; 
 ( XInteger (* XUInteger8 *) ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletL DTONTokenWalletFields . 
@@ -80,7 +80,7 @@ Definition details_infoL : list Type :=
     ( address ) : Type ; 
     ( ( XHMap XUInteger lend_array_recordLRecord ) ) : Type ; 
     ( XUInteger128 ) : Type ; 
-    ( XCell ) : Type ; 
+    cell : Type ; 
     ( allowance_infoLRecord ) : Type ; 
     ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord details_infoL details_infoFields .     
@@ -94,7 +94,7 @@ Definition DTONTokenWalletExternalL : list Type :=
 ( XUInteger256 ) : Type ; 
 ( address ) : Type ; 
 ( ( XMaybe address ) ) : Type ; 
-( XCell ) : Type ; 
+cell : Type ; 
 ( ( XMaybe allowance_infoLRecord ) ) : Type ; 
 ( XInteger (* XUInteger8 *) ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletExternalL DTONTokenWalletExternalFields . 
@@ -109,7 +109,7 @@ Definition DTONTokenWalletInternalL : list Type :=
 ( address ) : Type ; 
 ( ( XMaybe address ) ) : Type ; 
 ( ( XHMap addr_std_fixed lend_recordLRecord ) ) : Type ;
-( XCell ) : Type ; 
+cell : Type ; 
 ( XInteger (* XUInteger8 *) ) : Type ] . (* DTONTokenWalletExternal_ι_workchain_id_ *)
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
 

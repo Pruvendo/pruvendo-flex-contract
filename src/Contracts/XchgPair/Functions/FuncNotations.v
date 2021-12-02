@@ -10,6 +10,7 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.TvmCells.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
@@ -41,7 +42,8 @@ Local Open Scope ursus_scope.
 
 (********************************************************************************************************************)
 (*state fields*)
- 
+
+
 Definition flex_addr__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_flex_addr_ ) : ULValue address ) . 
 Definition flex_addr__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DXchgPair_ι_flex_addr_ ) : URValue address false ) . 
 Notation " '_flex_addr_' " := ( flex_addr__left ) (in custom ULValue at level 0) : ursus_scope. 
@@ -136,15 +138,15 @@ Local Open Scope string_scope.
  Notation " 'getNotifyAddr_' '(' ')' " := 
  ( getNotifyAddr_right ) (in custom URValue at level 0 ) : ursus_scope . 
  
- Definition _fallback_right { a1 a2 }  ( msg : URValue TvmCell a1 ) 
-                                       ( msg_body : URValue TvmSlice a2 ) : URValue uint ( orb a2 a1 ) := 
+ Definition _fallback_right { a1 a2 }  ( msg : URValue cell_ a1 ) 
+                                       ( msg_body : URValue slice a2 ) : URValue uint ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback msg msg_body ) . 
  
  Notation " '_fallback_' '(' msg msg_body ')' " := 
  ( _fallback_right msg msg_body ) (in custom URValue at level 0 , msg custom URValue at level 0 , msg_body custom URValue at level 0 ) : ursus_scope .
 
  Definition prepare_xchg_pair_state_init_and_addr_right { a1 a2 }  ( pair_data : URValue ContractLRecord a1 ) 
-                                                                   ( pair_code : URValue TvmCell a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
+                                                                   ( pair_code : URValue cell_ a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_xchg_pair_state_init_and_addr pair_data pair_code ) . 
  
  Notation " 'prepare_xchg_pair_state_init_and_addr_' '(' pair_data pair_code ')' " := 

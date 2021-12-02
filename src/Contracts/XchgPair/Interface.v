@@ -4,6 +4,7 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 Require Import UMLang.BasicModuleTypes. 
 
 Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonTypes. 
 Require Import XchgPair.ClassTypes.
@@ -41,7 +42,7 @@ Local Open Scope xlist_scope.
 Definition VarInitL := [DXchgPairLRecord : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
-Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
+Definition InitialStateL := [cell_ ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 Definition IXchgPair: Type := IXchgPairP address XUInteger128 (* StateInitLRecord *) StateInitLRecord.

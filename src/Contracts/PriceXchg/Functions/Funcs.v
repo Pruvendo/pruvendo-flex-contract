@@ -337,17 +337,17 @@ Definition prepare_internal_wallet_state_init_and_addr
 											( wallet_public_key : uint256 ) 
 											( root_address : address) 
 											( owner_address : optional address ) 
-											( code : TvmCell ) 
+											( code : cell ) 
 											( workchain_id : uint8 ) : UExpression ( StateInitLRecord # uint256 ) false .
 	refine {{ new 'wallet_data : DTONTokenWalletInternalLRecord @ "wallet_data" := 
 			[ #{name} , #{symbol} , #{decimals} , 0 , #{root_public_key} , 
 			#{wallet_public_key} , #{root_address} , #{owner_address} , 
 			{} , #{code} , #{workchain_id} ] ; { _ } }} . 
-	refine {{ new 'wallet_data_cl : TvmCell @ "wallet_data_cl" := 
+	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
 		prepare_persistent_data_ ( {} , !{wallet_data} ) ; { _ } }} . 
 	refine {{ new 'wallet_init : StateInitLRecord @ "wallet_init" := 
 		[ {} , {} , (#{code}) -> set () , (!{wallet_data_cl}) -> set () , {} ] ; { _ } }} . 
-	refine {{ new 'wallet_init_cl : TvmCell @ "wallet_init_cl" := {}  
+	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {}  
 			(*  build ( !{ wallet_init } ) . make_cell ( ) *) ; { _ } }} . 
 	refine {{ return_ [ !{ wallet_init } , tvm_hash ( !{wallet_init_cl} ) ] }} . 
 Defined . 
@@ -360,7 +360,7 @@ Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6
 							( wallet_public_key : URValue uint256 a5 ) 
 							( root_address : URValue address a6 ) 
 							( owner_address : URValue ( optional address ) a7 ) 
-							( code : URValue TvmCell a8 ) 
+							( code : URValue cell a8 ) 
 							( workchain_id : URValue uint8 a9 ) : URValue ( StateInitLRecord * uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 							
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr 
  						name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
@@ -502,7 +502,7 @@ Definition onTip3LendOwnership ( answer_addr : address )
 							   ( lend_finish_time : uint32 )
 							   ( pubkey : uint256 )
 							   ( internal_owner : address ) 
-							   ( payload : TvmCell ) : UExpression OrderRetLRecord true . 
+							   ( payload : cell ) : UExpression OrderRetLRecord true . 
  	 	 refine {{ new ( 'tip3_wallet : address , 'value : uint (* Grams *) ) @ 
                  ( "tip3_wallet" , "value" ) := int_sender_and_value_ ( ) ; { _ } }} . 
   	 refine {{ new 'wallet_in : address @ "wallet_in" (* ITONTokenWalletPtr *) := !{tip3_wallet} ; { _ } }} . 
@@ -782,18 +782,18 @@ Definition getBuyAmount_right: URValue uint128 false :=
  
 Notation " 'getBuyAmount_' '(' ')' " := ( getBuyAmount_right ) (in custom URValue at level 0 ) : ursus_scope .
  
-Definition _fallback ( _ : TvmCell ) ( _ : TvmSlice ) : UExpression uint false . 
+Definition _fallback ( _ : cell ) ( _ : slice ) : UExpression uint false . 
 	refine {{ return_ 0 }} . 
 Defined . 
  
 Definition prepare_price_xchg_state_init_and_addr ( price_data : ContractLRecord )
-												  ( price_code : TvmCell )
+												  ( price_code : cell )
 												  : UExpression ( StateInitLRecord # uint256 ) false . 
-	refine {{ new 'price_data_cl : TvmCell @ "price_data_cl" := 
+	refine {{ new 'price_data_cl : cell @ "price_data_cl" := 
 					prepare_persistent_data_ ( {} , #{price_data} ) ; { _ } }} . 
 	refine {{ new 'price_init : StateInitLRecord @ "price_init" := 	
 		[ {} , {} , (#{price_code}) -> set () , (!{price_data_cl}) -> set () , {} ] ; { _ } }} . 
-	refine {{ new 'price_init_cl : TvmCell @ "price_init_cl" := {} ; { _ } }} . 
+	refine {{ new 'price_init_cl : cell @ "price_init_cl" := {} ; { _ } }} . 
 	refine {{ {price_init_cl} := {} (* build ( !{ price_init } ) . make_cell ( ) *) ; { _ } }} . 
 	refine {{ return_ [ !{price_init} , tvm_hash ( !{price_init_cl} ) ] }} . 
 Defined . 

@@ -92,8 +92,8 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  Defined . 
  
  
- Definition Flex_Ф_setPairCode ( code : XCell ) : UExpression PhantomType true . 
-         refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
+ Definition Flex_Ф_setPairCode ( code : cell ) : UExpression PhantomType true . 
+         refine {{ code : cell @ "code" ; { _ } }} . 
 (*          refine {{ require_ (  ~ 1 (* Flex.pair_code_  *), error_code::cant_override_code ) ; { _ } }} . *)
 
 (*         refine {{ if ( Flex.deployer_pubkey_ (* Flex.pair_code_ *) ) then { {_: UExpression PhantomType true} } else { {_: UExpression PhantomType true} } ;{_} }} . *)
@@ -103,12 +103,12 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
     	 	 refine {{ tvm_accept () ; { _ } }} .  
          refine {{ require_ ( (* ( code.ctos ( ) . srefs ( ) *) 1 == 1 (* 2 *) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
-         refine {{ Flex.pair_code_ := {} (* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( )  *) }} . 
+         refine {{ Flex.pair_code_ := {} (* builder ( ) . stslice ( code ^^ cell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( )  *) }} . 
  Defined . 
  
  
- Definition Flex_Ф_setXchgPairCode ( code : XCell ) : UExpression PhantomType true . 
-         refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
+ Definition Flex_Ф_setXchgPairCode ( code : cell ) : UExpression PhantomType true . 
+         refine {{ code : cell @ "code" ; { _ } }} . 
          refine {{ require_ ( TRUE (* ~ Flex.xchg_pair_code_ *) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
     	 	 refine {{ tvm_accept () ; { _ } }} .  
@@ -117,8 +117,8 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  Defined . 
  
  
- Definition Flex_Ф_setPriceCode ( code : XCell ) : UExpression PhantomType true . 
-         refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
+ Definition Flex_Ф_setPriceCode ( code : cell ) : UExpression PhantomType true . 
+         refine {{ code : cell @ "code" ; { _ } }} . 
          refine {{ require_ ( ( ~ TRUE (* Flex.price_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
  	 	     refine {{ tvm_accept () ; { _ } }} . 
@@ -126,8 +126,8 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  Defined . 
  
  
- Definition Flex_Ф_setXchgPriceCode ( code : XCell ) : UExpression PhantomType true . 
-         refine {{ code : ( XCell ) @ "code" ; { _ } }} . 
+ Definition Flex_Ф_setXchgPriceCode ( code : cell ) : UExpression PhantomType true . 
+         refine {{ code : cell @ "code" ; { _ } }} . 
          refine {{ require_ ( ( ~ TRUE (* Flex.xchg_price_code_ *) ) , error_code::cant_override_code ) ; { _ } }} . 
          refine {{ require_ ( ( msg.pubkey () == Flex.deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
 (*  	 	 refine {{ tvm_accept () ; { _ } }} .  *)
@@ -145,29 +145,29 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  
  
  
- Definition Flex_Ф_getTradingPairCode : UExpression XCell false (* true *) . 
+ Definition Flex_Ф_getTradingPairCode : UExpression cell false (* true *) . 
          refine {{ return_ {} (* (Flex.pair_code_ ->get) *) }} . 
  Defined . 
  
  
  
- Definition Flex_Ф_getXchgPairCode : UExpression XCell false . 
+ Definition Flex_Ф_getXchgPairCode : UExpression cell false . 
          refine {{ return_ {} (* (Flex.xchg_pair_code_ ->get) *) }} . 
  Defined . 
  
  
  
- Definition Flex_Ф_getSellPriceCode ( tip3_addr : address ) : UExpression XCell true . 
+ Definition Flex_Ф_getSellPriceCode ( tip3_addr : address ) : UExpression cell true . 
          refine {{ tip3_addr : ( address ) @ "tip3_addr" ; { _ } }} . 
          refine {{ require_ ( ( (* Flex.price_code_ - > ctos ( ) . srefs ( ) == 2 *) 1 == 1 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
-         refine {{ (* new *) salt : ( XCell ) @"salt" ; { _ } }} . 
+         refine {{ (* new *) salt : cell @"salt" ; { _ } }} . 
          refine {{ { salt } := {} (* builder ( ) . stslice ( tvm_myaddr ( ) ) . stslice ( tip3_addr ^^ address:sl ( ) ) . endc ( ) *) ; { _ } }} . 
          refine {{ return_ {} (* builder ( ) . stslice ( price_code_ - > ctos ( ) ) . stref ( !{ salt } ) . endc ( ) *) }} . 
  Defined . 
  
  
  
- Definition Flex_Ф_getXchgPriceCode ( tip3_addr1 : address ) ( tip3_addr2 : address ) : UExpression XCell true . 
+ Definition Flex_Ф_getXchgPriceCode ( tip3_addr1 : address ) ( tip3_addr2 : address ) : UExpression cell true . 
          refine {{ tip3_addr1 : ( address ) @ "tip3_addr1" ; { _ } }} . 
          refine {{ tip3_addr2 : ( address ) @ "tip3_addr2" ; { _ } }} . 
          refine {{ require_ ( ( (* Flex.price_code_ - > ctos ( ) . srefs ( ) == 2 *) 1 == 1 ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
@@ -220,7 +220,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  
  
  
- Definition Flex_Ф__fallback ( _ : XCell ) : UExpression uint false . 
+ Definition Flex_Ф__fallback ( _ : cell ) : UExpression uint false . 
          refine {{ return_ 0 }} . 
  Defined . 
 

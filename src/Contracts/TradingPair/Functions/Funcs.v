@@ -78,17 +78,17 @@ Definition getNotifyAddr : UExpression address false .
 	refine {{ return_ _notify_addr_ }} . 
 Defined . 
  
-Definition _fallback ( _ : TvmCell ) ( _ : TvmSlice ) : UExpression uint false . 
+Definition _fallback ( _ : cell ) ( _ : slice ) : UExpression uint false . 
 	refine {{ return_ 0 }} . 
 Defined . 
  
-Definition prepare_trading_pair_state_init_and_addr ( pair_data : ContractLRecord) ( pair_code : TvmCell ) 
+Definition prepare_trading_pair_state_init_and_addr ( pair_data : ContractLRecord) ( pair_code : cell ) 
 													: UExpression ( StateInitLRecord * uint256 ) false . 
-	refine {{ new 'pair_data_cl : TvmCell @ "pair_data_cl" := 
+	refine {{ new 'pair_data_cl : cell @ "pair_data_cl" := 
 			prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
 	refine {{ new 'pair_init : StateInitLRecord @ "pair_init" :=
 				[ {} , {} , (#{pair_code}) -> set () , (!{pair_data_cl}) -> set () , {} ] ; { _ } }} . 
-	refine {{ new 'pair_init_cl : TvmCell @ "pair_init_cl" := {} ; { _ } }} . 
+	refine {{ new 'pair_init_cl : cell @ "pair_init_cl" := {} ; { _ } }} . 
 	refine {{ { pair_init_cl } := {} (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
 	refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} ) ] }} . 
 Defined . 

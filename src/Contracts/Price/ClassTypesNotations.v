@@ -215,7 +215,7 @@ Notation " a '↑' 'process_ret.ret_' " := ( process_ret_ret__right a) (in custo
 (*interface*)
 
 (* Inductive IPriceP :=
-| IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> IPriceP
+| IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> cell -> IPriceP
 | IbuyTip3 : XUInteger128 -> address -> XUInteger32 -> IPriceP
 | IprocessQueue : IPriceP
 | IcancelSell : IPriceP
@@ -252,14 +252,14 @@ Defined.
 
 Notation " 'Price.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
  
-(* | IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> IPriceP *)
+(* | IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> cell -> IPriceP *)
 
 Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger128 a2) 
                                                  (z : URValue XUInteger32 a3)
                                                  (t : URValue XUInteger256 a4)
                                                  (u : URValue address a5)
-                                                 (v : URValue XCell a6) : URValue IPrice (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
+                                                 (v : URValue cell a6) : URValue IPrice (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
                     urvalue_bind z (fun z' =>  

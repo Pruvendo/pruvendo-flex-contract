@@ -11,6 +11,7 @@ Require Import CommonTypes.
 Module CommonTypesProofs (xt: XTypesSig) (sm: StateMonadSig).
 Module Export CommonTypes := Types xt sm.
 
+
 Local Open Scope struct_scope.
 
 Tactic Notation "proof1" constr(f) constr(r) constr(T) := 

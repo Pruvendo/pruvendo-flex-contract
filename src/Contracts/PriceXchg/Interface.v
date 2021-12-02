@@ -17,7 +17,7 @@ Local Open Scope glist_scope.
 
 Section InterfaceDef.
 
-Variables XUInteger128 XUInteger32 XUInteger256 address XCell : Type.
+Variables XUInteger128 XUInteger32 XUInteger256 address cell : Type.
 
 Inductive VarInitFields      := | VarInit_ι_DPriceXchg | VarInit_ι_pubkey. 
 Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | InitState_ι_balance .
@@ -25,7 +25,7 @@ Inductive InitialStateFields := | InitState_ι_code | InitState_ι_varinit | Ini
 Variable InitialState : Type.
 
 Inductive IPriceXchgP :=
-| IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> IPriceXchgP
+| IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> cell -> IPriceXchgP
 | IprocessQueue : IPriceXchgP
 | IcancelSell : IPriceXchgP
 | IcancelBuy : IPriceXchgP
@@ -43,11 +43,11 @@ Local Open Scope xlist_scope.
 Definition VarInitL := [DPriceXchgLRecord : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
-Definition InitialStateL := [XCell ; VarInitLRecord ; XUInteger128: Type].
+Definition InitialStateL := [cell ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IPriceXchgP.  *)
-Definition IPriceXchg : Type := IPriceXchgP XUInteger128 XUInteger32 XUInteger256 address XCell StateInitLRecord.
+Definition IPriceXchg : Type := IPriceXchgP XUInteger128 XUInteger32 XUInteger256 address cell StateInitLRecord.
 
 Arguments IonTip3LendOwnership {_} {_} {_} {_} {_} {_} . 
 Arguments IprocessQueue {_} {_} {_} {_} {_} {_} . 

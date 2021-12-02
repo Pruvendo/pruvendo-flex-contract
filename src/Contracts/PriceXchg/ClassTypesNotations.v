@@ -390,10 +390,10 @@ Definition DPriceXchg_ι_tons_cfg__left (x: ULValue DPriceXchgLRecord): ULValue 
 Notation " a '↑' 'DPriceXchg.tons_cfg_' " := ( DPriceXchg_ι_tons_cfg__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DPriceXchg.tons_cfg_' " := ( DPriceXchg_ι_tons_cfg__left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition DPriceXchg_ι_tip3_code__right {b} (x: URValue DPriceXchgLRecord b): URValue XCell b :=
+Definition DPriceXchg_ι_tip3_code__right {b} (x: URValue DPriceXchgLRecord b): URValue cell b :=
     || {x} ^^ {DPriceXchg_ι_tip3_code_} || : _ .
 
-Definition DPriceXchg_ι_tip3_code__left (x: ULValue DPriceXchgLRecord): ULValue XCell :=
+Definition DPriceXchg_ι_tip3_code__left (x: ULValue DPriceXchgLRecord): ULValue cell :=
     {{ {x} ^^ {DPriceXchg_ι_tip3_code_} }} : _ .
 
 Notation " a '↑' 'DPriceXchg.tip3_code_' " := ( DPriceXchg_ι_tip3_code__right a ) (in custom URValue at level 0) : ursus_scope.
@@ -439,7 +439,7 @@ Notation " a '↑' 'DPriceXchg.buys_' " := ( DPriceXchg_ι_buys__left a ) (in cu
 
 (*interface*)
 (* Inductive IPriceXchgP :=
-| IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> IPriceXchgP
+| IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> cell -> IPriceXchgP
 | IprocessQueue : IPriceXchgP
 | IcancelSell : IPriceXchgP
 | IcancelBuy : IPriceXchgP
@@ -475,14 +475,14 @@ Defined.
 
 Notation " 'PriceXchg.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
  
-(* IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> XCell -> IPriceXchgP *)
+(* IonTip3LendOwnership : address -> XUInteger128 -> XUInteger32 -> XUInteger256 -> address -> cell -> IPriceXchgP *)
 
 Definition IonTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 ) 
                                                  (y : URValue XUInteger128 a2) 
                                                  (z : URValue XUInteger32 a3)
                                                  (t : URValue XUInteger256 a4)
                                                  (u : URValue address a5)
-                                                 (v : URValue XCell a6) : URValue IPriceXchg (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
+                                                 (v : URValue cell a6) : URValue IPriceXchg (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
  pose proof (urvalue_bind x (fun x' => 
                 urvalue_bind y (fun y' =>
                     urvalue_bind z (fun z' =>  

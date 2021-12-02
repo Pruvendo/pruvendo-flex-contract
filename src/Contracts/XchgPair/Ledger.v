@@ -11,6 +11,7 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
 Require Import UrsusTVM.Cpp.tvmFunc. 
+Require Import UrsusTVM.Cpp.TvmCells. 
 
 Require Import Project.CommonTypes. 
 
@@ -32,6 +33,8 @@ Definition ContractFields := DXchgPairFields.
 Inductive LedgerFieldsI := | _Contract | _ContractCopy | _VMState | _MessagesAndEvents | _MessagesAndEventsCopy | _LocalState | _LocalStateCopy .
 
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
+
+(* Variable x: URValue StateInitLRecord false. *)
 
 Module XchgPairPublicInterfaceModule := XchgPair.Interface.PublicInterface xt sm.
 
@@ -57,7 +60,7 @@ GeneratePruvendoRecord LocalState0000L LocalStateFields0000I .
 Opaque LocalState0000LRecord . 
 
 Inductive LocalStateFields0001I := | ι00010 | ι00011 . 
-Definition LocalState0001L := [ ( XHMap (string*nat) XCell ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState0001L := [ ( XHMap (string*nat) cell_ ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState0001L LocalStateFields0001I . 
 Opaque LocalState0001LRecord . 
 
@@ -257,7 +260,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField0000 : typeclass_instances. 
- #[global, program] Instance LocalStateField0001 : LocalStateField XCell.
+ #[global, program] Instance LocalStateField0001 : LocalStateField cell_.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -430,9 +433,9 @@ Next Obligation.
 #[local]
 Remove Hints LocalStateField1010 : typeclass_instances. 
 
-Definition LocalStateField_XUInteger := LocalStateField0110 .
+(* Definition LocalStateField_XUInteger := LocalStateField0110 .
 Definition LocalStateField_XBool := LocalStateField0011 .
-Definition LocalStateField_XCell := LocalStateField0001 .
+Definition LocalStateField_cell_ := LocalStateField0001 . *)
 
 Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
 Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.

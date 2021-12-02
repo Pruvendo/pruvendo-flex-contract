@@ -1,7 +1,11 @@
+Require Import Coq.Program.Equality.
+
+Require Import FinProof.Common.
 Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Module Type CompilerOptions.
 
@@ -26,16 +30,16 @@ Local Open Scope glist_scope.
 
 (* 1 *) Definition TonsConfigL : list Type := 
 [ ( XUInteger128 ) : Type ; 
-( XUInteger128 ) : Type ; 
-( XUInteger128 ) : Type ; 
-( XUInteger128 ) : Type ; 
-( XUInteger128 ) : Type ; 
-( XUInteger128 ) : Type ] .
+  ( XUInteger128 ) : Type ; 
+  ( XUInteger128 ) : Type ; 
+  ( XUInteger128 ) : Type ; 
+  ( XUInteger128 ) : Type ; 
+  ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord TonsConfigL TonsConfigFields . 
 
 (* 2 *)Definition TickTockL : list Type := 
  [ ( XBool ) : Type ; 
- ( XBool ) : Type ] .
+   ( XBool ) : Type ] .
 Elpi GeneratePruvendoRecord TickTockL TickTockFields . 
  
 (* 3 *)(* Definition addr_std_fixedL : list Type := 
@@ -45,34 +49,28 @@ Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields .  *)
 
 (* 4 *)Definition Tip3ConfigL : list Type := 
  [ ( XString ) : Type ; 
- ( XString ) : Type ; 
- ( XUInteger8 ) : Type ; 
- ( XUInteger256 ) : Type ; 
- ( address ) : Type ;
- ( XUInteger8 ) : Type ] .
+   ( XString ) : Type ; 
+   ( XUInteger8 ) : Type ; 
+   ( XUInteger256 ) : Type ; 
+   ( address ) : Type ;
+   ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
 
+Definition cell__ := cell.
 (* 5 *)Definition StateInitL : list Type := 
  [ ( XMaybe XUInteger ) : Type ; 
- ( XMaybe TickTockLRecord ) : Type ; 
- ( XMaybe XCell ) : Type ; 
- ( XMaybe XCell ) : Type ; 
- ( XMaybe XCell ) : Type ] .
+   ( XMaybe TickTockLRecord ) : Type ; 
+   ( XMaybe cell__ ) : Type ; 
+   ( XMaybe cell__ ) : Type ; 
+   ( XMaybe cell__ ) : Type ] .
 Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
 
  (* 7 *)Definition OrderRetL : list Type := 
  [ ( XUInteger32 ) : Type ; 
- ( XUInteger128 ) : Type ; 
- ( XUInteger128 ) : Type ] .
+   ( XUInteger128 ) : Type ; 
+   ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderRetL OrderRetFields . 
 
-
-
- (*NOT here!*)
-(* Definition IFlexNotifyPtr := address. 
-Definition ITONTokenWalletPtr := address. 
-Definition IPricePtr := address. 
-Definition IWrapperPtr := address . *)
 (******************************************)
 Definition TokensType := XUInteger256. 
 Definition WalletGramsType := XUInteger128. 

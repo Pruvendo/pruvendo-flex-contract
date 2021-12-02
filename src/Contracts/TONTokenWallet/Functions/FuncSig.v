@@ -34,15 +34,15 @@ Module Type SpecSig.
 
 
 Parameter transfer : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> UExpression PhantomType true . 
- Parameter transferWithNotify : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
+ Parameter transferWithNotify : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter transferToRecipient : ( ( address ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> UExpression PhantomType true . 
- Parameter transferToRecipientWithNotify : ( ( address ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
+ Parameter transferToRecipientWithNotify : ( ( address ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter requestBalance : UExpression XUInteger128 false . 
  Parameter accept : ( ( XUInteger128 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> UExpression XBool true . 
- Parameter internalTransfer : ( ( XUInteger128 ) ) -> ( ( address ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
+ Parameter internalTransfer : ( ( XUInteger128 ) ) -> ( ( address ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter destroy : ( ( address ) ) -> UExpression PhantomType true . 
  Parameter burn : ( ( XUInteger256 ) ) -> ( ( address ) ) -> UExpression PhantomType true . 
- Parameter lendOwnership : ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger256 ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger32 ) ) -> ( ( XCell ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
+ Parameter lendOwnership : ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger256 ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger32 ) ) -> ( cell ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter returnOwnership : ( ( XUInteger128 ) ) -> UExpression PhantomType true . 
  Parameter getDetails : UExpression details_infoLRecord false . 
  Parameter getName : UExpression XString false . 
@@ -53,18 +53,18 @@ Parameter transfer : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) 
  Parameter getWalletKey : UExpression XUInteger256 false . 
  Parameter getRootAddress : UExpression address false . 
  Parameter getOwnerAddress : UExpression address false . 
- Parameter getCode : UExpression XCell false . 
+ Parameter getCode : UExpression cell false . 
  Parameter allowance : UExpression allowance_infoLRecord false . 
  Parameter approve : ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression PhantomType true . 
  Parameter transferFrom : ( ( address ) ) -> ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression PhantomType true . 
- Parameter transferFromWithNotify : ( ( address ) ) -> ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
- Parameter internalTransferFrom : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
+ Parameter transferFromWithNotify : ( ( address ) ) -> ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( cell ) -> UExpression PhantomType true . 
+ Parameter internalTransferFrom : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter disapprove : UExpression PhantomType true . 
- Parameter _on_bounced : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
- Parameter _fallback : ( ( XCell ) ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
- Parameter transfer_impl : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
- Parameter transfer_to_recipient_impl : ( ( address ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
- Parameter transfer_from_impl : ( ( address ) ) -> ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XCell ) ) -> UExpression PhantomType true . 
+ Parameter _on_bounced : ( cell ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
+ Parameter _fallback : ( cell ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
+ Parameter transfer_impl : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
+ Parameter transfer_to_recipient_impl : ( ( address ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
+ Parameter transfer_from_impl : ( ( address ) ) -> ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter get_owner_addr : UExpression address false . 
  Parameter fixup_answer_addr : ( ( address ) ) -> UExpression address false . 
  Parameter check_transfer_requires : ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression XUInteger128 true . 

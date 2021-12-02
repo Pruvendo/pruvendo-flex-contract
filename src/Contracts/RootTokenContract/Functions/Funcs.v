@@ -122,7 +122,7 @@ Definition constructor ( name : String ) ( symbol : String ) ( decimals : uint8 
 Defined . 
  
 
-Definition setWalletCode ( wallet_code : TvmCell ) : UExpression boolean true . 
+Definition setWalletCode ( wallet_code : cell ) : UExpression boolean true . 
 	refine {{ check_owner_ ( TRUE ) ; { _ } }} . 
 	refine {{ tvm_accept () ; { _ } }} . 
 	refine {{ require_ ( ( ~ _wallet_code_ ) , error_code::cant_override_wallet_code ) ; { _ } }} . 
@@ -154,7 +154,7 @@ Defined .
 
 Definition prepare_wallet_data (name:XString)(symbol:XString)(decimals:XUInteger8)(root_public_key:XUInteger256)
                                (wallet_public_key:XUInteger256)(root_address:address)(owner_address:XMaybe address)
-                               (code:XCell)(workchain_id:XUInteger8) :
+                               (code:cell)(workchain_id:XUInteger8) :
 UExpression TONTokenWalletClassTypes.DTONTokenWalletLRecord false.
  	 refine {{ return_ [ #{name} , #{symbol} , #{decimals} , 0 , 
                        #{root_public_key} , #{wallet_public_key} , 
@@ -170,7 +170,7 @@ Defined .
 ( wallet_public_key : URValue ( XUInteger256 ) a5 ) 
 ( root_address : URValue ( address ) a6 ) 
 ( owner_address : URValue ( XMaybe address ) a7 ) 
-( code : URValue ( XCell ) a8 ) 
+( code : URValue cell a8 ) 
 ( workchain_id : URValue ( XUInteger8 ) a9 ) : URValue TONTokenWalletClassTypes.DTONTokenWalletLRecord  
 ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_wallet_data 
@@ -209,7 +209,7 @@ Definition prepare_wallet_state_init_and_addr (wallet_data : TONTokenWalletClass
 (* refine {{ if ( #{TIP3_ENABLE_EXTERNAL} )
                         then  { { _:UEf } } (* wallet_replay_protection_t::init()  *)
                         else  { { _:UEf } } ; { _ } }}. *)
- 	 	 refine {{ new 'wallet_data_cl : XCell @ "price_data_cl" :=  
+ 	 	 refine {{ new 'wallet_data_cl : cell @ "price_data_cl" :=  
                        prepare_persistent_data_ ( {} , #{wallet_data} )  ; { _ } }} .
  	 	 refine {{ new 'wallet_init : StateInitLRecord @ "pair_init" :=
                    [$
@@ -219,7 +219,7 @@ Definition prepare_wallet_state_init_and_addr (wallet_data : TONTokenWalletClass
                          {} ⇒ { StateInit_ι_data } ;
                          {} ⇒ { StateInit_ι_library }
                     $] ; { _ } }}.
- 	 	 refine {{ new 'wallet_init_cl : XCell @ "price_init_cl" := {} (* build(wallet_init).make_cell() *) ; { _ } }} .
+ 	 	 refine {{ new 'wallet_init_cl : cell @ "price_init_cl" := {} (* build(wallet_init).make_cell() *) ; { _ } }} .
  	 	 refine {{ return_ [ !{wallet_init} , tvm_hash(!{wallet_init_cl}) ] }} .
 Defined.
 
@@ -393,7 +393,7 @@ Defined .
  
  
  
- Definition getWalletCode : UExpression XCell true . 
+ Definition getWalletCode : UExpression cell true . 
  	 	 	 refine {{ return_ (_wallet_code_ -> get ()) }} . 
  Defined . 
  
@@ -407,7 +407,7 @@ Defined .
  
 (*  Definition Args := args_struct_t<&ITONTokenWallet::accept>; *)
  
- Definition _on_bounced ( msg : XCell ) ( msg_body : ( XSlice ) ) : UExpression XUInteger true . 
+ Definition _on_bounced ( msg : cell ) ( msg_body : ( XSlice ) ) : UExpression XUInteger true . 
  	 	 refine {{ tvm_accept () ; { _ } }} . 
 (*  	 	 refine {{ new 'p : parser @ "p" := ( (#{ msg_body }) ) ; { _ } }} .  *)
  	 	 refine {{ require_ ( ( (* p ↑ ldi ( #{32} ) *) {} == #{(-1)%Z} ) , error_code::wrong_bounced_header ) ; { _ } }} . 
@@ -439,17 +439,17 @@ Defined .
  
  
  
- Definition _fallback ( _ : XCell ) ( _ : XSlice ) : UExpression XUInteger false . 
+ Definition _fallback ( _ : cell ) ( _ : XSlice ) : UExpression XUInteger false . 
  	 	 	 refine {{ return_ 0 }} . 
  Defined . 
  
  
- Definition prepare_root_state_init_and_addr ( root_code : ( XCell ) ) ( root_data : ( DRootTokenContractLRecord ) ) : UExpression ( StateInitLRecord * XUInteger256 ) false . 
- 	 	 	 refine {{ new 'root_data_cl : ( XCell ) @ "root_data_cl" := 
+ Definition prepare_root_state_init_and_addr ( root_code : cell ) ( root_data : ( DRootTokenContractLRecord ) ) : UExpression ( StateInitLRecord * XUInteger256 ) false . 
+ 	 	 	 refine {{ new 'root_data_cl : cell @ "root_data_cl" := 
             prepare_persistent_data_ ( (* root_replay_protection_t::init () *) {} , (#{ root_data }) ) ; { _ } }} . 
  	 	 refine {{ new 'root_init : ( StateInitLRecord ) @ "root_init" := 	 	 
  	 	 	                        [ {} , {} , (#{ root_code }) ->set ()  , (!{ root_data_cl }) ->set () , {} ] ; { _ } }} . 
- 	 	 refine {{ new 'root_init_cl : ( XCell ) @ "root_init_cl" := {} 
+ 	 	 refine {{ new 'root_init_cl : cell @ "root_init_cl" := {} 
                           (*  build ( (!{ root_init }) ) . make_cell () *) ; { _ } }} . 
  	 	 refine {{ return_ [ (!{ root_init }) , tvm_hash ( (!{ root_init_cl }) ) ] }} . 
  Defined . 

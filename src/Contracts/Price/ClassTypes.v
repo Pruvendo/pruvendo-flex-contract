@@ -109,7 +109,7 @@ Definition DPriceL : list Type :=
  ( address (* IFlexNotify *) ) : Type ; 
  ( XInteger ) : Type ; (* DPrice_ι_workchain_id_ *)
  ( TonsConfigLRecord ) : Type ; 
- ( XCell ) : Type ; 
+ cell : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 
  ( ( XQueue OrderInfoLRecord ) ) : Type ; 
  ( ( XQueue OrderInfoLRecord ) ) : Type ] .

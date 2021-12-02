@@ -97,13 +97,13 @@ Notation " 'IPricePtr' " := ( PricePtr_messages_left ) (in custom ULValue at lev
  Notation " '_owner_' " := ( owner__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_owner_' " := ( owner__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition trading_pair_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_trading_pair_code_ ) : ULValue XCell ) . 
- Definition trading_pair_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_trading_pair_code_ ) : URValue XCell false ) . 
+ Definition trading_pair_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_trading_pair_code_ ) : ULValue cell ) . 
+ Definition trading_pair_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_trading_pair_code_ ) : URValue cell false ) . 
  Notation " '_trading_pair_code_' " := ( trading_pair_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_trading_pair_code_' " := ( trading_pair_code__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition xchg_pair_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_xchg_pair_code_ ) : ULValue XCell ) . 
- Definition xchg_pair_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_xchg_pair_code_ ) : URValue XCell false ) . 
+ Definition xchg_pair_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_xchg_pair_code_ ) : ULValue cell ) . 
+ Definition xchg_pair_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_xchg_pair_code_ ) : URValue cell false ) . 
  Notation " '_xchg_pair_code_' " := ( xchg_pair_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_xchg_pair_code_' " := ( xchg_pair_code__right ) (in custom URValue at level 0) : ursus_scope. 
 
@@ -122,18 +122,18 @@ Notation " 'IPricePtr' " := ( PricePtr_messages_left ) (in custom ULValue at lev
  Notation " '_flex_' " := ( flex__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_' " := ( flex__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition ext_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_ext_wallet_code_ ) : ULValue ( XMaybe XCell ) ) . 
- Definition ext_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_ext_wallet_code_ ) : URValue ( XMaybe XCell ) false ) . 
+ Definition ext_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_ext_wallet_code_ ) : ULValue ( XMaybe cell ) ) . 
+ Definition ext_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_ext_wallet_code_ ) : URValue ( XMaybe cell ) false ) . 
  Notation " '_ext_wallet_code_' " := ( ext_wallet_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_ext_wallet_code_' " := ( ext_wallet_code__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition flex_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wallet_code_ ) : ULValue ( XMaybe XCell ) ) . 
- Definition flex_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wallet_code_ ) : URValue ( XMaybe XCell ) false ) . 
+ Definition flex_wallet_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wallet_code_ ) : ULValue ( XMaybe cell ) ) . 
+ Definition flex_wallet_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wallet_code_ ) : URValue ( XMaybe cell ) false ) . 
  Notation " '_flex_wallet_code_' " := ( flex_wallet_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_wallet_code_' " := ( flex_wallet_code__right ) (in custom URValue at level 0) : ursus_scope. 
  
- Definition flex_wrapper_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wrapper_code_ ) : ULValue ( XMaybe XCell ) ) . 
- Definition flex_wrapper_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wrapper_code_ ) : URValue ( XMaybe XCell ) false ) . 
+ Definition flex_wrapper_code__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wrapper_code_ ) : ULValue ( XMaybe cell ) ) . 
+ Definition flex_wrapper_code__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlexClient_ι_flex_wrapper_code_ ) : URValue ( XMaybe cell ) false ) . 
  Notation " '_flex_wrapper_code_' " := ( flex_wrapper_code__left ) (in custom ULValue at level 0) : ursus_scope. 
  Notation " '_flex_wrapper_code_' " := ( flex_wrapper_code__right ) (in custom URValue at level 0) : ursus_scope. 
 
@@ -151,7 +151,7 @@ Export tc.
 
 Local Open Scope string_scope.
 
- Definition constructor_left { R a1 a2 a3 }  ( pubkey : URValue ( uint256 ) a1 ) ( trading_pair_code : URValue ( XCell ) a2 ) ( xchg_pair_code : URValue ( XCell ) a3 ) : UExpression R true := 
+ Definition constructor_left { R a1 a2 a3 }  ( pubkey : URValue ( uint256 ) a1 ) ( trading_pair_code : URValue cell a2 ) ( xchg_pair_code : URValue cell a3 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) constructor 
  pubkey trading_pair_code xchg_pair_code ) . 
  
@@ -172,7 +172,7 @@ Local Open Scope string_scope.
  (in custom ULValue at level 0 , tons_cfg custom URValue at level 0 
  , flex custom URValue at level 0 ) : ursus_scope . 
  
- Definition setExtWalletCode_left { R a1 }  ( ext_wallet_code : URValue ( XCell ) a1 ) : UExpression R true := 
+ Definition setExtWalletCode_left { R a1 }  ( ext_wallet_code : URValue cell a1 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setExtWalletCode 
  ext_wallet_code ) . 
  
@@ -181,7 +181,7 @@ Local Open Scope string_scope.
  ext_wallet_code ) 
  (in custom ULValue at level 0 , ext_wallet_code custom URValue at level 0 ) : ursus_scope . 
  
- Definition setFlexWalletCode_left { R a1 }  ( flex_wallet_code : URValue ( XCell ) a1 ) : UExpression R true := 
+ Definition setFlexWalletCode_left { R a1 }  ( flex_wallet_code : URValue cell a1 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setFlexWalletCode 
  flex_wallet_code ) . 
  
@@ -190,7 +190,7 @@ Local Open Scope string_scope.
  flex_wallet_code ) 
  (in custom ULValue at level 0 , flex_wallet_code custom URValue at level 0 ) : ursus_scope . 
  
- Definition setFlexWrapperCode_left { R a1 }  ( flex_wrapper_code : URValue ( XCell ) a1 ) : UExpression R true := 
+ Definition setFlexWrapperCode_left { R a1 }  ( flex_wrapper_code : URValue cell a1 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setFlexWrapperCode 
  flex_wrapper_code ) . 
  
@@ -223,7 +223,7 @@ Local Open Scope string_scope.
  , deploy_value custom URValue at level 0 
  , min_trade_amount custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
- Definition deployPriceWithSell_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  ( price : URValue ( uint128 ) a1 ) ( amount : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( deals_limit : URValue ( uint8 ) a5 ) ( tons_value : URValue ( uint128 ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( my_tip3_addr : URValue ( address ) a8 ) ( receive_wallet : URValue ( address ) a9 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a10 ) ( notify_addr : URValue ( address ) a11 ) : URValue address true := 
+ Definition deployPriceWithSell_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 }  ( price : URValue ( uint128 ) a1 ) ( amount : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( deals_limit : URValue ( uint8 ) a5 ) ( tons_value : URValue ( uint128 ) a6 ) ( price_code : URValue cell a7 ) ( my_tip3_addr : URValue ( address ) a8 ) ( receive_wallet : URValue ( address ) a9 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a10 ) ( notify_addr : URValue ( address ) a11 ) : URValue address true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ11 ) deployPriceWithSell 
  price amount lend_finish_time min_amount deals_limit tons_value price_code my_tip3_addr receive_wallet tip3cfg notify_addr ) . 
  
@@ -241,7 +241,7 @@ Local Open Scope string_scope.
  , receive_wallet custom URValue at level 0 
  , tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
- Definition deployPriceWithBuy_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( price : URValue ( uint128 ) a1 ) ( amount : URValue ( uint128 ) a2 ) ( order_finish_time : URValue ( uint32 ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( deals_limit : URValue ( uint8 ) a5 ) ( deploy_value : URValue ( uint128 ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( my_tip3_addr : URValue ( address ) a8 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address ) a10 ) : URValue address true := 
+ Definition deployPriceWithBuy_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( price : URValue ( uint128 ) a1 ) ( amount : URValue ( uint128 ) a2 ) ( order_finish_time : URValue ( uint32 ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( deals_limit : URValue ( uint8 ) a5 ) ( deploy_value : URValue ( uint128 ) a6 ) ( price_code : URValue cell a7 ) ( my_tip3_addr : URValue ( address ) a8 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address ) a10 ) : URValue address true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ10 ) deployPriceWithBuy 
  price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr ) . 
  
@@ -259,7 +259,7 @@ Local Open Scope string_scope.
  , tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
  
- Definition cancelSellOrder_left { R a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( uint128 ) a1 ) ( min_amount : URValue ( uint128 ) a2 ) ( deals_limit : URValue ( uint8 ) a3 ) ( value : URValue ( uint128 ) a4 ) ( price_code : URValue ( XCell ) a5 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( notify_addr : URValue ( address ) a7 ) : UExpression R true := 
+ Definition cancelSellOrder_left { R a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( uint128 ) a1 ) ( min_amount : URValue ( uint128 ) a2 ) ( deals_limit : URValue ( uint8 ) a3 ) ( value : URValue ( uint128 ) a4 ) ( price_code : URValue cell a5 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( notify_addr : URValue ( address ) a7 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancelSellOrder 
  price min_amount deals_limit value price_code tip3cfg notify_addr ) . 
  
@@ -274,7 +274,7 @@ Local Open Scope string_scope.
  , tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
  
- Definition cancelBuyOrder_left { R a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( uint128 ) a1 ) ( min_amount : URValue ( uint128 ) a2 ) ( deals_limit : URValue ( uint8 ) a3 ) ( value : URValue ( uint128 ) a4 ) ( price_code : URValue ( XCell ) a5 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( notify_addr : URValue ( address ) a7 ) : UExpression R true := 
+ Definition cancelBuyOrder_left { R a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( uint128 ) a1 ) ( min_amount : URValue ( uint128 ) a2 ) ( deals_limit : URValue ( uint8 ) a3 ) ( value : URValue ( uint128 ) a4 ) ( price_code : URValue cell a5 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( notify_addr : URValue ( address ) a7 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancelBuyOrder 
  price min_amount deals_limit value price_code tip3cfg notify_addr ) . 
  
@@ -289,7 +289,7 @@ Local Open Scope string_scope.
  , tip3cfg custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
  
- Definition cancelXchgOrder_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( sell : URValue ( XBool ) a1 ) ( price_num : URValue ( uint128 ) a2 ) ( price_denum : URValue ( uint128 ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( deals_limit : URValue ( uint8 ) a5 ) ( value : URValue ( uint128 ) a6 ) ( xchg_price_code : URValue ( XCell ) a7 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a8 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address ) a10 ) : UExpression R true := 
+ Definition cancelXchgOrder_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 }  ( sell : URValue ( XBool ) a1 ) ( price_num : URValue ( uint128 ) a2 ) ( price_denum : URValue ( uint128 ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( deals_limit : URValue ( uint8 ) a5 ) ( value : URValue ( uint128 ) a6 ) ( xchg_price_code : URValue cell a7 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a8 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a9 ) ( notify_addr : URValue ( address ) a10 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ10 ) cancelXchgOrder 
  sell price_num price_denum min_amount deals_limit value xchg_price_code major_tip3cfg minor_tip3cfg notify_addr ) . 
  
@@ -318,7 +318,7 @@ Local Open Scope string_scope.
  , value custom URValue at level 0 
  , bounce custom URValue at level 0 ) : ursus_scope . 
 
- Definition deployPriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 }  ( sell : URValue ( XBool ) a1 ) ( price_num : URValue ( uint128 ) a2 ) ( price_denum : URValue ( uint128 ) a3 ) ( amount : URValue ( uint128 ) a4 ) ( lend_amount : URValue ( uint128 ) a5 ) ( lend_finish_time : URValue ( uint32 ) a6 ) ( min_amount : URValue ( uint128 ) a7 ) ( deals_limit : URValue ( uint8 ) a8 ) ( tons_value : URValue ( uint128 ) a9 ) ( xchg_price_code : URValue ( XCell ) a10 ) ( my_tip3_addr : URValue ( address ) a11 ) ( receive_wallet : URValue ( address ) a12 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a13 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a14 ) ( notify_addr : URValue ( address ) a15 ) : URValue address true := 
+ Definition deployPriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 }  ( sell : URValue ( XBool ) a1 ) ( price_num : URValue ( uint128 ) a2 ) ( price_denum : URValue ( uint128 ) a3 ) ( amount : URValue ( uint128 ) a4 ) ( lend_amount : URValue ( uint128 ) a5 ) ( lend_finish_time : URValue ( uint32 ) a6 ) ( min_amount : URValue ( uint128 ) a7 ) ( deals_limit : URValue ( uint8 ) a8 ) ( tons_value : URValue ( uint128 ) a9 ) ( xchg_price_code : URValue cell a10 ) ( my_tip3_addr : URValue ( address ) a11 ) ( receive_wallet : URValue ( address ) a12 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a13 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a14 ) ( notify_addr : URValue ( address ) a15 ) : URValue address true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ15 ) deployPriceXchg 
  sell price_num price_denum amount lend_amount lend_finish_time min_amount deals_limit tons_value xchg_price_code my_tip3_addr receive_wallet major_tip3cfg minor_tip3cfg notify_addr ) . 
  
@@ -440,7 +440,7 @@ Local Open Scope string_scope.
  ( hasFlexWrapperCode_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getPayloadForDeployInternalWallet_right { a1 a2 a3 }  ( owner_pubkey : URValue ( uint256 ) a1 ) ( owner_addr : URValue ( address ) a2 ) ( tons : URValue ( uint128 ) a3 ) : URValue XCell ( orb ( orb a3 a2 ) a1 ) := 
+ Definition getPayloadForDeployInternalWallet_right { a1 a2 a3 }  ( owner_pubkey : URValue ( uint256 ) a1 ) ( owner_addr : URValue ( address ) a2 ) ( tons : URValue ( uint128 ) a3 ) : URValue cell ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) getPayloadForDeployInternalWallet 
  owner_pubkey owner_addr tons ) . 
  
@@ -450,7 +450,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , owner_pubkey custom URValue at level 0 
  , owner_addr custom URValue at level 0 
  , tons custom URValue at level 0 ) : ursus_scope . 
- Definition _fallback_right { a1 a2 }  ( msg : URValue ( XCell ) a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue uint ( orb a2 a1 ) := 
+ Definition _fallback_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue uint ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  msg msg_body ) . 
  
@@ -460,7 +460,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , msg custom URValue at level 0 
  , msg_body custom URValue at level 0 ) : ursus_scope . 
 
- Definition preparePrice_right { a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( uint128 ) a1 ) ( min_amount : URValue ( uint128 ) a2 ) ( deals_limit : URValue ( uint8 ) a3 ) ( tip3_code : URValue ( XCell ) a4 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( price_code : URValue ( XCell ) a6 ) ( notify_addr : URValue ( address ) a7 ) : URValue ( StateInitLRecord # ( address # uint256 ) ) ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition preparePrice_right { a1 a2 a3 a4 a5 a6 a7 }  ( price : URValue ( uint128 ) a1 ) ( min_amount : URValue ( uint128 ) a2 ) ( deals_limit : URValue ( uint8 ) a3 ) ( tip3_code : URValue cell a4 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( price_code : URValue cell a6 ) ( notify_addr : URValue ( address ) a7 ) : URValue ( StateInitLRecord # ( address # uint256 ) ) ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) preparePrice 
  price min_amount deals_limit tip3_code tip3cfg price_code notify_addr ) . 
  
@@ -474,7 +474,7 @@ Local Open Scope string_scope.
  , tip3cfg custom URValue at level 0 
  , price_code custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
- Definition preparePriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 }  ( price_num : URValue ( uint128 ) a1 ) ( price_denum : URValue ( uint128 ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( price_code : URValue ( XCell ) a7 ) ( notify_addr : URValue ( address ) a8 ) : URValue ( StateInitLRecord # ( address # uint256 ) ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb a8 a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ Definition preparePriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 }  ( price_num : URValue ( uint128 ) a1 ) ( price_denum : URValue ( uint128 ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( price_code : URValue cell a7 ) ( notify_addr : URValue ( address ) a8 ) : URValue ( StateInitLRecord # ( address # uint256 ) ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb a8 a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ8 ) preparePriceXchg 
  price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr ) . 
  

@@ -252,7 +252,7 @@ Definition transfer_impl
 ( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
-( payload : ( XCell ) ) 
+( payload : cell ) 
 : UExpression PhantomType true . 
  	 	 refine {{ new 'active_balance : uint128 @ "active_balance" := 
                          check_transfer_requires_ ( (#{ tokens }) , (#{ grams }) ) ; {_} }} . 
@@ -268,7 +268,7 @@ Definition transfer_impl
  	 	 refine {{ update_spent_balance_ ( (#{ tokens }) , (#{ return_ownership }) ) }} . 
  Defined . 
 
- Definition transfer_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( too : URValue ( address ) a2 ) ( tokens : URValue uint128 a3 ) ( grams : URValue uint128 a4 ) ( return_ownership : URValue ( XBool ) a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) : UExpression R true := 
+ Definition transfer_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( too : URValue ( address ) a2 ) ( tokens : URValue uint128 a3 ) ( grams : URValue uint128 a4 ) ( return_ownership : URValue ( XBool ) a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue cell a7 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) transfer_impl 
  answer_addr too tokens grams return_ownership send_notify payload ) . 
  
@@ -293,7 +293,7 @@ Definition transferWithNotify
 ( tokens : uint128 ) 
 ( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
-( payload : ( XCell ) ) 
+( payload : cell ) 
 : UExpression PhantomType true . 
 (*  	 	 refine {{ (* temporary_data::setglob ( global_id::answer_id , return_func_id () - > get () ) *) ; {_} }} .  *)
  	 	 refine {{ transfer_impl_ ( (#{ answer_addr }) , (#{ too }) , (#{ tokens }) , (#{ grams }) , (#{ return_ownership }), TRUE , (#{ payload }) ) }} . 
@@ -307,13 +307,13 @@ Definition prepare_wallet_data
 ( wallet_public_key : ( XUInteger256 ) ) 
 ( root_address : ( address ) ) 
 ( owner_address : ( XMaybe address ) ) 
-( code : ( XCell ) ) 
+( code : cell ) 
 ( workchain_id : ( XUInteger8 ) ) 
 : UExpression DTONTokenWalletLRecord false . 
 	 refine {{ return_ [ (#{ name }) , (#{ symbol }) , (#{ decimals }) , 0 , (#{ root_public_key }) , (#{ wallet_public_key }) , (#{ root_address }) , (#{ owner_address }) , {} , (#{ code }) , {} , (#{ workchain_id }) ] }} . 
 Defined . 
  
-Definition prepare_wallet_data_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( XUInteger8 ) a3 ) ( root_public_key : URValue ( XUInteger256 ) a4 ) ( wallet_public_key : URValue ( XUInteger256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue ( XCell ) a8 ) ( workchain_id : URValue ( XUInteger8 ) a9 ) : URValue DTONTokenWalletLRecord ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+Definition prepare_wallet_data_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( XUInteger8 ) a3 ) ( root_public_key : URValue ( XUInteger256 ) a4 ) ( wallet_public_key : URValue ( XUInteger256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue cell a8 ) ( workchain_id : URValue ( XUInteger8 ) a9 ) : URValue DTONTokenWalletLRecord ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_wallet_data 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
@@ -333,11 +333,11 @@ Definition prepare_wallet_data_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : UR
 Definition prepare_wallet_state_init_and_addr 
 ( wallet_data : ( DTONTokenWalletLRecord ) ) 
 : UExpression ( StateInitLRecord # XUInteger256 ) false . 
- 	 	 refine {{ new 'wallet_data_cl : ( XCell ) @ "wallet_data_cl" := 
+ 	 	 refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
             prepare_persistent_data_ ( {} , (#{ wallet_data}) ) ; {_} }} . 
  	 	 refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 	 	 
  	 	 	 [ {} , {} , ((#{ wallet_data}) ↑ DTONTokenWallet.code_) -> set () , !{wallet_data_cl} -> set () , {} ] ; {_} }} . 
- 	 	 refine {{ new 'wallet_init_cl : ( XCell ) @ "wallet_init_cl" := {} 
+ 	 	 refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {} 
                             (* build ( (!{ wallet_init }) ) . make_cell () *) ; {_} }} . 
  	 	 refine {{ return_ [ (!{ wallet_init }) , tvm_hash ( (!{ wallet_init_cl }) ) ] }} . 
 Defined . 
@@ -432,7 +432,7 @@ Definition transfer_to_recipient_impl
 ( deploy : ( XBool ) ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
-( payload : ( XCell ) ) 
+( payload : cell ) 
 : UExpression PhantomType true . 
  refine {{ new 'active_balance : uint128 @ "active_balance" :=
                           check_transfer_requires_ ( (#{ tokens }) , (#{ grams }) ) ; {_} }} . 
@@ -453,7 +453,7 @@ Definition transfer_to_recipient_impl
  refine {{ update_spent_balance_ ( (#{ tokens }) , (#{ return_ownership }) ) }} . 
 Defined . 
 
- Definition transfer_to_recipient_impl_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( answer_addr : URValue ( address ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( address ) a3 ) ( tokens : URValue uint128 a4 ) ( grams : URValue uint128 a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) ( send_notify : URValue ( XBool ) a8 ) ( payload : URValue ( XCell ) a9 ) 
+ Definition transfer_to_recipient_impl_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( answer_addr : URValue ( address ) a1 ) ( recipient_public_key : URValue ( XUInteger256 ) a2 ) ( recipient_internal_owner : URValue ( address ) a3 ) ( tokens : URValue uint128 a4 ) ( grams : URValue uint128 a5 ) ( deploy : URValue ( XBool ) a6 ) ( return_ownership : URValue ( XBool ) a7 ) ( send_notify : URValue ( XBool ) a8 ) ( payload : URValue cell a9 ) 
 : UExpression R true
 (* ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) transfer_to_recipient_impl 
@@ -493,7 +493,7 @@ Definition transferToRecipientWithNotify
 ( grams : uint128 ) 
 ( deploy : ( XBool ) ) 
 ( return_ownership : ( XBool ) ) 
-( payload : ( XCell ) ) 
+( payload : cell ) 
 : UExpression PhantomType true . 
 (*  	 	 refine {{ temporary_data::setglob ( global_id::answer_id , return_func_id () - > get () ) ; {_} }} .  *)
  	 	 refine {{ transfer_to_recipient_impl_ ( (#{ answer_addr }) , (#{ recipient_public_key }) , (#{ recipient_internal_owner }) , (#{ tokens }) , (#{ grams }) , (#{ deploy }) , (#{ return_ownership }) , TRUE , (#{ payload }) ) }} . 
@@ -551,7 +551,7 @@ Definition internalTransfer
 ( sender_pubkey : ( XUInteger256 ) ) 
 ( sender_owner : ( address ) ) 
 ( notify_receiver : ( XBool ) ) 
-( payload : ( XCell ) ) 
+( payload : cell ) 
 : UExpression PhantomType true . 
  	 	 refine {{ new 'expected_address : ( XUInteger256 ) @ "expected_address" := {} ; {_} }} . 
  	 	 refine {{ { expected_address } := expected_sender_address_ ( (#{ sender_pubkey }) , (#{ sender_owner }) ) ; {_} }} . 
@@ -592,8 +592,8 @@ Definition lendOwnership
 ( std_dest : ( XUInteger256 ) ) 
 ( lend_balance : uint128 ) 
 ( lend_finish_time : ( XUInteger32 ) ) 
-( deploy_init_cl : ( XCell ) ) 
-( payload : ( XCell ) ) 
+( deploy_init_cl : cell ) 
+( payload : cell ) 
 : UExpression PhantomType true . 
  	 	 refine {{ new 'allowed_balance : uint128 @ "allowed_balance" := 
                           check_owner_ ( TRUE , TRUE ) ; {_} }} . 
@@ -689,7 +689,7 @@ Definition getName : UExpression XString false .
  Definition getOwnerAddress : UExpression address false . 
  	 refine {{ return_ ( ( ? _owner_address_ ) ? _owner_address_ -> get_default () : 0 ) }} . 
  Defined . 
- Definition getCode : UExpression XCell false . 
+ Definition getCode : UExpression cell false . 
  	 refine {{ return_ _code_ }} . 
  Defined . 
  Definition getName_right  : URValue XString false := 
@@ -756,7 +756,7 @@ Definition getName : UExpression XString false .
  ( getOwnerAddress_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getCode_right  : URValue XCell false := 
+ Definition getCode_right  : URValue cell false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getCode 
  ) . 
  
@@ -806,7 +806,7 @@ Defined .
  
  
  
- Definition transfer_from_impl ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : ( XBool ) ) ( payload : ( XCell ) ) : UExpression PhantomType true . 
+ Definition transfer_from_impl ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : ( XBool ) ) ( payload : cell ) : UExpression PhantomType true . 
  	 	 refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
  	 	 refine {{ new 'answer_addr_fxd @ "answer_addr_fxd" := 
@@ -818,7 +818,7 @@ Defined .
 (*  	 	 refine {{ dest_wallet ( Grams ( (#{ grams }) . get () ) , (!{ msg_flags }) ) . internalTransferFrom_ ( (!{ answer_addr_fxd }) , (#{ too }) , (#{ tokens }) , bool_t (#{ send_notify }) , (#{ payload }) ) }} .  *)
  Defined . 
  
- Definition transfer_from_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( from : URValue ( address ) a2 ) ( too : URValue ( address ) a3 ) ( tokens : URValue uint128 a4 ) ( grams : URValue uint128 a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue ( XCell ) a7 ) 
+ Definition transfer_from_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue ( address ) a1 ) ( from : URValue ( address ) a2 ) ( too : URValue ( address ) a3 ) ( tokens : URValue uint128 a4 ) ( grams : URValue uint128 a5 ) ( send_notify : URValue ( XBool ) a6 ) ( payload : URValue cell a7 ) 
 : UExpression R true (* orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 *) := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) transfer_from_impl 
  answer_addr from too tokens grams send_notify payload ) . 
@@ -849,7 +849,7 @@ Definition transferFrom ( answer_addr : ( address ) )
 ( too : ( address ) ) 
 ( tokens : uint128 )
  ( grams : uint128 ) 
-( payload : ( XCell ) ) 
+( payload : cell ) 
 : UExpression PhantomType true . 
  refine {{ transfer_from_impl_ ( (#{ answer_addr }) , 
                                  (#{ from }) , 
@@ -865,7 +865,7 @@ Definition transferFrom ( answer_addr : ( address ) )
 ( too : ( address ) ) 
 ( tokens : uint128 ) 
 ( notify_receiver : ( XBool ) ) 
-( payload : ( XCell ) ) 
+( payload : cell ) 
 : UExpression PhantomType true . 
  refine {{ require_ ( ( _allowance_ ) ,  error_code::no_allowance_set  ) ; {_} }} . 
  	 	 refine {{ require_ ( ( int_sender () == ( ( _allowance_ ->get_default () ) ↑ allowance_info.spender) ) ,  error_code::wrong_spender  ) ; {_} }} . 
@@ -886,7 +886,7 @@ Definition transferFrom ( answer_addr : ( address ) )
  	 	 refine {{ return_ {} }} .
  Defined . 
  
-Definition _on_bounced ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpression XUInteger true . 
+Definition _on_bounced ( msg : cell ) ( msg_body : ( XSlice ) ) : UExpression XUInteger true . 
  	 	 refine {{ tvm_accept () ; {_} }} . 
 (*  	 	 refine {{ parser p ( (#{ msg_body }) ) ; {_} }} .  *)
  	 	 refine {{ require_ ( (* ( p ^^ ldi ( 32 ) *) {} == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} . 
@@ -916,7 +916,7 @@ Definition _on_bounced ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpressi
  refine {{ return_ 0 }} . 
  Defined . 
  
- Definition _fallback ( msg : XCell ) ( msg_body : ( XSlice ) ) : UExpression XUInteger true . 
+ Definition _fallback ( msg : cell ) ( msg_body : ( XSlice ) ) : UExpression XUInteger true . 
  refine {{ require_ ( (  (* parser (#{ msg_body }) ).ldu ( 32 ) *) {} == 0 ) , error_code::wrong_public_call  ) ; {_} }} . 
  	 	 refine {{ return_ 0 }} . 
  Defined . 
@@ -925,30 +925,30 @@ Definition _on_bounced ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) : UExpressi
     refine {{ return_ ( (? _owner_address_) ? _owner_address_ -> get_default () : 0 ) }} . 
  Defined . 
  
- Definition prepare_external_wallet_state_init_and_addr ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( XUInteger8 ) ) : UExpression ( StateInitLRecord # XUInteger256 ) false . 
+ Definition prepare_external_wallet_state_init_and_addr ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : cell ) ( workchain_id : ( XUInteger8 ) ) : UExpression ( StateInitLRecord # XUInteger256 ) false . 
  	 	 refine {{ new 'wallet_data : ( DTONTokenWalletExternalLRecord ) @ "wallet_data" := 	 	 
  	 	 	 [ (#{ name }) , (#{ symbol }) , (#{ decimals }) , 0 , (#{ root_public_key }) , (#{ wallet_public_key }) , (#{ root_address }) , (#{ owner_address }) , (#{ code }) , {} , (#{ workchain_id }) ] ; {_} }} . 
- 	 	 refine {{ new 'wallet_data_cl : ( XCell ) @ "wallet_data_cl" := 
+ 	 	 refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
                 prepare_persistent_data_ ( (* external_wallet_replay_protection_t::init () *) {} , (!{ wallet_data }) ) ; {_} }} . 
  	 	 refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 	 	 
  	 	 	 [ {} , {} , (#{ code }) -> set () , (!{ wallet_data_cl }) -> set () , {} ] ; {_} }} . 
- 	 	 refine {{ new 'wallet_init_cl : ( XCell ) @ "wallet_init_cl" := {} 
+ 	 	 refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {} 
                               (* build ( (!{ wallet_init }) ) . make_cell () *) ; {_} }} . 
  	 	 refine {{ return_ [ (!{ wallet_init }) , tvm_hash ( (!{ wallet_init_cl }) ) ] }} . 
  Defined . 
  
-Definition prepare_internal_wallet_state_init_and_addr ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( XUInteger8 ) ) : UExpression ( StateInitLRecord # XUInteger256 ) false . 
+Definition prepare_internal_wallet_state_init_and_addr ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : cell ) ( workchain_id : ( XUInteger8 ) ) : UExpression ( StateInitLRecord # XUInteger256 ) false . 
  	 	 refine {{ new 'wallet_data : ( DTONTokenWalletInternalLRecord ) @ "wallet_data" := 	 	 
  	 	 	 [  (#{ name }) , (#{ symbol }) , (#{ decimals }) , 
             0 , (#{ root_public_key }) , (#{ wallet_public_key }) , 
           (#{ root_address }) , (#{ owner_address }) , {} , 
           (#{ code }) , #{ workchain_id } ] ; {_} }} . 
- 	 	 refine {{ new 'wallet_data_cl : ( XCell ) @ "wallet_data_cl" := 
+ 	 	 refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
                 prepare_persistent_data_ ( {} , (!{ wallet_data }) ) ; {_} }} . 
  	 	 refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 	 	 
  	 	 	 [ {} , {} , (#{ code }) -> set () , 
                    (!{ wallet_data_cl }) -> set () , {} ] ; {_} }} . 
- 	 	 refine {{ new 'wallet_init_cl : ( XCell ) @ "wallet_init_cl" := {}  
+ 	 	 refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {}  
  	 	                  (* build ( (!{ wallet_init }) ) . make_cell () *) ; {_} }} . 
  	 	 refine {{ return_ [ (!{ wallet_init }) , tvm_hash ( (!{ wallet_init_cl }) ) ] }} . 
  Defined . 
