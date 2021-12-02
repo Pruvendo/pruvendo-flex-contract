@@ -680,6 +680,16 @@ Notation " '.burn' ( x , y ) " := (Iburn_right x y)
 (in custom URValue at level 0 , x custom URValue at level 0,
 y custom URValue at level 0 ) : ursus_scope .
 
+Definition IreturnOwnership_right { a1}  (x : URValue XUInteger128 a1 ) 
+: URValue ITONTokenWallet (a1 ).
+pose proof ((urvalue_bind x (fun x' => 
+ #(IreturnOwnership x' : ITONTokenWallet))): URValue _ _).
+rewrite right_or_false in X.
+refine X.
+Defined.
+
+Notation " '.returnOwnership' ( x ) " := (IreturnOwnership_right x) 
+(in custom URValue at level 0 , x custom URValue at level 0) : ursus_scope .
 
 (* void transfer(
     address_t answer_addr,
