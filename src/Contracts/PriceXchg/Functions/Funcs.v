@@ -710,29 +710,38 @@ Definition cancel_order_impl ( orders : queue OrderInfoXchgLRecord )
 							 ( client_addr : addr_std_fixed ) 
 							 ( all_amount : uint128 ) 
 							 ( sell : boolean ) 
-							 ( return_ownership : Grams ) 
-							 ( process_queue :  Grams ) 
-							 ( incoming_val : uint ) : UExpression ((queue OrderInfoXchgLRecord) # uint128) false . 
+							 ( return_ownership : uint (* Grams *) ) 
+               ( process_queue : uint (* Grams *) ) 
+               ( incoming_val : uint (* Grams *) )  : UExpression ((queue OrderInfoXchgLRecord) # uint128) false . 
  	 	 refine {{ new 'is_first : ( boolean ) @ "is_first" := TRUE ; { _ } }} . 
-(*  	 	 refine {{ for ( auto it = orders ^^ OrderInfoXchgLRecord:begin ( ) ; it != orders ^^ OrderInfoXchgLRecord:end ( ) ; ) { { _ } } ; { _ } }} . 
- 	 	 	 refine {{ { auto next_it = std : : next ( it ) ; { _ } }} . 
- 	 	 	 refine {{ new 'ord : ( auto ) @ "ord" := {} ; { _ } }} . 
- 	 	 	 refine {{ { ord } := *it ; { _ } }} . 
- 	 	 	 refine {{ if ( ord ^^ auto:client_addr == !{ client_addr } ) then { { _ } } else { { _ } } ; { _ } }} . 
- 	 	 	 	 refine {{ { unsigned minus_val = process_queue . get ( ) ; { _ } }} . 
- 	 	 	 	 refine {{ ITONTokenWalletPtr ( ord . tip3_wallet_provide ) ( return_ownership ) . returnOwnership ( ord . amount ) ; { _ } }} . 
- 	 	 	 	 refine {{ minus_val += return_ownership ^^ GramsLRecord:get ( ) ; { _ } }} . 
- 	 	 	 	 refine {{ new 'plus_val : ( uint ) @ "plus_val" := {} ; { _ } }} . 
- 	 	 	 	 refine {{ { plus_val } := ord ^^ auto:account . get ( ) + ( !{ is_first } ? incoming_val ^^ GramsLRecord:get ( ) : 0 ) ; { _ } }} . 
- 	 	 	 	 refine {{ { is_first } := false ; { _ } }} . 
- 	 	 	 	 refine {{ if ( !{ plus_val } > minus_val ) then { { _ } } else { { _ } } ; { _ } }} . 
- 	 	 	 	 	 refine {{ { unsigned ret_val = plus_val - minus_val ; { _ } }} . 
- 	 	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 	 
- 	 	 	 [$ $] ; { _ } }} . 
- 	 	 	 	 	 refine {{ IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) }} . 
- 	 	 	 refine {{ { all_amount } -= ord ^^ auto:amount ; { _ } }} . 
- 	 	 	 refine {{ orders ^^ OrderInfoXchgLRecord:erase ( it ) }} . 
- 	 refine {{ it := next_it }} .  *)
+	refine {{ new 'it : OrderInfoXchgLRecord @ "it" := second ( (#{orders}) -> begin () -> get_default () )  ; { _ } }} . 
+
+  refine {{ while ~ (!{it} != second ( (#{orders}) -> end () -> get_default () )) 
+             do { { _:UEf } } ; { _ } }} . 
+ 	 	 	 refine {{ new 'next_it : OrderInfoXchgLRecord @ "next_it" := 
+         second ( (#{orders}) -> next ( first ( (#{orders}) -> end () -> get_default () ) ) -> get_default () ) ; { _ } }} . 
+ 	 	 	 refine {{ new 'ord : ( OrderInfoXchgLRecord ) @ "ord" := !{it} ; { _ } }} . 
+ 	 	 	 refine {{ if ( (!{ord} ↑ OrderInfoXchg.client_addr) == #{client_addr} ) then { { _:UEf } } ; { _ } }} . 
+ 	 	 	 	 refine {{ new 'minus_val : XUInteger @ "minus_val" := 
+                       !{is_first} ? #{process_queue} : 0 ; { _ } }} . 
+ 	 	 	 	 refine {{ if ( #{sell} ) then { { _:UEf } } ; { _ } }} . 
+(*  	 	 	 refine {{ { ITONTokenWalletPtr ( ord . tip3_wallet ) ( return_ownership ) . returnOwnership ( ord . amount ) ; { _ } }} .  *)
+ 	 	 	 	 	 refine {{ {minus_val} += (#{return_ownership}) }} . 
+ 	 	 	 refine {{ new 'plus_val : ( XUInteger ) @ "plus_val" := 
+                      (((!{ord}) ↑ OrderInfoXchg.account) + ( !{is_first} ? (#{incoming_val}) : 0 )) ; { _ } }} . 
+ 	 	 	 refine {{ {is_first} := FALSE ; { _ } }} . 
+ 	 	 	 refine {{ if ( !{plus_val} > !{minus_val} ) then { { _:UEf } } ; { _ } }} . 
+ 	 	 	 	 refine {{ new 'ret_val : XUInteger @ "ret_val" := (!{plus_val} - !{minus_val}) ; { _ } }} . 
+ 	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
+ 	 	 	                          [ ec::canceled , !{ord} ↑ OrderInfoXchg.original_amount 
+                                                - !{ord} ↑ OrderInfoXchg.amount , 0 ] ; { _ } }} . 
+	 	 	 	 refine {{ (* IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) *) return_ {} }} . 
+     refine {{ new 'all_amount_ : uint128 @ "all_amount_" := #{all_amount} ; {_} }} .
+ 	 	 refine {{ {all_amount_} -= !{ord} ↑ OrderInfoXchg.amount ; { _ } }} .
+     refine {{ new 'orders_ : queue OrderInfoXchgLRecord @ "orders_" := #{orders} ; {_} }} .
+ 	 	 refine {{ {orders_} -> erase ( first ( (!{orders_}) -> end () -> get_default () ) ) }} . 
+   refine {{ {it} := !{next_it} }} .     (* end of while *)
+
  refine {{ return_ [ #{ orders } , #{ all_amount } ] }} . 
 Defined . 
  

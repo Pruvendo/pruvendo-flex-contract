@@ -701,21 +701,19 @@ Definition cancel_order_impl ( orders : queue OrderInfoLRecord )
                              ( sell : boolean ) 
                              ( return_ownership : uint(* Grams *) ) 
                              ( process_queue : uint(* Grams *) ) 
-                             ( incoming_val : uint(* Grams *) ) : UExpression ((queue OrderInfoLRecord) # uint128) false . 
+                             ( incoming_val : uint(* Grams *) ) 
+: UExpression ((queue OrderInfoLRecord) # uint128) false . 
 	refine {{ new 'is_first : boolean @ "is_first" := TRUE ; { _ } }} . 
-	refine {{ new 'it : queue OrderInfoLRecord @ "it" := {} ; { _ } }} . 
+	refine {{ new 'it : OrderInfoLRecord @ "it" := second ( (#{orders}) -> begin () -> get_default () )  ; { _ } }} . 
 
-
-(* Notation " 'for' ( v : m ; cond ) 'do' '{' f '}' " :=
-  (ForXHMapExpression m cond (fun kv => let v := URScalar kv in f))
-  : ursus_scope (default interpretation) *)
-
- 	   (* refine {{ for ( {it} : (#{orders}) -> begin () ; ~ ({it} != (#{orders}) -> end ()) ) 
+  refine {{ while ~ (!{it} != second ( (#{orders}) -> end () -> get_default () )) 
              do { { _:UEf } } ; { _ } }} . 
- 	 	 	 refine {{ new 'next_it : OrderInfoLRecord @ "next_it" := std::next ( it ) ; { _ } }} . 
- 	 	 	 refine {{ new 'ord : ( OrderInfoLRecord ) @ "ord" := *it ; { _ } }} . 
- 	 	 	 refine {{ if ( ({ord} ↑ OrderInfo.client_addr) == !{client_addr} ) then { { _:UEf } } ; { _ } }} . 
- 	 	 	 	 refine {{ new 'minus_val : XUInteger @ "minus_val" := !{is_first} ? #{process_queue} : 0 ; { _ } }} . 
+ 	 	 	 refine {{ new 'next_it : OrderInfoLRecord @ "next_it" := 
+         second ( (#{orders}) -> next ( first ( (#{orders}) -> end () -> get_default () ) ) -> get_default () ) ; { _ } }} . 
+ 	 	 	 refine {{ new 'ord : ( OrderInfoLRecord ) @ "ord" := !{it} ; { _ } }} . 
+ 	 	 	 refine {{ if ( (!{ord} ↑ OrderInfo.client_addr) == #{client_addr} ) then { { _:UEf } } ; { _ } }} . 
+ 	 	 	 	 refine {{ new 'minus_val : XUInteger @ "minus_val" := 
+                       !{is_first} ? #{process_queue} : 0 ; { _ } }} . 
  	 	 	 	 refine {{ if ( #{sell} ) then { { _:UEf } } ; { _ } }} . 
 (*  	 	 	 refine {{ { ITONTokenWalletPtr ( ord . tip3_wallet ) ( return_ownership ) . returnOwnership ( ord . amount ) ; { _ } }} .  *)
  	 	 	 	 	 refine {{ {minus_val} += (#{return_ownership}) }} . 
@@ -725,13 +723,16 @@ Definition cancel_order_impl ( orders : queue OrderInfoLRecord )
  	 	 	 refine {{ if ( !{plus_val} > !{minus_val} ) then { { _:UEf } } ; { _ } }} . 
  	 	 	 	 refine {{ new 'ret_val : XUInteger @ "ret_val" := (!{plus_val} - !{minus_val}) ; { _ } }} . 
  	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
- 	 	 	                          [$ ec::canceled , !{ord} ↑ OrderInfo.original_amount 
-                                                - !{ord} ↑ OrderInfo.amount, 0 $] (* ; { _ } }} . 
- 	 	 	 	 refine {{ IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) *) }} . 
- 	 	 refine {{ {all_amount} -= !{ord} ↑ OrderInfo.amount ; { _ } }} . 
- 	 	 refine {{ {orders} -> erase ( it ) }} . 
-   refine {{ {it} := !{next_it} }} .     *)                                 (* for end *)
- refine {{ return_ [ #{ orders } , #{ all_amount } ] }} . 
+ 	 	 	                          [ ec::canceled , !{ord} ↑ OrderInfo.original_amount 
+                                                - !{ord} ↑ OrderInfo.amount , 0 ] ; { _ } }} . 
+	 	 	 	 refine {{ (* IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) *) return_ {} }} . 
+     refine {{ new 'all_amount_ : uint128 @ "all_amount_" := #{all_amount} ; {_} }} .
+ 	 	 refine {{ {all_amount_} -= !{ord} ↑ OrderInfo.amount ; { _ } }} .
+     refine {{ new 'orders_ : queue OrderInfoLRecord @ "orders_" := #{orders} ; {_} }} .
+ 	 	 refine {{ {orders_} -> erase ( first ( (!{orders_}) -> end () -> get_default () ) ) }} . 
+   refine {{ {it} := !{next_it} }} .     (* end of while *)
+
+ refine {{ return_ [ #{orders} , #{all_amount} ] }} . 
 Defined . 
 
 Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  ( orders : URValue ( queue OrderInfoLRecord ) a1 ) 
