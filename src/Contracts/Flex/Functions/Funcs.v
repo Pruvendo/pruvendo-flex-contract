@@ -80,7 +80,7 @@ Defined .
 Print constructor .
 
 Definition constructor_left { R a1 a2 a3 a4 a5 a6 }  ( deployer_pubkey : URValue uint256 a1 ) 
-                                                      ( ownership_description : URValue ( XString ) a2 ) 
+                                                      ( ownership_description : URValue ( String ) a2 ) 
                                                       ( owner_address : URValue ( optional address ) a3 ) 
                                                       ( tons_cfg : URValue ( TonsConfigLRecord ) a4 ) 
                                                       ( deals_limit : URValue uint8 a5 ) 
@@ -122,9 +122,9 @@ Defined.
 Definition setPairCode ( code :  cell ) : UExpression PhantomType true . 
   refine {{ require_ ( ( ~ _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
   refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
-  refine {{ tvm_accept () ; { _ } }} . 
-(*   refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) ,  error_code::unexpected_refs_count_in_code  ) ; { _ } }} .  *) 
-  refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
+  refine {{ tvm_accept () ; { _ } }} .   
+(*   refine {{ require_ ( ( (#{code}) -> ctos () -> sref () == #{2} ) ,  error_code::unexpected_refs_count_in_code  ) ; { _ } }} . *)
+  refine {{ _pair_code_ := {} (* builder ( ) . stslice ( #{code} -> to_slice () ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
  refine {{ return_ {} }}.
 Defined . 
  
@@ -133,7 +133,7 @@ Definition setXchgPairCode ( code :  cell ) : UExpression PhantomType true .
     refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
     refine {{ tvm_accept () ; { _ } }} . 
     (* refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} .  *)
-    refine {{ _xchg_pair_code_ := {}(* builder ( ) . stslice ( code ^^ cell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
+    refine {{ _xchg_pair_code_ := {}(* builder ( ) . stslice ( #{code} -> to_slice () ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
     refine {{ return_ {} }}.
 Defined . 
  
@@ -142,7 +142,7 @@ Definition setWrapperCode ( code :  cell ) : UExpression PhantomType true .
     refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
     refine {{ tvm_accept () ; { _ } }} . 
    (*  refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} .  *)
-    refine {{ _wrapper_code_ := {} (* builder ( ) . stslice ( code ^^ cell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
+    refine {{ _wrapper_code_ := {} (* builder ( ) . stslice ( #{code} -> to_slice () ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
     refine {{ return_ {} }}.
 Defined . 
 
@@ -213,7 +213,7 @@ Definition prepare_trading_pair_state_init_and_addr
             {}  ⇒ {StateInit_ι_library} $] ; { _ } }} .
 
  	 	 refine {{ new 'pair_init_cl : cell @ "pair_init_cl" := {} ; { _ } }} . 
- 	 	 refine {{ { pair_init_cl } := {} (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
+ 	 	 refine {{ { pair_init_cl } := build ( σ (!{pair_init}) ) -> make_cell ()  ; { _ } }} . 
 	 	 refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} ) ] }} .
  Defined .  
  
@@ -280,8 +280,8 @@ Definition approveTradingPairImpl ( pubkey : uint256 )
                               (!{opt_req_info}) -> get () ; { _ } }} . 
  	 	 refine {{ new ( 'state_init : StateInitLRecord, 'std_addr : uint256 ) @ ("state_init", "std_addr") := 
                  prepare_trading_pair_ ( tvm_myaddr () , !{req_info} ↑ TradingPairListingRequest.tip3_root , #{pair_code} ) ; { _ } }} . 
- 	 	 refine {{ new 'trade_pair : address @ "trade_pair" := {} (*  
- 	 	  ITradingPairPtr ( Address :: make_std ( !{ workchain_id } , std_addr ) )  *); { _ } }} . 
+ 	 	 refine {{ new 'trade_pair : address @ "trade_pair" := 
+                               [ #{ workchain_id } , !{std_addr} ] ; { _ } }} . 
 refine ( let trade_pair_ptr := {{ ITradingPairPtr [[ !{trade_pair}  ]] }} in 
               {{ {trade_pair_ptr} with {} ⤳ TradingPair.deploy ( !{state_init} ) ; {_} }} ).  
 
@@ -363,10 +363,10 @@ Definition rejectTradingPairImpl_right { a1 a2 a3 }  ( pubkey : URValue  uint256
               rejectTradingPairImpl_ ( #{pubkey} , _trading_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
   	refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , rawreserve_flag::up_to  ) ; { _ } }} .
- 	 	refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
- 	  refine {{ {value_gr} := int_value () (* ; { _ } *) }} .  	 	 	 
-(*    refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
- 	 refine {{ return_ TRUE }} . 
+ 	 	refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
+ 	  refine {{ {value_gr} := int_value () ; { _ } }} .  	 	 	 
+    refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} .
+ 	 refine {{ return_ TRUE }} .
 Defined . 
 
 Definition rejectTradingPair_right { a1 }  ( pubkey : URValue uint256 a1 ) : URValue XBool true := 
@@ -384,9 +384,9 @@ Definition prepare_xchg_pair_state_init_and_addr ( pair_data :  XchgPairClassTyp
                {} ⇒ { StateInit_ι_special } ; 
                #{pair_code} -> set () ⇒ { StateInit_ι_code } ;
                !{pair_data_cl} -> set () ⇒ { StateInit_ι_data } ;
-               {} ⇒ { StateInit_ι_library } $] ; { _ } }} . 
-  refine {{ new 'pair_init_cl : cell @ "pair_init_cl" := {} 
-            (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
+               {} ⇒ { StateInit_ι_library } $] ; { _ } }} .
+  refine {{ new 'pair_init_cl : cell @ "pair_init_cl" := 
+                     build ( σ !{ pair_init } ) -> make_cell () ; { _ } }} . 
   refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} )  ] }} .
 Defined .
 
@@ -415,9 +415,8 @@ Definition approveXchgPairImpl ( pubkey :  uint256 ) ( xchg_pair_listing_request
                   [ #{0%Z} , 0 ] ⇒ { DXchgPair_ι_notify_addr_ } $] ; { _ } }} . (*45''*) 
 
  	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ( "state_init" , "std_addr" ) := prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , #{xchg_pair_code} ) ; { _ } }} . 
-      refine {{ new 'xchg_pair : address @ "xchg_pair" := {}  ; {_} }}. (*12''*)
-                (* IXchgPairPtr ( Address :: make_std ( !{ workchain_id } , std_addr ) ) *) (* ; { _ } }} .
- *)
+      refine {{ new 'xchg_pair : address @ "xchg_pair" := 
+                      [ #{workchain_id} , !{std_addr} ] ; { _ } }} .
     refine ( let xchg_pair_ptr := {{ IXchgPairPtr [[ !{xchg_pair}  ]] }} in 
               {{ {xchg_pair_ptr} with {} ⤳ XchgPair.deploy ( !{state_init} ) ; {_} }} ).  
 
@@ -501,8 +500,8 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_ad
                   {} ⇒ { StateInit_ι_library } 
                $]; { _ } }} . 
 
- 	 	 refine {{ new 'wrapper_init_cl : cell @ "wrapper_init_cl" := {} (* 
- 	 	 refine {{ { wrapper_init_cl } := build ( !{ wrapper_init } ) . make_cell ( ) *) ; { _ } }} . 
+ 	 	 refine {{ new 'wrapper_init_cl : cell @ "wrapper_init_cl" := 
+                   build ( σ !{ wrapper_init } ) -> make_cell () ; { _ } }} . 
  	 	 refine {{ return_ [ !{ wrapper_init } ,  tvm_hash ( !{wrapper_init_cl} ) ] }} . 
  Defined . 
 
@@ -554,8 +553,8 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
                   {} ⇒ { StateInit_ι_library } 
                $]; { _ } }} . 
 
- refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {} 
-          (*  build ( !{ wallet_init } ) . make_cell ( ) *) ; { _ } }} . 
+ refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := 
+                  build ( σ !{ wallet_init } ) -> make_cell () ; { _ } }} . 
  refine {{ return_ [ !{ wallet_init } ,  tvm_hash ( !{wallet_init_cl} )  ] }} . 
  Defined . 
 
@@ -618,8 +617,8 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
  	 	 refine {{ new ( 'wrapper_init : StateInitLRecord , 
                      'wrapper_hash_addr : uint256 ) @ ( "wrapper_init" , "wrapper_hash_addr" ) := 
                prepare_wrapper_state_init_and_addr_ ( #{wrapper_code} , !{wrapper_data} ) ; { _ } }} . 
- refine {{ new 'wrapper_addr : address @ "wrapper_addr" := {} ; { _ } }} .
-(*  	 	 refine {{ IWrapperPtr wrapper_addr ( address : : make_std ( workchain_id , wrapper_hash_addr ) ) ; { _ } }} .  *)
+ refine {{ new 'wrapper_addr : address @ "wrapper_addr" := 
+                            [ #{workchain_id} , !{wrapper_hash_addr} ]  ; { _ } }} .
  	 	 refine {{ new ( 'wallet_init : StateInitLRecord , 'wallet_hash_addr : uint256 ) @ ( "wallet_init" , "wallet_hash_addr" ) := 
        prepare_external_wallet_state_init_and_addr_ 
            ( (!{ tip3cfg }) ↑ Tip3Config.name , 
@@ -652,7 +651,7 @@ refine ( let wallet_addr_ptr := {{ IWrapperPtr [[ !{wallet_addr}  ]] }} in
 ( flex_wallet_code : URValue cell a5 )
  ( workchain_id : URValue int a6 ) 
 ( listing_cfg : URValue ListingConfigLRecord a7 ) 
-: URValue ( address * (wrappers_map ) )  true := 
+: URValue ( address # (wrappers_map ) )  true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) approveWrapperImpl 
  pubkey wrapper_listing_requests wrapper_code ext_wallet_code flex_wallet_code workchain_id listing_cfg ) . 
  
@@ -1036,8 +1035,8 @@ Defined .
               prepare_persistent_data_ ( {} (* flex_replay_protection_t::init ()*) , #{flex_data} ) ; { _ } }} . 
  	 	 refine {{ new 'flex_init : StateInitLRecord @ "flex_init" := 
              [ {} , {} , (#{flex_code}) -> set () , (!{flex_data_cl}) -> set () , {} ] ; { _ } }} . 
- 	 	 refine {{ new 'flex_init_cl : cell @ "flex_init_cl" := {} 
-                  (*  build ( !{ flex_init } ) . make_cell ( ) *) ; { _ } }} . 
+ 	 	 refine {{ new 'flex_init_cl : cell @ "flex_init_cl" := 
+                       build ( σ !{ flex_init } ) -> make_cell () ; { _ } }} . 
  	 	 refine {{ return_ [ !{ flex_init } , tvm_hash ( !{flex_init_cl} )  ] }} . 
  Defined . 
 
@@ -1061,8 +1060,8 @@ Defined .
                prepare_persistent_data_ ( {} , !{wallet_data} ) ; { _ } }} . 
  	 	 refine {{ new 'wallet_init : StateInitLRecord @ "wallet_init" := 
               [ {} , {} , (#{code}) -> set () , (!{wallet_data_cl}) -> set () , {} ] ; { _ } }} . 
- 	 	 refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {}  
- 	 	            (*  build ( !{ wallet_init } ) . make_cell ( ) *) ; { _ } }} . 
+ 	 	 refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := 
+                      build ( σ !{ wallet_init } ) -> make_cell () ; { _ } }} . 
  	 	 refine {{ return_ [ !{ wallet_init } ,  tvm_hash ( !{wallet_init_cl} )  ] }} . 
 Defined . 
 

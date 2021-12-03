@@ -717,7 +717,9 @@ Definition cancel_order_impl ( orders : queue OrderInfoLRecord )
  	 	 	 	 refine {{ new 'minus_val : XUInteger @ "minus_val" := 
                        !{is_first} ? #{process_queue} : 0 ; { _ } }} . 
  	 	 	 	 refine {{ if ( #{sell} ) then { { _:UEf } } ; { _ } }} . 
-(*  	 	 	 refine {{ { ITONTokenWalletPtr ( ord . tip3_wallet ) ( return_ownership ) . returnOwnership ( ord . amount ) ; { _ } }} .  *)
+					refine ( let tip3_wallet_ptr := {{ ITONTokenWalletPtr [[ !{ord} ↑ OrderInfo.tip3_wallet ]] }} in 
+						{{ {tip3_wallet_ptr} with [$ #{return_ownership} ⇒ { Messsage_ι_value }  $] 
+													⤳ .returnOwnership ( !{ord} ↑ OrderInfo.amount ) ; {_} }} ). 
  	 	 	 	 	 refine {{ {minus_val} += (#{return_ownership}) }} . 
  	 	 	 refine {{ new 'plus_val : ( XUInteger ) @ "plus_val" := 
                       (((!{ord}) ↑ OrderInfo.account) + ( !{is_first} ? (#{incoming_val}) : 0 )) ; { _ } }} . 
@@ -727,7 +729,9 @@ Definition cancel_order_impl ( orders : queue OrderInfoLRecord )
  	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
  	 	 	                          [ ec::canceled , !{ord} ↑ OrderInfo.original_amount 
                                                 - !{ord} ↑ OrderInfo.amount , 0 ] ; { _ } }} . 
-	 	 	 	 refine {{ (* IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) *) return_ {} }} . 
+					refine ( let ord_ptr := {{ IPriceCallBackPtr [[ (!{ord} ↑ OrderInfo.client_addr)  ]] }} in 
+              {{ {ord_ptr} with [$ !{ret_val} ⇒ { Messsage_ι_value }  $] 
+                                         ⤳ Price.onOrderFinished ( !{ret} , #{sell} ) }} ).
      refine {{ new 'all_amount_ : uint128 @ "all_amount_" := #{all_amount} ; {_} }} .
  	 	 refine {{ {all_amount_} -= !{ord} ↑ OrderInfo.amount ; { _ } }} .
      refine {{ new 'orders_ : queue OrderInfoLRecord @ "orders_" := #{orders} ; {_} }} .

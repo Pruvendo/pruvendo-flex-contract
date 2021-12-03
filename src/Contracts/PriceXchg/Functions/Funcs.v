@@ -623,8 +623,10 @@ Definition cancel_order_impl ( orders : queue OrderInfoXchgLRecord )
 	refine {{ new 'ord :  OrderInfoXchgLRecord  @ "ord" := second ( *!{it} ) ; { _ } }} . 
 	refine {{ if ( (!{ord} ↑ OrderInfoXchg.client_addr) == #{client_addr} ) then { { _:UEf } } ; { _ } }} . 
 	refine {{ new 'minus_val : uint @ "minus_val" := !{is_first} ? #{process_queue} : 0 ; { _ } }} . 
-	refine {{ if ( #{sell} ) then { { _:UEf } } ; { _ } }} . 
-(*  	 	 	 refine {{ { ITONTokenWalletPtr ( ord . tip3_wallet ) ( return_ownership ) . returnOwnership ( ord . amount ) ; { _ } }} .  *)
+	refine {{ if ( #{sell} ) then { { _:UEf } } ; { _ } }} .
+	refine ( let tip3_wallet_ptr := {{ ITONTokenWalletPtr [[ !{ord} ↑ OrderInfoXchg.tip3_wallet_provide ]] }} in 
+						{{ {tip3_wallet_ptr} with [$ #{return_ownership} ⇒ { Messsage_ι_value }  $] 
+													⤳ .returnOwnership ( !{ord} ↑ OrderInfoXchg.amount ) ; {_} }} ). 
 	refine {{ {minus_val} += (#{return_ownership}) }} . 
 	refine {{ new 'plus_val : ( uint ) @ "plus_val" := 
                       ((!{ord} ↑ OrderInfoXchg.account) + ( !{is_first} ? (#{incoming_val}) : 0 )) ; { _ } }} . 
@@ -634,7 +636,9 @@ Definition cancel_order_impl ( orders : queue OrderInfoXchgLRecord )
 	refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
  	 	 	                          [ ec::canceled , !{ord} ↑ OrderInfoXchg.original_amount 
                                                 - !{ord} ↑ OrderInfoXchg.amount , 0 ] ; { _ } }} . 
-	refine {{ (* IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) *) return_ {} }} . 
+	refine ( let ord_ptr := {{ IPriceCallBackPtr [[ (!{ord} ↑ OrderInfoXchg.client_addr)  ]] }} in 
+              				{{ {ord_ptr} with [$ !{ret_val} ⇒ { Messsage_ι_value }  $] 
+                                         ⤳ PriceXchg.onOrderFinished ( !{ret} , #{sell} ) }} ).
     refine {{ new 'all_amount_ : uint128 @ "all_amount_" := #{all_amount} ; {_} }} .
 	refine {{ {all_amount_} -= !{ord} ↑ OrderInfoXchg.amount ; { _ } }} .
     refine {{ new 'orders_ : queue OrderInfoXchgLRecord @ "orders_" := #{orders} ; {_} }} .
@@ -642,7 +646,8 @@ Definition cancel_order_impl ( orders : queue OrderInfoXchgLRecord )
    	refine {{ {it} := !{next_it} }} .     (* end of while *)
  	refine {{ return_ [ #{ orders } , #{ all_amount } ] }} . 
 Defined . 
- 
+
+
 Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
  			( orders : URValue ( queue OrderInfoXchgLRecord ) a1 ) 
 			( client_addr : URValue addr_std_fixed a2 ) 
