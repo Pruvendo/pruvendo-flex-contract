@@ -434,7 +434,7 @@ Definition extract_active_order_right { a1 a2 a3 a4 }
  , buys_amount custom URValue at level 0 
  , buys custom URValue at level 0 ) : ursus_scope . 
 
- Definition cancell_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
+ Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
 ( orders : URValue ( XQueue OrderInfoLRecord ) a1 ) 
 ( client_addr : URValue ( addr_std_fixed ) a2 ) 
 ( all_amount : URValue ( uint128 ) a3 ) 
@@ -444,11 +444,11 @@ Definition extract_active_order_right { a1 a2 a3 a4 }
 ( incoming_val : URValue ( uint (* Grams *) ) a7 ) 
 : URValue ((XQueue OrderInfoLRecord) # uint128)
  ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancell_order_impl 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancel_order_impl 
  orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
  
- Notation " 'cancell_order_impl_' '(' orders client_addr all_amount sell return_ownership process_queue incoming_val ')' " := 
- ( cancell_order_impl_right 
+ Notation " 'cancel_order_impl_' '(' orders client_addr all_amount sell return_ownership process_queue incoming_val ')' " := 
+ ( cancel_order_impl_right 
  orders client_addr all_amount sell return_ownership process_queue incoming_val ) 
  (in custom URValue at level 0 , orders custom URValue at level 0 
  , client_addr custom URValue at level 0 

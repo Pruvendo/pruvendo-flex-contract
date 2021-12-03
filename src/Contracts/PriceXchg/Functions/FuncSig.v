@@ -67,7 +67,7 @@ Parameter process_queue_impl : address -> address -> address (* IFlexNotifyPtrLR
                                price_t -> uint8 -> TonsConfigLRecord -> 
                                uint -> uint -> uint128 -> queue OrderInfoXchgLRecord ->
                                uint128 -> queue OrderInfoXchgLRecord -> UExpression process_retLRecord true .
-Parameter cancell_order_impl : queue OrderInfoXchgLRecord -> 
+Parameter cancel_order_impl : queue OrderInfoXchgLRecord -> 
                               addr_std_fixed -> uint128 -> boolean -> 
                               Grams -> Grams -> Grams -> UExpression ((queue OrderInfoXchgLRecord) # uint128) false . 
 (* Parameter int_sender_and_value : UExpression ( address # Grams ) false .  *)

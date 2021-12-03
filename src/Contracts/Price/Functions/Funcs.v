@@ -697,7 +697,7 @@ Definition processQueue : UExpression PhantomType true .
 		refine {{ _sells_amount_ := !{ sells_amount } (* suicide ( flex_ ) *) }} .
 Defined . 
 
-Definition cancell_order_impl ( orders : queue OrderInfoLRecord ) 
+Definition cancel_order_impl ( orders : queue OrderInfoLRecord ) 
                              ( client_addr : addr_std_fixed ) 
                              ( all_amount : uint128 ) 
                              ( sell : boolean ) 
@@ -717,7 +717,9 @@ Definition cancell_order_impl ( orders : queue OrderInfoLRecord )
  	 	 	 	 refine {{ new 'minus_val : XUInteger @ "minus_val" := 
                        !{is_first} ? #{process_queue} : 0 ; { _ } }} . 
  	 	 	 	 refine {{ if ( #{sell} ) then { { _:UEf } } ; { _ } }} . 
-(*  	 	 	 refine {{ { ITONTokenWalletPtr ( ord . tip3_wallet ) ( return_ownership ) . returnOwnership ( ord . amount ) ; { _ } }} .  *)
+					refine ( let tip3_wallet_ptr := {{ ITONTokenWalletPtr [[ !{ord} ↑ OrderInfo.tip3_wallet ]] }} in 
+						{{ {tip3_wallet_ptr} with [$ #{return_ownership} ⇒ { Messsage_ι_value }  $] 
+													⤳ .returnOwnership ( !{ord} ↑ OrderInfo.amount ) ; {_} }} ). 
  	 	 	 	 	 refine {{ {minus_val} += (#{return_ownership}) }} . 
  	 	 	 refine {{ new 'plus_val : ( XUInteger ) @ "plus_val" := 
                       (((!{ord}) ↑ OrderInfo.account) + ( !{is_first} ? (#{incoming_val}) : 0 )) ; { _ } }} . 
@@ -727,7 +729,9 @@ Definition cancell_order_impl ( orders : queue OrderInfoLRecord )
  	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
  	 	 	                          [ ec::canceled , !{ord} ↑ OrderInfo.original_amount 
                                                 - !{ord} ↑ OrderInfo.amount , 0 ] ; { _ } }} . 
-	 	 	 	 refine {{ (* IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) *) return_ {} }} . 
+					refine ( let ord_ptr := {{ IPriceCallBackPtr [[ (!{ord} ↑ OrderInfo.client_addr)  ]] }} in 
+              {{ {ord_ptr} with [$ !{ret_val} ⇒ { Messsage_ι_value }  $] 
+                                         ⤳ Price.onOrderFinished ( !{ret} , #{sell} ) }} ).
      refine {{ new 'all_amount_ : uint128 @ "all_amount_" := #{all_amount} ; {_} }} .
  	 	 refine {{ {all_amount_} -= !{ord} ↑ OrderInfo.amount ; { _ } }} .
      refine {{ new 'orders_ : queue OrderInfoLRecord @ "orders_" := #{orders} ; {_} }} .
@@ -737,7 +741,7 @@ Definition cancell_order_impl ( orders : queue OrderInfoLRecord )
  refine {{ return_ [ #{orders} , #{all_amount} ] }} . 
 Defined . 
 
-Definition cancell_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  ( orders : URValue ( queue OrderInfoLRecord ) a1 ) 
+Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  ( orders : URValue ( queue OrderInfoLRecord ) a1 ) 
                                                               ( client_addr : URValue addr_std_fixed a2 ) 
                                                               ( all_amount : URValue uint128 a3 ) 
 															  ( sell : URValue boolean a4 ) 
@@ -745,10 +749,10 @@ Definition cancell_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  ( orders : URValue
 															  ( process_queue : URValue uint (* Grams *) a6 ) 
 															  ( incoming_val : URValue uint (* Grams *) a7 ) 
 								    : URValue ((queue OrderInfoLRecord) # uint128)( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancell_order_impl  orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancel_order_impl  orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
  
-Notation " 'cancell_order_impl_' '(' orders ',' client_addr ',' all_amount ',' sell ',' return_ownership ',' process_queue ',' incoming_val ')' " := 
- ( cancell_order_impl_right  orders client_addr all_amount sell return_ownership process_queue incoming_val ) 
+Notation " 'cancel_order_impl_' '(' orders ',' client_addr ',' all_amount ',' sell ',' return_ownership ',' process_queue ',' incoming_val ')' " := 
+ ( cancel_order_impl_right  orders client_addr all_amount sell return_ownership process_queue incoming_val ) 
  (in custom URValue at level 0 , orders custom URValue at level 0 , client_addr custom URValue at level 0 , 
  all_amount custom URValue at level 0 , sell custom URValue at level 0 , return_ownership custom URValue at level 0 , 
  process_queue custom URValue at level 0 , incoming_val custom URValue at level 0 ) : ursus_scope . 
@@ -758,7 +762,7 @@ Definition cancelSell : UExpression PhantomType false .
 	refine {{ new 'client_addr : addr_std_fixed  @ "client_addr" := {} (* int_sender_ ( )  *); { _ } }} . 
 	refine {{ new 'value : ( uint ) @ "value" := int_value ( ) ; { _ } }} . 
 	refine {{ new ( 'sells : (queue OrderInfoLRecord) , 'sells_amount : uint128 ) @ ( "sells" , "sells_amount" ) :=
-		cancell_order_impl_ ( _sells_ , !{client_addr} , _sells_amount_ , TRUE , 
+		cancel_order_impl_ ( _sells_ , !{client_addr} , _sells_amount_ , TRUE , 
 			_tons_cfg_ ↑ TonsConfig.return_ownership , 
 			_tons_cfg_ ↑ TonsConfig.process_queue , 
 			!{value} ) ; { _ } }} . 
@@ -781,7 +785,7 @@ Definition cancelBuy : UExpression PhantomType false .
 	refine {{ new 'client_addr : ( addr_std_fixed ) @ "client_addr" := int_sender () ; { _ } }} . 
 	refine {{ new 'value : ( uint ) @ "value" := int_value ( ) ; { _ } }} . 
 	refine {{ new ( 'buys:(queue OrderInfoLRecord) , 'buys_amount:uint128 ) @ ( "buys" , "buys_amount" ) :=
-		cancell_order_impl_ ( _buys_ , !{client_addr} , _buys_amount_ , FALSE , 
+		cancel_order_impl_ ( _buys_ , !{client_addr} , _buys_amount_ , FALSE , 
 							_tons_cfg_ ↑ TonsConfig.return_ownership , _tons_cfg_ ↑ TonsConfig.process_queue , !{value} ) ; { _ } }} . 
 	refine {{ _buys_ := !{ buys } ; { _ } }} . 
 	refine {{ _buys_amount_ := !{buys_amount} ; { _ } }} . 
