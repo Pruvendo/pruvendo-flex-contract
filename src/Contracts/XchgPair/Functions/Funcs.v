@@ -82,19 +82,6 @@ Definition _fallback ( msg : cell_ ) ( msg_body : slice_ ) : UExpression uint fa
  	refine {{ return_ 0 }} . 
 Defined . 
 
-
-(* inline
-std::pair<StateInit, uint256> prepare_xchg_pair_state_init_and_addr(DXchgPair pair_data, cell pair_code) {
-  cell pair_data_cl = prepare_persistent_data<IXchgPair, void, DXchgPair>({}, pair_data);
-  StateInit pair_init {
-    /*split_depth*/{}, /*special*/{},
-    pair_code, pair_data_cl, /*library*/{}
-  };
-  cell pair_init_cl = build(pair_init).make_cell();
-  return { pair_init, uint256(tvm_hash(pair_init_cl)) };
-} *)
-
-(* Set Universe Polymorphism. *)
 Definition prepare_xchg_pair_state_init_and_addr ( pair_data : ContractLRecord ) 
                                                  ( pair_code : cell ) : UExpression ( StateInitLRecord # uint256 ) false . 
     refine {{ new 'pair_data_cl : cell @ "pair_data_cl" := prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 

@@ -28,23 +28,14 @@ Notation OrderInfoXchgWithIdx := (uint # OrderInfoXchgLRecord).
 
 Module Type SpecSig.
 
-
-(* Parameter make_deal : ULValue OrderInfoXchgLRecord -> ULValue OrderInfoXchgLRecord -> 
-UExpression ( boolean # (boolean # uint128) ) true . 
- *)
-(* static std::tuple<std::optional<OrderInfoXchgWithIdx>, big_queue<OrderInfoXchg>, uint128>
-  extract_active_order(std::optional<OrderInfoXchgWithIdx> cur_order,
-                       big_queue<OrderInfoXchg> orders, uint128 all_amount, bool_t sell) *)
-(*Error: not ULValue !!!*)
-Parameter extract_active_order : (* ULValue *) ( optional OrderInfoXchgWithIdx ) -> 
-                                 (* ULValue *) ( queue OrderInfoXchgLRecord )  -> 
-                                 (* ULValue *) ( uint128 ) -> boolean -> 
+Parameter extract_active_order : optional OrderInfoXchgWithIdx -> 
+                                 queue OrderInfoXchgLRecord  -> 
+                                 uint128 -> boolean -> 
           UExpression ( optional OrderInfoXchgWithIdx # ((queue OrderInfoXchgLRecord) # uint128) )  true .
-(* Parameter process_queue : uint -> uint -> UExpression PhantomType true . *)
 Parameter onTip3LendOwnership : address -> uint128 -> uint32 -> uint256 -> address -> cell -> UExpression OrderRetLRecord true . 
 Parameter processQueue : UExpression PhantomType true . 
-Parameter cancelSell : UExpression PhantomType false . 
-Parameter cancelBuy : UExpression PhantomType false . 
+Parameter cancelSell : UExpression PhantomType true . 
+Parameter cancelBuy : UExpression PhantomType true . 
 Parameter getDetails : UExpression DetailsInfoXchgLRecord false . 
 Parameter getPriceNum : UExpression uint128 false . 
 Parameter getPriceDenum : UExpression uint128 false . 
@@ -67,11 +58,9 @@ Parameter process_queue_impl : address -> address -> address (* IFlexNotifyPtrLR
                                price_t -> uint8 -> TonsConfigLRecord -> 
                                uint -> uint -> uint128 -> queue OrderInfoXchgLRecord ->
                                uint128 -> queue OrderInfoXchgLRecord -> UExpression process_retLRecord true .
-Parameter cancell_order_impl : queue OrderInfoXchgLRecord -> 
+Parameter cancel_order_impl : queue OrderInfoXchgLRecord -> 
                               addr_std_fixed -> uint128 -> boolean -> 
                               Grams -> Grams -> Grams -> UExpression ((queue OrderInfoXchgLRecord) # uint128) false . 
-(* Parameter int_sender_and_value : UExpression ( address # Grams ) false .  *)
-
 End SpecSig.
 
 End Spec.  

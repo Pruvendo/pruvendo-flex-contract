@@ -102,39 +102,30 @@ Notation " x '->' 'ldu' '(' '32' ')' " := (tvm_ldu32 x) (in custom URValue at le
 Notation " 'external_wallet_replay_protection_t::init' '()' " := 
 	(external_wallet_replay_protection_init) (in custom URValue at level 0) : ursus_scope .
 
+Definition root_replay_protection_init: URValue PhantomType false.
+exact || {} ||.
+Qed.
 
-(* Definition cell_to_slice_ {bb} (b: URValue cell bb) : URValue slice bb .
-pose proof (urvalue_bind b (fun x' => #(Build_CellSliceBuilder _Slice (undressBuilder x')))).
-rewrite right_or_false in X.
-refine X.
+Notation " 'root_replay_protection_t::init' '()' " := 
+	(root_replay_protection_init) (in custom URValue at level 0) : ursus_scope .
+
+Definition wallet_replay_protection_init: URValue PhantomType false.
+exact || {} ||.
+Qed.
+
+Notation " 'wallet_replay_protection_t::init' '()' " := 
+	(wallet_replay_protection_init) (in custom URValue at level 0) : ursus_scope .
+
+
+Definition suicide (a: address) : UExpression PhantomType true.
+refine {{ exit_ {} }}.
 Defined.
 
-Notation " c '->' 'ctos' '()' " := (cell_to_slice_ c) 
-    (in custom URValue at level 0, c custom URValue ) : ursus_scope . *)
+Definition suicide_left { R b } (x: URValue address b) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) suicide x) . 
+ 
+Notation " 'suicide_' '(' x ')' " := ( suicide_left x) 
+ (in custom ULValue at level 0 , x custom URValue at level 0 ) : ursus_scope . 
 
-(**************************************)
-
-
-
-(* Variable x: URValue StateInitLRecord false.
-Check || build ( {x} ) ||. *)
-
-(* Require Import Coq.Strings.String.
-Local Open Scope string_scope. *)
-
-(* Declare Instance foo : LocalStateField cell_.
-Declare Instance bar :LocalStateField StateInitLRecord.
-
-Definition prepare_xchg_pair_state_init_and_addr ( pair_data : StateInitLRecord ) 
-                                                 ( pair_code : cell_ ) : UExpression ( StateInitLRecord # XUInteger256 ) false . 
-    refine {{ new 'pair_data_cl : cell_ @ "pair_data_cl" := 
-            prepare_persistent_data_ ( {} , #{pair_data} ) ; { _ } }} . 
-    refine {{ new 'pair_init : StateInitLRecord @ "pair_init" := {} ; { _ } }} . 
-    refine {{ new 'pair_init_cl : cell_ @ "pair_init_cl" := {} ; { _ } }} . 
-    Check builder_build.
-    Eval compute in builder.
-    About TvmCell_.
-    Check || build ( !{pair_init} ) -> make_cell () ||.
-    refine {{ {pair_init_cl} :=  build ( !{pair_init} ) -> make_cell ()  ; { _ } }} . *)
 
 End CommonAxioms.

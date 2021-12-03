@@ -45,11 +45,6 @@ Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
-Parameter set_int_return_flag_ : UExpression boolean false .
-Notation " 'set_int_return_flag__' '(' ')' " := 
- ( set_int_return_flag_ ) 
- (in custom ULValue at level 0 ) : ursus_scope .
-
 Definition onDeploy ( min_amount : uint128 ) ( deploy_value : uint128 ) ( notify_addr : address ) : UExpression boolean true . 
 	refine {{ require_ ( ( int_value () ) > #{ deploy_value }  ,  error_code::not_enough_tons  ) ; { _ } }} . 
 	refine {{ require_ ( ~  _min_amount_  , error_code::double_deploy  ) ; { _ } }} .

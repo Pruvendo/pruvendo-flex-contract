@@ -9,8 +9,8 @@ Require Import FinProof.ProgrammingWith.
 
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
-Require Import UrsusTVM.Cpp.tvmTypes.
 
+Require Import UrsusTVM.Cpp.tvmTypes.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.TvmCells.
 Require Import UrsusTVM.Cpp.tvmNotations.
@@ -25,9 +25,8 @@ Require Import PriceXchg.Functions.FuncSig.
 Require Import PriceXchg.Functions.FuncNotations.
 (* Require Contracts.PriceXchg.Interface. *)
 
-Require Import Contracts.Flex.ClassTypesNotations.
-Require Import Contracts.TONTokenWallet.ClassTypesNotations.
-
+Require Import Flex.ClassTypesNotations.
+Require Import TONTokenWallet.ClassTypesNotations.
 
 Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
@@ -38,12 +37,11 @@ Import co.
 
 Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
 Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
-Module Import TONTonkenWalletModuleForPriceXchg := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
+Module Import TONTonkenWalletModuleForPriceXchg := TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
 
-Module Import FlexModuleForPriceXchg := Contracts.Flex.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module Import TONTokenWalletModuleForPriceXchg := Contracts.TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module TONTokenWalletClassTypesModule := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
-
+Module Import FlexModuleForPriceXchg := Flex.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import TONTokenWalletModuleForPriceXchg := TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module TONTokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
 
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  
@@ -58,10 +56,9 @@ Local Open Scope xlist_scope.
 Existing Instance LedgerPruvendoRecord.
 
 Definition minor_cost (amount: uint128) (price: price_t) : UExpression (optional uint128) true . 
-	refine {{ new 'cost : ( uint ) @ "cost" := {} 
-			(* __builtin_tvm_muldivr ( amount ^^ uint128:get ( ) , price ^^ RationalPriceLRecord:num , price ^^ RationalPriceLRecord:denum ) *) ; { _ } }} . 
-	refine {{ if ? ( !{cost} >> #{128} ) \\ 
-	             !{cost} == 0 then { exit_ {} } ; { _ } }} . 		
+	refine {{ new 'cost : ( uint ) @ "cost" := 
+			 __builtin_tvm_muldivr_ ( #{amount} , (#{price}) ↑ RationalPrice.num , (#{price}) ↑ RationalPrice.denum ) ; { _ } }} . 
+	refine {{ if ? ( !{cost} >> #{128} ) \\ !{cost} == 0 then { exit_ {} } ; { _ } }} . 		
 	refine {{ return_ (!{ cost }) -> set () }} . 
 Defined . 
 
@@ -73,8 +70,7 @@ Notation " 'minor_cost_' '(' amount ',' price ')' " := ( minor_cost_right amount
  (in custom URValue at level 0 , amount custom URValue at level 0 , price custom URValue at level 0 ) : ursus_scope . 
 
 Definition is_active_time ( order_finish_time : ( uint32 ) ) : UExpression boolean false .  
-	refine {{ return_ ( tvm_now () + safe_delay_period_ ) 
-					   <  #{order_finish_time} }} . 
+	refine {{ return_ ( tvm_now () + safe_delay_period_ ) <  #{order_finish_time} }} . 
 Defined . 
 
 Definition is_active_time_right { a1 }  ( order_finish_time : URValue uint32 a1 ) : URValue boolean a1 := 
@@ -112,29 +108,21 @@ Definition make_deal ( sell : ULValue OrderInfoXchgLRecord )
 	refine {{ {buy} ↑ OrderInfoXchg.amount -= !{deal_amount} ; { _ } }} . 
 	refine {{ {sell} ↑ OrderInfoXchg.account -= !{sell_ton_costs} ; { _ } }} . 
 	refine {{ {buy} ↑ OrderInfoXchg.account -= !{buy_ton_costs} ; { _ } }} . 
-(*  	 	 refine {{ ITONTokenWalletPtr ( (#{sell}) ↑ OrderInfoXchg.tip3_wallet_provide ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) 
-. transfer ( sell . tip3_wallet_provide , buy . tip3_wallet_receive , deal_amount , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
-refine ( let sell_ptr := {{ ITONTokenWalletPtr [[ (!{sell} ↑ OrderInfoXchg.tip3_wallet_provide)  ]] }} in 
+	refine ( let sell_ptr := {{ ITONTokenWalletPtr [[ (!{sell} ↑ OrderInfoXchg.tip3_wallet_provide)  ]] }} in 
               {{ {sell_ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.transfer_tip3) ⇒ { Messsage_ι_value }  $] 
                                          ⤳ .transfer ( !{sell} ↑ OrderInfoXchg.tip3_wallet_provide , !{buy} ↑ OrderInfoXchg.tip3_wallet_receive ,
 										 				 !{deal_amount} , 0 , FALSE ) ; {_} }} ).  
-(*  	 	 refine {{ ITONTokenWalletPtr ( buy . tip3_wallet_provide ) ( Grams ( tons_cfg_ . transfer_tip3 . get ( ) ) ) . 
-transfer ( buy . tip3_wallet_provide , sell . tip3_wallet_receive , *buy_payment , uint128 ( 0 ) , bool_t { false } ) ; { _ } }} .  *)
-refine ( let buy_ptr := {{ ITONTokenWalletPtr [[ (!{buy} ↑ OrderInfoXchg.tip3_wallet_provide)  ]] }} in 
+	refine ( let buy_ptr := {{ ITONTokenWalletPtr [[ (!{buy} ↑ OrderInfoXchg.tip3_wallet_provide)  ]] }} in 
               {{ {buy_ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.transfer_tip3) ⇒ { Messsage_ι_value }  $] 
                                          ⤳ .transfer ( !{buy} ↑ OrderInfoXchg.tip3_wallet_provide , !{sell} ↑ OrderInfoXchg.tip3_wallet_receive ,
 										 				 !{buy_payment}->get() , 0 , FALSE ) ; {_} }} ).  
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) )
- . onXchgDealCompleted ( tip3root_sell_ , tip3root_buy_ , price_ . num , price_ . denom , deal_amount ) ; { _ } }} .  *)
- refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ !{this} ↑ dealer.notify_addr_  ]] }} in 
- {{ {notify_addr__ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
+	 refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ !{this} ↑ dealer.notify_addr_  ]] }} in 
+ 			  {{ {notify_addr__ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
 							⤳ .onXchgDealCompleted ( !{this} ↑ dealer.tip3root_sell_  , !{this} ↑ dealer.tip3root_buy_  ,
 							 !{this} ↑ dealer.price_ ↑ RationalPrice.num , !{this} ↑ dealer.price_ ↑ RationalPrice.denum ,
 											 !{deal_amount} ) ; {_} }} ).  
 	refine {{ return_ [ FALSE , FALSE , !{ deal_amount } ] }} . 
 Defined. 
-
-Check make_deal.
 
 Definition make_deal_right (sell : ULValue OrderInfoXchgLRecord) 
 						   (buy : ULValue OrderInfoXchgLRecord) : URValue ( boolean # (boolean # uint128) ) true := 
@@ -163,8 +151,7 @@ Definition extract_active_order  ( cur_order : optional OrderInfoXchgWithIdx  )
 	refine {{ {all_amount} -= !{ord} ↑ OrderInfoXchg.amount ; { _ } }} . 
 	refine {{ new 'ret : OrderRetLRecord @ "ret" := [ ec::expired , 
 	           !{ord} ↑ OrderInfoXchg.original_amount - !{ord} ↑ OrderInfoXchg.amount , 0 ] ; { _ } }} . 
-	(* refine {{ IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ord . account . get ( ) ) )
-	. onOrderFinished ( ret , sell ) ; { _ } }} .  *)
+
 	refine ( let ord_ptr := {{ IPriceCallBackPtr [[ (!{ord} ↑ OrderInfoXchg.client_addr)  ]] }} in 
               {{ {ord_ptr} with [$ (!{ord} ↑ OrderInfoXchg.account) ⇒ { Messsage_ι_value }  $] 
                                          ⤳ PriceXchg.onOrderFinished ( !{ret} , !{sell} ) ; {_} }} ).
@@ -219,10 +206,8 @@ Definition process_queue (sell_idx : uint)
 	refine {{ if ~ !{ sell_out_of_tons } && ~ !{ buy_out_of_tons } then { { _:UEt } }  }} . 
 	refine {{ {sell} ↑ OrderInfoXchg.account -= !{half_process_queue} ; { _ } }} . 
 	refine {{ {buy} ↑ OrderInfoXchg.account -= !{half_process_queue} ; { _ } }} . 
- (*	refine {{ IPriceXchgPtr ( address { tvm_myaddr ( ) } )
-  ( Grams ( tons_cfg_ . process_queue . get ( ) ) ) . processQueue ( ) ; { _ } }} .  *)
- refine ( let tvm_myaddr_ptr := {{ IPriceXchgPtr [[ tvm_myaddr ()  ]] }} in 
-{{ {tvm_myaddr_ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.process_queue) ⇒ { Messsage_ι_value }  $] 
+ 	refine ( let tvm_myaddr_ptr := {{ IPriceXchgPtr [[ tvm_myaddr ()  ]] }} in 
+	{{ {tvm_myaddr_ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.process_queue) ⇒ { Messsage_ι_value }  $] 
 						   ⤳ .processQueue () ; {_} }} ). 
  	refine {{ if #{sell_idx} == !{sell_idx_cur} then { { _:UEf } } ; { _ } }} . 
 	refine {{ {this} ↑ dealer.ret_ -> set ( [ ec::deals_limit  , 
@@ -245,17 +230,11 @@ Definition process_queue (sell_idx : uint)
 	refine {{ if #{sell_idx} == !{sell_idx_cur} then { { _:UEf } } ; { _ } }} . 
 	refine {{ {this} ↑ dealer.ret_  ->set ( !{ ret } ) }} . 
 	refine {{ if !{sell} ↑ OrderInfoXchg.account > !{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.return_ownership then { { _:UEf } } ; { _ } }} . 
-	refine {{ {sell} ↑ OrderInfoXchg.account -= !{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.return_ownership  ; { _ } }} . (*
-         	 	 refine {{ ITONTokenWalletPtr ( sell . tip3_wallet_provide )
-				    ( Grams ( tons_cfg_ . return_ownership . get ( ) ) ) . returnOwnership ( sell . amount ) ; { _ } }} . 
-         	 	 refine {{ IPriceCallbackPtr ( sell . client_addr ) ( Grams ( sell . account . get ( ) ) ) 
-				   . onOrderFinished ( ret , bool_t { true } )  }} . *)
-			refine ( let sell_ptr := {{ ITONTokenWalletPtr [[ (!{sell} ↑ OrderInfoXchg.tip3_wallet_provide)  ]] }} in 
+	refine {{ {sell} ↑ OrderInfoXchg.account -= !{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.return_ownership  ; { _ } }} .
+	refine ( let sell_ptr := {{ ITONTokenWalletPtr [[ (!{sell} ↑ OrderInfoXchg.tip3_wallet_provide)  ]] }} in 
 			{{ {sell_ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.return_ownership) ⇒ { Messsage_ι_value }  $] 
 										⤳ .returnOwnership ( (!{sell} ↑ OrderInfoXchg.amount) ) ; {_} }} ).  
-	
-	
-				refine ( let sell_ptr := {{ IPriceCallBackPtr [[ (!{sell} ↑ OrderInfoXchg.client_addr)  ]] }} in 
+	refine ( let sell_ptr := {{ IPriceCallBackPtr [[ (!{sell} ↑ OrderInfoXchg.client_addr)  ]] }} in 
 				{{ {sell_ptr} with [$ (!{sell} ↑ OrderInfoXchg.account) ⇒ { Messsage_ι_value }  $] 
 											⤳ PriceXchg.onOrderFinished ( !{ret} , TRUE ) }} ).
 	refine {{ {sell_opt} -> reset () }} . 
@@ -267,21 +246,18 @@ Definition process_queue (sell_idx : uint)
 	refine {{ if #{ buy_idx } == !{buy_idx_cur} then { { _:UEf } } ; { _ } }} . 
 	refine {{ {this} ↑ dealer.ret_ ->set ( !{ ret } )}} . 
     refine {{ if !{sell} ↑ OrderInfoXchg.account > !{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.return_ownership then { { _:UEf } } ; { _ } }} . 
-(*      	 	 refine {{ { ITONTokenWalletPtr ( buy . tip3_wallet_provide ) 
-( Grams ( tons_cfg_ . return_ownership . get ( ) ) ) . returnOwnership ( buy . amount ) ; { _ } }} .  *)
-refine ( let buy_ptr := {{ ITONTokenWalletPtr [[ (!{buy} ↑ OrderInfoXchg.tip3_wallet_provide)  ]] }} in 
+	refine ( let buy_ptr := {{ ITONTokenWalletPtr [[ (!{buy} ↑ OrderInfoXchg.tip3_wallet_provide)  ]] }} in 
 			{{ {buy_ptr} with [$ (!{this} ↑ dealer.tons_cfg_ ↑ TonsConfig.return_ownership) ⇒ { Messsage_ι_value }  $] 
 										⤳ .returnOwnership ( (!{buy} ↑ OrderInfoXchg.amount) ) ; {_} }} ).  
-     	 	 refine {{ { ret } := !{ ret } (* IPriceCallbackPtr ( buy . client_addr ) 
-			   ( Grams ( buy . account . get ( ) ) ) . onOrderFinished ( ret , bool_t { false } ) *) }} . 
-			   refine ( let buy_ptr := {{ IPriceCallBackPtr [[ (!{buy} ↑ OrderInfoXchg.client_addr)  ]] }} in 
+	refine {{ { ret } := !{ ret }  }} . 
+	refine ( let buy_ptr := {{ IPriceCallBackPtr [[ (!{buy} ↑ OrderInfoXchg.client_addr)  ]] }} in 
 			   {{ {buy_ptr} with [$ (!{buy} ↑ OrderInfoXchg.account) ⇒ { Messsage_ι_value }  $] 
 										  ⤳ PriceXchg.onOrderFinished ( !{ret} , FALSE ) ; {_} }} ).
 	refine {{ {buy_opt} -> reset () }} . 
     refine {{ if ( !{ sell_out_of_tons } \\ !{ buy_out_of_tons } ) then { { _:UEt } } ; { _ } }} . 
 	refine {{ continue_  }} . 
-	       refine {{ second ( * {sell_opt} ) := !{sell} ; { _ } }} . 
-					refine {{ second ( * {buy_opt} ) := !{buy} ; { _ } }} . 
+	refine {{ second ( * {sell_opt} ) := !{sell} ; { _ } }} . 
+	refine {{ second ( * {buy_opt} ) := !{buy} ; { _ } }} . 
 	refine {{ {this} ↑ dealer.sells_amount_ -= !{ deal_amount } ; { _ } }} . 
     refine {{ {this} ↑ dealer.buys_amount_ -= !{ deal_amount } ; { _ } }} .
 	refine {{ if  ~ !{sell} ↑ OrderInfoXchg.amount then { { _:UEf } } ; { _ } }} . 
@@ -290,10 +266,8 @@ refine ( let buy_ptr := {{ ITONTokenWalletPtr [[ (!{buy} ↑ OrderInfoXchg.tip3_
                     !{sell} ↑ OrderInfoXchg.original_amount , 0 ] ; { _ } }} . 
 	refine {{ if #{ sell_idx } == !{ sell_idx_cur } then { { _:UEf } } ; { _ } }} . 
 	refine {{ {this} ↑ dealer.ret_ ->set (!{ ret } ) }} . 
-(*  	 refine {{ IPriceCallbackPtr ( sell . client_addr ) ( Grams ( sell . account . get ( ) ) ) 
-. onOrderFinished ( ret , bool_t { true } ) ; { _ } }} .  *)
-refine ( let sell_ptr := {{ IPriceCallBackPtr [[ (!{sell} ↑ OrderInfoXchg.client_addr)  ]] }} in 
-		   {{ {sell_ptr} with [$ (!{sell} ↑ OrderInfoXchg.account) ⇒ { Messsage_ι_value }  $] 
+	refine ( let sell_ptr := {{ IPriceCallBackPtr [[ (!{sell} ↑ OrderInfoXchg.client_addr)  ]] }} in 
+			   {{ {sell_ptr} with [$ (!{sell} ↑ OrderInfoXchg.account) ⇒ { Messsage_ι_value }  $] 
 									  ⤳ PriceXchg.onOrderFinished ( !{ret} , TRUE ) ; {_} }} ).
     refine {{ {sell_opt} -> reset () }} . 
 	refine {{ if  ~ !{buy} ↑ OrderInfoXchg.amount then { { _:UEf } } }} . 
@@ -302,13 +276,10 @@ refine ( let sell_ptr := {{ IPriceCallBackPtr [[ (!{sell} ↑ OrderInfoXchg.clie
  	 	 	           [ ok_ , !{buy} ↑ OrderInfoXchg.original_amount , 0 ] ; { _ } }} . 
 	refine {{ if #{ buy_idx } == !{ buy_idx_cur } then { { _:UEf } } ; { _ } }} . 
 	refine {{ {this} ↑ dealer.ret_ -> set ( !{ ret } ) }} . 
-(*  	       refine {{ IPriceCallbackPtr ( buy . client_addr ) ( Grams ( buy . account . get ( ) ) ) 
-. onOrderFinished ( ret , bool_t { false } ) ; { _ } }} .  *)
-refine ( let buy_ptr := {{ IPriceCallBackPtr [[ (!{buy} ↑ OrderInfoXchg.client_addr)  ]] }} in 
-{{ {buy_ptr} with [$ (!{buy} ↑ OrderInfoXchg.account) ⇒ { Messsage_ι_value }  $] 
+	refine ( let buy_ptr := {{ IPriceCallBackPtr [[ (!{buy} ↑ OrderInfoXchg.client_addr)  ]] }} in 
+			 {{ {buy_ptr} with [$ (!{buy} ↑ OrderInfoXchg.account) ⇒ { Messsage_ι_value }  $] 
 						   ⤳ PriceXchg.onOrderFinished ( !{ret} , FALSE ) ; {_} }} ).
 	refine {{ {buy_opt} -> reset () }} . 
-
 	refine {{ if ? !{sell_opt} && 
                  ? second ( !{sell_opt} -> get () ) ↑ OrderInfoXchg.amount
                        then { { _:UEt } } ; { _ } }} .
@@ -342,41 +313,6 @@ Definition process_queue_left { R a1 a2 } (dealer: ULValue dealerLRecord)
 Notation " d -> 'process_queue_' '(' sell_idx ',' buy_idx ')' " := ( process_queue_left d sell_idx buy_idx ) 
  (in custom ULValue at level 0 , d custom ULValue, sell_idx custom URValue at level 0 , buy_idx custom URValue at level 0 ) : ursus_scope . 
  
-(* Definition int_sender_and_value : UExpression ( address # Grams ) false . 
-	refine {{ new 'sender : ( address ) @ "sender" :=  int_sender () ; { _ } }} . 
-	refine {{ return_ [ !{ sender } , int_value () ] }} . 
-Defined .  *)
-
-(* Definition int_sender_and_value_right : URValue ( address #  Grams ) false := 
-	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) int_sender_and_value ) . 
- 
-Notation " 'int_sender_and_value_' '(' ')' " :=  ( int_sender_and_value_right ) 
- 												 (in custom URValue at level 0 ) : ursus_scope . 
- *)
-(* 
-struct addr_var {
-  bitconst<2, 0b11> kind;
-  optional<anycast_info> Anycast;
-  uint_t<9> addr_len;
-  int32 workchain_id;
-  dynamic_bitfield<&addr_var::addr_len> address;
-
-  DEFAULT_EQUAL(addr_var)
-};
-using MsgAddressInt = variant<addr_std, addr_var>;
- void set_int_sender(lazy<MsgAddressInt> val) { 
-    int_sender_ = val; } *)
-
-Parameter set_int_sender_ : UExpression OrderRetLRecord false .
-
-Notation " 'set_int_sender__' '(' ')' " := ( set_int_sender_ ) 
- 										  ( in custom ULValue at level 0 ) : ursus_scope . 
-
-(* void set_int_return_value(unsigned val) { int_return_value_ = val; }  *)
-Parameter set_int_return_value_ : UExpression PhantomType false .
-Notation " 'set_int_return_value__' '(' ')' " := ( set_int_sender_ ) 
- 												( in custom ULValue at level 0 ) : ursus_scope .
-
 Definition onTip3LendOwnershipMinValue : UExpression uint128 false . 
 	refine {{ return_  ( _tons_cfg_ ↑ TonsConfig.process_queue )+ 
 					( _tons_cfg_ ↑ TonsConfig.transfer_tip3 )+ 
@@ -388,8 +324,8 @@ Defined .
 Definition onTip3LendOwnershipMinValue_right  : URValue uint128 false := 
  	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) onTip3LendOwnershipMinValue ) . 
  
- Notation " 'onTip3LendOwnershipMinValue_' '(' ')' " := 
- ( onTip3LendOwnershipMinValue_right ) (in custom URValue at level 0 ) : ursus_scope .
+Notation " 'onTip3LendOwnershipMinValue_' '(' ')' " := ( onTip3LendOwnershipMinValue_right ) 
+	(in custom URValue at level 0 ) : ursus_scope .
   
 Definition prepare_internal_wallet_state_init_and_addr 
 											( name:  String ) 
@@ -409,8 +345,7 @@ Definition prepare_internal_wallet_state_init_and_addr
 		prepare_persistent_data_ ( {} , !{wallet_data} ) ; { _ } }} . 
 	refine {{ new 'wallet_init : StateInitLRecord @ "wallet_init" := 
 		[ {} , {} , (#{code}) -> set () , (!{wallet_data_cl}) -> set () , {} ] ; { _ } }} . 
-	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {}  
-			(*  build ( !{ wallet_init } ) . make_cell ( ) *) ; { _ } }} . 
+	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := build ( σ !{ wallet_init } ) -> make_cell () ; { _ } }} . 
 	refine {{ return_ [ !{ wallet_init } , tvm_hash ( !{wallet_init_cl} ) ] }} . 
 Defined .
 
@@ -439,7 +374,7 @@ Definition expected_wallet_address ( cfg : Tip3ConfigLRecord )
 								   ( internal_owner : uint256 ) : UExpression uint256 false . 
 	refine {{ new 'owner_addr : optional address @ "owner_addr" := {} ; { _ } }} . 
 	refine {{ if ( ? (#{internal_owner}) ) then { { _:UEf } } ; { _ } }} . 
-		refine {{ {owner_addr} := {} (* Address :: make_std ( workchain_id_ , !{ internal_owner } ) *) }} . 
+		refine {{ {owner_addr} := [ _workchain_id_ , #{ internal_owner } ] -> set () }} . 
 	refine {{ return_ 
 	                  second ( prepare_internal_wallet_state_init_and_addr_ 
 					                  ( (#{cfg}) ↑ Tip3Config.name , 
@@ -482,25 +417,13 @@ Notation " 'verify_tip3_addr_' '(' cfg ',' tip3_wallet ',' wallet_pubkey ',' int
  (in custom URValue at level 0 , cfg custom URValue at level 0 , tip3_wallet custom URValue at level 0 , 
  	wallet_pubkey custom URValue at level 0 , internal_owner custom URValue at level 0 ) : ursus_scope . 
 
-Parameter set_int_return_flag_ :UExpression OrderRetLRecord false .
-Notation " 'set_int_return_flag__' '(' ')' " := 
- ( set_int_return_flag_ ) 
- (in custom ULValue at level 0 ) : ursus_scope .
-
-Parameter int_value__ : URValue uint false .
-
-Notation " 'int_value' '(' ')' " := 
- ( int_value__ ) 
- (in custom URValue at level 0 ) : ursus_scope .
-
 Definition on_ord_fail (ec: uint) (wallet_in : address (* ITONTokenWalletPtrLRecord *)) (amount: uint128) : UExpression OrderRetLRecord false . 
-(*  	 	 refine {{ wallet_in(Grams(tons_cfg_.return_ownership.get())).returnOwnership(amount) ; { _ } }} .  *)
-refine ( let wallet_in_ptr := {{ ITONTokenWalletPtr [[ #{wallet_in}  ]] }} in 
-	  {{ {wallet_in_ptr} with [$ (_tons_cfg_ ↑ TonsConfig.return_ownership) ⇒ { Messsage_ι_value }  $] 
+	refine ( let wallet_in_ptr := {{ ITONTokenWalletPtr [[ #{wallet_in}  ]] }} in 
+	     	 {{ {wallet_in_ptr} with [$ (_tons_cfg_ ↑ TonsConfig.return_ownership) ⇒ { Messsage_ι_value }  $] 
 								  ⤳ .returnOwnership ( #{amount} ) ; {_} }} ).  
 	refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
-		refine {{ set_int_return_flag ( #{SEND_ALL_GAS} \\ #{DELETE_ME_IF_I_AM_EMPTY} ) }} .
-	refine {{ new 'incoming_value : uint @ "incoming_value" := int_value ( ) ; { _ } }} . 
+	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} \\ #{DELETE_ME_IF_I_AM_EMPTY} ) }} .
+	refine {{ new 'incoming_value : uint @ "incoming_value" := int_value () ; { _ } }} . 
 	refine {{ tvm_rawreserve (tvm_balance () - !{incoming_value} , rawreserve_flag::up_to ) ; { _ } }} . 
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} . 
 	refine {{ return_ [ ec_ , {} , {} ] }} .
@@ -529,7 +452,7 @@ Definition process_queue_impl ( tip3root_sell : address )
 							  ( buys : queue OrderInfoXchgLRecord ) : UExpression process_retLRecord true . 
 	refine {{ new 'd : ( dealerLRecord ) @ "d" := 	 	 
 		[ #{tip3root_sell}, #{tip3root_buy}, #{notify_addr}, #{price}, #{deals_limit}, #{tons_cfg},
-	#{sells_amount}, #{sells}, #{buys_amount}, #{buys}, {} ] ; { _ } }} . 
+	      #{sells_amount}, #{sells}, #{buys_amount}, #{buys}, {} ] ; { _ } }} . 
  	refine {{ {d} -> process_queue_ ( #{sell_idx} , #{buy_idx} ) ; { _ } }} .  
 	refine {{ return_ [ (!{d}) ↑ dealer.sells_amount_ , 
 						          (!{d}) ↑ dealer.sells_ , 
@@ -562,10 +485,6 @@ Notation " 'process_queue_impl_' '(' tip3root_sell ',' tip3root_buy ',' notify_a
   sells_amount custom URValue at level 0 , sells custom URValue at level 0 , buys_amount custom URValue at level 0 , 
   buys custom URValue at level 0 ) : ursus_scope . 
 
-Parameter int_sender_and_value_ : URValue (address # uint) false .
-Notation " 'int_sender_and_value__' '(' ')' " := 
- ( int_sender_and_value_ ) 
- (in custom URValue at level 0 ) : ursus_scope .
 
 Definition onTip3LendOwnership ( answer_addr : address ) 
 							   ( balance : uint128 ) 
@@ -573,83 +492,68 @@ Definition onTip3LendOwnership ( answer_addr : address )
 							   ( pubkey : uint256 )
 							   ( internal_owner : address ) 
 							   ( payload : cell ) : UExpression OrderRetLRecord true . 
- 	 	 refine {{ new ( 'tip3_wallet : address , 'value : uint (* Grams *) ) @ 
-                 ( "tip3_wallet" , "value" ) := int_sender_and_value__ ( ) ; { _ } }} . 
-  	 refine {{ new 'wallet_in : address @ "wallet_in" (* ITONTokenWalletPtr *) := !{tip3_wallet} ; { _ } }} . 
- 	 	 refine {{new 'ret_owner_gr : uint (* Grams *)@ "ret_owner_gr" :=
-                  ( _tons_cfg_ ↑ TonsConfig.return_ownership ) ; { _ } }} . 
- 	 	 refine {{ set_int_sender ( #{answer_addr} ) ; { _ } }} . 
- 	 	 refine {{ set_int_return_value ( _tons_cfg_ ↑ TonsConfig.order_answer ) ; { _ } }} . 
- 	 	 refine {{ new 'min_value : uint128 @ "min_value" := 
-                    onTip3LendOwnershipMinValue_ ( ) ; { _ } }} . 
-  	 	 refine {{ new 'args : PayloadArgsLRecord @ "args" := {} (* parse ( payload . ctos ( ) ) *) ; { _ } }} .
-
- 	 	 refine {{ new 'is_sell : boolean @ "is_sell" := (!{args}) ↑ PayloadArgs.sell ; { _ } }} . 
- 	 	 refine {{ new 'amount : uint128 @ "amount" := (!{args}) ↑ PayloadArgs.amount ; { _ } }} . 
- 	 	 refine {{ new 'minor_amount : optional uint128 @ "minor_amount" := 
-                             minor_cost_ ( !{ amount } , _price_ ) ; { _ } }} . 
- 	 	 refine {{ new 'err : uint @ "err" := 0 ; { _ } }} . 
- 	 	 refine {{ new 'internal_owner_std : uint @ "internal_owner_std" := 
-                         (#{internal_owner}) ↑ address.address ; { _ } }} . 
-
- 	 	 refine {{ if ( (!{value}) < !{min_value} ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
- 	 	 	 refine {{ {err} := ec::not_enough_tons_to_process }} . 
- 	 	   refine {{ if ( (!{is_sell}) 
+	refine {{ new ( 'tip3_wallet : address , 'value : Grams  ) @ 
+                       ( "tip3_wallet" , "value" ) := int_sender_and_value () ; { _ } }} . 
+	refine {{ new 'wallet_in : address @ "wallet_in" (* ITONTokenWalletPtr *) := !{tip3_wallet} ; { _ } }} . 
+	refine {{new 'ret_owner_gr : Grams @ "ret_owner_gr" :=  _tons_cfg_ ↑ TonsConfig.return_ownership ; { _ } }} . 
+	refine {{ set_int_sender ( #{answer_addr} ) ; { _ } }} . 
+	refine {{ set_int_return_value ( _tons_cfg_ ↑ TonsConfig.order_answer ) ; { _ } }} . 
+	refine {{ new 'min_value : uint128 @ "min_value" := onTip3LendOwnershipMinValue_ ( ) ; { _ } }} . 
+	refine {{ new 'args : PayloadArgsLRecord @ "args" :=  parse ( #{payload} -> ctos () , 0 ) ; { _ } }} .
+	refine {{ new 'is_sell : boolean @ "is_sell" := !{args} ↑ PayloadArgs.sell ; { _ } }} . 
+ 	refine {{ new 'amount : uint128 @ "amount" := !{args} ↑ PayloadArgs.amount ; { _ } }} . 
+	refine {{ new 'minor_amount : optional uint128 @ "minor_amount" := minor_cost_ ( !{ amount } , _price_ ) ; { _ } }} . 
+	refine {{ new 'err : uint @ "err" := 0 ; { _ } }} . 
+	refine {{ new 'internal_owner_std : uint @ "internal_owner_std" := (#{internal_owner}) ↑ address.address ; { _ } }} . 
+	refine {{ if ( !{value} < !{min_value} ) then { { _:UEf } } else { { _:UEf } } ; { _ } }} . 
+	refine {{ {err} := ec::not_enough_tons_to_process }} . 
+ 	refine {{ if ( (!{is_sell}) 
                        ? (~( verify_tip3_addr_ ( _major_tip3cfg_ , !{ tip3_wallet } , #{ pubkey } , !{ internal_owner_std } ) ) ) 
                        : (~( verify_tip3_addr_ ( _minor_tip3cfg_ , !{ tip3_wallet } , #{ pubkey } , !{ internal_owner_std } ) ) ) )
                   then { { _:UEf } } else { { _:UEf } } }} . 
-         	 	 	 refine {{ { err } :=  ec::unverified_tip3_wallet }} . 
-         	 	   refine {{ if ( ~ (?(!{ minor_amount })) ) 
-                         then { { _:UEf } } else { { _:UEf } } }} . 
-         	 	 	 refine {{ {err} :=  ec::too_big_tokens_amount  }} . 
-         	 	   refine {{ if ( !{amount} < _min_amount_ ) then { { _:UEf } } else { { _:UEf } } }} . 
-         	 	 	 refine {{ { err } := ec::not_enough_tokens_amount }} .
-         	 	 refine {{ if ( (#{balance}) <                  
-                   ( !{ is_sell } ? !{ amount } : ((!{minor_amount}) -> get_default () ) ) ) 
-                          then { { _:UEf } } else { { _:UEf } } }} . 
-         	 	 	 refine {{ { err } := ec::too_big_tokens_amount  }} . 
-         	 	   refine {{ if ( ~ (is_active_time_ ( #{ lend_finish_time } )) ) then { { _:UEf } } }} . 
-         	 	 	 refine {{ { err } :=  ec::expired  }} . 
-
- 	 	 refine {{ if ( !{ err } ) then { { _:UEt } } ; { _ } }} . 
- 	 	 	 refine {{ exit_ on_ord_fail_ ( !{err} , !{wallet_in} , !{amount} ) }} . 
- 	 	 refine {{ new 'account : uint128 @ "account" := 
+	refine {{ { err } :=  ec::unverified_tip3_wallet }} . 
+	refine {{ if  ~ !{ minor_amount } then { { _:UEf } } else { { _:UEf } } }} . 
+	refine {{ {err} :=  ec::too_big_tokens_amount  }} . 
+	refine {{ if ( !{amount} < _min_amount_ ) then { { _:UEf } } else { { _:UEf } } }} . 
+	refine {{ { err } := ec::not_enough_tokens_amount }} .
+	refine {{ if ( (#{balance}) <  !{ is_sell } ? !{ amount } : *!{minor_amount} ) then { { _:UEf } } else { { _:UEf } } }} . 
+	refine {{ { err } := ec::too_big_tokens_amount }} . 
+	refine {{ if ~ is_active_time_ ( #{ lend_finish_time } ) then { { _:UEf } } }} . 
+	refine {{ { err } :=  ec::expired  }} . 
+	refine {{ if ( !{ err } ) then { { _:UEt } } ; { _ } }} . 
+	refine {{ exit_ on_ord_fail_ ( !{err} , !{wallet_in} , !{amount} ) }} . 
+	refine {{ new 'account : uint128 @ "account" := 
                 (!{value}) - (_tons_cfg_ ↑ TonsConfig.process_queue) - 
                              (_tons_cfg_ ↑ TonsConfig.order_answer) ; { _ } }} . 
- 	 	 refine {{ new 'ord : ( OrderInfoXchgLRecord ) @ "ord" := 	 	 
- 	 	 	 [ !{amount} , !{amount} , !{account} , !{tip3_wallet} , 
-        (!{args}) ↑  PayloadArgs.receive_tip3_wallet , (!{args}) ↑ PayloadArgs.client_addr  , #{lend_finish_time} ] ; { _ } }} .
-    
- 	 	 refine {{ new 'sell_idx : uint @ "sell_idx" := 0 ; { _ } }} . 
- 	 	 refine {{ new 'buy_idx : uint @ "buy_idx" := 0 ; { _ } }} . 
- 	 	 refine {{ new 'notify_amount : uint128 @ "notify_amount" := {}  ; { _ } }} . 
- 	 	 refine {{ if ( !{ is_sell } ) then { { _:UEt } } else { { _:UEt } } ; { _ } }} . 
- 	 	 	 refine {{ _sells_ -> push ( !{ord} ) ; { _ } }} . 
- 	 	 	 refine {{ _sells_amount_ += ((!{ord}) ↑ OrderInfoXchg.amount) ; { _ } }} . 
- 	 	 	 refine {{ { sell_idx } :=  first ( _sells_ ->back_with_idx() ); { _ } }} . 
- 	 	 	 refine {{ {notify_amount} := _sells_amount_ }} . 
-
-     	 refine {{ _buys_ -> push ( !{ord} ) ; { _ } }} . 
-     	 refine {{ _buys_amount_ += !{ord} ↑ OrderInfoXchg.amount ; { _ } }} . 
-     	 refine {{ { buy_idx } := first ( _buys_ -> back_with_idx () ) ; { _ } }} . 
-     	 refine {{ {notify_amount} := _buys_amount_ }} . 
-(*  refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) 
-. onXchgOrderAdded ( is_sell , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address ,
- price_ . num , price_ . denum , ord . amount , notify_amount ) ; { _ } }} .  *)
- refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in 
-	  {{ {notify_addr__ptr} with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
+	refine {{ new 'ord : ( OrderInfoXchgLRecord ) @ "ord" := 
+	          [ !{amount} , !{amount} , !{account} , !{tip3_wallet} , 
+                !{args} ↑  PayloadArgs.receive_tip3_wallet , 
+				!{args} ↑ PayloadArgs.client_addr  , #{lend_finish_time} ] ; { _ } }} .    
+	refine {{ new 'sell_idx : uint @ "sell_idx" := 0 ; { _ } }} . 
+	refine {{ new 'buy_idx : uint @ "buy_idx" := 0 ; { _ } }} . 
+	refine {{ new 'notify_amount : uint128 @ "notify_amount" := {}  ; { _ } }} . 
+	refine {{ if ( !{ is_sell } ) then { { _:UEt } } else { { _:UEt } } ; { _ } }} . 
+	refine {{ _sells_ -> push ( !{ord} ) ; { _ } }} . 
+	refine {{ _sells_amount_ += !{ord} ↑ OrderInfoXchg.amount ; { _ } }} . 
+	refine {{ { sell_idx } :=  first ( _sells_ ->back_with_idx() ); { _ } }} . 
+	refine {{ {notify_amount} := _sells_amount_ }} . 
+	refine {{ _buys_ -> push ( !{ord} ) ; { _ } }} . 
+	refine {{ _buys_amount_ += !{ord} ↑ OrderInfoXchg.amount ; { _ } }} . 
+	refine {{ { buy_idx } := first ( _buys_ -> back_with_idx () ) ; { _ } }} . 
+	refine {{ {notify_amount} := _buys_amount_ }} . 
+	refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in 
+	         {{ {notify_addr__ptr} with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
 								  ⤳ .onXchgOrderAdded (!{is_sell} ,  _major_tip3cfg_ ↑ Tip3Config.root_address ,
 								  _minor_tip3cfg_ ↑ Tip3Config.root_address ,
 								  _price_ ↑ RationalPrice.num , 
 								  _price_ ↑ RationalPrice.denum ,
 								  !{ord} ↑ OrderInfoXchg.amount , 
 								  !{notify_amount}) ; {_} }} ). 
-
- 	 	 refine {{ new ( 'sells_amount : uint128 , 'sells : queue OrderInfoXchgLRecord , 
+	refine {{ new ( 'sells_amount : uint128 , 'sells : queue OrderInfoXchgLRecord , 
                          'buys_amount : uint128 , 'buys: queue OrderInfoXchgLRecord , 
                          'ret: optional OrderRetLRecord )
                         @ ( "sells_amount" , "sells" , "buys_amount" , "buys" , "ret" ) :=
-    process_queue_impl_ ( _major_tip3cfg_ ↑ Tip3Config.root_address , 
+    	process_queue_impl_ ( _major_tip3cfg_ ↑ Tip3Config.root_address , 
                           _minor_tip3cfg_ ↑ Tip3Config.root_address , 
                           _notify_addr_ , 
                           _price_ , 
@@ -661,26 +565,23 @@ Definition onTip3LendOwnership ( answer_addr : address )
                          _sells_ , 
                          _buys_amount_ , 
                          _buys_ ) ; { _ } }} . 
-
-   refine {{ _sells_ := !{sells} ; { _ } }} .
-   refine {{ _buys_ := !{buys} ; { _ } }} . 
-   refine {{ _sells_amount_ := !{ sells_amount } ; { _ } }} . 
-   refine {{ _buys_amount_ := !{buys_amount} ; { _ } }} . 
-   refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) 
-                   then { { _:UEf } } ; { _ } }} . 
- 	 refine {{ (* suicide ( _flex_ ) *) _buys_ := !{buys} }} . 
- refine {{ if ( !{ret} ) then { { _:UEt } } ; { _ } }} . 
- 	 refine {{ exit_ (!{ret}) -> get () }} . 
- refine {{ return_ [ ok_ , 0 , (!{ord}) ↑ OrderInfoXchg.amount ] }} . 
- Defined . 
+   	refine {{ _sells_ := !{sells} ; { _ } }} .
+   	refine {{ _buys_ := !{buys} ; { _ } }} . 
+   	refine {{ _sells_amount_ := !{ sells_amount } ; { _ } }} . 
+   	refine {{ _buys_amount_ := !{buys_amount} ; { _ } }} . 
+   	refine {{ if  ( _sells_ -> empty () ) && ( _buys_ -> empty () ) then { { _:UEt } } ; { _ } }} . 
+	refine {{  suicide_ ( _flex_ )  }} . 
+ 	refine {{ if ( !{ret} ) then { { _:UEt } } ; { _ } }} . 
+ 	refine {{ exit_ (!{ret}) -> get () }} . 
+ 	refine {{ return_ [ ok_ , 0 , !{ord} ↑ OrderInfoXchg.amount ] }} . 
+Defined . 
  
 
 Definition processQueue : UExpression PhantomType true . 
- 	 	 refine {{ if ( (_sells_ -> empty ()) \\ (_buys_ -> empty ()) ) 
-               then { { _:UEt } }; { _ } }} . 
- 	 	 	 refine {{ exit_ {} }} . 
-
- 	 	 refine {{ new ( 'sells_amount : uint128 , 
+	refine {{ if ( _sells_ -> empty () ) \\ 
+	             ( _buys_ -> empty () )  then { { _:UEt } }; { _ } }} . 
+	refine {{ exit_ {} }} . 
+	refine {{ new ( 'sells_amount : uint128 , 
                          'sells: queue OrderInfoXchgLRecord , 
                          'buys_amount : uint128 , 
                          'buys : queue OrderInfoXchgLRecord , 
@@ -702,52 +603,47 @@ Definition processQueue : UExpression PhantomType true .
    refine {{ _buys_ := !{buys} ; { _ } }} . 
    refine {{ _sells_amount_ := !{ sells_amount } ; { _ } }} . 
    refine {{ _buys_amount_ := !{buys_amount} ; { _ } }} . 
-   refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) 
-                   then { { _:UEf } } }} . 
- 	 refine {{ (* suicide ( _flex_ ) *) _buys_ := !{buys} ; {_} }} .
-refine {{ return_ {} }} . 
+   refine {{ if ( _sells_ -> empty () ) && 
+                ( _buys_ -> empty () ) then { { _:UEt } } }} . 
+	refine {{ suicide_ ( _flex_ ) }} .
 Defined . 
  
-Definition cancell_order_impl ( orders : queue OrderInfoXchgLRecord ) 
-							 ( client_addr : addr_std_fixed ) 
-							 ( all_amount : uint128 ) 
-							 ( sell : boolean ) 
-							 ( return_ownership : uint (* Grams *) ) 
-               ( process_queue : uint (* Grams *) ) 
-               ( incoming_val : uint (* Grams *) )  : UExpression ((queue OrderInfoXchgLRecord) # uint128) false . 
- 	 	 refine {{ new 'is_first : ( boolean ) @ "is_first" := TRUE ; { _ } }} . 
-	refine {{ new 'it : OrderInfoXchgLRecord @ "it" := second ( (#{orders}) -> begin () -> get_default () )  ; { _ } }} . 
-
-  refine {{ while ~ (!{it} != second ( (#{orders}) -> end () -> get_default () )) 
-             do { { _:UEf } } ; { _ } }} . 
- 	 	 	 refine {{ new 'next_it : OrderInfoXchgLRecord @ "next_it" := 
-         second ( (#{orders}) -> next ( first ( (#{orders}) -> end () -> get_default () ) ) -> get_default () ) ; { _ } }} . 
- 	 	 	 refine {{ new 'ord : ( OrderInfoXchgLRecord ) @ "ord" := !{it} ; { _ } }} . 
- 	 	 	 refine {{ if ( (!{ord} ↑ OrderInfoXchg.client_addr) == #{client_addr} ) then { { _:UEf } } ; { _ } }} . 
- 	 	 	 	 refine {{ new 'minus_val : XUInteger @ "minus_val" := 
-                       !{is_first} ? #{process_queue} : 0 ; { _ } }} . 
- 	 	 	 	 refine {{ if ( #{sell} ) then { { _:UEf } } ; { _ } }} . 
+Definition cancel_order_impl ( orders : queue OrderInfoXchgLRecord ) 
+							  ( client_addr : addr_std_fixed ) 
+							  ( all_amount : uint128 ) 
+							  ( sell : boolean ) 
+							  ( return_ownership : Grams ) 
+                              ( process_queue : Grams  ) 
+                              ( incoming_val : Grams )  
+							  : UExpression ((queue OrderInfoXchgLRecord) # uint128) false . 
+	refine {{ new 'is_first : ( boolean ) @ "is_first" := TRUE ; { _ } }} . 
+	refine {{ new 'it  @ "it" :=  (#{orders}) -> begin () ; { _ } }} . 
+  	refine {{ while !{it} != ( #{orders} ) -> end () do { { _:UEf } } ; { _ } }} . 
+	refine {{ new 'next_it  @ "next_it" := ( #{orders} ) -> next ( first ( *!{it} ) ) ; { _ } }} . 
+	refine {{ new 'ord :  OrderInfoXchgLRecord  @ "ord" := second ( *!{it} ) ; { _ } }} . 
+	refine {{ if ( (!{ord} ↑ OrderInfoXchg.client_addr) == #{client_addr} ) then { { _:UEf } } ; { _ } }} . 
+	refine {{ new 'minus_val : uint @ "minus_val" := !{is_first} ? #{process_queue} : 0 ; { _ } }} . 
+	refine {{ if ( #{sell} ) then { { _:UEf } } ; { _ } }} . 
 (*  	 	 	 refine {{ { ITONTokenWalletPtr ( ord . tip3_wallet ) ( return_ownership ) . returnOwnership ( ord . amount ) ; { _ } }} .  *)
- 	 	 	 	 	 refine {{ {minus_val} += (#{return_ownership}) }} . 
- 	 	 	 refine {{ new 'plus_val : ( XUInteger ) @ "plus_val" := 
-                      (((!{ord}) ↑ OrderInfoXchg.account) + ( !{is_first} ? (#{incoming_val}) : 0 )) ; { _ } }} . 
- 	 	 	 refine {{ {is_first} := FALSE ; { _ } }} . 
- 	 	 	 refine {{ if ( !{plus_val} > !{minus_val} ) then { { _:UEf } } ; { _ } }} . 
- 	 	 	 	 refine {{ new 'ret_val : XUInteger @ "ret_val" := (!{plus_val} - !{minus_val}) ; { _ } }} . 
- 	 	 	 	 refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
+	refine {{ {minus_val} += (#{return_ownership}) }} . 
+	refine {{ new 'plus_val : ( uint ) @ "plus_val" := 
+                      ((!{ord} ↑ OrderInfoXchg.account) + ( !{is_first} ? (#{incoming_val}) : 0 )) ; { _ } }} . 
+	refine {{ {is_first} := FALSE ; { _ } }} . 
+	refine {{ if ( !{plus_val} > !{minus_val} ) then { { _:UEf } } ; { _ } }} . 
+	refine {{ new 'ret_val : uint @ "ret_val" := (!{plus_val} - !{minus_val}) ; { _ } }} . 
+	refine {{ new 'ret : ( OrderRetLRecord ) @ "ret" := 	 	 	 	 
  	 	 	                          [ ec::canceled , !{ord} ↑ OrderInfoXchg.original_amount 
                                                 - !{ord} ↑ OrderInfoXchg.amount , 0 ] ; { _ } }} . 
-	 	 	 	 refine {{ (* IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) *) return_ {} }} . 
-     refine {{ new 'all_amount_ : uint128 @ "all_amount_" := #{all_amount} ; {_} }} .
- 	 	 refine {{ {all_amount_} -= !{ord} ↑ OrderInfoXchg.amount ; { _ } }} .
-     refine {{ new 'orders_ : queue OrderInfoXchgLRecord @ "orders_" := #{orders} ; {_} }} .
- 	 	 refine {{ {orders_} -> erase ( first ( (!{orders_}) -> end () -> get_default () ) ) }} . 
-   refine {{ {it} := !{next_it} }} .     (* end of while *)
-
- refine {{ return_ [ #{ orders } , #{ all_amount } ] }} . 
+	refine {{ (* IPriceCallbackPtr ( ord . client_addr ) ( Grams ( ret_val ) ) . onOrderFinished ( ret , sell ) *) return_ {} }} . 
+    refine {{ new 'all_amount_ : uint128 @ "all_amount_" := #{all_amount} ; {_} }} .
+	refine {{ {all_amount_} -= !{ord} ↑ OrderInfoXchg.amount ; { _ } }} .
+    refine {{ new 'orders_ : queue OrderInfoXchgLRecord @ "orders_" := #{orders} ; {_} }} .
+	refine {{ {orders_} -> erase ( first ( *!{it} ) ) }} . 
+   	refine {{ {it} := !{next_it} }} .     (* end of while *)
+ 	refine {{ return_ [ #{ orders } , #{ all_amount } ] }} . 
 Defined . 
  
-Definition cancell_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
+Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
  			( orders : URValue ( queue OrderInfoXchgLRecord ) a1 ) 
 			( client_addr : URValue addr_std_fixed a2 ) 
 			( all_amount : URValue uint128 a3 ) 
@@ -755,21 +651,20 @@ Definition cancell_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }
 			( return_ownership : URValue Grams a5 )
             ( process_queue : URValue Grams a6 ) 
 			( incoming_val : URValue Grams a7 ) : URValue ((queue OrderInfoXchgLRecord) # uint128) ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
-wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancell_order_impl orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
+wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancel_order_impl orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
  
-Notation " 'cancell_order_impl_' '(' orders ',' client_addr ',' all_amount ',' sell ',' return_ownership ',' process_queue ',' incoming_val ')' " := 
- ( cancell_order_impl_right orders client_addr all_amount sell return_ownership process_queue incoming_val ) 
+Notation " 'cancel_order_impl_' '(' orders ',' client_addr ',' all_amount ',' sell ',' return_ownership ',' process_queue ',' incoming_val ')' " := 
+ ( cancel_order_impl_right orders client_addr all_amount sell return_ownership process_queue incoming_val ) 
  (in custom URValue at level 0 , orders custom URValue at level 0 , client_addr custom URValue at level 0 , 
  all_amount custom URValue at level 0 , sell custom URValue at level 0 , return_ownership custom URValue at level 0 , 
  process_queue custom URValue at level 0 , incoming_val custom URValue at level 0 ) : ursus_scope .
 
-Definition cancelSell : UExpression PhantomType false . 
+Definition cancelSell : UExpression PhantomType true . 
 	refine {{ new 'canceled_amount : ( uint128 ) @ "canceled_amount" := _sells_amount_ ; { _ } }} . 
 	refine {{ new 'client_addr : ( addr_std_fixed ) @ "client_addr" := int_sender () ; { _ } }} . 
-	refine {{ new 'value : ( uint ) @ "value" := 
-						int_value ( ) ; { _ } }} . 
+	refine {{ new 'value : uint @ "value" := int_value () ; { _ } }} . 
 	refine {{ new ( 'sells:(XQueue OrderInfoXchgLRecord) , 'sells_amount:uint128 )
-				@ ( "sells" , "sells_amount" ) := cancell_order_impl_ ( _sells_ , !{client_addr} , _sells_amount_ , 
+				@ ( "sells" , "sells_amount" ) := cancel_order_impl_ ( _sells_ , !{client_addr} , _sells_amount_ , 
 																		TRUE , 
 																		_tons_cfg_ ↑ TonsConfig.return_ownership , 
 																		_tons_cfg_ ↑ TonsConfig.process_queue , 
@@ -777,27 +672,24 @@ Definition cancelSell : UExpression PhantomType false .
 	refine {{ _sells_ := !{ sells } ; { _ } }} . 
 	refine {{ _sells_amount_ := !{sells_amount} ; { _ } }} . 
 	refine {{ { canceled_amount } -= _sells_amount_ ; { _ } }} . 
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) 
-. onXchgOrderCanceled ( bool_t { true } , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , 
-price_ . num , price_ . denum , canceled_amount , sells_amount_ ) ; { _ } }} .  *)
-refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in 
-	  {{ {notify_addr__ptr} with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
+	refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in 
+	  		{{ {notify_addr__ptr} with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
 								  ⤳ .onXchgOrderCanceled ( TRUE , _major_tip3cfg_ ↑ Tip3Config.root_address ,
 								  _minor_tip3cfg_ ↑ Tip3Config.root_address ,
 								  _price_ ↑ RationalPrice.num , 
 								  _price_ ↑ RationalPrice.denum ,
 									 !{canceled_amount} , 
 								  _sells_amount_) ; {_} }} ). 
-	refine {{ if ( (_sells_ -> empty ()) && (_buys_ -> empty ()) ) then { { _:UEf } } }} . 
-	refine {{ return_ {} (* suicide ( flex_ ) *) }} . 
+	refine {{ if ( (_sells_ -> empty ()) && (_buys_ -> empty ()) ) then { { _:UEt } } }} . 
+	refine {{ suicide_ ( _flex_ ) }} . 
 Defined . 
  
-Definition cancelBuy : UExpression PhantomType false . 
+Definition cancelBuy : UExpression PhantomType true . 
 	refine {{ new 'canceled_amount : uint128 @ "canceled_amount" := _buys_amount_ ; { _ } }} . 
 	refine {{ new 'client_addr : addr_std_fixed @ "client_addr" := int_sender ()  ; { _ } }} . 
-	refine {{ new 'value : uint @ "value" := int_value ( ) ; { _ } }} . 
+	refine {{ new 'value : uint @ "value" := int_value () ; { _ } }} . 
 	refine {{ new ( 'buys: queue OrderInfoXchgLRecord , 'buys_amount : uint128 ) @ ( "buys" , "buys_amount" ) :=
-	cancell_order_impl_ ( _buys_ , !{client_addr} , _buys_amount_ , 
+	cancel_order_impl_ ( _buys_ , !{client_addr} , _buys_amount_ , 
 						FALSE , 
 						_tons_cfg_ ↑ TonsConfig.return_ownership , 
 						_tons_cfg_ ↑ TonsConfig.process_queue , 
@@ -805,19 +697,14 @@ Definition cancelBuy : UExpression PhantomType false .
 	refine {{ _buys_ := !{ buys } ; { _ } }} . 
 	refine {{ _buys_amount_ := !{buys_amount} ; { _ } }} . 
 	refine {{ {canceled_amount} -= _buys_amount_ ; { _ } }} . 
-(*  	 	 refine {{ notify_addr_ ( Grams ( tons_cfg_ . send_notify . get ( ) ) ) 
-. onXchgOrderCanceled ( bool_t { false } , major_tip3cfg_ . root_address , minor_tip3cfg_ . root_address , 
-price_ . num , price_ . denum , canceled_amount , buys_amount_ ) ; { _ } }} .  *)
-refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in 
-	  {{ {notify_addr__ptr} with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
+	refine ( {{ IFlexNotifyPtr [[ _notify_addr_  ]] with [$ (_tons_cfg_ ↑ TonsConfig.send_notify) ⇒ { Messsage_ι_value }  $] 
 								  ⤳ .onXchgOrderCanceled ( FALSE , _major_tip3cfg_ ↑ Tip3Config.root_address ,
 								  _minor_tip3cfg_ ↑ Tip3Config.root_address ,
 								  _price_ ↑ RationalPrice.num , 
 								  _price_ ↑ RationalPrice.denum ,
-									 !{canceled_amount} , 
-									 _buys_amount_) ; {_} }} ). 
-	refine {{ if ( ( _sells_ -> empty () ) && (_buys_ -> empty () ) ) then { { _:UEf } } }} . 
-		refine {{ return_ {} (* suicide ( flex_ ) *) }} . 
+									 !{canceled_amount} , _buys_amount_) ; {_} }} ). 
+	refine {{ if ( ( _sells_ -> empty () ) && (_buys_ -> empty () ) ) then { { _:UEt } } }} . 
+	refine {{ suicide_ ( _flex_ )  }} . 
 Defined . 
  
  Definition getPriceNum : UExpression uint128 false . 
@@ -827,7 +714,7 @@ Defined .
 Definition getPriceNum_right : URValue uint128 false := 
  	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getPriceNum ) . 
  
- Notation " 'getPriceNum_' '(' ')' " := ( getPriceNum_right ) (in custom URValue at level 0 ) : ursus_scope . 
+Notation " 'getPriceNum_' '(' ')' " := ( getPriceNum_right ) (in custom URValue at level 0 ) : ursus_scope . 
 
 Definition getPriceDenum : UExpression uint128 false . 
  	refine {{ return_ _price_ ↑ RationalPrice.denum }} . 
@@ -904,7 +791,7 @@ Definition prepare_price_xchg_state_init_and_addr ( price_data : ContractLRecord
 	refine {{ new 'price_init : StateInitLRecord @ "price_init" := 	
 		[ {} , {} , (#{price_code}) -> set () , (!{price_data_cl}) -> set () , {} ] ; { _ } }} . 
 	refine {{ new 'price_init_cl : cell @ "price_init_cl" := {} ; { _ } }} . 
-	refine {{ {price_init_cl} := {} (* build ( !{ price_init } ) . make_cell ( ) *) ; { _ } }} . 
+	refine {{ {price_init_cl} := build ( σ  !{ price_init } ) -> make_cell ()  ; { _ } }} . 
 	refine {{ return_ [ !{price_init} , tvm_hash ( !{price_init_cl} ) ] }} . 
 Defined . 
 
