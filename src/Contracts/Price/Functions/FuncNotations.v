@@ -150,7 +150,14 @@ Notation " 'ec::unverified_tip3_wallet' " := (sInject ec_ι_unverified_tip3_wall
 Notation " 'ec::not_enough_tokens_amount' " := (sInject ec_ι_not_enough_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'ec::too_big_tokens_amount' " := (sInject ec_ι_too_big_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'ec::deals_limit' " := (sInject ec_ι_deals_limit) (in custom URValue at level 0) : ursus_scope.
+Notation " 'ec::canceled' " := (sInject ec_ι_canceled) (in custom URValue at level 0) : ursus_scope.
 Notation " 'SENDER_WANTS_TO_PAY_FEES_SEPARATELY_' " := (sInject SENDER_WANTS_TO_PAY_FEES_SEPARATELY)(in custom URValue at level 0) : ursus_scope.
+
+
+
+
+
+
 Module Calls (tc : SpecSig).
 
 Export tc.
