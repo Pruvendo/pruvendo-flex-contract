@@ -84,7 +84,7 @@ Definition details_infoL : list Type :=
     ( XUInteger128 ) : Type ; 
     cell_ : Type ; 
     ( allowance_infoLRecord ) : Type ; 
-    ( XUInteger8 ) : Type ] .
+    ( XInteger ) : Type ] .
 Elpi GeneratePruvendoRecord details_infoL details_infoFields .     
 
 Definition DTONTokenWalletExternalL : list Type := 

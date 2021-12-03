@@ -452,10 +452,10 @@ Definition details_info_ι_allowance_left (x: ULValue details_infoLRecord): ULVa
 Notation " a '↑' 'details_info.allowance' " := ( details_info_ι_allowance_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'details_info.allowance' " := ( details_info_ι_allowance_left a ) (in custom ULValue at level 0) : ursus_scope.
 
-Definition details_info_ι_workchain_id_right {b} (x: URValue details_infoLRecord b): URValue XUInteger8 b :=
+Definition details_info_ι_workchain_id_right {b} (x: URValue details_infoLRecord b): URValue XInteger b :=
     || {x} ^^ {details_info_ι_workchain_id} || : _.
     
-Definition details_info_ι_workchain_id_left (x: ULValue details_infoLRecord): ULValue  XUInteger8  :=
+Definition details_info_ι_workchain_id_left (x: ULValue details_infoLRecord): ULValue XInteger  :=
     {{ {x} ^^ {details_info_ι_workchain_id} }} : _.
     
 Notation " a '↑' 'details_info.workchain_id' " := ( details_info_ι_workchain_id_right a ) (in custom URValue at level 0) : ursus_scope.

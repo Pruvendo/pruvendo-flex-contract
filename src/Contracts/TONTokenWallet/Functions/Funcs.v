@@ -93,11 +93,6 @@ Definition is_internal_owner_right : URValue boolean false :=
 Notation " 'is_internal_owner_' '(' ')' " := ( is_internal_owner_right ) 
  											 ( in custom URValue at level 0 ) : ursus_scope . 
 
-(*AL*)
-Notation " m '->' 'lookup' '(' k ')' " := (wrapURValue (uhmap_fetch m k))
-(in custom URValue at level 2 , m custom URValue(* , k custom URValue *)(*  at level 2 *)) : ucpp_scope.
-
-
 Definition check_internal_owner ( original_owner_only : boolean ) 
 								( allowed_for_original_owner_in_lend_state : boolean )  
 								: UExpression uint128 true . 
@@ -111,9 +106,9 @@ Definition check_internal_owner ( original_owner_only : boolean )
 	refine {{ require_ ( ( ~ (#{ original_owner_only }) ) ,  error_code::only_original_owner_allowed ) ; {_} }} . 
 	refine {{ new 'elem : ( optional lend_recordLRecord ) @ "elem" := !{filtered_map} -> lookup ( int_sender () ) ; {_} }} . 
 	refine {{ require_ ( !{ elem } ,  error_code::message_sender_is_not_my_owner  ) ; {_} }} . 
-	refine {{ return_ min ( _balance_ , (!{elem} -> get_default ()) ↑ lend_record.lend_balance ) }} . 
-	refine {{ require_ ( (is_internal_owner_ ( )) ,  error_code::internal_owner_disabled  ) ; {_} }} . 
-	refine {{ require_ ( ( (_owner_address_ -> get_default ()) == int_sender () ) , error_code::message_sender_is_not_my_owner  ) ; {_} }} . 
+	refine {{ return_ min ( _balance_ , ( *!{elem} ) ↑ lend_record.lend_balance ) }} . 
+	refine {{ require_ ( (is_internal_owner_ ( )) , error_code::internal_owner_disabled  ) ; {_} }} . 
+	refine {{ require_ ( ( ( * _owner_address_ ) == int_sender () ) , error_code::message_sender_is_not_my_owner  ) ; {_} }} . 
 	refine {{ return_ _balance_ }} .  
 Defined. 
 
@@ -166,6 +161,7 @@ Notation " 'check_owner_' '(' original_owner_only ',' allowed_in_lend_state ')' 
  ( check_owner_left original_owner_only allowed_in_lend_state ) 
  (in custom ULValue at level 0 , original_owner_only custom URValue at level 0 , allowed_in_lend_state custom URValue at level 0 ) : ursus_scope .
 
+(*AL*)
 Parameter min_transfer_costs : uint.
 
 Definition check_transfer_requires ( tokens : uint128 ) ( grams : uint128 ) : UExpression uint128 true . 
@@ -201,7 +197,7 @@ Notation " 'fixup_answer_addr_' '(' answer_addr ')' " :=
  ( fixup_answer_addr_right answer_addr ) 
  (in custom URValue at level 0 , answer_addr custom URValue at level 0 ) : ursus_scope . 
 
-Definition prepare_transfer_message_flags ( grams : ULValue uint128 ) : UExpression XUInteger false . 
+Definition prepare_transfer_message_flags ( grams : ULValue uint128 ) : UExpression uint false . 
 	refine {{ new 'msg_flags : uint @ "msg_flags" := #{IGNORE_ACTION_ERRORS} ; {_} }} . 
 	refine (if Internal then _ else  _).
 	refine {{ tvm_rawreserve ( tvm_balance () - int_value () , rawreserve_flag::up_to ) ; {_} }} . 
@@ -210,7 +206,7 @@ Definition prepare_transfer_message_flags ( grams : ULValue uint128 ) : UExpress
 	refine {{ return_ !{ msg_flags } }} . 
 Defined. 
 
-Definition prepare_transfer_message_flags_right  (grams : ULValue uint128 ) : URValue XUInteger false := 
+Definition prepare_transfer_message_flags_right  (grams : ULValue uint128 ) : URValue uint false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1L ) prepare_transfer_message_flags grams ) . 
  
 Notation " 'prepare_transfer_message_flags_' '(' grams ')' " := 
@@ -239,9 +235,8 @@ Notation " 'update_spent_balance_' '(' tokens ',' return_ownership ')' " :=
  ( update_spent_balance_left tokens return_ownership ) 
  (in custom ULValue at level 0 , tokens custom URValue at level 0 , return_ownership custom URValue at level 0 ) : ursus_scope .
 
-(*AL: fixme*)
 Definition get_owner_addr : UExpression address false. 
-	refine {{ return_ ( (? _owner_address_ ) ? ! ( * |{ _owner_address_ }| )  : [ #{0%Z} , 0 ] ) }} . 
+	refine {{ return_ ( (? _owner_address_ ) ? ( * _owner_address_ )  : [ #{0%Z} , 0 ] ) }} . 
 Defined . 
  
 Definition get_owner_addr_right  : URValue address false := 
@@ -285,38 +280,19 @@ Definition transfer_impl_left { R a1 a2 a3 a4 a5 a6 a7 } ( answer_addr : URValue
  
 Notation " 'transfer_impl_' '(' answer_addr ',' too ',' tokens ',' grams ',' return_ownership ',' send_notify ',' payload ')' " := 
  ( transfer_impl_left answer_addr too tokens grams return_ownership send_notify payload ) 
- (in custom ULValue at level 0 , answer_addr custom URValue at level 0 
- , too custom URValue at level 0 
- , tokens custom URValue at level 0 
- , grams custom URValue at level 0 
- , return_ownership custom URValue at level 0 
- , send_notify custom URValue at level 0 
- , payload custom URValue at level 0 ) : ursus_scope . 
+ (in custom ULValue at level 0 , answer_addr custom URValue at level 0 , too custom URValue at level 0 
+ , tokens custom URValue at level 0 , grams custom URValue at level 0 , return_ownership custom URValue at level 0 
+ , send_notify custom URValue at level 0 , payload custom URValue at level 0 ) : ursus_scope . 
 
-(*AL*)
-Notation " b '->' 'endc' '()' " := (builder_to_cell_ b) 
-    (in custom URValue at level 2, b custom URValue ) : ursus_scope .
-
-Notation " 'builder' '()' " := (sInject default: URValue builder false) 
-    (in custom URValue at level 0) : ursus_scope .
+(******************************************************************)	
 
 Definition transfer ( answer_addr : address ) ( too : address ) ( tokens : uint128 ) 
 				    ( grams : uint128 ) ( return_ownership : boolean ) : UExpression PhantomType true . 
- refine {{ transfer_impl_ ( (#{ answer_addr }) , (#{ too }) , (#{ tokens }) , (#{ grams }) , 
-                            (#{ return_ownership }) , FALSE , builder () -> endc ()  ) }} . 
+ refine {{ transfer_impl_ ( #{ answer_addr } , #{ too } , #{ tokens } , #{ grams } , 
+                            #{ return_ownership } , FALSE , builder () -> endc ()  ) }} . 
 Defined . 
 
-(*AL*) 
-Notation " 'global_id::answer_id' " := (Global_ι_answer_id) (in custom URValue at level 0) : ursus_scope .
-Definition return_func_id : URValue (optional uint32) false .
-exact ( || 0 -> set () || ).
-Qed.
-
-Notation " 'return_func_id_' '()' " := (return_func_id) 
-    (in custom URValue at level 0) : ursus_scope .
-
 (******************************)
-
 
 Definition transferWithNotify ( answer_addr : address ) ( too : address ) ( tokens : uint128 ) 
 							  ( grams : uint128 ) ( return_ownership : boolean ) ( payload : cell ) 
@@ -376,658 +352,529 @@ Notation " 'prepare_wallet_data_' '(' name ',' symbol ',' decimals ',' root_publ
  , code custom URValue at level 0 , workchain_id custom URValue at level 0 ) : ursus_scope . 
 
 Definition prepare_wallet_state_init_and_addr ( wallet_data : DTONTokenWalletLRecord ) 
-           : UExpression ( StateInitLRecord # uint256 ) false . 
-	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
-				prepare_persistent_data_ ( {} , #{ wallet_data} ) ; {_} }} . 
+           									  : UExpression ( StateInitLRecord # uint256 ) false . 
+	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := prepare_persistent_data_ ( {} , #{ wallet_data} ) ; {_} }} . 
 	refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 	 	 
 	         [ {} , {} , ((#{ wallet_data}) ↑ DTONTokenWallet.code_) -> set () , !{wallet_data_cl} -> set () , {} ] ; {_} }} . 
-	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {} 
-				(* build ( (!{ wallet_init }) ) . make_cell () *) ; {_} }} . 
-	refine {{ return_ [ (!{ wallet_init }) , tvm_hash ( (!{ wallet_init_cl }) ) ] }} . 
+	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" :=  
+				 build ( σ (!{ wallet_init }) ) -> make_cell ()  ; {_} }} . 
+	refine {{ return_ [ (!{ wallet_init }) , tvm_hash ( !{ wallet_init_cl } ) ] }} . 
 Defined . 
  
- Definition prepare_wallet_state_init_and_addr_right { a1 }  ( wallet_data : URValue ( DTONTokenWalletLRecord ) a1 ) : URValue ( StateInitLRecord * uint256 ) a1 := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) prepare_wallet_state_init_and_addr 
- wallet_data ) . 
+Definition prepare_wallet_state_init_and_addr_right { a1 }  ( wallet_data : URValue DTONTokenWalletLRecord a1 ) 
+                                                                        : URValue ( StateInitLRecord * uint256 ) a1 := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) prepare_wallet_state_init_and_addr wallet_data ) . 
  
- Notation " 'prepare_wallet_state_init_and_addr_' '(' wallet_data ')' " := 
- ( prepare_wallet_state_init_and_addr_right 
- wallet_data ) 
+Notation " 'prepare_wallet_state_init_and_addr_' '(' wallet_data ')' " := 
+ ( prepare_wallet_state_init_and_addr_right wallet_data ) 
  (in custom URValue at level 0 , wallet_data custom URValue at level 0 ) : ursus_scope . 
 
- Definition optional_owner ( owner : address ) : UExpression (optional address) false . 
-	 refine {{ return_ ( ( ? ( (#{owner}) ↑ address.address ) ) ? 
-                             (#{owner}) -> set () : 
-                               {} (* std::optional<address>() *))  }} . 
+Definition optional_owner ( owner : address ) : UExpression (optional address) false . 
+	 refine {{ return_ ( ( ? ( (#{owner}) ↑ address.address ) ) ? (#{owner}) -> set () : {} )  }} . 
  Defined . 
  
- Definition optional_owner_right { a1 }  ( owner : URValue address a1 ) : URValue (optional address) a1 := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner 
- owner ) . 
+Definition optional_owner_right { a1 }  ( owner : URValue address a1 ) : URValue (optional address) a1 := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) optional_owner owner ) . 
  
- Notation " 'optional_owner_' '(' owner ')' " := 
- ( optional_owner_right 
- owner ) 
+Notation " 'optional_owner_' '(' owner ')' " := ( optional_owner_right owner ) 
  (in custom URValue at level 0 , owner custom URValue at level 0 ) : ursus_scope .
 
-Definition calc_wallet_init_hash 
-( pubkey : uint256 ) 
-( internal_owner : address ) 
-: UExpression ( StateInitLRecord # uint256 ) false . 
- 	 	 refine {{ new 'wallet_data : ( DTONTokenWalletLRecord ) @ "wallet_data" := 
-                prepare_wallet_data_ ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , _root_address_ , optional_owner_ ( (#{ internal_owner }) ) , _code_ , _workchain_id_ ) ; {_} }} . 
- 	 	 refine {{ return_ prepare_wallet_state_init_and_addr_ ( (!{ wallet_data }) ) }} . 
+Definition calc_wallet_init_hash ( pubkey : uint256 ) ( internal_owner : address ) 
+								 : UExpression ( StateInitLRecord # uint256 ) false . 
+	refine {{ new 'wallet_data : DTONTokenWalletLRecord @ "wallet_data" := 
+		prepare_wallet_data_ ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , _root_address_ , optional_owner_ ( (#{ internal_owner }) ) , _code_ , _workchain_id_ ) ; {_} }} . 
+	refine {{ return_ prepare_wallet_state_init_and_addr_ ( (!{ wallet_data }) ) }} . 
 Defined . 
  
- Definition calc_wallet_init_hash_right { a1 a2 }  ( pubkey : URValue uint256 a1 ) ( internal_owner : URValue address a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_wallet_init_hash 
- pubkey internal_owner ) . 
+Definition calc_wallet_init_hash_right { a1 a2 }  ( pubkey : URValue uint256 a1 ) 
+ 									               ( internal_owner : URValue address a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_wallet_init_hash pubkey internal_owner ) . 
  
- Notation " 'calc_wallet_init_hash_' '(' pubkey ',' internal_owner ')' " := 
- ( calc_wallet_init_hash_right 
- pubkey internal_owner ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , internal_owner custom URValue at level 0 ) : ursus_scope . 
+Notation " 'calc_wallet_init_hash_' '(' pubkey ',' internal_owner ')' " := ( calc_wallet_init_hash_right pubkey internal_owner ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0 , internal_owner custom URValue at level 0 ) : ursus_scope . 
 
-Definition expected_sender_address 
-( sender_public_key : uint256 ) 
-( sender_owner : address ) 
-: UExpression uint256 false . 
- 	 	 refine {{ return_ second ( calc_wallet_init_hash_ ( (#{ sender_public_key }) , (#{ sender_owner }) ) ) }} . 
+Definition expected_sender_address ( sender_public_key : uint256 ) ( sender_owner : address ) : UExpression uint256 false . 
+ 	 	 refine {{ return_ second ( calc_wallet_init_hash_ ( #{ sender_public_key } , #{ sender_owner } ) ) }} . 
 Defined . 
  
- Definition expected_sender_address_right { a1 a2 }  ( sender_public_key : URValue uint256 a1 ) ( sender_owner : URValue address a2 ) : URValue uint256 ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) expected_sender_address 
- sender_public_key sender_owner ) . 
+Definition expected_sender_address_right { a1 a2 }  ( sender_public_key : URValue uint256 a1 ) 
+                                                    ( sender_owner : URValue address a2 ) : URValue uint256 ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) expected_sender_address sender_public_key sender_owner ) . 
  
- Notation " 'expected_sender_address_' '(' sender_public_key ',' sender_owner ')' " := 
- ( expected_sender_address_right 
- sender_public_key sender_owner ) 
+Notation " 'expected_sender_address_' '(' sender_public_key ',' sender_owner ')' " := 
+ ( expected_sender_address_right sender_public_key sender_owner ) 
  (in custom URValue at level 0 , sender_public_key custom URValue at level 0 
  , sender_owner custom URValue at level 0 ) : ursus_scope .
 
-Definition calc_wallet_init 
-( pubkey : uint256 ) 
-( internal_owner : address ) 
-: UExpression ( StateInitLRecord # address ) false . 
- 	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:uint256 ) @
-                   ( "wallet_init" , "dest_addr" ) := 
-              calc_wallet_init_hash_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} . 
- 	 	 refine {{ new 'dest : address @ "dest" :=
-                 [ _workchain_id_ , !{dest_addr} ] ; {_} }} . 
- 	 	 refine {{ return_ [ !{wallet_init} , (!{ dest }) ] }} . 
- Defined . 
- 
- Definition calc_wallet_init_right { a1 a2 }  ( pubkey : URValue uint256 a1 ) ( internal_owner : URValue address a2 ) : URValue ( StateInitLRecord # address ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_wallet_init 
- pubkey internal_owner ) . 
- 
- Notation " 'calc_wallet_init_' '(' pubkey ',' internal_owner ')' " := 
- ( calc_wallet_init_right 
- pubkey internal_owner ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , internal_owner custom URValue at level 0 ) : ursus_scope .
+Definition calc_wallet_init ( pubkey : uint256 ) ( internal_owner : address ) 
+                            : UExpression ( StateInitLRecord # address ) false . 
+	refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:uint256 ) @ ( "wallet_init" , "dest_addr" ) := 
+	             calc_wallet_init_hash_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} . 
+	refine {{ new 'dest : address @ "dest" := [ _workchain_id_ , !{dest_addr} ] ; {_} }} . 
+ 	refine {{ return_ [ !{wallet_init} , (!{ dest }) ] }} . 
+Defined . 
 
-Definition transfer_to_recipient_impl 
-( answer_addr : address ) 
-( recipient_public_key : uint256 ) 
-( recipient_internal_owner : address ) 
-( tokens : uint128 ) 
-( grams : uint128 ) 
-( deploy : boolean ) 
-( return_ownership : boolean ) 
-( send_notify : boolean ) 
-( payload : cell ) 
-: UExpression PhantomType true . 
- refine {{ new 'active_balance : uint128 @ "active_balance" :=
-                          check_transfer_requires_ ( (#{ tokens }) , (#{ grams }) ) ; {_} }} . 
- 	 	 refine {{ tvm_accept () ; {_} }} . 
- 	 	 refine {{ new 'answer_addr_fxd : address @ "answer_addr_fxd" := 
-                          fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} .
-     refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
- 	 	 refine {{ new 'msg_flags : uint @ "msg_flags" := 
-                     prepare_transfer_message_flags_ ( ({ grams_ }) ) ; {_} }} . 
- 	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:address ) @
-                   ( "wallet_init" , "dest" ) := 
-         calc_wallet_init_ ( (#{ recipient_public_key }) , (#{ recipient_internal_owner }) ) ; {_} }} . 
-(*  	 	 refine {{ ITONTokenWalletPtr dest_wallet ( (!{ dest }) ) ; {_} }} .  *)
- 	 	 refine {{ if ( (#{ deploy }) ) then { {_:UEf} } else { {_:UEf} } ; {_} }} . 
-(*  	 	 	 refine {{ dest_wallet.deploy( wallet_init , Grams ( (#{ grams })) , (!{ msg_flags }) ) 
-. internalTransfer_ ( (#{ tokens }) , (!{ answer_addr_fxd }) , _wallet_public_key_ , get_owner_addr_ () , bool_t (#{ send_notify }) , (#{ payload }) ) }} .  *)
-refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{ dest }  ]] }} in 
-              {{ {dest_handle_ptr} with {}
-                                         ⤳ TONTokenWallet.deploy (!{wallet_init} ) ; {_} }} ).
-refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{ dest }  ]] }} in 
+Definition calc_wallet_init_right { a1 a2 }  ( pubkey : URValue uint256 a1 ) 
+ 											  ( internal_owner : URValue address a2 ) 
+											   : URValue ( StateInitLRecord # address ) ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) calc_wallet_init pubkey internal_owner ) . 
+ 
+Notation " 'calc_wallet_init_' '(' pubkey ',' internal_owner ')' " := ( calc_wallet_init_right pubkey internal_owner ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0 , internal_owner custom URValue at level 0 ) : ursus_scope .
+
+Definition transfer_to_recipient_impl ( answer_addr : address ) ( recipient_public_key : uint256 ) 
+									  ( recipient_internal_owner : address ) ( tokens : uint128 ) 
+								      ( grams : uint128 ) ( deploy : boolean ) 
+									  ( return_ownership : boolean ) ( send_notify : boolean ) ( payload : cell ) 
+								      : UExpression PhantomType true . 
+	refine {{ new 'active_balance : uint128 @ "active_balance" := check_transfer_requires_ ( #{ tokens } , #{ grams } ) ; {_} }} . 
+	refine {{ tvm_accept () ; {_} }} . 
+ 	refine {{ new 'answer_addr_fxd : address @ "answer_addr_fxd" := fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} .
+	refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
+ 	refine {{ new 'msg_flags : uint @ "msg_flags" := prepare_transfer_message_flags_ ( ({ grams_ }) ) ; {_} }} . 
+ 	refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:address ) @
+                   ( "wallet_init" , "dest" ) := calc_wallet_init_ ( #{ recipient_public_key } , #{ recipient_internal_owner } ) ; {_} }} . 
+	refine {{ if ( (#{ deploy }) ) then { {_:UEf} } else { {_:UEf} } ; {_} }} . 
+	refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{ dest }  ]] }} in 
+              {{ {dest_handle_ptr} with {} ⤳ TONTokenWallet.deploy (!{wallet_init} ) ; {_} }} ).
+	refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{ dest }  ]] }} in 
               {{ {dest_handle_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value } ;
 			  								!{ msg_flags } ⇒ { Messsage_ι_flags } $] 
                                          ⤳ .internalTransfer_ ( #{ tokens } , !{answer_addr_fxd} , _wallet_public_key_ ,
 										  get_owner_addr_ ( ) , #{ send_notify } , #{ payload } ) }} ).
-(*  	     refine {{ { dest_wallet ( Grams ( (#{ grams }) . get () ) , (!{ msg_flags }) ) 
-. internalTransfer_ ( (#{ tokens }) , (!{ answer_addr_fxd }) , _wallet_public_key_ , get_owner_addr_ ( ) , bool_t (#{ send_notify }) , (#{ payload }) ) }} .  *)
-refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{ dest }  ]] }} in 
+	refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{ dest }  ]] }} in 
               {{ {dest_handle_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value } ;
 			  								!{ msg_flags } ⇒ { Messsage_ι_flags } $] 
                                          ⤳ .internalTransfer_ ( #{ tokens } , !{answer_addr_fxd} , _wallet_public_key_ ,
 										 get_owner_addr_ ( ) , #{ send_notify } , #{ payload } ) }} ).
- refine {{ update_spent_balance_ ( (#{ tokens }) , (#{ return_ownership }) ) ; {_} }} . 
- refine {{ return_ {} }} .
+ 	refine {{ update_spent_balance_ ( (#{ tokens }) , (#{ return_ownership }) ) ; {_} }} . 
+ 	refine {{ return_ {} }} .
 Defined . 
 
- Definition transfer_to_recipient_impl_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( answer_addr : URValue address a1 ) ( recipient_public_key : URValue uint256 a2 ) ( recipient_internal_owner : URValue address a3 ) ( tokens : URValue uint128 a4 ) ( grams : URValue uint128 a5 ) ( deploy : URValue boolean a6 ) ( return_ownership : URValue boolean a7 ) ( send_notify : URValue boolean a8 ) ( payload : URValue cell a9 ) 
-: UExpression R true
-(* ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) *) := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) transfer_to_recipient_impl 
- answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload ) . 
+Definition transfer_to_recipient_impl_left { R a1 a2 a3 a4 a5 a6 a7 a8 a9 }  
+ 											( answer_addr : URValue address a1 ) 
+											( recipient_public_key : URValue uint256 a2 ) 
+											( recipient_internal_owner : URValue address a3 ) 
+											( tokens : URValue uint128 a4 ) 
+											( grams : URValue uint128 a5 ) 
+											( deploy : URValue boolean a6 ) 
+											( return_ownership : URValue boolean a7 ) 
+											( send_notify : URValue boolean a8 ) 
+											( payload : URValue cell a9 ) 
+											: UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) transfer_to_recipient_impl answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload ) . 
  
- Notation " 'transfer_to_recipient_impl_' '(' answer_addr ',' recipient_public_key ',' recipient_internal_owner ',' tokens ',' grams ',' deploy ',' return_ownership ',' send_notify ',' payload ')' " := 
- ( transfer_to_recipient_impl_left 
- answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload ) 
- (in custom ULValue at level 0 , answer_addr custom URValue at level 0 
- , recipient_public_key custom URValue at level 0 
- , recipient_internal_owner custom URValue at level 0 
- , tokens custom URValue at level 0 
- , grams custom URValue at level 0 
- , deploy custom URValue at level 0 
- , return_ownership custom URValue at level 0 
- , send_notify custom URValue at level 0 
+Notation " 'transfer_to_recipient_impl_' '(' answer_addr ',' recipient_public_key ',' recipient_internal_owner ',' tokens ',' grams ',' deploy ',' return_ownership ',' send_notify ',' payload ')' " := 
+ ( transfer_to_recipient_impl_left answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload ) 
+ (in custom ULValue at level 0 , answer_addr custom URValue at level 0 , recipient_public_key custom URValue at level 0 
+ , recipient_internal_owner custom URValue at level 0 , tokens custom URValue at level 0 , grams custom URValue at level 0 
+ , deploy custom URValue at level 0 , return_ownership custom URValue at level 0 , send_notify custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope . 
 
  
-Definition transferToRecipient 
-( answer_addr : address ) 
-( recipient_public_key : uint256 ) 
-( recipient_internal_owner : address ) 
-( tokens : uint128 ) 
-( grams : uint128 ) 
-( deploy : boolean ) 
-( return_ownership : boolean ) 
-: UExpression PhantomType true . 
- refine {{ transfer_to_recipient_impl_ ( (#{ answer_addr }) , 
-                                         (#{ recipient_public_key }) , 
-                                         (#{ recipient_internal_owner }) , 
-                                         (#{ tokens }) , 
-                                         (#{ grams }) , 
-                                         (#{ deploy }) , 
-                                         (#{ return_ownership }) , 
-                                             FALSE , 
-                                           {} (* builder () . endc () *) ) ; {_} }} . 
- refine {{ return_ {} }} .
- Defined . 
+Definition transferToRecipient ( answer_addr : address ) ( recipient_public_key : uint256 ) 
+							   ( recipient_internal_owner : address ) ( tokens : uint128 ) 
+                               ( grams : uint128 ) ( deploy : boolean ) ( return_ownership : boolean ) 
+							   : UExpression PhantomType true . 
+	refine {{ transfer_to_recipient_impl_ ( #{ answer_addr } , 
+                                        #{ recipient_public_key } , 
+                                        #{ recipient_internal_owner } , 
+                                        #{ tokens } , 
+                                        #{ grams } , 
+                                        #{ deploy } , 
+                                        #{ return_ownership } , 
+                                        FALSE , 
+                                        builder () -> endc () ) ; {_} }} . 
+	refine {{ return_ {} }} .
+Defined . 
  
-Definition transferToRecipientWithNotify 
-( answer_addr : address ) 
-( recipient_public_key : uint256 ) 
-( recipient_internal_owner : address ) 
-( tokens : uint128 ) 
-( grams : uint128 ) 
-( deploy : boolean ) 
-( return_ownership : boolean ) 
-( payload : cell ) 
-: UExpression PhantomType true . 
-(*  	 	 refine {{ temporary_data::setglob ( global_id::answer_id , return_func_id () - > get () ) ; {_} }} .  *)
- 	 	 refine {{ transfer_to_recipient_impl_ ( 
-                                      (#{ answer_addr }) , 
-                                      (#{ recipient_public_key }) , 
-                                      (#{ recipient_internal_owner }) , 
-                                      (#{ tokens }) , 
-                                      (#{ grams }) , 
-                                      (#{ deploy }) , 
-                                      (#{ return_ownership }) , 
-                                          TRUE , 
-                                      (#{ payload }) ) ; {_} }} . 
- refine {{ return_ {} }} . 
- Defined . 
+Definition transferToRecipientWithNotify ( answer_addr : address ) 
+										 ( recipient_public_key : uint256 ) 
+										 ( recipient_internal_owner : address ) 
+                                         ( tokens : uint128 ) 
+                                         ( grams : uint128 )   
+										 ( deploy : boolean ) 
+										 ( return_ownership : boolean ) 
+										 ( payload : cell ) : UExpression PhantomType true . 
+	refine {{ temporary_data::setglob ( global_id::answer_id , return_func_id_ () ->  get () ) ; {_} }} .
+ 	refine {{ transfer_to_recipient_impl_ (  #{ answer_addr } , 
+                                             #{ recipient_public_key } , 
+                                             #{ recipient_internal_owner } , 
+                                             #{ tokens } , 
+                                             #{ grams } , 
+                                             #{ deploy } , 
+                                             #{ return_ownership } , 
+                                             TRUE , 
+                                             #{ payload } ) ; {_} }} . 
+ 	refine {{ return_ {} }} . 
+Defined . 
  
 Definition requestBalance : UExpression uint128 false . 
-  	 	 refine {{ tvm_rawreserve ( tvm_balance () - int_value () , rawreserve_flag::up_to ) ; {_} }} .
-(*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; {_} }} .  *)
- 	 	 refine {{ return_ _balance_ }} . 
- Defined . 
+	refine {{ tvm_rawreserve ( tvm_balance () - int_value () , rawreserve_flag::up_to ) ; {_} }} .
+	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} . 
+	refine {{ return_ _balance_ }} . 
+Defined . 
  
-Parameter int_value_ : uint (*Grams*) .
-
-(* Definition int_sender_and_value : UExpression ( address # uint (*Grams*)) false .
-  refine {{ new 'sender : address @ "sender" := int_sender() ; { _ } }} .
-  refine {{ return_ [ !{sender} , #{int_value_} ] }} .
-Defined.
-
-Definition int_sender_and_value_right : URValue ( address # uint (*Grams*)) false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) int_sender_and_value ) . 
- 
- Notation " 'int_sender_and_value_' '(' ')' " := 
- ( int_sender_and_value_right ) 
- (in custom URValue at level 0 ) : ursus_scope .  *)
-(* 
-Parameter set_int_sender : UExpression XBool false . *)
-
-(* Notation " 'set_int_sender_' '(' ')' " := 
- ( set_int_sender ) 
- (in custom ULValue at level 0 ) : ursus_scope .  *)
-
-(* void set_int_return_value(unsigned val) { int_return_value_ = val; } *)
-(* Parameter set_int_return_value : UExpression PhantomType false .
-Notation " 'set_int_return_value_' '(' ')' " := 
- ( set_int_sender ) 
- (in custom ULValue at level 0 ) : ursus_scope . *)
-
-
 Definition accept ( tokens : uint128 ) ( answer_addr : address ) ( keep_grams : uint128 ) : UExpression XBool true . 
- 	 	 refine {{ new ( 'sender:address , 'value_gr:uint ) @
-                   ( "sender" , "value_gr" ) := int_sender_and_value () ; {_} }} . 
- 	 	 refine {{ require_ ( ( _root_address_ == !{sender} ) , error_code::message_sender_is_not_my_root ) ; {_} }} . 
- 	 	 refine {{ tvm_accept () ; {_} }} . 
- 	 	 refine {{ _balance_ += (#{ tokens }) ; {_} }} . 
- 	 	 refine {{ tvm_rawreserve ( tvm_balance () + (#{ keep_grams }) - !{value_gr} , rawreserve_flag::up_to ) ; {_} }} . 
- 	 	 refine {{ set_int_sender ( #{ answer_addr } ) ; {_} }} . 
- 	 	 refine {{ set_int_return_value ( 0 ) ; {_} }} . 
-(*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS | IGNORE_ACTION_ERRORS ) ; {_} }} .  *)
- 	 	 refine {{ return_ TRUE }} . 
- Defined . 
+	refine {{ new ( 'sender:address , 'value_gr:uint ) @
+		          ( "sender" , "value_gr" ) := int_sender_and_value () ; {_} }} . 
+	refine {{ require_ ( ( _root_address_ == !{sender} ) , error_code::message_sender_is_not_my_root ) ; {_} }} . 
+	refine {{ tvm_accept () ; {_} }} . 
+	refine {{ _balance_ += #{ tokens } ; {_} }} . 
+	refine {{ tvm_rawreserve ( tvm_balance () + (#{ keep_grams }) - !{value_gr} , rawreserve_flag::up_to ) ; {_} }} . 
+	refine {{ set_int_sender ( #{ answer_addr } ) ; {_} }} . 
+	refine {{ set_int_return_value ( 0 ) ; {_} }} . 
+	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} \\ #{IGNORE_ACTION_ERRORS} ) ; {_} }} . 
+	refine {{ return_ TRUE }} . 
+Defined . 
 
-Definition internalTransfer 
-( tokens : uint128 ) 
-( answer_addr : address ) 
-( sender_pubkey : uint256 ) 
-( sender_owner : address ) 
-( notify_receiver : boolean ) 
-( payload : cell ) 
-: UExpression PhantomType true . 
- 	 	 refine {{ new 'expected_address : uint256 @ "expected_address" := {} ; {_} }} . 
- 	 	 refine {{ { expected_address } := expected_sender_address_ ( (#{ sender_pubkey }) , (#{ sender_owner }) ) ; {_} }} . 
- 	 	 refine {{ new ( 'sender:address , 'value_gr:uint ) @
-                   ( "sender" , "value_gr" ) := int_sender_and_value () ; {_} }} . 
- 	 	 refine {{ require_ ( (* ( std::get < addr_std > ( sender () ) . address *) {} == (!{ expected_address })  , error_code::message_sender_is_not_good_wallet  ) ; {_} }} . 
- 	 	 refine {{ _balance_ += (#{ tokens }) ; {_} }} . 
- 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , rawreserve_flag::up_to ) ; {_} }} . 
- 	 	 refine {{ if ( (#{ notify_receiver }) && ( ? _owner_address_) ) then { {_:UEf} } else { {_:UEf} } }} . 
-(*  	 	 	 refine {{ { temporary_data::setglob ( global_id::answer_id , return_func_id () - > get () ) ; {_} }} .  *)
-(*  	 	 	 refine {{ ITONTokenWalletNotifyPtr ( *owner_address_ ) ( Grams ( 0 ) , SEND_ALL_GAS ) 
-. onTip3Transfer ( (#{ answer_addr }) , _balance_ , (#{ tokens }) , (#{ sender_pubkey }) , (#{ sender_owner }) , (#{ payload }) ) }} .  *)
-refine ( let _owner_address__ptr := {{ ITONTokenWalletNotifyPtr [[  _owner_address_ ->get_default()   ]] }} in (* need get *)
-              {{ {_owner_address__ptr} with [$ 0 ⇒ { Messsage_ι_value } ;
-			  								SEND_ALL_GAS_ ⇒ { Messsage_ι_flags } $] 
-                                         ⤳ TONTokenWallet.onTip3Transfer ( #{ answer_addr } , _balance_ , #{tokens}, #{sender_pubkey}
-										  , #{ sender_owner } , #{ payload } ) }} ). 
- 	 refine {{ if ( (#{ answer_addr }) != (tvm_myaddr ()) ) then { {_:UEf} } ; {_} }} .
- 	 refine {{ tvm_transfer ( (#{ answer_addr }) , 0 , FALSE , SEND_ALL_GAS_ ) }} . 
-   refine {{ return_ {} }} . 
+Definition internalTransfer ( tokens : uint128 ) ( answer_addr : address ) 
+						    ( sender_pubkey : uint256 ) ( sender_owner : address ) 
+						    ( notify_receiver : boolean ) ( payload : cell ) : UExpression PhantomType true . 
+	refine {{ new 'expected_address : uint256 @ "expected_address" := {} ; {_} }} . 
+	refine {{ { expected_address } := expected_sender_address_ ( #{ sender_pubkey } , #{ sender_owner } ) ; {_} }} . 
+	refine {{ new ( 'sender:address , 'value_gr:uint ) @
+				( "sender" , "value_gr" ) := int_sender_and_value () ; {_} }} . 
+	refine {{ require_ ( !{sender} ↑ address.address == !{ expected_address }  , error_code::message_sender_is_not_good_wallet  ) ; {_} }} . 
+	refine {{ _balance_ += #{ tokens } ; {_} }} . 
+	refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , rawreserve_flag::up_to ) ; {_} }} . 
+	refine {{ if ( #{ notify_receiver } && 
+				( ? _owner_address_) ) then { {_:UEt} } else { {_:UEf} } }} . 
+	refine {{ temporary_data::setglob ( global_id::answer_id , return_func_id_ () -> get () ) ; {_} }} .
+	refine ( let _owner_address__ptr := {{ ITONTokenWalletNotifyPtr [[  * _owner_address_  ]] }} in (* need get *)
+			{{ {_owner_address__ptr} with [$ 0 ⇒ { Messsage_ι_value } ;
+										#{SEND_ALL_GAS} ⇒ { Messsage_ι_flags } $] 
+										⤳ TONTokenWallet.onTip3Transfer ( #{ answer_addr } , _balance_ , #{tokens}, #{sender_pubkey}, #{ sender_owner } , #{ payload } ) }} ). 
+	refine {{ if #{ answer_addr } != tvm_myaddr () then { {_:UEf} } ; {_} }} .
+	refine {{ tvm_transfer ( (#{ answer_addr }) , 0 , FALSE , #{SEND_ALL_GAS} ) }} . 
+	refine {{ return_ {} }} . 
 Defined . 
  
 Definition destroy ( dest : address ) : UExpression PhantomType true . 
- 	 	 refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( _balance_ == 0 ) ,  error_code::destroy_non_empty_wallet  ) ; {_} }} . 
- 	 	 refine {{ tvm_accept () ; {_} }} . 
- 	 	 refine {{ tvm_transfer ( (#{ dest }) , 0 , FALSE , SEND_ALL_GAS_ \\ 
-                                  SENDER_WANTS_TO_PAY_FEES_SEPARATELY_ \\ 
-                                               DELETE_ME_IF_I_AM_EMPTY_ \\
-                                                IGNORE_ACTION_ERRORS_ ) }} . 
- Defined . 
+	refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
+	refine {{ require_ ( _balance_ == 0 ,  error_code::destroy_non_empty_wallet  ) ; {_} }} . 
+	refine {{ tvm_accept () ; {_} }} . 
+	refine {{ tvm_transfer ( #{ dest } , 0 , FALSE , SEND_ALL_GAS_ \\ 
+							                         SENDER_WANTS_TO_PAY_FEES_SEPARATELY_ \\ 
+										             DELETE_ME_IF_I_AM_EMPTY_ \\
+										             IGNORE_ACTION_ERRORS_ ) }} . 
+Defined . 
  
- Definition getBalance : UExpression uint128 false . 
- 	 refine {{ return_ _balance_ }} . 
- Defined . 
+Definition getBalance : UExpression uint128 false . 
+	refine {{ return_ _balance_ }} . 
+Defined . 
  
-Definition getBalance_right  : URValue XUInteger128 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBalance 
- ) . 
+Definition getBalance_right : URValue uint128 false := 
+	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getBalance ) . 
  
- Notation " 'getBalance_' '(' ')' " := 
- ( getBalance_right 
- ) 
+Notation " 'getBalance_' '(' ')' " := ( getBalance_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
-
 Definition burn ( out_pubkey : uint256 ) ( out_internal_owner : address ) : UExpression PhantomType true . 
- 	 	 refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
- 	 	 refine {{ tvm_accept () ; {_} }} . 
-		 refine {{ new 'root_ptr : address @ "root_ptr" := {}; {_} }}.
-(*  	 	 refine {{ IWrapperPtr root_ptr ( _root_address_ ) ; {_} }} .  *)
- 	 	 refine {{ new 'flags : uint @ "flags" := 
+	refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
+	refine {{ tvm_accept () ; {_} }} . 
+	refine {{ new 'root_ptr : address @ "root_ptr" := {}; {_} }}.
+	refine {{ new 'flags : uint @ "flags" := 
                                    SEND_ALL_GAS_ \\ 
                    SENDER_WANTS_TO_PAY_FEES_SEPARATELY_ \\ 
                               DELETE_ME_IF_I_AM_EMPTY_ \\ 
                                 IGNORE_ACTION_ERRORS_ ; {_} }} . 
-(*  	 	 refine {{ root_ptr ( Grams ( 0 ) , (!{ flags }) ) 
-. burn_ ( int_sender () , _wallet_public_key_ , get_owner_addr_ () , (#{ out_pubkey }) , (#{ out_internal_owner }) , getBalance_ () ) }} .  *)
-refine ( let root_ptr_ptr := {{ IWrapperPtr [[ !{root_ptr}  ]] }} in 
+	refine ( let root_ptr_ptr := {{ IWrapperPtr [[ !{root_ptr}  ]] }} in 
               {{ {root_ptr_ptr} with [$ 0 ⇒ { Messsage_ι_value } ;
 			  							!{ flags } ⇒ { Messsage_ι_flags } $] 
                                          ⤳ .burn ( int_sender () , _wallet_public_key_ ,
 										 get_owner_addr_ ( ) , (#{ out_pubkey }) , (#{ out_internal_owner }) ,
 										 getBalance_ ( ) ) ; {_} }}  ).
-refine {{ return_ {} }} .   
+	refine {{ return_ {} }} .   
 Defined . 
 
-Definition lendOwnership 
-( answer_addr : address ) 
-( grams : uint128 ) 
-( std_dest : uint256 ) 
-( lend_balance : uint128 ) 
-( lend_finish_time : ( XUInteger32 ) ) 
-( deploy_init_cl : cell ) 
-( payload : cell ) 
-: UExpression PhantomType true . 
- 	 	 refine {{ new 'allowed_balance : uint128 @ "allowed_balance" := 
-                          check_owner_ ( TRUE , TRUE ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( ( (#{ lend_balance }) > 0 ) && ( (#{ lend_balance }) <= (!{ allowed_balance }) ) ) , error_code::not_enough_balance ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( (#{ lend_finish_time }) > tvm_now () ) ,  error_code::finish_time_must_be_greater_than_now  ) ; {_} }} . 
- 	 	 refine {{ tvm_accept () ; {_} }} . 
- 	 	 refine {{ new 'answer_addr_fxd : address @ "answer_addr_fxd" := 
-                           fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} . 
- 	 	 refine {{ new 'dest : address @ "dest" :=  
-                     [ _workchain_id_ , #{ std_dest } ] ; {_} }} . 
- 	 	 refine {{ new 'sum_lend_balance : uint128 @ "sum_lend_balance" := 
-                             (#{ lend_balance }) ; {_} }} . 
- 	 	 refine {{ new 'sum_lend_finish_time : ( XUInteger32 ) @ "sum_lend_finish_time" := 
-                             (#{ lend_finish_time }) ; {_} }} . 
- 	 	 refine {{ if ( {} (* _lend_ownership_ -> lookup ( (!{ dest }) ) *) ) then { {_:UEf} } ; {_} }} .
- 	 	 	 refine {{ new 'existing_lend:XUInteger @ "existing_lend" := {} 
-                                 (* _lend_ownership_ -> lookup ( (!{ dest }) ) *) ; {_} }} .
- 	 	 	 refine {{ ({ sum_lend_balance }) += {} (* !{existing_lend} -> (#{ lend_balance }) *) ; {_} }} . 
- 	 	 	 refine {{ { sum_lend_finish_time } := max ( (#{ lend_finish_time }) , {} (* existing_lend - > (#{ lend_finish_time }) *) ) }} . 
- 	 refine {{ _lend_ownership_ -> set_at ( (*!{ dest }*) {} , [ (!{ sum_lend_balance }) , (!{ sum_lend_finish_time }) ] ) ; {_} }} . 
- 	 refine {{ new 'deploy_init : ( StateInitLRecord ) @ "deploy_init" := {}
-                              (*  parse ( (#{ deploy_init_cl }) . ctos () ) *) ; {_} }} . 
-   refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
- 	 refine {{ new 'msg_flags : uint @ "msg_flags" := 
-                               prepare_transfer_message_flags_ ( { grams_ } ) ; {_} }} . 
- 	 refine {{ if ( {} (* deploy_init.code && deploy_init.data *) ) then { {_:UEf} } else { {_:UEf} } }} . 
-(*  	 	 refine {{ { temporary_data::setglob ( global_id::answer_id , return_func_id () - > get () ) ; {_} }} . *)
- 	(*  	 refine {{ ITONTokenWalletNotifyPtr ( (!{ dest }) ) .
-		    deploy ( (!{ deploy_init }) , Grams ( (#{ grams }) . get () ) , (!{ msg_flags }) , FALSE ) 
-			. onTip3LendOwnership ( (!{ answer_addr_fxd }) , (#{ lend_balance }) , (#{ lend_finish_time }) , _wallet_public_key_ , get_owner_addr_ () , (#{ payload }) ) }} . 
- *) 
- refine ( let dest_ptr := {{ ITONTokenWalletNotifyPtr [[  !{ dest }   ]] }} in
- {{ {dest_ptr} with {} 
-							⤳ TONTokenWalletNotify.deploy ( !{deploy_init} ) ; {_} }} ). 
- refine ( let dest_ptr := {{ ITONTokenWalletNotifyPtr [[ !{dest}   ]] }} in
-									{{ {dest_ptr} with [$ !{grams_} ⇒ { Messsage_ι_value } ;
-															!{ msg_flags } ⇒ { Messsage_ι_flags }; 
-								 							FALSE ⇒ {Messsage_ι_bounce}$] 
+Definition lendOwnership ( answer_addr : address ) ( grams : uint128 ) 
+						 ( std_dest : uint256 ) ( lend_balance : uint128 ) 
+						 ( lend_finish_time : uint32 ) ( deploy_init_cl : cell ) ( payload : cell ) 
+						 : UExpression PhantomType true . 
+	refine {{ new 'allowed_balance : uint128 @ "allowed_balance" := check_owner_ ( TRUE , TRUE ) ; {_} }} . 
+	refine {{ require_ ( (#{ lend_balance } > 0)  && 
+	                      (#{ lend_balance } <= !{ allowed_balance }) , error_code::not_enough_balance ) ; {_} }} . 
+	refine {{ require_ ( #{ lend_finish_time } > tvm_now () ,  error_code::finish_time_must_be_greater_than_now  ) ; {_} }} . 
+	refine {{ tvm_accept () ; {_} }} . 
+	refine {{ new 'answer_addr_fxd : address @ "answer_addr_fxd" := 
+					fixup_answer_addr_ ( #{ answer_addr } ) ; {_} }} . 
+	refine {{ new 'dest : address @ "dest" := [ _workchain_id_ , #{ std_dest } ] ; {_} }} . 
+	refine {{ new 'sum_lend_balance : uint128 @ "sum_lend_balance" := #{ lend_balance } ; {_} }} . 
+	refine {{ new 'sum_lend_finish_time : uint32 @ "sum_lend_finish_time" := #{ lend_finish_time } ; {_} }} . 
+	refine {{ if  _lend_ownership_ -> lookup ( !{ dest } ) then { {_:UEf} } ; {_} }} .
+	refine {{ new 'existing_lend : optional lend_recordLRecord @ "existing_lend" :=  
+                                  _lend_ownership_ -> lookup ( !{ dest } )  ; {_} }} .
+ 	refine {{ { sum_lend_balance } += ( *!{existing_lend} ) ↑ lend_record.lend_balance  ; {_} }} . 
+ 	refine {{ { sum_lend_finish_time } := max ( #{ lend_finish_time } , ( *!{existing_lend} ) ↑ lend_record.lend_finish_time ) }} . 
+ 	refine {{ _lend_ownership_ -> set_at ( !{ dest } , [ (!{ sum_lend_balance }) , (!{ sum_lend_finish_time }) ] ) ; {_} }} . 
+ 	refine {{ new 'deploy_init : StateInitLRecord @ "deploy_init" := parse ( (#{ deploy_init_cl }) -> ctos () , 0 )  ; {_} }} . 
+   	refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
+ 	refine {{ new 'msg_flags : uint @ "msg_flags" := prepare_transfer_message_flags_ ( { grams_ } ) ; {_} }} . 
+ 	refine {{ if (  !{deploy_init} ↑ StateInit.code && 
+	  				 !{deploy_init} ↑ StateInit.data  ) then { {_:UEt} } else { {_:UEt} } }} . 
+ 	refine {{ temporary_data::setglob ( global_id::answer_id , return_func_id_ () -> get () ) ; {_} }} .
+	refine ( let dest_ptr := {{ ITONTokenWalletNotifyPtr [[ !{ dest } ]] }} in
+             {{ {dest_ptr} with {} ⤳ TONTokenWalletNotify.deploy ( !{deploy_init} ) ; {_} }} ). 
+    refine ( {{ {dest_ptr} with [$ !{grams_} ⇒ { Messsage_ι_value } ;
+								   !{ msg_flags } ⇒ { Messsage_ι_flags }; 
+								   FALSE ⇒ {Messsage_ι_bounce} $] 
 							⤳ .onTip3LendOwnership ( !{ answer_addr_fxd } , 
                                        #{lend_balance} , 
                                        #{lend_finish_time}, 
                                        _wallet_public_key_ ,
-							                          get_owner_addr_ ( ) , 
+							           get_owner_addr_ ( ) , 
                                        #{ payload } ) }} ).  
-(*      refine {{ { temporary_data::setglob ( global_id::answer_id , return_func_id () - > get () ) ; {_} }} . 
-     refine {{ ITONTokenWalletNotifyPtr ( (!{ dest }) ) ( Grams ( (#{ grams }) . get () ) , (!{ msg_flags }) , FALSE ) 
-	 . onTip3LendOwnership ( (!{ answer_addr_fxd }) , (#{ lend_balance }) , (#{ lend_finish_time }) , _wallet_public_key_ , get_owner_addr_ () , (#{ payload }) ) }} .  *) 
-	  refine ( let dest_ptr := {{ ITONTokenWalletNotifyPtr [[ !{dest}   ]] }} in 
-								{{ {dest_ptr} with [$ !{grams_} ⇒ { Messsage_ι_value } ;
-													!{ msg_flags } ⇒ { Messsage_ι_flags } ; 
-								 FALSE ⇒ { Messsage_ι_bounce } $] 
+    refine {{ temporary_data::setglob ( global_id::answer_id , return_func_id_ () -> get () ) ; {_} }} .     
+	refine ( let dest_ptr := {{ ITONTokenWalletNotifyPtr [[ !{dest} ]] }} in 
+			 {{ {dest_ptr} with [$ !{grams_} ⇒ { Messsage_ι_value } ;
+								   !{ msg_flags } ⇒ { Messsage_ι_flags } ; 
+								   FALSE ⇒ { Messsage_ι_bounce } $] 
 							⤳ .onTip3LendOwnership ( !{ answer_addr_fxd } , #{lend_balance} , 
-                                       #{lend_finish_time}, _wallet_public_key_ ,
-                                         get_owner_addr_ ( ) ,
-							                         #{payload} ) }} ). 
+                                       #{lend_finish_time}, _wallet_public_key_ ,get_owner_addr_ ( ) ,
+							            #{payload} ) }} ). 
 Defined . 
  
- Definition filter_lend_ownerhip_array : UExpression ( lend_ownership_array # uint128 ) false . 
- 	 	 refine {{ if ( _lend_ownership_ -> empty () ) then { return_ {} } ; {_} }} . 
- 	 	 refine {{ new 'now_v : uint256 @ "now_v" := tvm_now () ; {_} }} . 
- 	 	 refine {{ new 'rv : lend_ownership_array @ "rv" := {} ; {_} }} . 
- 	 	 refine {{ new 'lend_balance:uint128 @ "lend_balance" := {} ; {_} }} .
-     refine {{ for ( 'v : _lend_ownership_) do { {_ : UEf} } ; { _ } }}. 
-     refine {{ if ( ( !{now_v} ) < second ( {v} )  ↑ lend_record.lend_finish_time ) then { {_ : UEf } } }}.
-	   refine {{ {rv}  -> push ( [ first ({v}) , 
-                         (second ({v})) ↑ lend_record.lend_balance  ,
-                         (second ({v})) ↑ lend_record.lend_finish_time ] ) ; { _ } }}.
-	   refine {{ {lend_balance} += second ({v}) ↑ lend_record.lend_balance }}.
-     refine {{ return_ [ !{rv} , !{lend_balance} ] }} .
+Definition filter_lend_ownerhip_array : UExpression ( lend_ownership_array # uint128 ) false . 
+	refine {{ if ( _lend_ownership_ -> empty () ) then { return_ {} } ; {_} }} . 
+	refine {{ new 'now_v : uint256 @ "now_v" := tvm_now () ; {_} }} . 
+	refine {{ new 'rv : lend_ownership_array @ "rv" := {} ; {_} }} . 
+	refine {{ new 'lend_balance:uint128 @ "lend_balance" := {} ; {_} }} .
+	refine {{ for ( 'v : _lend_ownership_) do { {_ : UEf} } ; { _ } }}. 
+	refine {{ if ( ( !{now_v} ) < second ( {v} )  ↑ lend_record.lend_finish_time ) then { {_ : UEf } } }}.
+	refine {{ {rv}  -> push ( [ first ({v}) , 
+					(second ({v})) ↑ lend_record.lend_balance  ,
+					(second ({v})) ↑ lend_record.lend_finish_time ] ) ; { _ } }}.
+	refine {{ {lend_balance} += second ({v}) ↑ lend_record.lend_balance }}.
+	refine {{ return_ [ !{rv} , !{lend_balance} ] }} .
 Defined . 
 
 Definition filter_lend_ownerhip_array_right  : URValue ( lend_ownership_array # uint128 ) false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) filter_lend_ownerhip_array 
- ) . 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) filter_lend_ownerhip_array ) . 
  
- Notation " 'filter_lend_ownerhip_array_' '(' ')' " := 
- ( filter_lend_ownerhip_array_right 
- ) 
+Notation " 'filter_lend_ownerhip_array_' '(' ')' " := ( filter_lend_ownerhip_array_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
 Definition returnOwnership ( tokens : uint128 ) : UExpression PhantomType true . 
- 	 	 refine {{ check_owner_ ( FALSE , FALSE ) ; {_} }} . 
- 	 	 refine {{ new 'sender : address @ "sender" := int_sender () ; {_} }} . 
- 	 	 refine {{ new 'v : ( lend_recordLRecord ) @ "v" := 
-                         _lend_ownership_ [[ (!{ sender }) ]] ; {_} }} . 
- 	 	 refine {{ if ( !{ v } ↑ lend_record.lend_balance <= (#{ tokens }) ) 
-                  then { {_:UEf} } else { {_:UEf} } }} . 
- 	 	 	 refine {{ _lend_ownership_ -> erase ( !{ sender } ) }} . 
-    	 refine {{ { v } ↑ lend_record.lend_balance -= (#{ tokens }) ; {_} }} . 
- 	 refine {{ _lend_ownership_ -> set_at ( !{ sender } , !{ v } ) }} . 
+	refine {{ check_owner_ ( FALSE , FALSE ) ; {_} }} . 
+	refine {{ new 'sender : address @ "sender" := int_sender () ; {_} }} . 
+	refine {{ new 'v : lend_recordLRecord @ "v" := _lend_ownership_ [[ (!{ sender }) ]] ; {_} }} . 
+	refine {{ if ( !{ v } ↑ lend_record.lend_balance <= (#{ tokens }) ) 
+			  then { {_:UEf} } else { {_:UEf} } }} . 
+	refine {{ _lend_ownership_ -> erase ( !{ sender } ) }} . 
+	refine {{ { v } ↑ lend_record.lend_balance -= (#{ tokens }) ; {_} }} . 
+	refine {{ _lend_ownership_ -> set_at ( !{ sender } , !{ v } ) }} . 
 Defined . 
  
 Definition getName : UExpression String false . 
- 	 refine {{ return_ _name_ }} . 
- Defined . 
- Definition getSymbol : UExpression String false . 
- 	 refine {{ return_ _symbol_ }} . 
- Defined . 
- Definition getDecimals : UExpression XUInteger8 false . 
- 	 refine {{ return_ _decimals_ }} . 
- Defined . 
- Definition getRootKey : UExpression uint256 false . 
- 	 refine {{ return_ _root_public_key_ }} . 
- Defined . 
- Definition getWalletKey : UExpression uint256 false . 
- 	 refine {{ return_ _wallet_public_key_ }} . 
- Defined . 
- Definition getRootAddress : UExpression address false . 
- 	 refine {{ return_ _root_address_ }} . 
- Defined . 
- Definition getOwnerAddress : UExpression address false . 
- 	 refine {{ return_ {}(* ( ( ? _owner_address_ ) ? _owner_address_ -> get_default () : 0 ) *) }} . 
- Defined . 
- Definition getCode : UExpression cell false . 
- 	 refine {{ return_ _code_ }} . 
- Defined . 
- Definition getName_right  : URValue String false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getName 
- ) . 
+	refine {{ return_ _name_ }} . 
+Defined.
+
+Definition getSymbol : UExpression String false . 
+	refine {{ return_ _symbol_ }} . 
+Defined . 
  
- Notation " 'getName_' '(' ')' " := 
- ( getName_right 
- ) 
+Definition getDecimals : UExpression uint8 false . 
+	refine {{ return_ _decimals_ }} . 
+Defined . 
+
+Definition getRootKey : UExpression uint256 false . 
+	refine {{ return_ _root_public_key_ }} . 
+Defined . 
+
+Definition getWalletKey : UExpression uint256 false . 
+	refine {{ return_ _wallet_public_key_ }} . 
+Defined . 
+
+Definition getRootAddress : UExpression address false . 
+	refine {{ return_ _root_address_ }} . 
+Defined . 
+ 
+Definition getOwnerAddress : UExpression address false . 
+	refine {{ return_ ( ( ? _owner_address_ ) ? * _owner_address_ : [ #{0%Z} , 0 ] )  }} . 
+Defined . 
+
+Definition getCode : UExpression cell false . 
+	refine {{ return_ _code_ }} . 
+Defined . 
+
+Definition getName_right : URValue String false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getName ) . 
+ 
+Notation " 'getName_' '(' ')' " := ( getName_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getSymbol_right  : URValue String false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSymbol 
- ) . 
  
- Notation " 'getSymbol_' '(' ')' " := 
- ( getSymbol_right 
- ) 
+Definition getSymbol_right : URValue String false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getSymbol ) . 
+ 
+Notation " 'getSymbol_' '(' ')' " := ( getSymbol_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getDecimals_right  : URValue XUInteger8 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDecimals 
- ) . 
+
+Definition getDecimals_right  : URValue uint8 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDecimals ) . 
  
- Notation " 'getDecimals_' '(' ')' " := 
- ( getDecimals_right 
- ) 
+Notation " 'getDecimals_' '(' ')' " := ( getDecimals_right ) 
  (in custom URValue at level 0 ) : ursus_scope .
 
-Notation " 'getBalance_' '(' ')' " := 
- ( getBalance_right 
- ) 
+Notation " 'getBalance_' '(' ')' " := ( getBalance_right ) 
  (in custom URValue at level 0 ) : ursus_scope .
  
- Definition getRootKey_right  : URValue uint256 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getRootKey 
- ) . 
+Definition getRootKey_right  : URValue uint256 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getRootKey ) . 
  
- Notation " 'getRootKey_' '(' ')' " := 
- ( getRootKey_right 
- ) 
+Notation " 'getRootKey_' '(' ')' " := ( getRootKey_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getWalletKey_right  : URValue uint256 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getWalletKey 
- ) . 
+
+Definition getWalletKey_right  : URValue uint256 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getWalletKey ) . 
  
- Notation " 'getWalletKey_' '(' ')' " := 
- ( getWalletKey_right 
- ) 
- (in custom URValue at level 0 ) : ursus_scope . 
- Definition getRootAddress_right  : URValue address false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getRootAddress 
- ) . 
- 
- Notation " 'getRootAddress_' '(' ')' " := 
- ( getRootAddress_right 
- ) 
- (in custom URValue at level 0 ) : ursus_scope . 
- Definition getOwnerAddress_right  : URValue address false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwnerAddress 
- ) . 
- 
- Notation " 'getOwnerAddress_' '(' ')' " := 
- ( getOwnerAddress_right 
- ) 
- (in custom URValue at level 0 ) : ursus_scope . 
- Definition getCode_right  : URValue cell false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getCode 
- ) . 
- 
- Notation " 'getCode_' '(' ')' " := 
- ( getCode_right 
- ) 
+Notation " 'getWalletKey_' '(' ')' " := ( getWalletKey_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
- Definition allowance : UExpression allowance_infoLRecord false . 
- 	 	 refine {{ return_ {}(* [ 0 , 0 ] *) }} . 
- Defined . 
+Definition getRootAddress_right  : URValue address false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getRootAddress) . 
  
- Definition allowance_right  : URValue allowance_infoLRecord false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) allowance 
- ) . 
+Notation " 'getRootAddress_' '(' ')' " := ( getRootAddress_right ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
+
+Definition getOwnerAddress_right  : URValue address false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwnerAddress ) . 
  
- Notation " 'allowance_' '(' ')' " := 
- ( allowance_right 
- ) 
+Notation " 'getOwnerAddress_' '(' ')' " := ( getOwnerAddress_right ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
+
+Definition getCode_right  : URValue cell false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getCode ) . 
+ 
+Notation " 'getCode_' '(' ')' " := ( getCode_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
-Definition getDetails : UExpression details_infoLRecord false . 
- 	 	 refine {{ new ( 'filtered_lend_array:lend_ownership_array , 'lend_balance:uint128 ) @
-                   ( "filtered_lend_array" , "lend_balance" ) 
-                          := filter_lend_ownerhip_array_ ( ) ; {_} }} . 
- 	 	 refine {{ return_ {} (* [ getName_ ( ) , getSymbol_ ( ) , getDecimals_ ( ) , 
+Definition allowance : UExpression allowance_infoLRecord true . 
+	refine {{ if _allowance_ then { exit_ ( * _allowance_ ) } ; {_} }}.
+    refine {{ return_ [ [ #{0%Z}, 0 ] , 0 ]  }}.	
+Defined . 
+ 
+Definition allowance_right  : URValue allowance_infoLRecord true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) allowance ) . 
+ 
+Notation " 'allowance_' '(' ')' " := ( allowance_right ) 
+ (in custom URValue at level 0 ) : ursus_scope . 
+ 
+Definition getDetails : UExpression details_infoLRecord true . 
+	refine {{ new ( 'filtered_lend_array : lend_ownership_array , 'lend_balance : uint128 ) 
+	                    @ ( "filtered_lend_array" , "lend_balance" ) := filter_lend_ownerhip_array_ ( ) ; {_} }} . 
+	refine {{ return_ [ getName_ ( ) , getSymbol_ ( ) , getDecimals_ ( ) , 
                          getBalance_ ( ) , getRootKey_ ( ) , getWalletKey_ ( ) , 
                          getRootAddress_ ( ) , getOwnerAddress_ ( ) , 
                          !{filtered_lend_array} , !{lend_balance} , getCode_ ( ) , 
-                         allowance_ ( ) , _workchain_id_ ] *) }} . 
+                         allowance_ ( ) , _workchain_id_ ] }} . 
 Defined . 
 
-Definition approve ( spender : address ) ( remainingTokens : uint128 ) ( tokens : uint128 ) : UExpression PhantomType true . 
- 	 	 refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( (#{ tokens }) <= _balance_ ) , error_code::not_enough_balance ) ; {_} }} . 
- 	 	 refine {{ tvm_accept () ; {_} }} . 
- 	 	 refine {{ if ( _allowance_ ) then { {_:UEf} } else { {_:UEt} } }} . 
- 	 	 	 refine {{ if ( ( ( _allowance_ ->get_default () ) ↑ allowance_info.remainingTokens ) == (#{ remainingTokens }) ) 
+Definition approve ( spender : address ) 
+				   ( remainingTokens : uint128 ) 
+				   ( tokens : uint128 ) : UExpression PhantomType true . 
+	refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
+	refine {{ require_ ( ( (#{ tokens }) <= _balance_ ) , error_code::not_enough_balance ) ; {_} }} . 
+	refine {{ tvm_accept () ; {_} }} . 
+ 	refine {{ if ( _allowance_ ) then { {_:UEf} } else { {_:UEt} } }} . 
+	refine {{ if ( ( ( * _allowance_  ) ↑ allowance_info.remainingTokens ) == #{ remainingTokens } ) 
                           then { {_:UEf} } }} .
-(*  	 	 	 refine {{ ( ( _allowance_ ->get_default () ) ↑ allowance_info.remainingTokens ) := (#{ tokens }) ; {_} }} .  *)
-(*  	 	 	 refine {{ ( ( _allowance_ ->get_default () ) ↑ allowance_info.spender ) = (#{ spender }) }} .  *)
-refine {{ return_ {} }} .
- refine {{ require_ ( (#{ remainingTokens }) == 0 ,  error_code::non_zero_remaining  ) ; {_} }} . 
- refine {{ _allowance_ := ( [ (#{ spender }) , (#{ tokens }) ] -> set () ) ; {_} }} . 
- refine {{ return_ {}  }} .
+	refine {{  ( * _allowance_  ) ↑ allowance_info.remainingTokens  := #{ tokens } ; {_} }} .  
+	refine {{  ( * _allowance_  ) ↑ allowance_info.spender := #{ spender } }} .	
+ 	refine {{ require_ ( #{ remainingTokens } == 0 ,  error_code::non_zero_remaining  ) ; {_} }} . 
+ 	refine {{ _allowance_ := [ #{ spender } , #{ tokens } ] -> set ()  ; {_} }} . 
+ 	refine {{ return_ {}  }} .
 Defined . 
  
- 
- 
- Definition transfer_from_impl ( answer_addr : address ) ( from : address ) ( too : address ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : boolean ) ( payload : cell ) : UExpression PhantomType true . 
- 	 	 refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
- 	 	 refine {{ tvm_accept () ; {_} }} . 
- 	 	 refine {{ new 'answer_addr_fxd @ "answer_addr_fxd" := 
+Definition transfer_from_impl ( answer_addr : address ) 
+							  ( from : address ) 
+							  ( too : address ) 
+							  ( tokens : uint128 ) 
+							  ( grams : uint128 ) 
+							  ( send_notify : boolean ) 
+							  ( payload : cell ) : UExpression PhantomType true . 
+	refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
+	refine {{ tvm_accept () ; {_} }} . 
+	refine {{ new 'answer_addr_fxd @ "answer_addr_fxd" := 
                             fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} . 
- 	 	 refine {{ new 'msg_flags : uint @ "msg_flags" := {} ; {_} }} . 
-     refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
- 	 	 refine {{ { msg_flags } := prepare_transfer_message_flags_ ( { grams_ } )  ; {_}  }} . 
-(*  	 	 refine {{ ITONTokenWalletPtr dest_wallet ( (#{ from }) ) ; {_} }} .  *)
-(*  	 	 refine {{ dest_wallet ( Grams ( (#{ grams }) . get () ) , (!{ msg_flags }) ) 
-. internalTransferFrom_ ( (!{ answer_addr_fxd }) , (#{ too }) , (#{ tokens }) , bool_t (#{ send_notify }) , (#{ payload }) ) }} .  *)
-refine ( let dest_wallet_ptr := {{ ITONTokenWalletPtr [[ #{ from }  ]] }} in 
+	refine {{ new 'msg_flags : uint @ "msg_flags" := {} ; {_} }} . 
+	refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
+	refine {{ { msg_flags } := prepare_transfer_message_flags_ ( { grams_ } )  ; {_}  }} . 
+	refine ( let dest_wallet_ptr := {{ ITONTokenWalletPtr [[ #{ from }  ]] }} in 
               {{ {dest_wallet_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value } ;
 			  								!{ msg_flags } ⇒ { Messsage_ι_flags } $] 
                                          ⤳ .internalTransferFrom (!{answer_addr_fxd} , #{ too } , #{ tokens } , 
 										  #{ send_notify } , #{ payload } ) }} ). 
- Defined . 
+Defined . 
  
- Definition transfer_from_impl_left { R a1 a2 a3 a4 a5 a6 a7 }  ( answer_addr : URValue address a1 ) ( from : URValue address a2 ) ( too : URValue address a3 ) ( tokens : URValue uint128 a4 ) ( grams : URValue uint128 a5 ) ( send_notify : URValue boolean a6 ) ( payload : URValue cell a7 ) 
-: UExpression R true (* orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 *) := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) transfer_from_impl 
- answer_addr from too tokens grams send_notify payload ) . 
+Definition transfer_from_impl_left { R a1 a2 a3 a4 a5 a6 a7 } 
+								   ( answer_addr : URValue address a1 ) 
+								   ( from : URValue address a2 ) 
+								   ( too : URValue address a3 ) 
+								   ( tokens : URValue uint128 a4 ) 
+								   ( grams : URValue uint128 a5 ) 
+								   ( send_notify : URValue boolean a6 ) ( payload : URValue cell a7 )  : 
+								   UExpression R true  := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) transfer_from_impl answer_addr from too tokens grams send_notify payload ) . 
  
- Notation " 'transfer_from_impl_' '(' answer_addr ',' from ',' too ',' tokens ',' grams ',' send_notify ',' payload ')' " := 
- ( transfer_from_impl_left 
- answer_addr from too tokens grams send_notify payload ) 
- (in custom ULValue at level 0 , answer_addr custom URValue at level 0 
- , from custom URValue at level 0 
- , too custom URValue at level 0 
- , tokens custom URValue at level 0 
- , grams custom URValue at level 0 
- , send_notify custom URValue at level 0 
- , payload custom URValue at level 0 ) : ursus_scope . 
+Notation " 'transfer_from_impl_' '(' answer_addr ',' from ',' too ',' tokens ',' grams ',' send_notify ',' payload ')' " := 
+ ( transfer_from_impl_left  answer_addr from too tokens grams send_notify payload ) 
+ (in custom ULValue at level 0 , answer_addr custom URValue at level 0 , from custom URValue at level 0 
+ , too custom URValue at level 0 , tokens custom URValue at level 0 , grams custom URValue at level 0 
+ , send_notify custom URValue at level 0 , payload custom URValue at level 0 ) : ursus_scope . 
 
-Definition transferFrom ( answer_addr : address ) 
-( from : address ) 
-( too : address ) 
-( tokens : uint128 ) 
-( grams : uint128 ) 
-: UExpression PhantomType true . 
- refine {{ transfer_from_impl_ ( (#{ answer_addr }) , (#{ from }) , (#{ too }) , (#{ tokens }) , (#{ grams }) , FALSE , {} (* builder () . endc () *) ) }} . 
- Defined . 
+Definition transferFrom ( answer_addr : address ) ( from : address ) ( too : address ) ( tokens : uint128 ) ( grams : uint128 ) : UExpression PhantomType true . 
+	refine {{ transfer_from_impl_ ( #{ answer_addr }, 
+									#{ from }, 
+									#{ too }, 
+									#{ tokens }, 
+									#{ grams }, 
+									FALSE , 
+									builder () -> endc () ) ; {_} }} . 
+	refine {{ return_ {} }}.
+Defined . 
  
- Definition transferFromWithNotify 
-( answer_addr : address ) 
-( from : address ) 
-( too : address ) 
-( tokens : uint128 )
- ( grams : uint128 ) 
-( payload : cell ) 
-: UExpression PhantomType true . 
- refine {{ transfer_from_impl_ ( (#{ answer_addr }) , 
-                                 (#{ from }) , 
-                                 (#{ too }) , 
-                                 (#{ tokens }) , 
-                                 (#{ grams }) , 
-                                  TRUE , 
-                                 (#{ payload }) ) }} . 
- Defined . 
+Definition transferFromWithNotify ( answer_addr : address ) ( from : address ) 
+							      ( too : address ) ( tokens : uint128 )
+                                  ( grams : uint128 ) ( payload : cell ) : UExpression PhantomType true . 
+	refine {{ transfer_from_impl_ ( #{ answer_addr } , 
+                                 #{ from }, 
+                                 #{ too }, 
+                                 #{ tokens }, 
+                                 #{ grams }, 
+                                 TRUE , 
+                                 #{ payload } ) ; {_} }} . 
+ 	refine {{ return_ {} }}.
+Defined . 
  
- Definition internalTransferFrom 
-( answer_addr : address ) 
-( too : address ) 
-( tokens : uint128 ) 
-( notify_receiver : boolean ) 
-( payload : cell ) 
-: UExpression PhantomType true . 
- refine {{ require_ ( ( _allowance_ ) ,  error_code::no_allowance_set  ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( int_sender () == ( ( _allowance_ ->get_default () ) ↑ allowance_info.spender) ) ,  error_code::wrong_spender  ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( (#{ tokens }) <= ( ( _allowance_ ->get_default () ) ↑ allowance_info.remainingTokens) ) , error_code::not_enough_allowance  ) ; {_} }} . 
- 	 	 refine {{ require_ ( ( (#{ tokens }) <= _balance_ ) , error_code::not_enough_balance ) ; {_} }} . 
-(*  	 	 refine {{ ITONTokenWalletPtr dest_wallet ( (#{ too }) ) ; {_} }} .  *)
- 	 	 refine {{ tvm_rawreserve ( tvm_balance () - int_value () , rawreserve_flag::up_to ) ; {_} }} . 
-(*  	 	 refine {{ dest_wallet ( Grams ( 0 ) , SEND_ALL_GAS ) 
-. internalTransfer_ ( (#{ tokens }) , (#{ answer_addr }) , _wallet_public_key_ , get_owner_addr_ () , (#{ notify_receiver }) , (#{ payload }) ) ; {_} }} .  *)
-refine ( let dest_wallet_ptr := {{ ITONTokenWalletPtr [[ #{ too }  ]] }} in 
-              {{ {dest_wallet_ptr} with [$ 0 ⇒ { Messsage_ι_value } ;
+Definition internalTransferFrom ( answer_addr : address ) ( too : address ) ( tokens : uint128 ) 
+								( notify_receiver : boolean ) ( payload : cell ) : UExpression PhantomType true . 
+	refine {{ require_ ( _allowance_ ,  error_code::no_allowance_set  ) ; {_} }} . 
+	refine {{ require_ ( int_sender () == ( * _allowance_ ) ↑ allowance_info.spender ,  error_code::wrong_spender  ) ; {_} }} . 
+	refine {{ require_ ( (#{ tokens }) <= ( * _allowance_ ) ↑ allowance_info.remainingTokens , error_code::not_enough_allowance  ) ; {_} }} . 
+	refine {{ require_ ( (#{ tokens }) <= _balance_ , error_code::not_enough_balance ) ; {_} }} . 
+
+    refine ( let dest_wallet_ptr := {{ ITONTokenWalletPtr [[ #{ too }  ]] }} in 
+              {{ tvm_rawreserve ( tvm_balance () - int_value () , rawreserve_flag::up_to ) ;
+			     {dest_wallet_ptr} with [$ 0 ⇒ { Messsage_ι_value } ;
 			  								SEND_ALL_GAS_ ⇒ { Messsage_ι_flags } $] 
                                          ⤳ .internalTransfer_ ((#{ tokens }) , (#{ answer_addr }) , _wallet_public_key_ , 
 										 get_owner_addr_ ( ) , (#{ notify_receiver }) , (#{ payload }) ) ; {_} }} ). 
-  	 	 refine {{ ( ( * |{_allowance_ }| ) ↑ allowance_info.remainingTokens ) -= (#{ tokens }) ; {_} }} .
- 	 	 refine {{ _balance_ -= (#{ tokens }) ; {_} }} . 
- 	 	 refine {{ return_ {} }} .
- Defined . 
+	refine {{ ( * _allowance_  ) ↑ allowance_info.remainingTokens  -= #{ tokens } ; {_} }} .
+	refine {{ _balance_ -= #{ tokens } ; {_} }} . 
+	refine {{ return_ {} }} .
+Defined . 
  
- Definition disapprove : UExpression PhantomType true . 
- 	 	 refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
- 	 	 refine {{ tvm_accept () ; {_} }} . 
- 	 	 refine {{ _allowance_ -> reset () ; {_} }} . 
- 	 	 refine {{ return_ {} }} .
- Defined . 
- 
-Definition _on_bounced ( msg : cell ) ( msg_body : ( slice ) ) : UExpression XUInteger true . 
- 	 	 refine {{ tvm_accept () ; {_} }} . 
+Definition disapprove : UExpression PhantomType true . 
+	refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
+	refine {{ tvm_accept () ; {_} }} . 
+	refine {{ _allowance_ -> reset () ; {_} }} . 
+	refine {{ return_ {} }} .
+Defined . 
+
+(*AL: TODO*) 
+Definition _on_bounced ( msg : cell ) ( msg_body : slice ) : UExpression uint true . 
+	refine {{ tvm_accept () ; {_} }} . 
 (*  	 	 refine {{ parser p ( (#{ msg_body }) ) ; {_} }} .  *)
  	 	 refine {{ require_ ( (* ( p ^^ ldi ( 32 ) *) {} == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} . 
 (*  	 	 refine {{ opt_hdr : ( auto ) @ "opt_hdr" ; {_} }} .  *)
@@ -1054,40 +901,55 @@ Definition _on_bounced ( msg : cell ) ( msg_body : ( slice ) ) : UExpression XUI
  	 	 refine {{ (* (!{persist}) ↑ _balance_ += (!{ bounced_val }) *) return_ {} }} . 
 (*  refine {{ save_persistent_data < ITONTokenWallet , wallet_replay_protection_t > ( hdr , persist ) ; {_} }} .  *)
  refine {{ return_ 0 }} . 
- Defined . 
- 
- Definition _fallback ( msg : cell ) ( msg_body : ( slice ) ) : UExpression XUInteger true . 
- refine {{ require_ ( (  (* parser (#{ msg_body }) ).ldu ( 32 ) *) {} == 0 ) , error_code::wrong_public_call  ) ; {_} }} . 
- 	 	 refine {{ return_ 0 }} . 
- Defined . 
- 
-Definition prepare_external_wallet_state_init_and_addr ( name : String ) ( symbol : String ) ( decimals : uint8 ) ( root_public_key : uint256 ) ( wallet_public_key : uint256 ) ( root_address : address ) ( owner_address : optional address ) ( code : cell ) ( workchain_id : int ) : UExpression ( StateInitLRecord # uint256 ) false . 
-		refine {{ new 'wallet_data : ( DTONTokenWalletExternalLRecord ) @ "wallet_data" := 	 	 
-			[ (#{ name }) , (#{ symbol }) , (#{ decimals }) , 0 , (#{ root_public_key }) , (#{ wallet_public_key }) , (#{ root_address }) , (#{ owner_address }) , (#{ code }) , {} , (#{ workchain_id }) ] ; {_} }} . 
-		refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
-			prepare_persistent_data_ ( (* external_wallet_replay_protection_t::init () *) {} , (!{ wallet_data }) ) ; {_} }} . 
-		refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 	 	 
-			[ {} , {} , (#{ code }) -> set () , (!{ wallet_data_cl }) -> set () , {} ] ; {_} }} . 
-		refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {} 
-							(* build ( (!{ wallet_init }) ) . make_cell () *) ; {_} }} . 
-		refine {{ return_ [ (!{ wallet_init }) , tvm_hash ( (!{ wallet_init_cl }) ) ] }} . 
+Defined . 
+
+Definition _fallback ( msg : cell ) ( msg_body : slice ) : UExpression uint true . 
+	refine {{ require_ ( (  parser ( #{ msg_body } ) -> ldu ( 32 ) == 0 ) , error_code::wrong_public_call  ) ; {_} }} . 
+	refine {{ return_ 0 }} . 
+Defined . 
+
+Definition prepare_external_wallet_state_init_and_addr ( name : String ) 
+													   ( symbol : String ) 
+													   ( decimals : uint8 ) 
+													   ( root_public_key : uint256 ) 
+													   ( wallet_public_key : uint256 ) 
+													   ( root_address : address ) 
+													   ( owner_address : optional address ) 
+													   ( code : cell ) 
+													   ( workchain_id : int ) 
+													   : UExpression ( StateInitLRecord # uint256 ) false . 
+	refine {{ new 'wallet_data : ( DTONTokenWalletExternalLRecord ) @ "wallet_data" := 	 	 
+			[ #{ name } , #{ symbol } , #{ decimals } , 0 , 
+			  #{ root_public_key } , #{ wallet_public_key } , 
+			  #{ root_address } , #{ owner_address } , #{ code } , {} , #{ workchain_id } ] ; {_} }} . 
+	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
+			prepare_persistent_data_ ( external_wallet_replay_protection_t::init () , (!{ wallet_data }) ) ; {_} }} . 
+	refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 	 	 
+			      [ {} , {} , (#{ code }) -> set () , (!{ wallet_data_cl }) -> set () , {} ] ; {_} }} . 
+	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := 
+							build ( σ !{ wallet_init } ) -> make_cell ()  ; {_} }} . 
+	refine {{ return_ [ !{ wallet_init } , tvm_hash ( !{ wallet_init_cl } ) ] }} . 
 Defined . 
  
-Definition prepare_internal_wallet_state_init_and_addr ( name : String ) ( symbol : String ) ( decimals : uint8 ) ( root_public_key : uint256 ) ( wallet_public_key : uint256 ) ( root_address : address ) ( owner_address : optional address ) ( code : cell) ( workchain_id : ( int ) ) : UExpression ( StateInitLRecord # uint256 ) false . 
- 	 	 refine {{ new 'wallet_data : ( DTONTokenWalletInternalLRecord ) @ "wallet_data" := 	 	 
- 	 	 	 [  (#{ name }) , (#{ symbol }) , (#{ decimals }) , 
-            0 , (#{ root_public_key }) , (#{ wallet_public_key }) , 
-          (#{ root_address }) , (#{ owner_address }) , {} , 
-          (#{ code }) , #{ workchain_id } ] ; {_} }} . 
- 	 	 refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
-                prepare_persistent_data_ ( {} , (!{ wallet_data }) ) ; {_} }} . 
- 	 	 refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 	 	 
- 	 	 	 [ {} , {} , (#{ code }) -> set () , 
-                   (!{ wallet_data_cl }) -> set () , {} ] ; {_} }} . 
- 	 	 refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {}  
- 	 	                  (* build ( (!{ wallet_init }) ) . make_cell () *) ; {_} }} . 
- 	 	 refine {{ return_ [ (!{ wallet_init }) , tvm_hash ( (!{ wallet_init_cl }) ) ] }} . 
- Defined . 
+Definition prepare_internal_wallet_state_init_and_addr ( name : String ) 
+													   ( symbol : String ) 
+													   ( decimals : uint8 ) 
+													   ( root_public_key : uint256 ) 
+													   ( wallet_public_key : uint256 ) 
+													   ( root_address : address ) 
+													   ( owner_address : optional address ) 
+													   ( code : cell ) 
+													   ( workchain_id : int ) 
+													   : UExpression ( StateInitLRecord # uint256 ) false . 
+	refine {{ new 'wallet_data : ( DTONTokenWalletInternalLRecord ) @ "wallet_data" := 	 	 
+ 	 	 	 [ #{ name } , #{ symbol } , #{ decimals } , 0 , #{ root_public_key } , #{ wallet_public_key } , 
+               #{ root_address } , #{ owner_address } , {} , #{ code } , #{ workchain_id } ] ; {_} }} . 
+	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := prepare_persistent_data_ ( {} , (!{ wallet_data }) ) ; {_} }} . 
+	refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := [ {} , {} , (#{ code }) -> set () , 
+                   														   !{ wallet_data_cl } -> set () , {} ] ; {_} }} . 
+	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := build ( σ !{ wallet_init } ) -> make_cell () ; {_} }} . 
+	refine {{ return_ [ !{ wallet_init } , tvm_hash ( !{ wallet_init_cl } ) ] }} . 
+Defined . 
  
 End FuncsInternal.
 End Funcs.
