@@ -472,10 +472,10 @@ Definition on_sell_fail ( ec : uint ) ( wallet_in : ( address (* ITONTokenWallet
 	  {{ {wallet_in_ptr} with [$ (_tons_cfg_ ↑ TonsConfig.return_ownership) ⇒ { Messsage_ι_value }  $] 
 								  ⤳ .returnOwnership ( #{amount} ) ; {_} }} ).  
 	refine {{ if  _sells_ -> empty () && _buys_ -> empty ()  then { { _: UEf } } else { { _: UEf } } ; { _ } }} .
- 	refine {{ set_int_return_flag  ( 1 ) (* SEND_ALL_GAS | DELETE_ME_IF_I_AM_EMPTY *) }} . 
+ 	refine {{ set_int_return_flag  ( #{SEND_ALL_GAS} \\ #{DELETE_ME_IF_I_AM_EMPTY} ) }} . 
  	refine {{ new 'incoming_value : uint @ "incoming_value" := int_value ( ) ; { _ } }} . 
   	refine {{ tvm_rawreserve ( tvm_balance () - !{incoming_value} ,  rawreserve_flag::up_to) ; { _ } }} .
- 	refine {{ set_int_return_flag ( 1 ) (* SEND_ALL_GAS *) }} . 
+ 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} . 
  	refine {{ return_ [ #{ec} , {} , {} ] }} . 
 Defined . 
 
@@ -534,7 +534,7 @@ refine {{ new 'wallet_in : address @ "wallet_in" := {} ; { _ } }} .
 	refine {{ new 'ret_owner_gr : uint(*Grams*) @ "ret_owner_gr" :=
 		( _tons_cfg_ ↑ TonsConfig.return_ownership ) ; { _ } }} . 
 	refine {{ set_int_sender ( #{answer_addr} ) ; { _ } }} . 
-(*  	 	 refine {{ set_int_return_value ( tons_cfg_ . order_answer . get ( ) ) ; { _ } }} .  *)
+  refine {{ set_int_return_value ( _tons_cfg_ ↑ TonsConfig.order_answer ) ; { _ } }} .  
 	refine {{ new 'min_value : uint128 @ "min_value" := onTip3LendOwnershipMinValue_ ( ) ; { _ } }} . 
 	refine {{ new 'args : SellArgsLRecord @ "args" := {} (* parse ( payload . ctos ( ) )  *) ; { _ } }} . 
 	refine {{ new 'amount : ( uint128 ) @ "amount" :=  !{args} ↑ SellArgs.amount ; { _ } }} . 
@@ -542,7 +542,8 @@ refine {{ new 'wallet_in : address @ "wallet_in" := {} ; { _ } }} .
 
 	refine {{ if ( !{value} < !{ min_value } ) then { { _:UEf } } ; { _ } }} . 
 		refine {{ {err} := ec::not_enough_tons_to_process }} . 
-	refine {{ if  ~ verify_tip3_addr_ ( !{ tip3_wallet } , #{ pubkey } , {} (* ( std::get<addr_std>( internal_owner.val ( ) ).address ) *) )                             then { { _:UExpression OrderRetLRecord false } }  ; { _ } }} . 
+	refine {{ if  ~ verify_tip3_addr_ ( !{ tip3_wallet } , #{ pubkey } , {} )
+                             then { { _:UExpression OrderRetLRecord false } }  ; { _ } }} . 
 		refine {{ {err} := ec::unverified_tip3_wallet }} . 
 	refine {{ if ( !{ amount } < _min_amount_ ) then { { _:UEf } } ; { _ } }} . 
 		refine {{ {err} := ec::not_enough_tokens_amount }} . 
@@ -624,7 +625,7 @@ Definition buyTip3 ( amount : uint128 ) ( receive_tip3_wallet : address ) ( orde
 	refine {{ require_ ( !{value_gr} > buyTip3MinValue_ ( !{cost} -> get_default () )  , 
 						ec::not_enough_tons_to_process ) ; { _ } }} . 
 	refine {{ require_ ( is_active_time_ ( #{ order_finish_time } ) ,  ec::expired  ) ; { _ } }} . 
-	refine {{ set_int_return_value ( {} ) (* tons_cfg_ . order_answer . get ( ) *) ; { _ } }} . 
+	refine {{ set_int_return_value ( _tons_cfg_ ↑ TonsConfig.order_answer ) ; { _ } }} . 
 	refine {{ new 'account : uint128 @ "account" := !{value_gr} - _tons_cfg_ ↑ TonsConfig.process_queue 
 																- _tons_cfg_ ↑ TonsConfig.order_answer ; { _ } }} . 
 	refine {{ new 'buy : OrderInfoLRecord @ "buy" := [ 
@@ -771,7 +772,8 @@ refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in
 								  _sells_amount_) ; {_} }} ). 
 
 	refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) then { { _: UEf } } }} . 
-		refine {{ {value} := !{value} (* suicide ( _flex_ ) *) }} . 
+		refine {{ {value} := {} (* suicide ( _flex_ ) *) ; {_} }} . 
+refine {{ return_ {} }} .
 Defined . 
  
 Definition cancelBuy : UExpression PhantomType false . 
@@ -790,7 +792,8 @@ refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in
 								  _price_ , !{canceled_amount} , 
 								  _buys_amount_) ; {_} }} ). 
 	refine {{ if  _sells_ -> empty () && _buys_ -> empty () then { { _: UEf } } }} . 
-		refine {{ _buys_ := !{ buys } (* suicide ( _flex_ ) *) }} . 
+		refine {{ _buys_ := !{ buys } (* suicide ( _flex_ ) *) ; {_} }} . 
+refine {{ return_ {} }} .
 Defined. 
 
 Definition getPrice : UExpression uint128 false . 

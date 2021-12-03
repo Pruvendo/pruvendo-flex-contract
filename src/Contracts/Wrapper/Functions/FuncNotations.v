@@ -125,12 +125,6 @@ Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in 
 
 Notation " 'error_code::internal_owner_disabled' " := (sInject internal_owner_disabled) (in custom URValue at level 0) : ursus_scope.
 
-
-
-
-
-
-
 Module Calls (tc : SpecSig).
 
 Export tc.

@@ -276,9 +276,8 @@ Defined .
 
  	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:address ) @ ( "wallet_init" , "dest" ) :=  
                            calc_wallet_init_  ( (#{ pubkey }) , (#{ internal_owner }) ) ; { _ } }} . 
-
-
-(*      refine {{ temporary_data::setglob ( global_id::answer_id , return_func_id () - > get () ) ; { _ } }} .  *)
+(*    refine {{ temporary_data::setglob ( (* global_id::answer_id *) {global_id_answer_id}
+                        , {} (* return_func_id ( ) *) ) ; { _ } }} .  *)
 (*      refine {{ ITONTokenWalletPtr dest_handle ( dest ) ; { _ } }} .  *)
 refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
               {{ {dest_handle_ptr} with {} 
@@ -287,7 +286,7 @@ refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in
               {{ {dest_handle_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value }  $] 
                                          ⤳ .accept ( #{ tokens } , !{answer_addr} , #{ grams } ) ; {_} }} ). 
      refine {{ _total_granted_ += (#{ tokens }) ; { _ } }} . 
-(*      refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; { _ } }} .  *)
+     refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; { _ } }} . 
      refine {{ return_ !{dest} }} . 
  Defined . 
  
@@ -302,7 +301,7 @@ Definition deployEmptyWallet ( pubkey : ( XUInteger256 ) ) ( internal_owner : ( 
 refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
               {{ {dest_handle_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value }  $] 
                                          ⤳ TONTokenWallet.deploy ( !{wallet_init} ) ; {_} }} ). 
-(*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; { _ } }} .  *)
+  	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; { _ } }} . 
  	 	 refine {{ return_ !{dest} }} . 
  Defined . 
  
@@ -338,7 +337,7 @@ Definition mint ( tokens : ( XUInteger128 ) ) : UExpression boolean true .
  	 	 	 refine {{ new 'value_gr:XUInteger@"value_gr" := int_value () ; { _ } }} . 
  	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr }) , rawreserve_flag::up_to ) }} . 
  	 refine {{ _total_supply_ += (#{ tokens }) ; { _ } }} . 
-(*  	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; { _ } }} .  *)
+  	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; { _ } }} .  
  	 refine {{ return_ TRUE }} . 
 Defined . 
  
@@ -348,7 +347,7 @@ Defined .
  Definition requestTotalGranted : UExpression XUInteger128 false . 
  	 	 	 refine {{ new 'value_gr : ( XUInteger ) @ "value_gr" := int_value () ; { _ } }} . 
  	 	 refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr }) , rawreserve_flag::up_to ) ; { _ } }} . 
-(*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) ; { _ } }} .  *)
+  	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; { _ } }} .  
  	 	 refine {{ return_ _total_granted_ }} . 
  Defined . 
  
@@ -428,7 +427,8 @@ Defined .
                                                error_code::wrong_bounced_header ) ; { _ } }} . 
  	 	 refine {{ new 'args : ( address ) @ "args" := {} 
                               (* parse ( p , error_code::wrong_bounced_args ) *) ; { _ } }} . 
- 	 	 refine {{ new 'bounced_val : ( XUInteger (* auto *) ) @ "bounced_val" := {} (* (!{ args }) ↑ auto:tokens *) ; { _ } }} . 
+ 	 	 refine {{ new 'bounced_val : ( XUInteger (* auto *) ) @ "bounced_val" := {} 
+                         (* (!{ args }) ↑ auto:tokens *) ; { _ } }} . 
 
 (* very controversial things: *)
 

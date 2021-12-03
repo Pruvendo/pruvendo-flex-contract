@@ -769,9 +769,9 @@ Definition deployPriceXchg ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( pr
  	 	 refine {{ { deploy_init_cl } := {} (* build ( !{ state_init } ) . endc ( ) *) ; { _ } }} . 
  	 	 refine {{ new 'payload_args : ( PriceXchgClassTypesModule.PayloadArgsLRecord ) @ "payload_args" :=  
            [$ #{ sell }  ⇒ { PayloadArgs_ι_sell } ; 
-              #{ amount } ⇒ { PayloadArgs_ι_amount } (*; 
+              #{ amount } ⇒ { PayloadArgs_ι_amount } ; 
               #{ receive_wallet } ⇒ { PayloadArgs_ι_receive_tip3_wallet } ;
-              tvm_myaddr () ⇒ { PayloadArgs_ι_client_addr } *)  $]  ; { _ } }} . 
+              tvm_myaddr () ⇒ { PayloadArgs_ι_client_addr }   $]  ; { _ } }} . 
 
  	 	 refine {{ new 'payload : cell @ "payload" := {} (* build ( !{ payload_args } ) . endc ( ) *) ; { _ } }} . 
  	 	 refine {{ new 'my_tip3: address @ "my_tip3" := #{ my_tip3_addr } ; { _ } }} . 
