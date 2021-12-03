@@ -97,4 +97,6 @@ Parameter ec_ι_deals_limit : ErrorType .
 
 Parameter ec : ErrorType .
 
+Parameter IGNORE_ACTION_ERRORS : XUInteger .
+
 End ConstsTypesSig.

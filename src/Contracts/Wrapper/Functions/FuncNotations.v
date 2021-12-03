@@ -20,6 +20,12 @@ Require Import Contracts.Wrapper.Ledger.
 Require Import Contracts.Wrapper.Functions.FuncSig.
 Require Import Contracts.Wrapper.ClassTypes.
 
+Require Import Contracts.TONTokenWallet.ClassTypes.
+Require Import Project.CommonTypes.
+
+
+(* здесь инмпортируем все внешние интерфейсы *)
+Require Import Contracts.TONTokenWallet.Interface.
 
 Require Import Contracts.Wrapper.Interface.
 
@@ -28,14 +34,26 @@ Module FuncNotations (xt: XTypesSig)
                      (sm: StateMonadSig) 
                      (dc : ConstsTypesSig xt sm ).
 
+Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
+
+
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
 Import xt. Export dc. 
 Module WrapperPublicInterface := Contracts.Wrapper.Interface.PublicInterface xt sm.
 
+
+
 Import UrsusNotations.
 Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
+
+Definition ITONTokenWalletPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet )) )) . 
+Definition ITONTokenWalletPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet ))) false) . 
+Notation " 'ITONTokenWalletPtr' " := ( ITONTokenWalletPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
 
 Definition name__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_name_ ) : ULValue XString ) . 
 Definition name__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DWrapper_ι_name_ ) : URValue XString false ) . 

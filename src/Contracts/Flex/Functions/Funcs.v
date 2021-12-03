@@ -919,9 +919,9 @@ Definition getTradingPairCode_right  : URValue cell true :=
 
  Definition getWrapperListingRequests : UExpression ( XHMap uint WrapperListingRequestWithPubkeyLRecord ) false . 
  	 	 refine {{ new 'rv :  ( XHMap uint WrapperListingRequestWithPubkeyLRecord ) @ "rv" := {} ; { _ } }} . 
-(*  	 	 refine {{ for ( const auto &v : wrapper_listing_requests_ ) { { _ } } ; { _ } }} . 
- 	 	 	 refine {{ { rv . push_back ( { v . first , v . second } ) }} . *) 
- 	 refine {{ return_ !{rv} }} . 
+     refine {{ for ( 'v : _wrapper_listing_requests_) do { {_ : UEf} } ; { _ } }}. 
+	   refine {{ {rv}  -> push ( [ first ({v}) , second ({v}) ] ) }}.
+  	 refine {{ return_ !{rv} }} . 
 Defined . 
 
  Definition getWrapperListingRequests_right  : URValue ( XHMap uint WrapperListingRequestWithPubkeyLRecord) false := 
@@ -935,9 +935,9 @@ Defined .
 
  Definition getTradingPairListingRequests : UExpression ( XHMap uint TradingPairListingRequestWithPubkeyLRecord ) false . 
  	 	 refine {{ new 'rv :  ( XHMap uint TradingPairListingRequestWithPubkeyLRecord ) @ "rv" := {} ; { _ } }} . 
- (* 	 	 refine {{ for ( const auto &v : trading_pair_listing_requests_ ) { { _ } } ; { _ } }} . 
- 	 	 	 refine {{ { rv . push_back ( { v . first , v . second } ) }} . 
- *) 	 refine {{ return_ !{rv} }} . 
+     refine {{ for ( 'v : _trading_pair_listing_requests_) do { {_ : UEf} } ; { _ } }}. 
+	   refine {{ {rv}  -> push ( [ first ({v}) , second ({v}) ] ) }}.
+ 	 refine {{ return_ !{rv} }} . 
 Defined . 
 
  Definition getTradingPairListingRequests_right  : URValue ( XHMap uint TradingPairListingRequestWithPubkeyLRecord ) false := 
@@ -951,8 +951,8 @@ Defined .
 
 Definition getXchgPairListingRequests : UExpression ( XHMap uint XchgPairListingRequestWithPubkeyLRecord ) false . 
  	 	 refine {{ new 'rv :  ( XHMap uint XchgPairListingRequestWithPubkeyLRecord ) @ "rv" := {} ; { _ } }} . 
- 	 	 (* refine {{ for ( const auto &v : xchg_pair_listing_requests_ ) { { _ } } ; { _ } }} . 
- 	 	 	 refine {{ { rv . push_back ( { v . first , v . second } ) }} . *) 
+     refine {{ for ( 'v : _xchg_pair_listing_requests_) do { {_ : UEf} } ; { _ } }}. 
+	   refine {{ {rv}  -> push ( [ first ({v}) , second ({v}) ] ) }}.
  	 refine {{ return_ !{rv} }} . 
 Defined .
 

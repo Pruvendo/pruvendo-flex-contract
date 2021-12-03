@@ -33,7 +33,6 @@ Module FuncNotations (xt: XTypesSig)
 (* здесь модули из каждого внешнего интерфейса *)
 Module PriceXchgPublicInterface := Contracts.PriceXchg.Interface.PublicInterface xt sm.
 Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
-Module PriceCallbackPublicInterface := Contracts.Price.Interface.PublicInterface xt sm.
 Module FlexPublicInterface := Contracts.Flex.Interface.PublicInterface xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
@@ -46,7 +45,29 @@ Local Open Scope ucpp_scope.
 Local Open Scope ursus_scope.
 
 
+Definition ITONTokenWalletPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TONTokenWallet ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet )) )) . 
+Definition ITONTokenWalletPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_TONTokenWallet ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet ))) false) . 
+Notation " 'ITONTokenWalletPtr' " := ( ITONTokenWalletPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
+Definition PriceXchgPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_PriceXchg ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage PriceXchgPublicInterface.IPriceXchg )) )) . 
+Definition PriceXchgPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_PriceXchg ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage PriceXchgPublicInterface.IPriceXchg ))) false) . 
+Notation " 'IPriceXchgPtr' " := ( PriceXchgPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition IPriceCallBackPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_PriceCallBack ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage PriceXchgPublicInterface.IPriceCallBack )) )) . 
+Definition IPriceCallBackrPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_PriceCallBack ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage PriceXchgPublicInterface.IPriceCallBack ))) false) . 
+Notation " 'IPriceCallBackPtr' " := ( IPriceCallBackPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
+
+Definition IFlexNotifyPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_FlexNotify ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage FlexPublicInterface.IFlexNotify )) )) . 
+Definition IFlexNotifyPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_FlexNotify ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage FlexPublicInterface.IFlexNotify ))) false) . 
+Notation " 'IFlexNotifyPtr' " := ( IFlexNotifyPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
 
 
 (**********************************************************************************************************************)

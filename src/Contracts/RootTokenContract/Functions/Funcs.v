@@ -161,8 +161,8 @@ Defined .
 
 Definition prepare_wallet_data (name:XString)(symbol:XString)(decimals:XUInteger8)(root_public_key:XUInteger256)
                                (wallet_public_key:XUInteger256)(root_address:address)(owner_address:XMaybe address)
-                               (code:cell)(workchain_id:int) :
-UExpression TONTokenWalletClassTypes.DTONTokenWalletLRecord false.  
+                               (code:XCell)(workchain_id : int) :
+UExpression TONTokenWalletClassTypes.DTONTokenWalletLRecord false.
  	 refine {{ return_ [ #{name} , #{symbol} , #{decimals} , 0 , 
                        #{root_public_key} , #{wallet_public_key} , 
                        #{root_address} , #{owner_address} , {} ,
@@ -242,10 +242,10 @@ Notation " 'prepare_wallet_state_init_and_addr_' '(' x0  ')' " :=
 Definition calc_wallet_init ( pubkey : ( XUInteger256 ) ) ( owner_addr : ( address ) ) : UExpression ( StateInitLRecord # address ) false . 
   	 	 refine {{ new 'wallet_data : ( TONTokenWalletClassTypes.DTONTokenWalletLRecord ) @ "wallet_data" := 
                   prepare_wallet_data_ ( _name_ , _symbol_ , _decimals_ , _root_public_key_ , (#{ pubkey }) , tvm_myaddr () , optional_owner_ ( (#{ owner_addr }) ) , _wallet_code_ ->get_default () ,  workchain_id_ ( ) ) ; { _:UEf } }} . 
-  	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:address ) @ ( "wallet_init" , "dest_addr" ) := {}(*  
-                              prepare_wallet_state_init_and_addr_ ( {} (*TODO! !{wallet_data} *) )  *); { _ } }} . 
- 	 	 refine {{ new 'dest : ( address ) @ "dest" := 
-                         {} (* Address :: make_std ( workchain_id_ () , dest_addr ) *) ; { _ } }} . 
+ 	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:uint256 ) @ 
+                   ( "wallet_init" , "dest_addr" ) := 
+                  prepare_wallet_state_init_and_addr_ ( !{wallet_data} ) ; { _ } }} . 
+ 	 	 refine {{ new 'dest : ( address ) @ "dest" := [ workchain_id_ ( ) , !{dest_addr} ] ; { _ } }} . 
  	 	 refine {{ return_ [ !{wallet_init} , (!{ dest }) ] }} . 
 Defined . 
  

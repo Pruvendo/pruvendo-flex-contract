@@ -14,6 +14,7 @@ Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.TvmCells. 
 
 Require Import Project.CommonTypes. 
+Require TONTokenWallet.Interface.
 
 Require TONTokenWallet.ClassTypes.
 Require Import Wrapper.ClassTypes.
@@ -25,7 +26,7 @@ Local Open Scope glist_scope.
 
 (*TONTokenWallet only*)
 Inductive MessagesAndEventsFields := 
-  | _OutgoingMessages_Wrapper 
+  | _OutgoingMessages_ITONTokenWallet 
   | _EmittedEvents
   | _GlobalParams
   | _OutgoingMessageParams
@@ -37,6 +38,7 @@ Definition ContractFields := DWrapperFields.
 Module Ledger (xt: XTypesSig) (sm: StateMonadSig) <: ClassSigTVM xt sm. 
 
 Module WrapperPublicInterfaceModule := Wrapper.Interface.PublicInterface xt sm.
+Module TONPublicInterfaceModule := TONTokenWallet.Interface.PublicInterface xt sm.
 
 Module Export VMStateModule := VMStateModule xt sm. 
 Module Export TypesModuleForLedger := Wrapper.ClassTypes.ClassTypes xt sm .
@@ -46,7 +48,7 @@ Module TONTonkenWalletModuleForPrice :=
 
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
- [ XHMap address ( XQueue (OutgoingMessage  WrapperPublicInterfaceModule.IWrapper ) ) : Type ; 
+[ XHMap address ( XQueue (OutgoingMessage TONPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
    XList TVMEvent : Type ; 
    GlobalParamsLRecord: Type ;
    OutgoingMessageParamsLRecord: Type ;
