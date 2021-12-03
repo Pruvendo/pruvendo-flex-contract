@@ -108,12 +108,14 @@ Notation " 'is_internal_owner_' '(' ')' " := ( is_internal_owner_right)
 
 Definition check_internal_owner : UExpression PhantomType true .
 	refine {{ require_ ( is_internal_owner_ ( )  , error_code::internal_owner_disabled ) ; {_} }} . 
-	refine {{ require_ ( ( _owner_address_ -> get_default () == int_sender () ) , error_code::message_sender_is_not_my_owner ) }} . 
+	refine {{ require_ ( ( _owner_address_ -> get_default () == int_sender () ) , error_code::message_sender_is_not_my_owner ) ; {_} }} .
+refine {{ return_ {} }} .  
 Defined. 
  
 Definition check_external_owner : UExpression PhantomType true . 
 	refine {{ require_ (  ~ is_internal_owner_ ( ) , error_code::internal_owner_enabled ) ; {_} }} . 
-	refine {{ require_ ( ( msg_pubkey () == _root_public_key_ ) , error_code::message_sender_is_not_my_owner ) }} . 
+	refine {{ require_ ( ( msg_pubkey () == _root_public_key_ ) , error_code::message_sender_is_not_my_owner ) ; {_} }} .
+refine {{ return_ {} }} .  
 Defined.
  
 Definition check_internal_owner_left { R }  : UExpression R true := 
@@ -131,7 +133,8 @@ Notation " 'check_external_owner_' '(' ')' " := ( check_external_owner_left )
 Definition check_owner : UExpression PhantomType true . 
 	refine {{ { if Internal then _ else _ } }} . 
 	refine {{ check_internal_owner_ ( ) }} . 
-	refine {{ check_external_owner_ ( ) }} . 
+	refine {{ check_external_owner_ ( ) ; {_} }} .
+refine {{ return_ {} }} .  
 Defined.
 
 Definition check_owner_left { R } : UExpression R true  := 
@@ -145,9 +148,9 @@ Definition setInternalWalletCode ( wallet_code : cell ) : UExpression boolean tr
 	refine {{ tvm_accept () ; {_}  }} . 
 	refine {{ require_ ( ( ~ _internal_wallet_code_ ) , error_code::cant_override_wallet_code ) ; {_} }} . 
 	refine {{ _internal_wallet_code_ := (#{ wallet_code } ->set()) ; {_} }} . 
-	refine {{ {if Internal then _ else {{return_ {} }} } ; {_} }} . 
+ 	refine {{ {if Internal then _ else {{ return_ {} }} } ; {_} }} .  
 	refine {{ new 'value_gr : XUInteger256 @ "value_gr" := int_value () ; {_} }} . 
-	refine {{ tvm_rawreserve (( tvm_balance () - !{value_gr} ) , rawreserve_flag::up_to ) ; {_} }}.
+	refine {{ tvm_rawreserve (( tvm_balance () - !{value_gr} ) , rawreserve_flag::up_to ) ; {_} }}. 
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} . 
  	refine {{ return_ TRUE }} . 
 Defined . 
@@ -290,7 +293,8 @@ Definition burn ( answer_addr : address ) ( sender_pubkey :uint256 )
                                         error_code::message_sender_is_not_good_wallet ) ; {_} }} .
  	refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
  	 	 (* refine {{ ( *external_wallet_ ) ( Grams ( 0 ) , SEND_ALL_GAS ) . transferToRecipient ( (#{ answer_addr }) , (#{ out_pubkey }) , (#{ out_internal_owner }) , (#{ tokens }) , uint128 ( 0 ) ,  TRUE ,  FALSE ) ; {_} }} .  *)
- 	refine {{ _total_granted_ -= #{ tokens } }} . 
+ 	refine {{ _total_granted_ -= #{ tokens } ; {_} }} .
+refine {{ return_ {} }} .  
 Defined. 
  
 Definition requestTotalGranted : UExpression XUInteger128 false . 

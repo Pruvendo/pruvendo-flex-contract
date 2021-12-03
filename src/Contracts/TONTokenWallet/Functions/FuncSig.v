@@ -67,7 +67,7 @@ Parameter transfer : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) 
  Parameter transfer_to_recipient_impl : ( ( address ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter transfer_from_impl : ( ( address ) ) -> ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter get_owner_addr : UExpression address false . 
- Parameter fixup_answer_addr : ( ( address ) ) -> UExpression address false . 
+ Parameter fixup_answer_addr : ( ( address ) ) -> UExpression address true . 
  Parameter check_transfer_requires : ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> UExpression XUInteger128 true . 
  Parameter prepare_transfer_message_flags : ( ULValue ( XUInteger128 ) ) -> UExpression XUInteger false . 
  Parameter update_spent_balance : ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> UExpression PhantomType false . 

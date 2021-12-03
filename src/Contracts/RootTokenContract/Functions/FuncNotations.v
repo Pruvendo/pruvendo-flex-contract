@@ -109,6 +109,8 @@ Notation " 'error_code::wrong_bounced_args' " := (sInject error_code_ι_wrong_bo
 Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'SEND_ALL_GAS_' " := (sInject SEND_ALL_GAS) (in custom URValue at level 0) : ursus_scope.
  
+Notation " 'global_id::answer_id' " := (sInject global_id_ι_answer_id) (in custom URValue at level 0) : ursus_scope.
+
 Module Calls (tc : SpecSig).
 
 Export tc.

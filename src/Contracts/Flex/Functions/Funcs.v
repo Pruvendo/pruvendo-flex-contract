@@ -117,15 +117,15 @@ Definition setSpecificCode ( type :  uint8 ) ( code :  cell ) : UExpression Phan
   refine {{ case_ price_code => setPairCode(code) ; return_ {} }}.
   refine {{ case_ xchg_price_code => setPairCode(code) ; return_ {} }}. *)
  	 	 refine {{ return_ {} }} .
-Defined. *)
+Defined.
 
 Definition setPairCode ( code :  cell ) : UExpression PhantomType true . 
   refine {{ require_ ( ( ~ _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
   refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
   refine {{ tvm_accept () ; { _ } }} . 
-  (* refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) ,  error_code::unexpected_refs_count_in_code  ) ; { _ } }} .  *)
-  refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
-  refine {{ return_ {} }}.
+(*   refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) ,  error_code::unexpected_refs_count_in_code  ) ; { _ } }} .  *) 
+  refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
+ refine {{ return_ {} }}.
 Defined . 
  
 Definition setXchgPairCode ( code :  cell ) : UExpression PhantomType true . 
@@ -133,7 +133,7 @@ Definition setXchgPairCode ( code :  cell ) : UExpression PhantomType true .
     refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
     refine {{ tvm_accept () ; { _ } }} . 
     (* refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} .  *)
-    refine {{ _xchg_pair_code_ := {}(* builder ( ) . stslice ( code ^^ cell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
+    refine {{ _xchg_pair_code_ := {}(* builder ( ) . stslice ( code ^^ cell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
     refine {{ return_ {} }}.
 Defined . 
  
@@ -142,7 +142,7 @@ Definition setWrapperCode ( code :  cell ) : UExpression PhantomType true .
     refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
     refine {{ tvm_accept () ; { _ } }} . 
    (*  refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} .  *)
-    refine {{ _wrapper_code_ := {} (* builder ( ) . stslice ( code ^^ cell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
+    refine {{ _wrapper_code_ := {} (* builder ( ) . stslice ( code ^^ cell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
     refine {{ return_ {} }}.
 Defined . 
 
@@ -260,9 +260,7 @@ Definition prepare_trading_pair_right { a1 a2 a3 }  ( flex : URValue address a1 
                                 #{tip3_root} , 
                                 #{min_amount} , 
                                 #{notify_addr}  ] ) ; { _ } }} . 
-
-(*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
-
+  	 	 refine {{ set_int_return_value ( _listing_cfg_ ↑ ListingConfig.register_return_value ) ; { _ } }} .  
       refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ("state_init", "std_addr") :=
                 prepare_trading_pair_ ( tvm_myaddr () , #{tip3_root} , _pair_code_ -> get () ) ; { _ } }} .
  	 	 refine {{ return_ [ _workchain_id_ , !{std_addr} ]  }} . 
@@ -325,7 +323,7 @@ Notation " 'approveTradingPairImpl_' '(' pubkey , trading_pair_listing_requests 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value ()  ; { _ } }} . 
   	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  )  (* ; { _ } *) }} .
-(*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
+ 	 	 refine {{ set_int_return_flag ( SEND_ALL_GAS ) }} .
  	 refine {{ return_ !{ trade_pair } }} . 
 Defined .
  
@@ -726,7 +724,7 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_add
                       0 ⇒ { DXchgPair_ι_min_amount_ }   ; 
                      [ # {0%Z} , 0 ]  ⇒ { DXchgPair_ι_notify_addr_ }  
                    $] ; { _ } }} . 
- 	 	 (* refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} . *) 
+ 	 	 refine {{ set_int_return_value ( _listing_cfg_ ↑ ListingConfig.register_return_value ) ; { _ } }} . 
  	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ( "state_init" , "std_addr" )  := 
        prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , _xchg_pair_code_ -> get () ) ; { _ } }} . 
      (* AL: change workchain_id type *)  
@@ -746,7 +744,7 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_add
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
   	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .  
-(*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
+ 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .  
  	 refine {{ return_ !{ xchg_pair } }} . 
  Defined . 
 
@@ -757,7 +755,7 @@ Definition rejectXchgPair ( pubkey : uint256 ) : UExpression XBool true .
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
  	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to ) (* ; { _ } *) }} .
-(*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
+  	 	 	 refine {{ set_int_return_flag (  #{SEND_ALL_GAS} ) ; {_} }} .  
  	 refine {{ return_ TRUE }} . 
  Defined . 
 
@@ -786,7 +784,7 @@ Definition registerWrapper
        (_listing_cfg_ ↑ ListingConfig.wrapper_keep_balance) ⇒ { DWrapper_ι_start_balance_ } ; 
         {} ⇒ { DWrapper_ι_external_wallet_ }  
       $] ; { _ } }} . 
-(*  	 	 refine {{ set_int_return_value ( listing_cfg_ . register_return_value . get ( ) ) ; { _ } }} .  *)
+  	 	 refine {{ set_int_return_value ( _listing_cfg_ ↑  ListingConfig.register_return_value ) ; { _ } }} .  
  	 	 refine {{ new ( 'wrapper_init :StateInitLRecord , 'wrapper_hash_addr : uint256 ) @ ( "wrapper_init" , "wrapper_hash_addr" ) := 
                prepare_wrapper_state_init_and_addr_ ( _wrapper_code_ -> get () , !{wrapper_data} ) ; { _ } }} . 
  	 	 refine {{ return_  [ _workchain_id_ , !{wrapper_hash_addr} ] }} . 
@@ -809,7 +807,7 @@ Definition registerWrapper
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
   	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .
-(*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
+  	 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .
  	 refine {{ return_ !{ wrapper_addr } }} . 
 Defined . 
  
@@ -822,7 +820,7 @@ Defined .
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
  	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .
-(*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
+  	 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} . 
  	 refine {{ return_ TRUE }} . 
 Defined . 
 
@@ -1007,7 +1005,7 @@ Defined .
  Definition getSellTradingPair ( tip3_root : address ) : UExpression address true . 
  	 	 refine {{ new 'std_addr : uint256 @ "std_addr" := 
           second (  prepare_trading_pair_ ( ( tvm_myaddr () ) , #{tip3_root} , _pair_code_ -> get () ) ) ; { _ } }} . 
- 	 	 refine {{ return_ {} (* Address :: make_std ( workchain_id_ , !{ std_addr } ) *) }} . 
+ 	 	 refine {{ return_ [ _workchain_id_ , !{ std_addr } ] }} . 
  Defined . 
  
  Definition getXchgTradingPair ( tip3_major_root : address ) 

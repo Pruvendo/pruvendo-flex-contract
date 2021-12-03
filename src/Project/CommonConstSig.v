@@ -100,4 +100,6 @@ Parameter ec_ι_canceled : ErrorType .
 
 Parameter IGNORE_ACTION_ERRORS : XUInteger .
 
+Parameter global_id_ι_answer_id : XUInteger .
+
 End ConstsTypesSig.

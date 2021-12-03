@@ -241,7 +241,7 @@ Notation " 'update_spent_balance_' '(' tokens ',' return_ownership ')' " :=
 
 (*AL: fixme*)
 Definition get_owner_addr : UExpression address false. 
-	refine {{ return_ ( (? _owner_address_ ) ? ! ( * |{ _owner_address_ }| )  : [ #{0%Z} , 0 ] ) }} . 
+	refine {{ return_ ( (? _owner_address_ ) ?  ( * _owner_address_  )  : [ #{0%Z} , 0 ] ) }} . 
 Defined . 
  
 Definition get_owner_addr_right  : URValue address false := 
@@ -1014,7 +1014,7 @@ refine ( let dest_wallet_ptr := {{ ITONTokenWalletPtr [[ #{ too }  ]] }} in
 			  								SEND_ALL_GAS_ ⇒ { Messsage_ι_flags } $] 
                                          ⤳ .internalTransfer_ ((#{ tokens }) , (#{ answer_addr }) , _wallet_public_key_ , 
 										 get_owner_addr_ ( ) , (#{ notify_receiver }) , (#{ payload }) ) ; {_} }} ). 
-  	 	 refine {{ ( ( * |{_allowance_ }| ) ↑ allowance_info.remainingTokens ) -= (#{ tokens }) ; {_} }} .
+  	 	 refine {{ ( ( * _allowance_  ) ↑ allowance_info.remainingTokens ) -= (#{ tokens }) ; {_} }} .
  	 	 refine {{ _balance_ -= (#{ tokens }) ; {_} }} . 
  	 	 refine {{ return_ {} }} .
  Defined . 

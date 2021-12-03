@@ -537,7 +537,7 @@ Local Open Scope string_scope.
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition fixup_answer_addr_right { a1 }  ( answer_addr : URValue ( address ) a1 ) : URValue address a1 := 
+ Definition fixup_answer_addr_right { a1 }  ( answer_addr : URValue ( address ) a1 ) : URValue address true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) fixup_answer_addr 
  answer_addr ) . 
  
