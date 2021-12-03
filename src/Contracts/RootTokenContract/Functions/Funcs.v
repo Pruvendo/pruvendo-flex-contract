@@ -276,7 +276,7 @@ Defined .
 
  	 	 refine {{ new ( 'wallet_init:StateInitLRecord , 'dest:address ) @ ( "wallet_init" , "dest" ) :=  
                            calc_wallet_init_  ( (#{ pubkey }) , (#{ internal_owner }) ) ; { _ } }} . 
-(*    refine {{ temporary_data::setglob ( (* global_id::answer_id *) {global_id_answer_id}
+    refine {{ temporary_data::setglob ( global_id::answer_id 
                         , {} (* return_func_id ( ) *) ) ; { _ } }} .  *)
 (*      refine {{ ITONTokenWalletPtr dest_handle ( dest ) ; { _ } }} .  *)
 refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
