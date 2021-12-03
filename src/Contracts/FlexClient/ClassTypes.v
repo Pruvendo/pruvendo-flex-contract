@@ -4,6 +4,8 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
+Require Import UrsusTVM.Cpp.TvmCells.
+
 Require Import Project.CommonTypes.
 
 Inductive DFlexClientFields := | DFlexClient_ι_owner_ | DFlexClient_ι_trading_pair_code_ | DFlexClient_ι_xchg_pair_code_ | DFlexClient_ι_workchain_id_ | DFlexClient_ι_tons_cfg_ | DFlexClient_ι_flex_ | DFlexClient_ι_ext_wallet_code_ | DFlexClient_ι_flex_wallet_code_ | DFlexClient_ι_flex_wrapper_code_ .
@@ -18,14 +20,14 @@ Local Open Scope glist_scope.
 
 Definition DFlexClientL : list Type := 
  [ ( XUInteger256 ) : Type ; 
- cell : Type ; 
- cell : Type ; 
+ cell_ : Type ; 
+ cell_ : Type ; 
  ( XInteger (* XUInteger8 *) ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( address ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
- ( ( XMaybe cell ) ) : Type ] .
+ ( ( XMaybe cell_ ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ] .
 Elpi GeneratePruvendoRecord DFlexClientL DFlexClientFields . 
 
 End ClassTypes .

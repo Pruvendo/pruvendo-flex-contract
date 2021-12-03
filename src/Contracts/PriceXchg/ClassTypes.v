@@ -4,6 +4,8 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
+Require Import UrsusTVM.Cpp.TvmCells.
+
 Require Import Project.CommonTypes.
 
 Inductive RationalPriceFields := | RationalPrice_ι_num | RationalPrice_ι_denum .
@@ -70,7 +72,7 @@ Definition DPriceXchgL : list Type :=
  ( address (* IFlexNotifyPtr *) ) : Type ; 
  ( XInteger (* XUInteger8 *) ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
- cell : Type ; 
+ cell_ : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 
  ( ( XQueue OrderInfoXchgLRecord ) ) : Type ; 

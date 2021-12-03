@@ -11,6 +11,7 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonConstSig.
 
@@ -30,6 +31,8 @@ Module FuncNotations (xt: XTypesSig)
                      (dc : ConstsTypesSig xt sm ).
 Export dc. Export xt. Export sm.
 
+Module TONTokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
+
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
 Import xt.
@@ -38,6 +41,13 @@ Import UrsusNotations.
 
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
+
+
+Definition ITONTokenWalletPtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet )) )) . 
+Definition ITONTokenWalletPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_ITONTokenWallet ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage TONTokenWalletPublicInterface.ITONTokenWallet ))) false) . 
+Notation " 'ITONTokenWalletPtr' " := ( ITONTokenWalletPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 
  Definition name__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DRootTokenContract_ι_name_ ) : ULValue XString ) . 
@@ -97,7 +107,7 @@ Notation " 'error_code::wrong_bounced_header' " := (sInject error_code_ι_wrong_
 Notation " 'error_code::wrong_bounced_args' " := (sInject error_code_ι_wrong_bounced_args) (in custom URValue at level 0) : ursus_scope. 
 
 Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
-
+Notation " 'SEND_ALL_GAS_' " := (sInject SEND_ALL_GAS) (in custom URValue at level 0) : ursus_scope.
  
 Module Calls (tc : SpecSig).
 
@@ -250,7 +260,7 @@ Local Open Scope string_scope.
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , owner custom URValue at level 0 ) : ursus_scope . 
 
- Definition _on_bounced_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger true := 
+ Definition _on_bounced_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( slice ) a2 ) : URValue XUInteger true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _on_bounced 
  msg msg_body ) . 
  
@@ -268,7 +278,7 @@ Local Open Scope string_scope.
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition _fallback_right { a1 a2 }  ( x : URValue cell a1 ) ( y : URValue XSlice a2 ) : URValue XUInteger (orb a2 a1) := 
+ Definition _fallback_right { a1 a2 }  ( x : URValue cell a1 ) ( y : URValue slice a2 ) : URValue XUInteger (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  x y ) . 
  
@@ -288,7 +298,7 @@ y custom URValue at level 0 ) : ursus_scope .
  owner ) 
  (in custom URValue at level 0 , owner custom URValue at level 0 ) : ursus_scope . 
 
- Definition workchain_id_right  : URValue XUInteger8 false := 
+ Definition workchain_id_right  : URValue int false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) workchain_id 
  ) . 
  

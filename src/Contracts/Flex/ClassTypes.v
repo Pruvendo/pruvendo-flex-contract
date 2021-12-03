@@ -4,6 +4,8 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
+Require Import UrsusTVM.Cpp.TvmCells.
+
 Require Import Project.CommonTypes.
 
 (* 1 *) Inductive ListingConfigFields := | ListingConfig_ι_register_wrapper_cost | ListingConfig_ι_reject_wrapper_cost | ListingConfig_ι_wrapper_deploy_value | ListingConfig_ι_wrapper_keep_balance | ListingConfig_ι_ext_wallet_balance | ListingConfig_ι_set_internal_wallet_value | ListingConfig_ι_register_pair_cost | ListingConfig_ι_reject_pair_cost | ListingConfig_ι_pair_deploy_value | ListingConfig_ι_pair_keep_balance | ListingConfig_ι_register_return_value .
@@ -110,8 +112,8 @@ Elpi GeneratePruvendoRecord FlexOwnershipInfoL FlexOwnershipInfoFields .
  [ ( XBool ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( ListingConfigLRecord ) : Type ; 
- cell : Type ; 
- cell : Type ; 
+ cell_ : Type ; 
+ cell_ : Type ; 
  ( XUInteger8 ) : Type ; 
  ( FlexOwnershipInfoLRecord ) : Type ; 
  ( ( XHMap XUInteger WrapperListingRequestWithPubkeyLRecord ) ) : Type ; 
@@ -126,13 +128,13 @@ Elpi GeneratePruvendoRecord FlexDetailsL FlexDetailsFields .
  ( ( XMaybe address ) ) : Type ; 
  ( TonsConfigLRecord ) : Type ; 
  ( ListingConfigLRecord ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
   ( XUInteger8 ) : Type ;
  ( (XHMap XUInteger256  WrapperListingRequestLRecord)) : Type ; 
  ( (XHMap XUInteger256  TradingPairListingRequestLRecord)) : Type ; 

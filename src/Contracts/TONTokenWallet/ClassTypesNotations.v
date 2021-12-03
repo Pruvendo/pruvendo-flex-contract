@@ -2,6 +2,7 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonAxioms.
 Require Import Project.CommonTypes.
@@ -538,7 +539,7 @@ Definition IonTip3Transfer_right { a1 a2 a3 a4 a5 a6 }  (x : URValue address a1 
  refine X.
 Defined.
 
-Notation " '.onTip3Transfer' ( x , y , z , t , u , v ) " := (IonTip3Transfer_right x y z t u v) 
+Notation " 'TONTokenWallet.onTip3Transfer' ( x , y , z , t , u , v ) " := (IonTip3Transfer_right x y z t u v) 
 (in custom URValue at level 0 , x custom URValue at level 0,
  y custom URValue at level 0 , z custom URValue at level 0, 
  t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
@@ -680,6 +681,33 @@ Notation " '.burn' ( x , y ) " := (Iburn_right x y)
 (in custom URValue at level 0 , x custom URValue at level 0,
 y custom URValue at level 0 ) : ursus_scope .
 
+Definition Iaccept_right { a1 a2 a3 }  (x : URValue XUInteger128 a1 ) 
+(y : URValue address a2) 
+(z : URValue XUInteger128 a3) 
+: URValue ITONTokenWallet (orb a1 (orb a2 a3) ).
+pose proof ((urvalue_bind x (fun x' => 
+urvalue_bind y (fun y' =>
+urvalue_bind z (fun z' =>
+ #(Iaccept x' y' z' : ITONTokenWallet))))): URValue _ _).
+rewrite right_or_false in X.
+refine X.
+Defined.
+
+Notation " '.accept' ( x , y , z ) " := (Iaccept_right x y z) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+y custom URValue at level 0 , z custom URValue at level 0 ) : ursus_scope .
+
+
+Definition IreturnOwnership_right { a1}  (x : URValue XUInteger128 a1 ) 
+: URValue ITONTokenWallet (a1 ).
+pose proof ((urvalue_bind x (fun x' => 
+ #(IreturnOwnership x' : ITONTokenWallet))): URValue _ _).
+rewrite right_or_false in X.
+refine X.
+Defined.
+
+Notation " '.returnOwnership' ( x ) " := (IreturnOwnership_right x) 
+(in custom URValue at level 0 , x custom URValue at level 0) : ursus_scope .
 
 (* void transfer(
     address_t answer_addr,
@@ -716,5 +744,53 @@ Defined.
 
 Notation " 'TONTokenWallet.deploy' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
 Notation " 'TONTokenWallet.deploy_noop' ( x ) " := (_Icreate_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+Definition IinternalTransfer__right { a1 a2 a3 a4 a5 a6 }  (x : URValue XUInteger128 a1 ) 
+                                                 (y : URValue address a2) 
+                                                 (z : URValue XUInteger256 a3)
+                                                 (t : URValue address a4)
+                                                 (u : URValue XBool a5)
+                                                 (v : URValue cell a6) : URValue ITONTokenWallet (orb a1 (orb a2 (orb a3 (orb a4 (orb a5 a6))))).
+ pose proof (urvalue_bind x (fun x' => 
+                urvalue_bind y (fun y' =>
+                    urvalue_bind z (fun z' =>  
+                        urvalue_bind t (fun t' =>  
+                            urvalue_bind u (fun u' =>  
+                                urvalue_bind v (fun v' =>  #(IinternalTransfer x' y' z' t' u' v' : ITONTokenWallet))))))): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " '.internalTransfer_' ( x , y , z , t , u , v ) " := (IinternalTransfer__right x y z t u v) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+ y custom URValue at level 0 , z custom URValue at level 0, 
+ t custom URValue at level 0 , u custom URValue at level 0, v custom URValue at level 0 ) : ursus_scope .
+
+ Definition _IcreateNotify_right { a1 }  ( x : URValue StateInitLRecord a1 ) : URValue ITONTokenWalletNotify a1.
+ pose proof (urvalue_bind x (fun x' => #(_IcreateNotify x' : ITONTokenWalletNotify)): URValue _ _).
+ rewrite right_or_false in X.
+ refine X.
+Defined.
+
+Notation " 'TONTokenWalletNotify.deploy' ( x ) " := (_IcreateNotify_right x) (in custom URValue at level 0 , x custom URValue at level 0 ) : ursus_scope .
+
+Definition IinternalTransferFrom_right { a1 a2 a3 a4 a5 }  (x : URValue address a1 ) 
+(y : URValue address a2) 
+(z : URValue XUInteger128 a3)
+(t : URValue XBool a4)
+(u : URValue cell a5) : URValue ITONTokenWallet (orb a1 (orb a2 (orb a3 (orb a4 a5 )))).
+pose proof (urvalue_bind x (fun x' => 
+urvalue_bind y (fun y' =>
+urvalue_bind z (fun z' =>  
+urvalue_bind t (fun t' =>  
+urvalue_bind u (fun u' =>  #(IinternalTransferFrom x' y' z' t' u' : ITONTokenWallet)))))): URValue _ _).
+rewrite right_or_false in X.
+refine X.
+Defined.
+
+Notation " '.internalTransferFrom' ( x , y , z , t , u ) " := (IinternalTransferFrom_right x y z t u) 
+(in custom URValue at level 0 , x custom URValue at level 0,
+y custom URValue at level 0 , z custom URValue at level 0, 
+t custom URValue at level 0 , u custom URValue at level 0) : ursus_scope .
 
 End ClassTypesNotations.

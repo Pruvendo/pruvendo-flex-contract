@@ -4,6 +4,7 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonAxioms.
 
@@ -58,9 +59,16 @@ Parameter getPayloadForDeployInternalWallet : uint256 ->  address ->  uint128 ->
 Parameter _fallback : cell -> slice -> UExpression uint false . 
 Parameter preparePrice : uint128 ->  uint128 ->  uint8 -> cell ->  Tip3ConfigLRecord ->  
                          cell ->  address -> UExpression ( StateInitLRecord # ( address # uint256 ) )  false . 
+
+                         (*  Definition preparePriceXchg ( price_num : ( uint128 ) ) 
+( price_denum : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
+( deals_limit : ( uint8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
+( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : cell )
+ ( notify_addr : ( address_t ) )  :
+ : UExpression ( StateInitLRecord # ( address # uint256 ) ) true .*)
 Parameter preparePriceXchg :  uint128 ->  uint128 ->  uint128 ->  uint8 ->  Tip3ConfigLRecord ->  
                               Tip3ConfigLRecord ->  cell ->  address -> 
-                              UExpression ( StateInitLRecord # ( address # uint256 ) )  false . 
+                              UExpression ( StateInitLRecord # ( address # uint256 ) )  true . 
 
 End SpecSig.
 

@@ -11,6 +11,7 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonConstSig.
 Require Import Project.CommonAxioms.
@@ -128,7 +129,7 @@ Definition onDeploy_right { a1 a2 a3 }  ( min_amount : URValue ( uint128 ) a1 ) 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition _fallback_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue uint ( orb a2 a1 ) := 
+ Definition _fallback_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( slice ) a2 ) : URValue uint ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback msg msg_body ) . 
  
  Notation " '_fallback_' '(' msg msg_body ')' " := 

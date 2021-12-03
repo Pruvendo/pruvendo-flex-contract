@@ -38,7 +38,7 @@ Opaque FlexDeployWalletArgsLRecord .
  ( XUInteger8 ) : Type ; 
  ( XUInteger256 ) : Type ; 
  ( XUInteger128 ) : Type ; 
- cell : Type ; 
+ cell_ : Type ; 
  ( address ) : Type ; 
  ( address ) : Type ] .
 Elpi GeneratePruvendoRecord wrapper_details_infoL wrapper_details_infoFields . 
@@ -51,7 +51,7 @@ Opaque wrapper_details_infoLRecord .
  ( XInteger (* XUInteger8 *) ) : Type ; (* DWrapper_ι_workchain_id_ *)
  ( XUInteger256 ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
  ( ( XMaybe address ) ) : Type ; 
  ( XUInteger16 (* Grams *) ) : Type ; 
  ( ( XMaybe address (* ITONTokenWalletPtrLRecord *) ) ) : Type ] .

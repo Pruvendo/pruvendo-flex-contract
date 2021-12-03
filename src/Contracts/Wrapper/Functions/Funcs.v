@@ -12,6 +12,7 @@ Require Import UMLang.ProofEnvironment2.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonConstSig.
 Require Import Project.CommonTypes.
@@ -76,7 +77,7 @@ Definition init ( external_wallet : address ) : UExpression boolean true .
 	refine {{ require_ ( ( (!{init}) ↑ StateInit.code ) , error_code::bad_incoming_msg ) ; {_} }} . 
 	refine {{ new 'mycode : cell @ "mycode" := 
 						((!{init}) ↑ StateInit.code ) -> get_default () ; {_} }} . 
-	refine {{ require_ ( ( (!{ mycode }) -> to_cell () -> refs () == #{3} ) , error_code::unexpected_refs_count_in_code ) ; {_} }} . 
+	(* refine {{ require_ ( ( (!{ mycode }) -> to_cell () -> refs () == #{3} ) , error_code::unexpected_refs_count_in_code ) ; {_} }} . *) 
 	(*  	 	 refine {{ parser mycode_parser ( (!{ mycode }) -> to_cell () ) ; {_} }} .  *)
 	(*  	 	 refine {{ mycode_parser ^^ ldref () ; {_} }} . 
 	refine {{ mycode_parser ^^ ldref () ; {_} }} .  *)
@@ -259,7 +260,7 @@ Definition onTip3Transfer ( answer_addr : address )
 	(* 		refine {{ dest_handle.deploy ( wallet_init , Grams ( (!{ args }) . grams . get () ) ) . accept ( (#{ new_tokens }) , int_sender () , (!{ args }) . grams ) ; {_} }} .  *)
 
 	refine {{ _total_granted_ += #{ new_tokens } ; {_} }} . 
-	refine {{ return_ {}(* [ 0 , dest_handle ^^ get () ] *) }} . 
+	refine {{ return_  [ 0 , {} (* !{dest_handle} *) ] }} . 
 Defined . 
  
 Definition burn ( answer_addr : address ) ( sender_pubkey :uint256 ) 
@@ -445,7 +446,7 @@ Definition getInternalWalletCodeHash : UExpression XUInteger256 true .
 	refine  {{ return_  tvm_hash ( _internal_wallet_code_ -> get () )  }} . 
 Defined . 
  
-Definition _fallback ( cell :  (cell ) ) : UExpression XUInteger false . 
+Definition _fallback (_: cell) (_: slice) : UExpression XUInteger false . 
 	refine  {{ return_ 0 }} . 
 Defined . 
   

@@ -29,12 +29,12 @@ Parameter missed_flex_wallet_code : ErrorType .
 Parameter missed_flex_wrapper_code : ErrorType . 
 Parameter zero_owner_pubkey : ErrorType . 
 
-Parameter SENDER_WANTS_TO_PAY_FEES_SEPARATELY : ErrorType .
+Parameter SENDER_WANTS_TO_PAY_FEES_SEPARATELY : XUInteger .
 Parameter ec_ι_expired : ErrorType .
 Parameter ec_ι_out_of_tons : ErrorType .
 Parameter ok : ErrorType .
-Parameter SEND_ALL_GAS : ErrorType .
-Parameter DELETE_ME_IF_I_AM_EMPTY : ErrorType .
+Parameter SEND_ALL_GAS : XUInteger .
+Parameter DELETE_ME_IF_I_AM_EMPTY : XUInteger .
 Parameter rawreserve_flag_ι_up_to : ErrorType .
 Parameter ec_ι_not_enough_tons_to_process : ErrorType .
 Parameter ec_ι_unverified_tip3_wallet : ErrorType .
@@ -72,9 +72,9 @@ Parameter error_code_ι_not_my_wallet_notifies : ErrorType .
 Parameter error_code_ι_burn_unallocated : ErrorType .
 Parameter error_code_ι_message_sender_is_not_good_wallet : ErrorType .
 
-Parameter deals_limit : ErrorType.
-Parameter different_workchain_id : ErrorType.
-Parameter canceled : ErrorType.
+Parameter deals_limit : XUInteger.
+Parameter different_workchain_id : XUInteger.
+Parameter canceled : XUInteger.
 
 Parameter only_original_owner_allowed : ErrorType.
 Parameter wallet_in_lend_owneship : ErrorType.
@@ -90,6 +90,11 @@ Parameter non_zero_remaining : ErrorType.
 Parameter bad_incoming_msg : ErrorType .
 Parameter internal_owner_disabled : ErrorType .
 
-Parameter DEFAULT_MSG_FLAGS : ErrorType .
+Parameter DEFAULT_MSG_FLAGS : XUInteger .
+
+Parameter safe_delay_period : XUInteger .
+Parameter ec_ι_deals_limit : ErrorType .
+
+Parameter ec : ErrorType .
 
 End ConstsTypesSig.

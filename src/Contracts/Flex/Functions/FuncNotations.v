@@ -11,6 +11,7 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonConstSig.
 
@@ -86,8 +87,6 @@ Definition IListingAnswerPtr_messages_left := ( ULState (f:=_MessagesAndEvents) 
 Definition IListingAnswerPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_IListingAnswer ) : 
                                    URValue ( mapping address (queue (OutgoingMessage FlexPublicInterfaceModule.IListingAnswer ))) false) . 
 Notation " 'IListingAnswerPtr' " := ( IListingAnswerPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
-
-
 
 Definition deployer_pubkey__left := ( ULState (f:= _Contract ) (H:=ContractLEmbeddedType DFlex_ι_deployer_pubkey_ ) : ULValue uint256 ) . 
 Definition deployer_pubkey__right := ( URState (f:=_Contract) (H:=ContractLEmbeddedType DFlex_ι_deployer_pubkey_ ) : URValue uint256 false ) . 
@@ -397,7 +396,8 @@ Local Open Scope string_scope.
  ( isFullyInitialized_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getDetails_right  : URValue FlexDetailsLRecord false := 
+
+ Definition getDetails_right  : URValue FlexDetailsLRecord true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDetails 
  ) . 
  
@@ -405,6 +405,7 @@ Local Open Scope string_scope.
  ( getDetails_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition getTonsCfg_right  : URValue TonsConfigLRecord false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTonsCfg 
  ) . 
@@ -421,7 +422,7 @@ Local Open Scope string_scope.
  ( getListingCfg_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getTradingPairCode_right  : URValue cell false := 
+ Definition getTradingPairCode_right  : URValue cell true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTradingPairCode 
  ) . 
  
@@ -429,7 +430,7 @@ Local Open Scope string_scope.
  ( getTradingPairCode_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getXchgPairCode_right  : URValue cell false := 
+ Definition getXchgPairCode_right  : URValue cell true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getXchgPairCode 
  ) . 
  
@@ -454,7 +455,8 @@ Local Open Scope string_scope.
  tip3_addr1 tip3_addr2 ) 
  (in custom URValue at level 0 , tip3_addr1 custom URValue at level 0 
  , tip3_addr2 custom URValue at level 0 ) : ursus_scope . 
- Definition getSellTradingPair_right { a1 }  ( tip3_root : URValue ( address ) a1 ) : URValue address a1 := 
+
+ Definition getSellTradingPair_right { a1 }  ( tip3_root : URValue ( address ) a1 ) : URValue address true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) getSellTradingPair 
  tip3_root ) . 
  
@@ -462,7 +464,8 @@ Local Open Scope string_scope.
  ( getSellTradingPair_right 
  tip3_root ) 
  (in custom URValue at level 0 , tip3_root custom URValue at level 0 ) : ursus_scope . 
- Definition getXchgTradingPair_right { a1 a2 }  ( tip3_major_root : URValue ( address ) a1 ) ( tip3_minor_root : URValue ( address ) a2 ) : URValue address ( orb a2 a1 ) := 
+ Definition getXchgTradingPair_right { a1 a2 }  ( tip3_major_root : URValue ( address ) a1 ) ( tip3_minor_root : URValue ( address ) a2 ) 
+: URValue address (* orb a2 a1 *) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) getXchgTradingPair 
  tip3_major_root tip3_minor_root ) . 
  
@@ -520,7 +523,7 @@ Local Open Scope string_scope.
  ( check_owner_left 
  ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
- Definition _fallback_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue uint ( orb a2 a1 ) := 
+ Definition _fallback_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( slice ) a2 ) : URValue uint ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  msg msg_body ) . 
  

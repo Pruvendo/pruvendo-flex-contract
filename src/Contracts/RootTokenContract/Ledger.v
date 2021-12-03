@@ -11,8 +11,11 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
 Require Import UrsusTVM.Cpp.tvmFunc. 
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require TONTokenWallet.Interface.
+Require Import TONTokenWallet.ClassTypes.
+
 
 Require Import Project.CommonTypes. 
 Require Import RootTokenContract.ClassTypes.
@@ -39,6 +42,7 @@ Module Export TypesModuleForLedger := ClassTypes xt sm .
 Module Export ClassTypesModule := ClassTypes xt sm .
 
 Import xt.
+Module TONTokenWalletClassTypes := Contracts.TONTokenWallet.ClassTypes.ClassTypes xt sm.
 
 (* 2 *) Definition MessagesAndEventsL : list Type := 
  [ XHMap address ( XQueue (OutgoingMessage TONPublicInterfaceModule.ITONTokenWallet ) ) : Type ; 
@@ -58,7 +62,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState00000LRecord . 
  
  Inductive LocalStateFields00001I := | ι000010 | ι000011 . 
- Definition LocalState00001L := [ ( XHMap (string*nat) cell ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState00001L := [ ( XHMap (string*nat) cell_ ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState00001L LocalStateFields00001I . 
  Opaque LocalState00001LRecord . 
  
@@ -138,7 +142,7 @@ Inductive LocalStateFields00000I := | ι000000 | ι000001 .
  Opaque LocalState10000LRecord . 
  
  Inductive LocalStateFields10001I := | ι100010 | ι100011 . 
- Definition LocalState10001L := [ ( XHMap (string*nat) XUInteger (* record1 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+ Definition LocalState10001L := [ ( XHMap (string*nat) TONTokenWalletClassTypes.DTONTokenWalletLRecord (* record1 *) ) : Type ; ( XHMap string nat ) : Type ] . 
  GeneratePruvendoRecord LocalState10001L LocalStateFields10001I . 
  Opaque LocalState10001LRecord . 
  
@@ -700,7 +704,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10000 : typeclass_instances. 
- #[global, program] Instance LocalStateField10001 : LocalStateField XUInteger (* record1 *).
+ #[global, program] Instance LocalStateField10001 : LocalStateField TONTokenWalletClassTypes.DTONTokenWalletLRecord (* record1 *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι100). 
@@ -787,62 +791,6 @@ Next Obligation.
 #[local]
 Remove Hints LocalStateField10101 : typeclass_instances. 
 
-Definition LocalStateField_XUInteger := LocalStateField01110 .
-Definition LocalStateField_XBool := LocalStateField00011 .
-Definition LocalStateField_cell := LocalStateField00000 .
-
-
-Lemma MessagesAndEventsFields_noeq : forall (f1 f2:  MessagesAndEventsFields ) 
-         (v2: field_type f2) (r :  MessagesAndEventsLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= MessagesAndEventsLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
-(* 
-Lemma SelfDeployerFields_noeq : forall (f1 f2:  RootTokenContractLRecord ) 
-         (v2: field_type f2) (r :  ContractLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= ContractLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
- *)
-(* Lemma LocalFields_noeq : forall (f1 f2:  LocalFieldsI ) 
-         (v2: field_type f2) (r :  LocalStateLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= LocalStateLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed . *)
-
-Lemma LedgerFields_noeq : forall (f1 f2:  LedgerFields ) 
-         (v2: field_type f2) (r :  LedgerLRecord  ) ,  
-f1 <> f2 -> 
-f1 {$$ r with f2 := v2 $$} = f1 r.
-Proof.
-  intros.
-  destruct f1; destruct f2; 
-  (revert r;     
-               apply (countable_prop_proof (T:= LedgerLRecord ));
-               cbv;
-               first [reflexivity| contradiction]).
-Qed .
 
 Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
 Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.

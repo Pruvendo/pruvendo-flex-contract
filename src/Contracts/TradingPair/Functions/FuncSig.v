@@ -5,6 +5,7 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusStdLib.Cpp.stdTypes.
 
+Require Import UrsusTVM.Cpp.TvmCells.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonAxioms.

@@ -11,6 +11,7 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonConstSig.
 
@@ -133,8 +134,11 @@ Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPr
  Notation " 'ec::canceled' " := (sInject canceled) (in custom URValue at level 0) : ursus_scope. 
  Notation " 'ec::expired' " := (sInject ec_ι_expired) (in custom URValue at level 0) : ursus_scope. 
  
- 
  Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
+
+ Notation " 'safe_delay_period_' " := (sInject safe_delay_period ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ok_' " := (sInject ok ) (in custom URValue at level 0) : ursus_scope. 
+ Notation " 'ec_' " := (sInject ec ) (in custom URValue at level 0) : ursus_scope. 
 
 Module Calls (tc : SpecSig).
 
@@ -145,11 +149,11 @@ Local Open Scope string_scope.
 (**************************************************************************************************)
 
 
-Definition make_deal_right  
+(* Definition make_deal_right  
 ( sell : ULValue ( OrderInfoXchgLRecord ) ) 
 ( buy : ULValue ( OrderInfoXchgLRecord ) ) 
 : URValue ( XBool # (XBool # uint128) ) 
-false := 
+                                           true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2LL ) make_deal 
  sell buy ) . 
  
@@ -158,7 +162,7 @@ false :=
  sell buy ) 
  (in custom URValue at level 0 , sell custom URValue at level 0 
  , buy custom URValue at level 0 ) : ursus_scope . 
-
+ *)
  (* Definition extract_active_order_right { a2 a3 a4 a5 }  
 ( cur_order : URValue ( XMaybe (uint # OrderInfoXchgLRecord ) ) a2 ) 
 ( orders : URValue ( XQueue OrderInfoXchgLRecord ) a3 ) 
@@ -178,7 +182,7 @@ false :=
  , all_amount custom URValue at level 0 
  , sell custom URValue at level 0 ) : ursus_scope .  *)
  
- Definition process_queue_left { R a1 a2 }  ( sell_idx : URValue ( uint ) a1 ) ( buy_idx : URValue ( uint ) a2 ) : UExpression R true := 
+ (* Definition process_queue_left { R a1 a2 }  ( sell_idx : URValue ( uint ) a1 ) ( buy_idx : URValue ( uint ) a2 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) process_queue 
  sell_idx buy_idx ) . 
  
@@ -186,7 +190,8 @@ false :=
  ( process_queue_left 
  sell_idx buy_idx ) 
  (in custom ULValue at level 0 , sell_idx custom URValue at level 0 
- , buy_idx custom URValue at level 0 ) : ursus_scope . 
+ , buy_idx custom URValue at level 0 ) : ursus_scope .  *)
+
  Definition onTip3LendOwnership_right { a1 a2 a3 a4 a5 a6 }  ( answer_addr : URValue ( address ) a1 ) ( balance : URValue ( uint128 ) a2 ) ( lend_finish_time : URValue ( uint32 ) a3 ) ( pubkey : URValue ( uint256 ) a4 ) ( internal_owner : URValue ( address ) a5 ) ( payload : URValue cell a6 ) : URValue OrderRetLRecord true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) onTip3LendOwnership 
  answer_addr balance lend_finish_time pubkey internal_owner payload ) . 
@@ -201,7 +206,7 @@ false :=
  , internal_owner custom URValue at level 0 
  , payload custom URValue at level 0 ) : ursus_scope .
  
- Definition processQueue_left { R }  : UExpression R false := 
+ Definition processQueue_left { R }  : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) processQueue 
  ) . 
  
@@ -310,7 +315,7 @@ false :=
  
  Definition _fallback_right { a1 a2 }  
 ( x : URValue cell a1 )
-( y : URValue XSlice a2 ) 
+( y : URValue slice a2 ) 
 : URValue uint (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  x y ) . 
@@ -381,7 +386,8 @@ false :=
  order_finish_time ) 
  (in custom URValue at level 0 , order_finish_time custom URValue at level 0 ) : ursus_scope .
 
- Definition minor_cost_right { a1 a2 }  ( amount : URValue ( uint128 ) a1 ) ( price : URValue ( RationalPriceLRecord ) a2 ) : URValue (XMaybe uint128) ( orb a2 a1 ) := 
+ Definition minor_cost_right { a1 a2 }  ( amount : URValue ( uint128 ) a1 ) ( price : URValue ( RationalPriceLRecord ) a2 ) 
+: URValue (XMaybe uint128) (* orb a2 a1 *) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) minor_cost 
  amount price ) . 
  
@@ -405,7 +411,8 @@ false :=
 ( buys_amount : URValue ( uint128 ) a11 ) 
 ( buys : URValue ( XQueue OrderInfoXchgLRecord ) a12 ) 
 : URValue process_retLRecord 
-( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a12 a11 ) a10 ) a9 ) a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) 
+true
+(* orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a12 a11 ) a10 ) a9 ) a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 *) 
 := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ12 ) process_queue_impl 
  tip3root_sell tip3root_buy notify_addr price deals_limit tons_cfg sell_idx buy_idx sells_amount sells buys_amount buys ) . 
@@ -426,7 +433,7 @@ false :=
  , buys_amount custom URValue at level 0 
  , buys custom URValue at level 0 ) : ursus_scope . 
 
- Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
+ Definition cancell_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
 ( orders : URValue ( XQueue OrderInfoXchgLRecord ) a1 ) 
 ( client_addr : URValue ( addr_std_fixed ) a2 ) 
 ( all_amount : URValue ( uint128 ) a3 ) 
@@ -436,11 +443,11 @@ false :=
 ( incoming_val : URValue ( uint (* Grams *) ) a7 ) 
 : URValue ((XQueue OrderInfoXchgLRecord) # uint128) 
 ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancel_order_impl 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancell_order_impl 
  orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
  
- Notation " 'cancel_order_impl_' '(' orders client_addr all_amount sell return_ownership process_queue incoming_val ')' " := 
- ( cancel_order_impl_right 
+ Notation " 'cancell_order_impl_' '(' orders client_addr all_amount sell return_ownership process_queue incoming_val ')' " := 
+ ( cancell_order_impl_right 
  orders client_addr all_amount sell return_ownership process_queue incoming_val ) 
  (in custom URValue at level 0 , orders custom URValue at level 0 
  , client_addr custom URValue at level 0 
@@ -450,14 +457,14 @@ false :=
  , process_queue custom URValue at level 0 
  , incoming_val custom URValue at level 0 ) : ursus_scope .
  
- Definition int_sender_and_value_right  : URValue ( address # uint (* Grams *) ) false := 
+ (* Definition int_sender_and_value_right  : URValue ( address # uint (* Grams *) ) false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) int_sender_and_value 
  ) . 
  
  Notation " 'int_sender_and_value_' '(' ')' " := 
  ( int_sender_and_value_right 
  ) 
- (in custom URValue at level 0 ) : ursus_scope . 
+ (in custom URValue at level 0 ) : ursus_scope .  *)
 
 End Calls. 
 

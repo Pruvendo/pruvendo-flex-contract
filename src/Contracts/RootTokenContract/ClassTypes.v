@@ -4,6 +4,8 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
+Require Import UrsusTVM.Cpp.TvmCells.
+
 Require Import Project.CommonTypes.
 
 Inductive DRootTokenContractFields := | DRootTokenContract_ι_name_ | DRootTokenContract_ι_symbol_ | DRootTokenContract_ι_decimals_ | DRootTokenContract_ι_root_public_key_ | DRootTokenContract_ι_total_supply_ | DRootTokenContract_ι_total_granted_ | DRootTokenContract_ι_wallet_code_ | DRootTokenContract_ι_owner_address_ | DRootTokenContract_ι_start_balance_ .
@@ -23,7 +25,7 @@ Definition DRootTokenContractL : list Type :=
  ( XUInteger256 ) : Type ; 
  ( XUInteger128 ) : Type ; 
  ( XUInteger128 ) : Type ; 
- ( ( XMaybe cell ) ) : Type ; 
+ ( ( XMaybe cell_ ) ) : Type ; 
  ( ( XMaybe address ) ) : Type ; 
  ( XUInteger (* Grams *) ) : Type ] .
 Elpi GeneratePruvendoRecord DRootTokenContractL DRootTokenContractFields . 

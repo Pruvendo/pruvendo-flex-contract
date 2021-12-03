@@ -11,6 +11,7 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
 Require Import UrsusTVM.Cpp.tvmFunc. 
+Require Import UrsusTVM.Cpp.TvmCells. 
 
 Require Import Project.CommonTypes. 
 
@@ -75,7 +76,7 @@ GeneratePruvendoRecord LocalState00010L LocalStateFields00010I .
 Opaque LocalState00010LRecord . 
 
 Inductive LocalStateFields00011I := | ι000110 | ι000111 . 
-Definition LocalState00011L := [ ( XHMap (string*nat) cell ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState00011L := [ ( XHMap (string*nat) cell_ ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState00011L LocalStateFields00011I . 
 Opaque LocalState00011LRecord . 
 
@@ -181,7 +182,7 @@ GeneratePruvendoRecord LocalState10111L LocalStateFields10111I .
 Opaque LocalState10111LRecord . 
 
 Inductive LocalStateFields11000I := | ι110000 | ι110001 . 
-Definition LocalState11000L := [ ( XHMap (string*nat) XUInteger (* type1 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState11000L := [ ( XHMap (string*nat) lend_recordLRecord (* type1 *) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState11000L LocalStateFields11000I . 
 Opaque LocalState11000LRecord . 
 
@@ -920,7 +921,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10111 : typeclass_instances. 
- #[global, program] Instance LocalStateField11000 : LocalStateField XUInteger (* type1 *).
+ #[global, program] Instance LocalStateField11000 : LocalStateField lend_recordLRecord (* type1 *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι11). 
@@ -1017,9 +1018,9 @@ Next Obligation.
 #[local]
 Remove Hints LocalStateField11100 : typeclass_instances. 
 
-Definition LocalStateField_XUInteger := LocalStateField01110 .
+(* Definition LocalStateField_XUInteger := LocalStateField01110 .
 Definition LocalStateField_XBool := LocalStateField00011 .
-Definition LocalStateField_cell := LocalStateField00000 .
+Definition LocalStateField_cell := LocalStateField00000 . *)
 
 Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
 Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.

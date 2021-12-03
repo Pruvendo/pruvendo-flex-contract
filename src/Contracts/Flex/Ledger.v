@@ -11,6 +11,7 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
 Require Import UrsusTVM.Cpp.tvmFunc. 
+Require Import UrsusTVM.Cpp.TvmCells. 
 
 Require Import Project.CommonTypes. 
 
@@ -93,7 +94,7 @@ GeneratePruvendoRecord LocalState000000L LocalStateFields000000I .
 Opaque LocalState000000LRecord . 
 
 Inductive LocalStateFields000001I := | ι0000010 | ι0000011 . 
-Definition LocalState000001L := [ ( XHMap (string*nat) cell ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState000001L := [ ( XHMap (string*nat) cell_ ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState000001L LocalStateFields000001I . 
 Opaque LocalState000001LRecord . 
 
@@ -163,7 +164,7 @@ GeneratePruvendoRecord LocalState001110L LocalStateFields001110I .
 Opaque LocalState001110LRecord . 
 
 Inductive LocalStateFields001111I := | ι0011110 | ι0011111 . 
-Definition LocalState001111L := [ ( XHMap (string*nat) XSlice ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState001111L := [ ( XHMap (string*nat) slice_ ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState001111L LocalStateFields001111I . 
 Opaque LocalState001111LRecord . 
 
@@ -920,7 +921,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField001110 : typeclass_instances. 
- #[global, program] Instance LocalStateField001111 : LocalStateField XSlice.
+ #[global, program] Instance LocalStateField001111 : LocalStateField slice.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι0). 
  eapply TransEmbedded. eapply (_ ι00). 
@@ -1508,9 +1509,9 @@ Next Obligation.
 Remove Hints LocalStateField101010 : typeclass_instances. 
 
 
-Definition LocalStateField_XUInteger := LocalStateField011100 .
+(* Definition LocalStateField_XUInteger := LocalStateField011100 .
 Definition LocalStateField_XBool := LocalStateField010001 .
-Definition LocalStateField_cell := LocalStateField000001 .
+Definition LocalStateField_cell := LocalStateField000001 . *)
 
 Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
 Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.

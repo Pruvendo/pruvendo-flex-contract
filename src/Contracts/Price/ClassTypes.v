@@ -4,6 +4,8 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
+Require Import UrsusTVM.Cpp.TvmCells.
+
 Require Import Project.CommonTypes.
 
 Inductive SellArgsFields := | SellArgs_ι_amount | SellArgs_ι_receive_wallet .
@@ -109,7 +111,7 @@ Definition DPriceL : list Type :=
  ( address (* IFlexNotify *) ) : Type ; 
  ( XInteger ) : Type ; (* DPrice_ι_workchain_id_ *)
  ( TonsConfigLRecord ) : Type ; 
- cell : Type ; 
+ cell_ : Type ; 
  ( Tip3ConfigLRecord ) : Type ; 
  ( ( XQueue OrderInfoLRecord ) ) : Type ; 
  ( ( XQueue OrderInfoLRecord ) ) : Type ] .

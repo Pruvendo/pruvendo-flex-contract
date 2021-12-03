@@ -11,6 +11,7 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
 Require Import UrsusTVM.Cpp.tvmFunc. 
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonTypes. 
 
@@ -57,7 +58,7 @@ GeneratePruvendoRecord LocalState0000L LocalStateFields0000I .
 Opaque LocalState0000LRecord . 
 
 Inductive LocalStateFields0001I := | ι00010 | ι00011 . 
-Definition LocalState0001L := [ ( XHMap (string*nat) cell ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState0001L := [ ( XHMap (string*nat) cell_ ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState0001L LocalStateFields0001I . 
 Opaque LocalState0001LRecord . 
 
@@ -397,9 +398,9 @@ Next Obligation.
 #[local]
 Remove Hints LocalStateField1001 : typeclass_instances. 
 
-Definition LocalStateField_XUInteger := LocalStateField0110 .
+(* Definition LocalStateField_XUInteger := LocalStateField0110 .
 Definition LocalStateField_XBool := LocalStateField0011 .
-Definition LocalStateField_cell := LocalStateField0001 .
+Definition LocalStateField_cell := LocalStateField0001 . *)
 
 Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
 Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.

@@ -4,6 +4,8 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.LocalClassGenerator.ClassGenerator.
 
+Require Import UrsusTVM.Cpp.TvmCells.
+
 Require Import Project.CommonTypes.
 
 Inductive lend_array_recordFields := | lend_array_record_ι_lend_addr | lend_array_record_ι_lend_balance | lend_array_record_ι_lend_finish_time .
@@ -58,7 +60,7 @@ Definition DTONTokenWalletL : list Type :=
 ( address ) : Type ; 
 ( ( XMaybe address ) ) : Type ; 
 (XHMap addr_std_fixed lend_recordLRecord) : Type;
-cell : Type ; 
+cell_ : Type ; 
 ( ( XMaybe allowance_infoLRecord ) ) : Type ; 
 ( XInteger (* XUInteger8 *) ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletL DTONTokenWalletFields . 
@@ -80,7 +82,7 @@ Definition details_infoL : list Type :=
     ( address ) : Type ; 
     ( ( XHMap XUInteger lend_array_recordLRecord ) ) : Type ; 
     ( XUInteger128 ) : Type ; 
-    cell : Type ; 
+    cell_ : Type ; 
     ( allowance_infoLRecord ) : Type ; 
     ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord details_infoL details_infoFields .     
@@ -94,7 +96,7 @@ Definition DTONTokenWalletExternalL : list Type :=
 ( XUInteger256 ) : Type ; 
 ( address ) : Type ; 
 ( ( XMaybe address ) ) : Type ; 
-cell : Type ; 
+cell_ : Type ; 
 ( ( XMaybe allowance_infoLRecord ) ) : Type ; 
 ( XInteger (* XUInteger8 *) ) : Type ] .
 Elpi GeneratePruvendoRecord DTONTokenWalletExternalL DTONTokenWalletExternalFields . 
@@ -109,7 +111,7 @@ Definition DTONTokenWalletInternalL : list Type :=
 ( address ) : Type ; 
 ( ( XMaybe address ) ) : Type ; 
 ( ( XHMap addr_std_fixed lend_recordLRecord ) ) : Type ;
-cell : Type ; 
+cell_ : Type ; 
 ( XInteger (* XUInteger8 *) ) : Type ] . (* DTONTokenWalletExternal_ι_workchain_id_ *)
 Elpi GeneratePruvendoRecord DTONTokenWalletInternalL DTONTokenWalletInternalFields . 
 

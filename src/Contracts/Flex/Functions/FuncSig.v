@@ -4,6 +4,7 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells. 
 
 Require Import Project.CommonAxioms.
 Require Import Flex.ClassTypesNotations.
@@ -46,15 +47,15 @@ Parameter registerWrapper : uint256 -> Tip3ConfigLRecord -> UExpression address 
 Parameter approveWrapper : uint256 -> UExpression address true . 
 Parameter rejectWrapper : uint256 -> UExpression boolean true . 
 Parameter isFullyInitialized : UExpression boolean false . 
-Parameter getDetails : UExpression FlexDetailsLRecord false . 
+Parameter getDetails : UExpression FlexDetailsLRecord true . 
 Parameter getTonsCfg : UExpression TonsConfigLRecord false . 
 Parameter getListingCfg : UExpression ListingConfigLRecord false . 
-Parameter getTradingPairCode : UExpression cell false . 
-Parameter getXchgPairCode : UExpression cell false . 
+Parameter getTradingPairCode : UExpression cell true . 
+Parameter getXchgPairCode : UExpression cell true . 
 Parameter getSellPriceCode : address -> UExpression cell true . 
 Parameter getXchgPriceCode : address -> address -> UExpression cell true . 
-Parameter getSellTradingPair : address -> UExpression address false . 
-Parameter getXchgTradingPair : address -> address -> UExpression address false . 
+Parameter getSellTradingPair : address -> UExpression address true . 
+Parameter getXchgTradingPair : address -> address -> UExpression address true . 
 Parameter getDealsLimit : UExpression uint8 false . 
 Parameter getOwnershipInfo : UExpression FlexOwnershipInfoLRecord false .
 Parameter getWrapperListingRequests : UExpression ( mapping uint WrapperListingRequestWithPubkeyLRecord) false .

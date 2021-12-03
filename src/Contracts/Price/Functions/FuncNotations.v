@@ -11,6 +11,7 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonConstSig.
 
@@ -63,6 +64,11 @@ Definition IFlexNotifyPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H
                                    URValue ( mapping address (queue (OutgoingMessage FlexNotifyPublicInterface.IFlexNotify ))) false) . 
 Notation " 'IFlexNotifyPtr' " := ( IFlexNotifyPtr_messages_left ) (in custom ULValue at level 0) : ursus_scope. 
 
+Definition IPricePtr_messages_left := ( ULState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_Price ) : 
+                                   ULValue ( mapping address (queue (OutgoingMessage PricePublicInterface.IPrice )) )) . 
+Definition IPricerPtr_messages_right := ( URState (f:=_MessagesAndEvents) (H:=MessagesAndEventsLEmbeddedType _OutgoingMessages_Price ) : 
+                                   URValue ( mapping address (queue (OutgoingMessage PricePublicInterface.IPrice))) false) . 
+Notation " 'IPricePtr' " := ( IPricePtr_messages_left ) (in custom ULValue at level 0) : ursus_scope.
 
 
  Definition price__left := ( ULState (f:=_Contract) (H:=ContractLEmbeddedType DPrice_ι_price_ ) : ULValue uint128 ) . 
@@ -143,8 +149,8 @@ Notation " 'ec::not_enough_tons_to_process' " := (sInject ec_ι_not_enough_tons_
 Notation " 'ec::unverified_tip3_wallet' " := (sInject ec_ι_unverified_tip3_wallet) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'ec::not_enough_tokens_amount' " := (sInject ec_ι_not_enough_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'ec::too_big_tokens_amount' " := (sInject ec_ι_too_big_tokens_amount) (in custom URValue at level 0) : ursus_scope. 
-
-
+Notation " 'ec::deals_limit' " := (sInject ec_ι_deals_limit) (in custom URValue at level 0) : ursus_scope.
+Notation " 'SENDER_WANTS_TO_PAY_FEES_SEPARATELY_' " := (sInject SENDER_WANTS_TO_PAY_FEES_SEPARATELY)(in custom URValue at level 0) : ursus_scope.
 Module Calls (tc : SpecSig).
 
 Export tc.
@@ -316,7 +322,7 @@ Definition extract_active_order_right { a1 a2 a3 a4 }
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition _fallback_right { a1 a2 }  ( x : URValue cell a1 ) ( y : URValue XSlice a2 ) : URValue uint (orb a2 a1) := 
+ Definition _fallback_right { a1 a2 }  ( x : URValue cell a1 ) ( y : URValue slice a2 ) : URValue uint (orb a2 a1) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  x y ) . 
  
@@ -421,7 +427,7 @@ Definition extract_active_order_right { a1 a2 a3 a4 }
  , buys_amount custom URValue at level 0 
  , buys custom URValue at level 0 ) : ursus_scope . 
 
- Definition cancel_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
+ Definition cancell_order_impl_right { a1 a2 a3 a4 a5 a6 a7 }  
 ( orders : URValue ( XQueue OrderInfoLRecord ) a1 ) 
 ( client_addr : URValue ( addr_std_fixed ) a2 ) 
 ( all_amount : URValue ( uint128 ) a3 ) 
@@ -431,11 +437,11 @@ Definition extract_active_order_right { a1 a2 a3 a4 }
 ( incoming_val : URValue ( uint (* Grams *) ) a7 ) 
 : URValue ((XQueue OrderInfoLRecord) # uint128)
  ( orb ( orb ( orb ( orb ( orb ( orb a7 a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancel_order_impl 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) cancell_order_impl 
  orders client_addr all_amount sell return_ownership process_queue incoming_val ) . 
  
- Notation " 'cancel_order_impl_' '(' orders client_addr all_amount sell return_ownership process_queue incoming_val ')' " := 
- ( cancel_order_impl_right 
+ Notation " 'cancell_order_impl_' '(' orders client_addr all_amount sell return_ownership process_queue incoming_val ')' " := 
+ ( cancell_order_impl_right 
  orders client_addr all_amount sell return_ownership process_queue incoming_val ) 
  (in custom URValue at level 0 , orders custom URValue at level 0 
  , client_addr custom URValue at level 0 

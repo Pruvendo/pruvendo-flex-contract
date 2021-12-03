@@ -6,6 +6,7 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusStdLib.Cpp.stdTypes.
 
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonAxioms.
 
@@ -60,7 +61,7 @@ Parameter process_queue_impl : address -> address (*IFlexNotifyPtr*) -> uint128 
                                uint -> uint -> uint128 -> queue OrderInfoLRecord -> 
                                uint128 -> 
                                queue OrderInfoLRecord -> UExpression process_retLRecord true . 
-Parameter cancel_order_impl : queue OrderInfoLRecord -> addr_std_fixed -> uint128 -> boolean -> Grams -> 
+Parameter cancell_order_impl : queue OrderInfoLRecord -> addr_std_fixed -> uint128 -> boolean -> Grams -> 
                               Grams -> Grams -> UExpression ((queue OrderInfoLRecord) # uint128) false . 
 
 End SpecSig.

@@ -5,6 +5,7 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusStdLib.Cpp.stdTypes.
 
+Require Import UrsusTVM.Cpp.TvmCells.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonAxioms.
@@ -28,19 +29,20 @@ Notation OrderInfoXchgWithIdx := (uint # OrderInfoXchgLRecord).
 Module Type SpecSig.
 
 
-(* Parameter make_deal : ULValue OrderInfoXchgLRecord -> ULValue OrderInfoXchgLRecord -> UExpression ( boolean # (boolean # uint128) ) false . 
+(* Parameter make_deal : ULValue OrderInfoXchgLRecord -> ULValue OrderInfoXchgLRecord -> 
+UExpression ( boolean # (boolean # uint128) ) true . 
  *)
 (* static std::tuple<std::optional<OrderInfoXchgWithIdx>, big_queue<OrderInfoXchg>, uint128>
   extract_active_order(std::optional<OrderInfoXchgWithIdx> cur_order,
                        big_queue<OrderInfoXchg> orders, uint128 all_amount, bool_t sell) *)
 (*Error: not ULValue !!!*)
-(* Parameter extract_active_order : ULValue ( optional OrderInfoXchgWithIdx ) -> 
-                                 ULValue ( queue OrderInfoXchgLRecord )  -> 
-                                 ULValue ( uint128 ) -> boolean -> 
-          UExpression ( optional OrderInfoXchgWithIdx # ((queue OrderInfoXchgLRecord) # uint128) )  true .  *)
-(* Parameter process_queue : uint -> uint -> UExpression PhantomType true .  *)
+Parameter extract_active_order : (* ULValue *) ( optional OrderInfoXchgWithIdx ) -> 
+                                 (* ULValue *) ( queue OrderInfoXchgLRecord )  -> 
+                                 (* ULValue *) ( uint128 ) -> boolean -> 
+          UExpression ( optional OrderInfoXchgWithIdx # ((queue OrderInfoXchgLRecord) # uint128) )  true .
+(* Parameter process_queue : uint -> uint -> UExpression PhantomType true . *)
 Parameter onTip3LendOwnership : address -> uint128 -> uint32 -> uint256 -> address -> cell -> UExpression OrderRetLRecord true . 
-Parameter processQueue : UExpression PhantomType false . 
+Parameter processQueue : UExpression PhantomType true . 
 Parameter cancelSell : UExpression PhantomType false . 
 Parameter cancelBuy : UExpression PhantomType false . 
 Parameter getDetails : UExpression DetailsInfoXchgLRecord false . 
@@ -60,15 +62,15 @@ Parameter on_ord_fail :  uint -> address (* ITONTokenWalletPtrLRecord *)  -> uin
 
 Parameter prepare_price_xchg_state_init_and_addr: ContractLRecord -> cell -> UExpression ( StateInitLRecord # uint256 ) false . 
 Parameter is_active_time : uint32  -> UExpression boolean false . 
-Parameter minor_cost : uint128 -> price_t -> UExpression (optional uint128) false . 
+Parameter minor_cost : uint128 -> price_t -> UExpression (optional uint128) true . 
 Parameter process_queue_impl : address -> address -> address (* IFlexNotifyPtrLRecord *) -> 
                                price_t -> uint8 -> TonsConfigLRecord -> 
                                uint -> uint -> uint128 -> queue OrderInfoXchgLRecord ->
-                               uint128 -> queue OrderInfoXchgLRecord -> UExpression process_retLRecord false .
-Parameter cancel_order_impl : queue OrderInfoXchgLRecord -> 
+                               uint128 -> queue OrderInfoXchgLRecord -> UExpression process_retLRecord true .
+Parameter cancell_order_impl : queue OrderInfoXchgLRecord -> 
                               addr_std_fixed -> uint128 -> boolean -> 
                               Grams -> Grams -> Grams -> UExpression ((queue OrderInfoXchgLRecord) # uint128) false . 
-Parameter int_sender_and_value : UExpression ( address # Grams ) false . 
+(* Parameter int_sender_and_value : UExpression ( address # Grams ) false .  *)
 
 End SpecSig.
 

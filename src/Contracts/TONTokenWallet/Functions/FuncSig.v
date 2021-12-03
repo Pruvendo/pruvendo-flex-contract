@@ -6,6 +6,7 @@ Require Import UMLang.UrsusLib.
 Require Import UrsusStdLib.Cpp.stdTypes.
 
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonAxioms.
 
@@ -17,8 +18,8 @@ Module Spec (xt: XTypesSig) (sm: StateMonadSig).
 
 Module LedgerModuleForFuncSig := Ledger xt sm .
 Module Export ClassTypesNotationsModule := ClassTypesNotations xt sm LedgerModuleForFuncSig. 
-Module Export stdTypesNotationsModule := stdTypesNotations xt sm LedgerModuleForFuncSig.
-
+(* Module Export stdTypesNotationsModule := stdTypes.stdTypesNotations xt sm LedgerModuleForFuncSig.
+ *)
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
 
@@ -60,8 +61,8 @@ Parameter transfer : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) 
  Parameter transferFromWithNotify : ( ( address ) ) -> ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter internalTransferFrom : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter disapprove : UExpression PhantomType true . 
- Parameter _on_bounced : ( cell ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
- Parameter _fallback : ( cell ) -> ( ( XSlice ) ) -> UExpression XUInteger true . 
+ Parameter _on_bounced : ( cell ) -> ( ( slice ) ) -> UExpression XUInteger true . 
+ Parameter _fallback : ( cell ) -> ( ( slice ) ) -> UExpression XUInteger true . 
  Parameter transfer_impl : ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter transfer_to_recipient_impl : ( ( address ) ) -> ( ( XUInteger256 ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 
  Parameter transfer_from_impl : ( ( address ) ) -> ( ( address ) ) -> ( ( address ) ) -> ( ( XUInteger128 ) ) -> ( ( XUInteger128 ) ) -> ( ( XBool ) ) -> ( cell ) -> UExpression PhantomType true . 

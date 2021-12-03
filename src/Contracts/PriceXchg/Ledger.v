@@ -11,6 +11,7 @@ Require Import UMLang.BasicModuleTypes.
 Require Import UMLang.GlobalClassGenerator.ClassGenerator.
 
 Require Import UrsusTVM.Cpp.tvmFunc. 
+Require Import UrsusTVM.Cpp.TvmCells. 
 
 Require Import Project.CommonTypes. 
 Require Import PriceXchg.ClassTypes.
@@ -64,7 +65,7 @@ GeneratePruvendoRecord LocalState00000L LocalStateFields00000I .
 Opaque LocalState00000LRecord . 
 
 Inductive LocalStateFields00001I := | ι000010 | ι000011 . 
-Definition LocalState00001L := [ ( XHMap (string*nat) cell ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState00001L := [ ( XHMap (string*nat) cell_ ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState00001L LocalStateFields00001I . 
 Opaque LocalState00001LRecord . 
 

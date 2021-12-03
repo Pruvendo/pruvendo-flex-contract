@@ -12,22 +12,23 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonConstSig.
+Require Import Project.CommonAxioms.
 
-Require Import CommonAxioms.
-Require Import Contracts.FlexClient.Ledger.
-Require Import Contracts.FlexClient.Functions.FuncSig.
-Require Import Contracts.FlexClient.ClassTypes.
+Require Import FlexClient.Ledger.
+Require Import FlexClient.Functions.FuncSig.
+Require Import FlexClient.ClassTypes.
 (* Require Import Contracts.Wrapper.ClassTypes. *)
 
 (* здесь инмпортируем все внешние интерфейсы *)
-Require Import Contracts.TradingPair.Interface.
-Require Import Contracts.XchgPair.Interface.
-Require Import Contracts.Price.Interface.
-Require Import Contracts.TONTokenWallet.Interface.
-Require Import Contracts.PriceXchg.Interface.
-Require Import Contracts.Flex.Interface.
+Require Import TradingPair.Interface.
+Require Import XchgPair.Interface.
+Require Import Price.Interface.
+Require Import TONTokenWallet.Interface.
+Require Import PriceXchg.Interface.
+Require Import Flex.Interface.
 
 Module FuncNotations (xt: XTypesSig) 
                      (sm: StateMonadSig) 
@@ -35,14 +36,14 @@ Module FuncNotations (xt: XTypesSig)
 Export dc. Export xt. Export sm.
 
 (* здесь модули из каждого внешнего интерфейса *)
-Module TradingPairPublicInterfaceModule := Contracts.TradingPair.Interface.PublicInterface xt sm.
-Module XchgPairPublicInterface    := Contracts.XchgPair.Interface.PublicInterface xt sm.
-Module PricePublicInterface       := Contracts.Price.Interface.PublicInterface xt sm.
-Module TokenWalletPublicInterface := Contracts.TONTokenWallet.Interface.PublicInterface xt sm.
-Module PriceXchgPublicInterface   := Contracts.PriceXchg.Interface.PublicInterface xt sm.
-Module FlexPublicInterface        := Contracts.Flex.Interface.PublicInterface xt sm.
-Module FlexClientPublicInterface  := Contracts.FlexClient.Interface.PublicInterface xt sm.
-Module TradingPairClassTypesModule     := TradingPair.ClassTypes.ClassTypes xt sm.
+Module TradingPairPublicInterfaceModule := TradingPair.Interface.PublicInterface xt sm.
+Module XchgPairPublicInterface    := XchgPair.Interface.PublicInterface xt sm.
+Module PricePublicInterface       := Price.Interface.PublicInterface xt sm.
+Module TokenWalletPublicInterface := TONTokenWallet.Interface.PublicInterface xt sm.
+Module PriceXchgPublicInterface   := PriceXchg.Interface.PublicInterface xt sm.
+Module FlexPublicInterface        := Flex.Interface.PublicInterface xt sm.
+Module FlexClientPublicInterface  := FlexClient.Interface.PublicInterface xt sm.
+Module TradingPairClassTypesModule  := TradingPair.ClassTypes.ClassTypes xt sm.
 
 Module Export SpecModuleForFuncNotations := Spec xt sm.
 
@@ -389,74 +390,65 @@ Local Open Scope string_scope.
  , tons_to_wallet custom URValue at level 0 
  , tip3cfg custom URValue at level 0 ) : ursus_scope . 
  
- Definition burnWallet_left { R a1 a2 a3 a4 }  ( tons_value : URValue ( uint128 ) a1 ) ( out_pubkey : URValue ( uint256 ) a2 ) ( out_internal_owner : URValue ( address ) a3 ) ( my_tip3_addr : URValue ( address ) a4 ) : UExpression R true := 
+Definition burnWallet_left { R a1 a2 a3 a4 }  ( tons_value : URValue ( uint128 ) a1 ) ( out_pubkey : URValue ( uint256 ) a2 ) ( out_internal_owner : URValue ( address ) a3 ) ( my_tip3_addr : URValue ( address ) a4 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) burnWallet 
  tons_value out_pubkey out_internal_owner my_tip3_addr ) . 
  
- Notation " 'burnWallet_' '(' tons_value out_pubkey out_internal_owner my_tip3_addr ')' " := 
- ( burnWallet_left 
- tons_value out_pubkey out_internal_owner my_tip3_addr ) 
+Notation " 'burnWallet_' '(' tons_value out_pubkey out_internal_owner my_tip3_addr ')' " := 
+ ( burnWallet_left tons_value out_pubkey out_internal_owner my_tip3_addr ) 
  (in custom ULValue at level 0 , tons_value custom URValue at level 0 
  , out_pubkey custom URValue at level 0 
  , out_internal_owner custom URValue at level 0 
  , my_tip3_addr custom URValue at level 0 ) : ursus_scope . 
+
  Definition getOwner_right  : URValue uint256 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwner 
- ) . 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwner ) . 
  
- Notation " 'getOwner_' '(' ')' " := 
- ( getOwner_right 
- ) 
+ Notation " 'getOwner_' '(' ')' " := ( getOwner_right  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getFlex_right  : URValue address false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getFlex 
- ) . 
+
+Definition getFlex_right  : URValue address false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getFlex ) . 
  
  Notation " 'getFlex_' '(' ')' " := 
- ( getFlex_right 
- ) 
+ ( getFlex_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition hasExtWalletCode_right  : URValue XBool false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) hasExtWalletCode 
- ) . 
+
+Definition hasExtWalletCode_right  : URValue XBool false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) hasExtWalletCode ) . 
  
- Notation " 'hasExtWalletCode_' '(' ')' " := 
- ( hasExtWalletCode_right 
- ) 
+Notation " 'hasExtWalletCode_' '(' ')' " := ( hasExtWalletCode_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition hasFlexWalletCode_right  : URValue XBool false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) hasFlexWalletCode 
- ) . 
+
+Definition hasFlexWalletCode_right  : URValue XBool false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) hasFlexWalletCode ) . 
  
  Notation " 'hasFlexWalletCode_' '(' ')' " := 
- ( hasFlexWalletCode_right 
- ) 
+ ( hasFlexWalletCode_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
+
  Definition hasFlexWrapperCode_right  : URValue XBool false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) hasFlexWrapperCode 
  ) . 
  
  Notation " 'hasFlexWrapperCode_' '(' ')' " := 
- ( hasFlexWrapperCode_right 
- ) 
+ ( hasFlexWrapperCode_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
  Definition getPayloadForDeployInternalWallet_right { a1 a2 a3 }  ( owner_pubkey : URValue ( uint256 ) a1 ) ( owner_addr : URValue ( address ) a2 ) ( tons : URValue ( uint128 ) a3 ) : URValue cell ( orb ( orb a3 a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) getPayloadForDeployInternalWallet 
  owner_pubkey owner_addr tons ) . 
  
  Notation " 'getPayloadForDeployInternalWallet_' '(' owner_pubkey owner_addr tons ')' " := 
- ( getPayloadForDeployInternalWallet_right 
- owner_pubkey owner_addr tons ) 
+ ( getPayloadForDeployInternalWallet_right owner_pubkey owner_addr tons ) 
  (in custom URValue at level 0 , owner_pubkey custom URValue at level 0 
  , owner_addr custom URValue at level 0 
  , tons custom URValue at level 0 ) : ursus_scope . 
- Definition _fallback_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( XSlice ) a2 ) : URValue uint ( orb a2 a1 ) := 
+ Definition _fallback_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( slice ) a2 ) : URValue uint ( orb a2 a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
  msg msg_body ) . 
  
  Notation " '_fallback_' '(' msg msg_body ')' " := 
- ( _fallback_right 
- msg msg_body ) 
+ ( _fallback_right msg msg_body ) 
  (in custom URValue at level 0 , msg custom URValue at level 0 
  , msg_body custom URValue at level 0 ) : ursus_scope . 
 
@@ -464,9 +456,8 @@ Local Open Scope string_scope.
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) preparePrice 
  price min_amount deals_limit tip3_code tip3cfg price_code notify_addr ) . 
  
- Notation " 'preparePrice_' '(' price min_amount deals_limit tip3_code tip3cfg price_code notify_addr ')' " := 
- ( preparePrice_right 
- price min_amount deals_limit tip3_code tip3cfg price_code notify_addr ) 
+Notation " 'preparePrice_' '(' price min_amount deals_limit tip3_code tip3cfg price_code notify_addr ')' " := 
+ ( preparePrice_right price min_amount deals_limit tip3_code tip3cfg price_code notify_addr ) 
  (in custom URValue at level 0 , price custom URValue at level 0 
  , min_amount custom URValue at level 0 
  , deals_limit custom URValue at level 0 
@@ -474,13 +465,12 @@ Local Open Scope string_scope.
  , tip3cfg custom URValue at level 0 
  , price_code custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
- Definition preparePriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 }  ( price_num : URValue ( uint128 ) a1 ) ( price_denum : URValue ( uint128 ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( price_code : URValue cell a7 ) ( notify_addr : URValue ( address ) a8 ) : URValue ( StateInitLRecord # ( address # uint256 ) ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb a8 a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ8 ) preparePriceXchg 
- price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr ) . 
+
+Definition preparePriceXchg_right { a1 a2 a3 a4 a5 a6 a7 a8 }  ( price_num : URValue ( uint128 ) a1 ) ( price_denum : URValue ( uint128 ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( deals_limit : URValue ( uint8 ) a4 ) ( major_tip3cfg : URValue ( Tip3ConfigLRecord ) a5 ) ( minor_tip3cfg : URValue ( Tip3ConfigLRecord ) a6 ) ( price_code : URValue cell a7 ) ( notify_addr : URValue ( address ) a8 ) : URValue ( StateInitLRecord # ( address # uint256 ) ) (* ( orb ( orb ( orb ( orb ( orb ( orb ( orb a8 a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) *) true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ8 ) preparePriceXchg price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr ) . 
  
- Notation " 'preparePriceXchg_' '(' price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr ')' " := 
- ( preparePriceXchg_right 
- price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr ) 
+Notation " 'preparePriceXchg_' '(' price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr ')' " := 
+ ( preparePriceXchg_right price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr ) 
  (in custom URValue at level 0 , price_num custom URValue at level 0 
  , price_denum custom URValue at level 0 
  , min_amount custom URValue at level 0 

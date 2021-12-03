@@ -56,13 +56,12 @@ Elpi GeneratePruvendoRecord addr_std_fixedL addr_std_fixedFields .  *)
    ( XUInteger8 ) : Type ] .
 Elpi GeneratePruvendoRecord Tip3ConfigL Tip3ConfigFields . 
 
-Definition cell__ := cell.
 (* 5 *)Definition StateInitL : list Type := 
  [ ( XMaybe XUInteger ) : Type ; 
    ( XMaybe TickTockLRecord ) : Type ; 
-   ( XMaybe cell__ ) : Type ; 
-   ( XMaybe cell__ ) : Type ; 
-   ( XMaybe cell__ ) : Type ] .
+   ( XMaybe cell_ ) : Type ; 
+   ( XMaybe cell_ ) : Type ; 
+   ( XMaybe cell_ ) : Type ] .
 Elpi GeneratePruvendoRecord StateInitL StateInitFields . 
 
  (* 7 *)Definition OrderRetL : list Type := 

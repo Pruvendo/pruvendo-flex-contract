@@ -11,6 +11,7 @@ Require Import UMLang.UrsusLib.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonConstSig.
 
@@ -280,7 +281,7 @@ Notation " 'getWalletAddress_' '(' pubkey owner ')' " :=
 pubkey owner ) 
 (in custom URValue at level 0 , pubkey custom URValue at level 0 
 , owner custom URValue at level 0 ) : ursus_scope . 
-Definition _on_bounced_right { a1 a2 }  ( cell : URValue cell a1 )  ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger true := 
+Definition _on_bounced_right { a1 a2 }  ( cell : URValue cell a1 )  ( msg_body : URValue ( slice ) a2 ) : URValue XUInteger true := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _on_bounced 
 cell msg_body ) . 
 
@@ -297,7 +298,7 @@ Notation " 'getInternalWalletCodeHash_' '(' ')' " :=
 ( getInternalWalletCodeHash_right 
 ) 
 (in custom URValue at level 0 ) : ursus_scope . 
-Definition _fallback_right { a1 a2 }  ( cell : URValue  cell a1  ) ( msg_body : URValue ( XSlice ) a2 ) : URValue XUInteger (orb a2 a1) := 
+Definition _fallback_right { a1 a2 }  ( cell : URValue  cell a1  ) ( msg_body : URValue ( slice ) a2 ) : URValue XUInteger (orb a2 a1) := 
 wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
 cell msg_body) . 
 

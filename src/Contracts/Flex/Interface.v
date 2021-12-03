@@ -4,6 +4,7 @@ Require Import UMLang.LocalClassGenerator.ClassGenerator.
 Require Import UMLang.BasicModuleTypes. 
 
 Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.TvmCells.
 
 Require Import Project.CommonTypes. 
 Require Import Flex.ClassTypes.
@@ -73,7 +74,7 @@ Local Open Scope xlist_scope.
 Definition VarInitL := [ DFlexLRecord : Type; XUInteger256: Type].
 GeneratePruvendoRecord VarInitL VarInitFields.
 
-Definition InitialStateL := [cell ; VarInitLRecord ; XUInteger128: Type].
+Definition InitialStateL := [cell_ ; VarInitLRecord ; XUInteger128: Type].
 GeneratePruvendoRecord InitialStateL InitialStateFields.
 
 (* Print IFlexP. *)
