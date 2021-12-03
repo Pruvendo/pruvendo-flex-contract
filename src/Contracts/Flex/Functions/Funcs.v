@@ -105,25 +105,26 @@ Definition constructor_left { R a1 a2 a3 a4 a5 a6 }  ( deployer_pubkey : URValue
     }
   }
  *)
-
+(* 
 Definition setSpecificCode ( type :  uint8 ) ( code :  TvmCell ) : UExpression PhantomType false .
-   (* refine {{ switch_ ( {} ) with { { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } } ) }}.
-  refine {{ case_ trade_pair_code => setPairCode(code) ; return_ {} }}.
-  refine {{ case_ xchg_pair_code => setPairCode(code) ; return_ {} }}.
-  refine {{ case_ wrapper_code => setPairCode(code) ; return_ {} }}.
-  refine {{ case_ ext_wallet_code => setPairCode(code) ; return_ {} }}.
-  refine {{ case_ flex_wallet_code => setPairCode(code) ; return_ {} }}.
-  refine {{ case_ price_code => setPairCode(code) ; return_ {} }}.
-  refine {{ case_ xchg_price_code => setPairCode(code) ; return_ {} }}. *)
+refine {{ switch_ ( {} ) with { { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } ;; { _ } } ) }}.
+  refine {{ case_ trade_pair_code => setPairCode(code) ; exit_ {} }}.
+  refine {{ case_ xchg_pair_code => setPairCode(code) ; exit_ {} }}.
+  refine {{ case_ wrapper_code => setPairCode(code) ; exit_ {} }}.
+  refine {{ case_ ext_wallet_code => setPairCode(code) ; exit_ {} }}.
+  refine {{ case_ flex_wallet_code => setPairCode(code) ; exit_ {} }}.
+  refine {{ case_ price_code => setPairCode(code) ; exit_ {} }}.
+  refine {{ case_ xchg_price_code => setPairCode(code) ; exit_ {} }}. *)
  	 	 refine {{ return_ {} }} .
-Defined.
+Defined. *)
 
 Definition setPairCode ( code :  TvmCell ) : UExpression PhantomType true . 
   refine {{ require_ ( ( ~ _pair_code_ ) , error_code::cant_override_code ) ; { _ } }} . 
   refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
   refine {{ tvm_accept () ; { _ } }} . 
   refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) ,  error_code::unexpected_refs_count_in_code  ) ; { _ } }} . 
-  refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
+  refine {{ _pair_code_ := {} (* builder ( ) . stslice ( code.ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
+  refine {{ return_ {} }}.
 Defined . 
  
 Definition setXchgPairCode ( code :  TvmCell ) : UExpression PhantomType true . 
@@ -131,7 +132,8 @@ Definition setXchgPairCode ( code :  TvmCell ) : UExpression PhantomType true .
     refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
     refine {{ tvm_accept () ; { _ } }} . 
     refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
-    refine {{ _xchg_pair_code_ := {}(* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
+    refine {{ _xchg_pair_code_ := {}(* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
+  refine {{ return_ {} }}.
 Defined . 
  
 Definition setWrapperCode ( code :  TvmCell ) : UExpression PhantomType true . 
@@ -139,7 +141,8 @@ Definition setWrapperCode ( code :  TvmCell ) : UExpression PhantomType true .
     refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) , error_code::sender_is_not_deployer ) ; { _ } }} . 
     refine {{ tvm_accept () ; { _ } }} . 
     refine {{ require_ ( ( (#{code}) -> to_slice () -> refs () == #{2} ) , error_code::unexpected_refs_count_in_code ) ; { _ } }} . 
-    refine {{ _wrapper_code_ := {} (* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) }} . 
+    refine {{ _wrapper_code_ := {} (* builder ( ) . stslice ( code ^^ XCell:ctos ( ) ) . stref ( build ( Address { tvm_myaddr ( ) } ) . endc ( ) ) . endc ( ) *) ; {_} }} . 
+  refine {{ return_ {} }}. 
 Defined . 
 
 
@@ -147,35 +150,38 @@ Defined .
  	 	 refine {{ require_ ( ( ~ _price_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm_accept () ; { _ } }} . 
- 	 	 refine {{ _price_code_ -> set ( (#{code}) ) }} . 
+ 	 	 refine {{ _price_code_ -> set ( (#{code}) ) ; {_} }} . 
+  refine {{ return_ {} }}. 
  Defined . 
  
  Definition setXchgPriceCode ( code :  TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( ~ _xchg_price_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm_accept () ; { _ } }} . 
- 	 	 refine {{ _xchg_price_code_ -> set ((#{code})) }} . 
+ 	 	 refine {{ _xchg_price_code_ -> set ((#{code})) ; {_} }} . 
+  refine {{ return_ {} }}. 
  Defined .  
  
  Definition setExtWalletCode ( code :  TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( ~ _ext_wallet_code_ ) ,   error_code::cant_override_code  ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,  error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm_accept () ; { _ } }} . 
- 	 	 refine {{ _ext_wallet_code_ -> set ( (#{code}) ) }} . 
+ 	 	 refine {{ _ext_wallet_code_ -> set ( (#{code}) ) ; {_} }} . 
+  refine {{ return_ {} }}. 
  Defined . 
  
  Definition setFlexWalletCode ( code :  TvmCell ) : UExpression PhantomType true . 
  	 	 refine {{ require_ ( ( ~ _flex_wallet_code_ ) ,  error_code::cant_override_code  ) ; { _ } }} . 
  	 	 refine {{ require_ ( ( msg_pubkey () == _deployer_pubkey_ ) ,   error_code::sender_is_not_deployer  ) ; { _ } }} . 
  	 	 refine {{ tvm_accept () ; { _ } }} . 
- 	 	 refine {{ _flex_wallet_code_ -> set ( (#{code}) ) }} . 
+ 	 	 refine {{ _flex_wallet_code_ -> set ( (#{code}) ) ; {_} }} . 
+  refine {{ return_ {} }}. 
  Defined . 
 
 Definition check_owner : UExpression PhantomType true . 
  	 	 refine {{ new 'internal_ownership : boolean @ "internal_ownership" :=  ~~ ? _owner_address_ ; { _ } }} . 
   	 refine {{ if ( #{Internal} ) then { { _: UExpression PhantomType true } } else { { _: UExpression PhantomType true } } ; { _ } }} . 
  	 	   refine {{ require_ ( !{ internal_ownership } && ( int_sender () == ( _owner_address_ ->get_default () ) ) ,  error_code::sender_is_not_my_owner )  }} . 
-
  	 	   refine {{ require_ ( ( ~ !{ internal_ownership } && ( msg_pubkey () == _deployer_pubkey_ ) ) ,  error_code::sender_is_not_my_owner )  }} . 
      refine {{ return_ {} }} .
  Defined . 
@@ -315,7 +321,7 @@ Notation " 'approveTradingPairImpl_' '(' pubkey , trading_pair_listing_requests 
                     @ ("trade_pair", "new_trading_pair_listing_requests")  := 
             approveTradingPairImpl_ ( #{pubkey} , _trading_pair_listing_requests_ , _pair_code_ -> get () , _workchain_id_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _trading_pair_listing_requests_ := !{new_trading_pair_listing_requests} ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value ()  ; { _ } }} . 
   	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  )  (* ; { _ } *) }} .
 (*  	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -358,7 +364,7 @@ Definition rejectTradingPairImpl_right { a1 a2 a3 }  ( pubkey : URValue  uint256
               rejectTradingPairImpl_ ( #{pubkey} , _trading_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
   	refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} , rawreserve_flag::up_to  ) ; { _ } }} .
- 	 	refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
+ 	 	refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	  refine {{ {value_gr} := int_value () (* ; { _ } *) }} .  	 	 	 
 (*    refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
  	 refine {{ return_ TRUE }} . 
@@ -736,7 +742,7 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_add
                                       _workchain_id_ , 
                                       _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _xchg_pair_listing_requests_ := !{xchg_pair_listing_requests} ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
   	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .  
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -747,7 +753,7 @@ Definition rejectXchgPair ( pubkey : uint256 ) : UExpression XBool true .
   	 	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ _xchg_pair_listing_requests_ := 
           rejectXchgPairImpl_ ( #{pubkey} , _xchg_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
  	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -799,7 +805,7 @@ Definition registerWrapper
                                   _workchain_id_ , 
                                   _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ _wrapper_listing_requests_ := !{new_wrapper_listing_requests} ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
   	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)
@@ -812,7 +818,7 @@ Defined .
  	 	 refine {{ tvm_accept () ; { _ } }} . 
  	 	 refine {{ _wrapper_listing_requests_ := 
             rejectWrapperImpl_ ( #{pubkey} , _wrapper_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
- 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { return_ {} } ; { _ } }} . 
+ 	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
  	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .
 (*  	 	 	 refine {{ Set_int_return_flag ( SEND_ALL_GAS ) }} .  *)

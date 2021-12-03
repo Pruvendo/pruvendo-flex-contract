@@ -551,8 +551,8 @@ refine {{ new 'wallet_in : address @ "wallet_in" := {} ; { _ } }} .
 		refine {{ {err} := ec::too_big_tokens_amount }} . 
 	refine {{ if ~ is_active_time_ ( #{ lend_finish_time } ) then { { _:UExpression OrderRetLRecord false } } ; { _ } }} . 
 		refine {{ {err} := ec::expired }} . 
-	refine {{ if !{err} then { { _:UEf } } ; { _ } }} . 
-		refine {{ return_ ( on_sell_fail_ ( !{err} , !{wallet_in} , !{ amount } ) ) }} . 
+	refine {{ if !{err} then { { _:UEt } } ; { _ } }} . 
+		refine {{ exit_ ( on_sell_fail_ ( !{err} , !{wallet_in} , !{ amount } ) ) }} . 
 	refine {{ new 'account : uint128 @ "account" := !{value} - _tons_cfg_ ↑ TonsConfig.process_queue
 															- _tons_cfg_ ↑ TonsConfig.order_answer ; { _ } }} . 
 	refine {{ new 'sell : ( OrderInfoLRecord ) @ "sell" := 
@@ -591,7 +591,7 @@ refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in
 	refine {{ if ( (_sells_  -> empty ()) && ( _buys_ -> empty () ) ) then { { _:UEf } } ; { _ } }} . 
 		refine {{ {buys_amount} := !{buys_amount} (* suicide ( _flex_ ) *) }} . 
 	refine {{ if ( !{ret} ) then { { _:UEt } } ; { _ } }} . 
-		refine {{ return_ (!{ret}) -> get () }} . 
+		refine {{ exit_ (!{ret}) -> get () }} . 
 	refine {{ return_ [ ok , 0 , !{sell} ↑ OrderInfo.amount ] }} . 
 Defined .
 
@@ -663,13 +663,13 @@ refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in
 	refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) then { { _: UEf } } ; { _ } }} . 
 		refine {{ _sells_amount_ := !{ sells_amount } (* suicide ( _flex_ ) *) }} . 
 	refine {{ if ( !{ret} ) then { { _: UEt } } ; { _ } }} . 
-		refine {{ return_ (!{ret}) -> get () }} . 
+		refine {{ exit_ (!{ret}) -> get () }} . 
 	refine {{ return_ [ ok , 0 , !{buy} ↑ OrderInfo.amount ] }} . 
 Defined . 
  
 Definition processQueue : UExpression PhantomType true . 
-	refine {{ if ( (_sells_ -> empty ()) \\ ( _buys_ -> empty () ) ) then { { _: UEf } } ; { _ } }} . 
-		refine {{ return_ {} }} . 
+	refine {{ if ( (_sells_ -> empty ()) \\ ( _buys_ -> empty () ) ) then { { _: UEt } } ; { _ } }} . 
+		refine {{ exit_ {} }} . 
 	refine {{ new ('sells_amount : uint128 , 
 			       'sells : queue OrderInfoLRecord , 
 			       'buys_amount : uint128 , 
@@ -819,7 +819,8 @@ Definition getTonsCfg_right  : URValue TonsConfigLRecord false :=
 Notation " 'getTonsCfg_' '(' ')' " := ( getTonsCfg_right ) (in custom URValue at level 0 ) : ursus_scope . 
  
 Definition getSells : UExpression ( XHMap uint OrderInfoLRecord ) false . 
-	refine {{ return_ {} (* dict_array ( sells_ . begin ( ) , sells_ . end ( ) ) *) }} . 
+	refine {{ return_ {} (* dict_array ( sells_ . begin ( ) , sells_ . end ( ) ) *) ; {_} }} .
+refine {{ return_ {} }} . 
 Defined . 
  
 Definition getSells_right  : URValue ( XHMap uint OrderInfoLRecord ) false := 
@@ -829,7 +830,8 @@ Notation " 'getSells_' '(' ')' " := ( getSells_right )
  (in custom URValue at level 0 ) : ursus_scope . 
 
 Definition getBuys : UExpression ( XHMap uint OrderInfoLRecord ) false . 
-	refine {{ return_ {} (* dict_array ( buys_ . begin ( ) , buys_ . end ( ) ) *) }} . 
+	refine {{ return_ {} (* dict_array ( buys_ . begin ( ) , buys_ . end ( ) ) *) ; {_} }} .
+refine {{ return_ {} }} . 
 Defined . 
  
 Definition getSellAmount : UExpression uint128 false . 
@@ -859,7 +861,7 @@ Definition getDetails : UExpression DetailsInfoLRecord false .
 Defined . 
  
 Definition prepare_price_state_init_and_addr ( price_data : DPriceLRecord ) 
-											 ( price_code : TvmCell ) : UExpression ( StateInitLRecord * uint256 ) false . 
+											 ( price_code : TvmCell ) : UExpression ( StateInitLRecord # uint256 ) false . 
 	refine {{ new 'price_data_cl : TvmCell @ "price_data_cl" := prepare_persistent_data_ ( {} , #{price_data} ) ; { _ } }} . 
 	refine {{ new 'price_init : StateInitLRecord @ "price_init" := [ {} , {} , (#{price_code}) -> set () , 
 																	(!{price_data_cl}) -> set () , {} ] ; { _ } }} . 
