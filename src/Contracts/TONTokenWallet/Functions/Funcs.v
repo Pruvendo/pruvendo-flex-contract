@@ -1053,10 +1053,6 @@ Definition _on_bounced ( msg : cell ) ( msg_body : ( slice ) ) : UExpression XUI
  	 	 refine {{ return_ 0 }} . 
  Defined . 
  
- Definition get_owner_addr : UExpression address false . 
-    refine {{ return_ {}(* ( (? _owner_address_) ? _owner_address_ -> get_default () : 0 ) *) }} . 
- Defined . 
- 
 Definition prepare_external_wallet_state_init_and_addr ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : cell ) ( workchain_id : int ) : UExpression ( StateInitLRecord # XUInteger256 ) false . 
 		refine {{ new 'wallet_data : ( DTONTokenWalletExternalLRecord ) @ "wallet_data" := 	 	 
 			[ (#{ name }) , (#{ symbol }) , (#{ decimals }) , 0 , (#{ root_public_key }) , (#{ wallet_public_key }) , (#{ root_address }) , (#{ owner_address }) , (#{ code }) , {} , (#{ workchain_id }) ] ; {_} }} . 

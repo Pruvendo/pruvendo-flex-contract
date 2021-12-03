@@ -161,7 +161,7 @@ Defined .
 
 Definition prepare_wallet_data (name:XString)(symbol:XString)(decimals:XUInteger8)(root_public_key:XUInteger256)
                                (wallet_public_key:XUInteger256)(root_address:address)(owner_address:XMaybe address)
-                               (code:XCell)(workchain_id : int) :
+                               (code:cell)(workchain_id : int) :
 UExpression TONTokenWalletClassTypes.DTONTokenWalletLRecord false.
  	 refine {{ return_ [ #{name} , #{symbol} , #{decimals} , 0 , 
                        #{root_public_key} , #{wallet_public_key} , 
