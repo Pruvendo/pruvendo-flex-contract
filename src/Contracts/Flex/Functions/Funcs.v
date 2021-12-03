@@ -323,7 +323,7 @@ Notation " 'approveTradingPairImpl_' '(' pubkey , trading_pair_listing_requests 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value ()  ; { _ } }} . 
   	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  )  (* ; { _ } *) }} .
- 	 	 refine {{ set_int_return_flag ( SEND_ALL_GAS ) }} .
+ 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .
  	 refine {{ return_ !{ trade_pair } }} . 
 Defined .
  

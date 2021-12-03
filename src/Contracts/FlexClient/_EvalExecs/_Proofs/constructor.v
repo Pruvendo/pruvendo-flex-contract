@@ -16,14 +16,11 @@ Require Import Ledger.
 Require Import FuncSig.
 Require Import FuncNotations.
 
-(* From elpi Require Import elpi. *)
-
 Require Import Funcs.
 
 Module constructorEvalExec (dc : trainConstsTypesSig XTypesModule StateMonadModule).
 
 Module Import trainContractFuncs := trainFuncs dc.
-(* Import trainFuncsInternal. *)
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.

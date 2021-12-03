@@ -1,6 +1,5 @@
 Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
-From elpi Require Import elpi.
 Require Import Setoid.
 Require Import ZArith.
 Require Import Coq.Program.Equality.

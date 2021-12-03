@@ -9,7 +9,6 @@ Require Import Contracts.PriceXchg.Functions.FuncNotations.
 Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import FinProof.Common. 
 Require Import FinProof.ProgrammingWith.
-(* From elpi Require Import elpi. *)
 
 Require Import Contracts.PriceXchg.Functions.Funcs.
 
