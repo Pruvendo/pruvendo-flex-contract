@@ -130,7 +130,7 @@ Local Open Scope string_scope.
  , root_public_key custom URValue at level 0 
  , root_owner custom URValue at level 0 
  , total_supply custom URValue at level 0 ) : ursus_scope . 
- Definition setWalletCode_right { a1 }  ( wallet_code : URValue cell a1 ) : URValue XBool true := 
+ Definition setWalletCode_right { a1 }  ( wallet_code : URValue cell a1 ) : URValue boolean true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setWalletCode 
  wallet_code ) . 
  
@@ -170,7 +170,7 @@ Local Open Scope string_scope.
  (in custom ULValue at level 0 , dest custom URValue at level 0 
  , tokens custom URValue at level 0 
  , grams custom URValue at level 0 ) : ursus_scope . 
- Definition mint_right { a1 }  ( tokens : URValue ( XUInteger128 ) a1 ) : URValue XBool true := 
+ Definition mint_right { a1 }  ( tokens : URValue ( XUInteger128 ) a1 ) : URValue boolean true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) mint 
  tokens ) . 
  
@@ -234,7 +234,7 @@ Local Open Scope string_scope.
  ( getTotalGranted_right 
  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition hasWalletCode_right  : URValue XBool false := 
+ Definition hasWalletCode_right  : URValue boolean false := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) hasWalletCode 
  ) . 
  
@@ -317,13 +317,10 @@ y custom URValue at level 0 ) : ursus_scope .
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , owner_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition is_internal_owner_right  : URValue XBool false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) is_internal_owner 
- ) . 
+Definition is_internal_owner_right : URValue boolean false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) is_internal_owner ) . 
  
- Notation " 'is_internal_owner_' '(' ')' " := 
- ( is_internal_owner_right 
- ) 
+Notation " 'is_internal_owner_' '(' ')' " := ( is_internal_owner_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
  Definition check_internal_owner_left { R }  : UExpression R true := 
@@ -335,7 +332,7 @@ y custom URValue at level 0 ) : ursus_scope .
  ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
  
- Definition check_external_owner_left { R a1 }  ( allow_pubkey_owner_in_internal_node : URValue ( XBool ) a1 ) : UExpression R true := 
+ Definition check_external_owner_left { R a1 }  ( allow_pubkey_owner_in_internal_node : URValue ( boolean ) a1 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) check_external_owner 
  allow_pubkey_owner_in_internal_node ) . 
  
@@ -344,7 +341,7 @@ y custom URValue at level 0 ) : ursus_scope .
  allow_pubkey_owner_in_internal_node ) 
  (in custom ULValue at level 0 , allow_pubkey_owner_in_internal_node custom URValue at level 0 ) : ursus_scope . 
  
- Definition check_owner_left { R a1 }  ( false : URValue XBool a1 ) : UExpression R true := 
+ Definition check_owner_left { R a1 }  ( false : URValue boolean a1 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) check_owner 
  false ) . 
  

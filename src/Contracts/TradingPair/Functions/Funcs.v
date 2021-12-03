@@ -59,7 +59,7 @@ Definition onDeploy ( min_amount : uint128 ) ( deploy_value : uint128 ) ( notify
 	refine {{ _min_amount_ := (#{ min_amount }) ; { _ } }} . 
 	refine {{ _notify_addr_ := (#{ notify_addr }) ; { _ } }} . 
 	refine {{ tvm_rawreserve ( #{deploy_value} , rawreserve_flag::up_to  ) ; { _ } }} .  
-	refine {{ set_int_return_flag__ ( ) (* SEND_ALL_GAS *) ; { _ } }} . 
+	refine {{ set_int_return_flag (# {SEND_ALL_GAS} ) ; { _ } }} . 
 	refine {{ return_ TRUE }} .
 Defined.
 
@@ -90,7 +90,7 @@ Definition prepare_trading_pair_state_init_and_addr ( pair_data : ContractLRecor
 	refine {{ new 'pair_init : StateInitLRecord @ "pair_init" :=
 				[ {} , {} , (#{pair_code}) -> set () , (!{pair_data_cl}) -> set () , {} ] ; { _ } }} . 
 	refine {{ new 'pair_init_cl : cell @ "pair_init_cl" := {} ; { _ } }} . 
-	refine {{ { pair_init_cl } := {} (* build ( !{ pair_init } ) . make_cell ( ) *) ; { _ } }} . 
+	refine {{ { pair_init_cl } := build ( σ !{ pair_init } ) -> make_cell () ; { _ } }} . 
 	refine {{ return_ [ !{ pair_init } , tvm_hash ( !{pair_init_cl} ) ] }} . 
 Defined . 
 
