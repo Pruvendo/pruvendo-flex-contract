@@ -79,6 +79,18 @@ Notation " 'parse' '(' x , e ')' " := (parse x e) (in custom URValue at level 2,
 Notation " 'parser' '(' x ')' " := (parser x) (in custom URValue at level 2, x custom URValue) : ursus_scope .   
 Notation " x '->' 'ldu' '(' '32' ')' " := (tvm_ldu32 x) (in custom URValue at level 2, x custom URValue) : ursus_scope .
 
+Parameter tvm_ldi32 : forall b (s: URValue slice b), URValue int b.
+Arguments tvm_ldi32 {b}.
+Notation " x '->' 'ldi' '(' '32' ')' " := (tvm_ldi32 x) (in custom URValue at level 2, x custom URValue) : ursus_scope .
+
+
+Definition msg_header_t := internal_msg_headerLRecord.
+
+Parameter parse_continue : forall X (b be: bool) (x: URValue slice b) (e: URValue ErrorType be) , URValue (X # slice) true.
+Arguments parse_continue {X} {b} {be}.
+
+Notation " 'parse_continue' '(' x , e ')' " := (parse_continue x e) (in custom URValue at level 2, x custom URValue , e custom URValue) : ursus_scope .   
+
 Definition external_wallet_replay_protection_init: URValue PhantomType false.
   exact || {} ||.
 Qed.
@@ -114,20 +126,5 @@ Qed.
 Notation " 'wrapper_replay_protection_t::init' '()' " := 
 	(wrapper_replay_protection_init) (in custom URValue at level 0) : ursus_scope .
   
-(* wrapper_replay_protection_t::init () *)  
-
-(* Definition suicide (a: address) : UExpression PhantomType true.
-  refine {{ tvm_transfer ( #{ a } , 0 , FALSE , #{SEND_ALL_GAS} \\ 
-							                                  #{SENDER_WANTS_TO_PAY_FEES_SEPARATELY} \\ 
-										                            #{DELETE_ME_IF_I_AM_EMPTY} \\
-										                            #{IGNORE_ACTION_ERRORS} ) ; {_} }}.
-  refine {{ exit_ {} }}.
-Defined.
-
-Definition suicide_left { R b } (x: URValue address b) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) suicide x) . 
- 
-Notation " 'suicide_' '(' x ')' " := ( suicide_left x) 
- (in custom ULValue at level 0 , x custom URValue at level 0 ) : ursus_scope .  *)
 
 End CommonAxioms.

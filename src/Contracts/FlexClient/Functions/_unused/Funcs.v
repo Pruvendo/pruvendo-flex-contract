@@ -130,7 +130,7 @@ Definition Flex_Ф_constructor ( deployer_pubkey : uint256 )
  Defined . 
  
  
- Definition Flex_Ф_isFullyInitialized : UExpression XBool false . 
+ Definition Flex_Ф_isFullyInitialized : UExpression boolean false . 
          refine {{ return_ {} (* Flex.pair_code_ && Flex.price_code_ && Flex.xchg_pair_code_ && Flex.xchg_price_code_ *) }} . 
  Defined . 
  

@@ -145,6 +145,8 @@ Notation " 'error_code::wrong_spender' " := (sInject wrong_spender) (in custom U
 Notation " 'error_code::not_enough_allowance' " := (sInject not_enough_allowance) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::wrong_public_call' " := (sInject wrong_public_call) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'error_code::non_zero_remaining' " := (sInject non_zero_remaining) (in custom URValue at level 0) : ursus_scope. 
+Notation " 'error_code::bad_incoming_msg' ":= (sInject bad_incoming_msg) (in custom URValue at level 0) : ursus_scope.
+
 
 Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'SEND_ALL_GAS_' " := (sInject SEND_ALL_GAS) (in custom URValue at level 0) : ursus_scope. 
@@ -152,6 +154,12 @@ Notation " 'IGNORE_ACTION_ERRORS_' " := (sInject IGNORE_ACTION_ERRORS) (in custo
 
 Notation " 'SENDER_WANTS_TO_PAY_FEES_SEPARATELY_' " := (sInject IGNORE_ACTION_ERRORS ) (in custom URValue at level 0) : ursus_scope. 
 Notation " 'DELETE_ME_IF_I_AM_EMPTY_' " := (sInject DELETE_ME_IF_I_AM_EMPTY ) (in custom URValue at level 0) : ursus_scope. 
+
+
+Definition save_persistent_data_left { R a1 } (x: URValue DTONTokenWalletLRecord a1) : UExpression R a1 := 
+ wrapULExpression ( ursus_call_with_args (LedgerableWithArgs:= λ0 ) (save_persistent_data x) ) .  
+
+Notation " 'save_persistent_data' '(' x ')' " := (save_persistent_data_left x)  (in custom ULValue at level 0, x custom URValue) : ursus_scope .
 
 
 Module Calls (tc : SpecSig).

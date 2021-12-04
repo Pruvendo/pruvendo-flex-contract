@@ -138,10 +138,10 @@ Notation " 'check_external_owner_' '(' ')' " := ( check_external_owner_right )
  (in custom URValue at level 0 ) : ursus_scope . 
 
 Definition check_owner ( original_owner_only : boolean ) ( allowed_in_lend_state : boolean ) : UExpression uint128 true . 
-	refine ( if Internal then _ else _ ).
-	refine {{ return_ (check_internal_owner_ ( #{original_owner_only} , 
-										       #{allowed_in_lend_state} ) ) }} . 
-	refine {{ return_ (check_external_owner_ ( ) ) }} . 
+	refine {{ {if Internal then _: UEt else _} ; {_} }} .
+	refine {{ exit_ (check_internal_owner_ ( #{original_owner_only} , #{allowed_in_lend_state} ) ) }} . 
+	refine {{ exit_ (check_external_owner_ ( ) ) }} . 
+	refine {{ return_ {} }}.
 Defined.
 
 Definition check_owner_right { a1 a2 }  ( original_owner_only : URValue boolean a1 ) 
@@ -153,7 +153,7 @@ Notation " 'check_owner_' '(' original_owner_only ',' allowed_in_lend_state ')' 
 (in custom URValue at level 0 , original_owner_only custom URValue at level 0 , allowed_in_lend_state custom URValue at level 0 ) : ursus_scope .
 
 Definition check_owner_left { R a1 a2 }  ( original_owner_only : URValue boolean a1 ) 
-                                          ( allowed_in_lend_state : URValue boolean a2 ) 
+                                         ( allowed_in_lend_state : URValue boolean a2 ) 
 										  : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) check_owner original_owner_only allowed_in_lend_state ) . 
  
@@ -161,14 +161,11 @@ Notation " 'check_owner_' '(' original_owner_only ',' allowed_in_lend_state ')' 
  ( check_owner_left original_owner_only allowed_in_lend_state ) 
  (in custom ULValue at level 0 , original_owner_only custom URValue at level 0 , allowed_in_lend_state custom URValue at level 0 ) : ursus_scope .
 
-(*AL*)
-Parameter min_transfer_costs : uint.
-
 Definition check_transfer_requires ( tokens : uint128 ) ( grams : uint128 ) : UExpression uint128 true . 
 	refine {{ new 'active_balance : uint128 @ "active_balance" := 	check_owner_ ( FALSE , FALSE ) ; {_} }} . 
 	refine {{ require_ ( (#{ tokens }) <= !{ active_balance } , error_code::not_enough_balance ) ; {_} }} . 
-	refine {{ { ( if Internal then _ else _ ) } ; { _ } }} . 
-	refine {{ require_ ( ( ( int_value () ) >= # {min_transfer_costs} ) ,  error_code::not_enough_tons_to_process  ) }} . 
+	refine {{ { if Internal then _ else _ } ; { _ } }} . 
+	refine {{ require_ ( int_value () >= # {min_transfer_costs} ,  error_code::not_enough_tons_to_process  ) }} . 
 	refine {{ require_ ( ( #{ grams } >= # {min_transfer_costs} )  && 
 	                     ( tvm_balance () > #{ grams } )  ,  error_code::not_enough_tons_to_process ) }} . 
 	refine {{ return_ !{ active_balance } }} . 
@@ -184,7 +181,7 @@ Notation " 'check_transfer_requires_' '(' tokens ',' grams ')' " :=
  (in custom URValue at level 0 , tokens custom URValue at level 0 , grams custom URValue at level 0 ) : ursus_scope . 
 
 Definition fixup_answer_addr ( answer_addr : address ) : UExpression address true . 
-	refine {{ if ( (#{ answer_addr }) ↑ address.address == 0 ) then { {_:UEt} } ; {_} }} . 
+	refine {{ if (#{ answer_addr }) ↑ address.address == 0 then { {_:UEt} } ; {_} }} . 
  	refine ( if Internal then {{ exit_ int_sender () }}
                          else {{ exit_ tvm_myaddr () }} ) . 
  	refine {{ return_ (#{ answer_addr }) }} . 
@@ -284,15 +281,11 @@ Notation " 'transfer_impl_' '(' answer_addr ',' too ',' tokens ',' grams ',' ret
  , tokens custom URValue at level 0 , grams custom URValue at level 0 , return_ownership custom URValue at level 0 
  , send_notify custom URValue at level 0 , payload custom URValue at level 0 ) : ursus_scope . 
 
-(******************************************************************)	
-
 Definition transfer ( answer_addr : address ) ( too : address ) ( tokens : uint128 ) 
 				    ( grams : uint128 ) ( return_ownership : boolean ) : UExpression PhantomType true . 
  refine {{ transfer_impl_ ( #{ answer_addr } , #{ too } , #{ tokens } , #{ grams } , 
                             #{ return_ownership } , FALSE , builder () -> endc ()  ) }} . 
 Defined . 
-
-(******************************)
 
 Definition transferWithNotify ( answer_addr : address ) ( too : address ) ( tokens : uint128 ) 
 							  ( grams : uint128 ) ( return_ownership : boolean ) ( payload : cell ) 
@@ -517,7 +510,7 @@ Definition requestBalance : UExpression uint128 false .
 	refine {{ return_ _balance_ }} . 
 Defined . 
  
-Definition accept ( tokens : uint128 ) ( answer_addr : address ) ( keep_grams : uint128 ) : UExpression XBool true . 
+Definition accept ( tokens : uint128 ) ( answer_addr : address ) ( keep_grams : uint128 ) : UExpression boolean true . 
 	refine {{ new ( 'sender:address , 'value_gr:uint ) @
 		          ( "sender" , "value_gr" ) := int_sender_and_value () ; {_} }} . 
 	refine {{ require_ ( ( _root_address_ == !{sender} ) , error_code::message_sender_is_not_my_root ) ; {_} }} . 
@@ -874,35 +867,51 @@ Definition disapprove : UExpression PhantomType true .
 	refine {{ return_ {} }} .
 Defined . 
 
-(*AL: TODO*) 
+
+Declare Instance foo: LocalStateField slice.
+Declare Instance bar: LocalStateField (optional msg_header_t).
+(* Parameter id_v : forall b, URValue ITONTokenWallet b -> URValue uint32 b.
+Arguments id_v {b}.
+Notation " 'id_v' '(' x ')' " := (id_v x) (in custom URValue at level 0, x custom URValue ) : ursus_scope .   
+ *)
+
+Declare Instance baz: LocalStateField DTONTokenWalletLRecord.
+Declare Instance kkk: LocalStateField msg_header_t.
+Declare Instance yyy: LocalStateField int_msg_infoLRecord.
+
+Check Interface.IinternalTransferFrom.
+Check load_persistent_data.
+ 
+Definition save_persistent_data_left { R a1 } (x: URValue DTONTokenWalletLRecord a1) : UExpression R a1 := 
+ wrapULExpression ( ursus_call_with_args (LedgerableWithArgs:= λ0 ) (save_persistent_data x) ) .  
+
+Notation " 'save_persistent_data' '(' x ')' " := (save_persistent_data_left x)  (in custom ULValue at level 0, x custom URValue) : ursus_scope .
+
+
 Definition _on_bounced ( msg : cell ) ( msg_body : slice ) : UExpression uint true . 
 	refine {{ tvm_accept () ; {_} }} . 
-(*  	 	 refine {{ parser p ( (#{ msg_body }) ) ; {_} }} .  *)
- 	 	 refine {{ require_ ( (* ( p ^^ ldi ( 32 ) *) {} == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} . 
-(*  	 	 refine {{ opt_hdr : ( auto ) @ "opt_hdr" ; {_} }} .  *)
-       refine {{ new 'opt_hdr @ "opt_hdr" := {} ; {_} }} .
-(* 	 	 refine {{ [ opt_hdr , =p ] := parse_continue < abiv2::internal_msg_header > ( p ) ; {_} }} . *) 
- 	 	 refine {{ require_ ( (  !{opt_hdr} ) , error_code::wrong_bounced_header ) ; {_} }} . 
- 	 	 refine {{  new ( 'hdr:_ , 'persist:_ ) @ ( "hdr" , "persist" ) := {}
-           (* load_persistent_data < ITONTokenWallet , wallet_replay_protection_t , DTONTokenWallet > () *) ; {_} }} . 
- 	 	 refine {{  if (  (* ( * {opt_hdr} )  ↑ ???.function_id *) {} == {}
-            (* id_v < &ITONTokenWalletNotify::onTip3LendOwnership > *) ) then { {_:UEf} } else { {_:UEt} } ; {_} }} .
-(*  	 	 refine {{  auto parsed_msg = parse < int_msg_info > ( parser ( (#{ msg }) ) , error_code::bad_incoming_msg ) ; {_} }} .  *)
-(*  	 	 refine {{ persist ^^ _lend_ownership_ . erase ( incoming_msg ( parsed_msg ) . int_sender () ) ; {_} }} .  *)
- 	 	 refine {{ return_ {} }} .
- 	 	 refine {{ require_ ( (* ( * {opt_hdr} )  ↑ ???.function_id *) {} == {}
+	refine {{new 'p @ "p" := parser (#{msg_body}) ; {_} }}.
+	refine {{ require_ ( !{p} -> ldi (32) == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} . 
+    refine {{ new 'opt_hdr : optional msg_header_t  @ "opt_hdr" := {} ; {_} }}. 
+	refine {{ [ {opt_hdr} , {p} ] := parse_continue ( !{p} , 0  ) ; {_} }} .
+    refine {{ require_ ( ~~!{opt_hdr} , error_code::wrong_bounced_header ) ; {_} }} .
+	refine {{ if ( *!{opt_hdr} ) ↑ internal_msg_header.function_id == (* id_v ( # {IinternalTransferFrom}  ) *)0 then { {_} } ; {_}  }}.	
+    refine {{ exit_ 0 }}.
+	refine {{  new ( 'hdr:msg_header_t , 'persist:_ ) @ ( "hdr" , "persist" ) := [ {}, load_persistent_data () ]; {_} }}.
+    refine {{  if (  ( * !{opt_hdr} )  ↑ internal_msg_header.function_id == 0
+            (* id_v < &ITONTokenWalletNotify::onTip3LendOwnership > *) ) then { {_:UEt} } else { {_:UEt} } ; {_} }} .
+    refine {{  new 'parsed_msg : int_msg_infoLRecord @ "parsed_msg" := parse ( parser ( (#{ msg }) -> ctos () ) ,  error_code::bad_incoming_msg )  ; {_} }} .  	
+    refine {{ ({persist} ↑ DTONTokenWallet.lend_ownership_) -> erase ( !{parsed_msg} ↑ int_msg_info.src ) }} .
+	refine {{ require_ ( ( * !{opt_hdr} )  ↑ internal_msg_header.function_id == 0
                           (*  id_v < &ITONTokenWallet::internalTransfer > *) , error_code::wrong_bounced_header ) ; {_} }} . 
- 	 	 refine {{ new 'Args @ "Args" := {}
-                     (* args_struct_t<&ITONTokenWallet::internalTransfer> *) ; {_} }} . 
-(*  	 	 refine {{ static_assert ( std::is_same_v < decltype ( (!{ Args }) {} . tokens ) , uint128 > ) ; {_} }} .  *)
- 	 	 refine {{ new 'answer_id @ "answer_id" := {} ; {_} }} . 
-(*  	 	 refine {{ =p : ( auto ) @ "=p" ; {_} }} .  *)
-(*  	 	 refine {{ [ answer_id , =p ] := parse_continue < uint32 > ( p ) ; {_} }} .  *)
- 	 	 refine {{ new 'bounced_val @ "bounced_val" := {}  
- 	 	                   (*  parse ( p , error_code::wrong_bounced_args )  *); {_} }} . 
- 	 	 refine {{ (* (!{persist}) ↑ _balance_ += (!{ bounced_val }) *) return_ {} }} . 
-(*  refine {{ save_persistent_data < ITONTokenWallet , wallet_replay_protection_t > ( hdr , persist ) ; {_} }} .  *)
- refine {{ return_ 0 }} . 
+	(* using Args = args_struct_t<&ITONTokenWallet::internalTransfer>;
+      static_assert(std::is_same_v<decltype(Args{}.tokens), uint128>); *)						   	
+	refine {{ new 'answer_id : uint32  @ "answer_id" := {} ; {_} }} . 
+	refine {{ [ {answer_id} , {p} ] := parse_continue ( !{p} , 0 ) ; {_} }} .  
+ 	refine {{ new 'bounced_val : uint128 @ "bounced_val" :=  parse ( !{p} , error_code::wrong_bounced_args )  ; {_} }} . 
+ 	refine {{ {persist} ↑ DTONTokenWallet.balance_ += !{ bounced_val } }} . 
+    refine {{ save_persistent_data ( (* hdr , *) !{persist} ) ; {_} }} . 
+ 	refine {{ return_ 0 }} . 
 Defined . 
 
 Definition _fallback ( msg : cell ) ( msg_body : slice ) : UExpression uint true . 

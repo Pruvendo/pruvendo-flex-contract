@@ -205,6 +205,147 @@ Definition StateInit_ι_library_left (x: ULValue StateInitLRecord): ULValue ( XM
 Notation " a '↑' 'StateInit.library' " := ( StateInit_ι_library_right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'StateInit.library' " := ( StateInit_ι_library_left a ) (in custom ULValue at level 0) : ursus_scope.
 
+(***********************)
+Definition internal_msg_header_ι_function_id_right {b} (x: URValue internal_msg_headerLRecord b): URValue XUInteger32 b :=
+    || {x} ^^ {internal_msg_header_ι_function_id} || : _ .
+    
+Definition internal_msg_header_ι_function_id_left (x: ULValue internal_msg_headerLRecord): ULValue XUInteger32 :=
+    {{ {x} ^^ {internal_msg_header_ι_function_id} }} : _.
+    
+Notation " a '↑' 'internal_msg_header.function_id' " := ( internal_msg_header_ι_function_id_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'internal_msg_header.function_id' " := ( internal_msg_header_ι_function_id_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+(* ---------------- *)
+Definition int_msg_info_ι_ihr_disabled_right {b} (x: URValue int_msg_infoLRecord b): URValue XBool b :=
+    || {x} ^^ {int_msg_info_ι_ihr_disabled} || : _ .
+    
+Definition int_msg_info_ι_ihr_disabled_left (x: ULValue int_msg_infoLRecord): ULValue XBool :=
+    {{ {x} ^^ {int_msg_info_ι_ihr_disabled} }} : _.
+    
+Notation " a '↑' 'int_msg_info.ihr_disabled' " := ( int_msg_info_ι_ihr_disabled_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.ihr_disabled' " := ( int_msg_info_ι_ihr_disabled_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition int_msg_info_ι_bounce_right {b} (x: URValue int_msg_infoLRecord b): URValue XBool b :=
+    || {x} ^^ {int_msg_info_ι_bounce} || : _ .
+    
+Definition int_msg_info_ι_bounce_left (x: ULValue int_msg_infoLRecord): ULValue XBool :=
+    {{ {x} ^^ {int_msg_info_ι_bounce} }} : _.
+    
+Notation " a '↑' 'int_msg_info.bounce' " := ( int_msg_info_ι_bounce_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.bounce' " := ( int_msg_info_ι_bounce_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition int_msg_info_ι_bounced_right {b} (x: URValue int_msg_infoLRecord b): URValue XBool b :=
+    || {x} ^^ {int_msg_info_ι_bounced} || : _ .
+    
+Definition int_msg_info_ι_bounced_left (x: ULValue int_msg_infoLRecord): ULValue XBool :=
+    {{ {x} ^^ {int_msg_info_ι_bounced} }} : _.
+    
+Notation " a '↑' 'int_msg_info.bounced' " := ( int_msg_info_ι_bounced_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.bounced' " := ( int_msg_info_ι_bounced_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition int_msg_info_ι_src_right {b} (x: URValue int_msg_infoLRecord b): URValue address b :=
+    || {x} ^^ {int_msg_info_ι_src} || : _ .
+    
+Definition int_msg_info_ι_src_left (x: ULValue int_msg_infoLRecord): ULValue address :=
+    {{ {x} ^^ {int_msg_info_ι_src} }} : _.
+    
+Notation " a '↑' 'int_msg_info.src' " := ( int_msg_info_ι_src_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.src' " := ( int_msg_info_ι_src_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition int_msg_info_ι_dest_right {b} (x: URValue int_msg_infoLRecord b): URValue address b :=
+    || {x} ^^ {int_msg_info_ι_dest} || : _ .
+    
+Definition int_msg_info_ι_dest_left (x: ULValue int_msg_infoLRecord): ULValue address :=
+    {{ {x} ^^ {int_msg_info_ι_dest} }} : _.
+    
+Notation " a '↑' 'int_msg_info.dest' " := ( int_msg_info_ι_dest_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.dest' " := ( int_msg_info_ι_dest_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition int_msg_info_ι_value_right {b} (x: URValue int_msg_infoLRecord b): URValue CurrencyCollectionLRecord b :=
+    || {x} ^^ {int_msg_info_ι_value} || : _ .
+    
+Definition int_msg_info_ι_value_left (x: ULValue int_msg_infoLRecord): ULValue CurrencyCollectionLRecord :=
+    {{ {x} ^^ {int_msg_info_ι_value} }} : _.
+    
+Notation " a '↑' 'int_msg_info.value' " := ( int_msg_info_ι_value_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.value' " := ( int_msg_info_ι_value_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition int_msg_info_ι_ihr_fee_right {b} (x: URValue int_msg_infoLRecord b): URValue XUInteger16 b :=
+    || {x} ^^ {int_msg_info_ι_ihr_fee} || : _ .
+    
+Definition int_msg_info_ι_ihr_fee_left (x: ULValue int_msg_infoLRecord): ULValue XUInteger16 :=
+    {{ {x} ^^ {int_msg_info_ι_ihr_fee} }} : _.
+
+Notation " a '↑' 'int_msg_info.ihr_fee' " := ( int_msg_info_ι_ihr_fee_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.ihr_fee' " := ( int_msg_info_ι_ihr_fee_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition int_msg_info_ι_fwd_fee_right {b} (x: URValue int_msg_infoLRecord b): URValue XUInteger16 b :=
+    || {x} ^^ {int_msg_info_ι_fwd_fee} || : _ .
+    
+Definition int_msg_info_ι_fwd_fee_left (x: ULValue int_msg_infoLRecord): ULValue XUInteger16 :=
+    {{ {x} ^^ {int_msg_info_ι_fwd_fee} }} : _.
+
+Notation " a '↑' 'int_msg_info.fwd_fee' " := ( int_msg_info_ι_fwd_fee_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.fwd_fee' " := ( int_msg_info_ι_fwd_fee_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition int_msg_info_ι_created_lt_right {b} (x: URValue int_msg_infoLRecord b): URValue XUInteger64 b :=
+    || {x} ^^ {int_msg_info_ι_created_lt} || : _ .
+    
+Definition int_msg_info_ι_created_lt_left (x: ULValue int_msg_infoLRecord): ULValue XUInteger64 :=
+    {{ {x} ^^ {int_msg_info_ι_created_lt} }} : _.
+    
+Notation " a '↑' 'int_msg_info.created_lt' " := ( int_msg_info_ι_created_lt_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.created_lt' " := ( int_msg_info_ι_created_lt_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition int_msg_info_ι_created_at_right {b} (x: URValue int_msg_infoLRecord b): URValue XUInteger64 b :=
+    || {x} ^^ {int_msg_info_ι_created_at} || : _ .
+    
+Definition int_msg_info_ι_created_at_left (x: ULValue int_msg_infoLRecord): ULValue XUInteger64 :=
+    {{ {x} ^^ {int_msg_info_ι_created_at} }} : _.
+    
+Notation " a '↑' 'int_msg_info.created_at' " := ( int_msg_info_ι_created_at_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'int_msg_info.created_at' " := ( int_msg_info_ι_created_at_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition CurrencyCollection_ι_grams_right {b} (x: URValue CurrencyCollectionLRecord b): URValue XUInteger16 b :=
+    || {x} ^^ {CurrencyCollection_ι_grams} || : _ .
+    
+Definition CurrencyCollection_ι_grams_left (x: ULValue CurrencyCollectionLRecord): ULValue XUInteger16 :=
+    {{ {x} ^^ {CurrencyCollection_ι_grams} }} : _.
+    
+Notation " a '↑' 'CurrencyCollection.grams' " := ( CurrencyCollection_ι_grams_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'CurrencyCollection.grams' " := ( CurrencyCollection_ι_grams_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition CurrencyCollection_ι_other_right {b} (x: URValue CurrencyCollectionLRecord b): URValue ExtraCurrencyCollectionLRecord b :=
+    || {x} ^^ {CurrencyCollection_ι_other} || : _ .
+    
+Definition CurrencyCollection_ι_other_left (x: ULValue CurrencyCollectionLRecord): ULValue ExtraCurrencyCollectionLRecord :=
+    {{ {x} ^^ {CurrencyCollection_ι_other} }} : _.
+    
+Notation " a '↑' 'CurrencyCollection.other' " := ( CurrencyCollection_ι_other_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'CurrencyCollection.other' " := ( CurrencyCollection_ι_other_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition ExtraCurrencyCollection_ι_dict_right {b} (x: URValue ExtraCurrencyCollectionLRecord b): URValue (XHMap XUInteger32 XUInteger32) b :=
+    || {x} ^^ {ExtraCurrencyCollection_ι_dict} || : _ .
+    
+Definition ExtraCurrencyCollection_ι_dict_left (x: ULValue ExtraCurrencyCollectionLRecord): ULValue (XHMap XUInteger32 XUInteger32) :=
+    {{ {x} ^^ {ExtraCurrencyCollection_ι_dict} }} : _.
+    
+Notation " a '↑' 'ExtraCurrencyCollection.dict' " := ( ExtraCurrencyCollection_ι_dict_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'ExtraCurrencyCollection.dict' " := ( ExtraCurrencyCollection_ι_dict_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
 Definition OrderRet_err_code_right {b} (x: URValue OrderRetLRecord b): URValue XUInteger32 b :=
     || {x} ^^ {OrderRet_ι_err_code} || : _ .
 
@@ -236,6 +377,9 @@ let T := type of x in
 refine {{new 'x : T @ ss := {} ; {_} }} ;
 refine {{ {x} := #{s} ; {_} }} ;
 clear s.
+
+
+Notation " 'load_persistent_data' '()' " := (load_persistent_data)  (in custom URValue at level 0) : ursus_scope .
 
 End CommonNotations.
 

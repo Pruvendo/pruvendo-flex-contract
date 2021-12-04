@@ -74,7 +74,6 @@ Notation " 'is_internal_owner_' '(' ')' " := ( is_internal_owner_right )
 
 Definition check_internal_owner : UExpression PhantomType true . 
 	refine {{ require_ ( ( is_internal_owner_ ( ) ) , error_code::internal_owner_disabled ) ; { _ } }} . 
-	(*AL: get under require *)
 	refine {{ require_ ( ( * _owner_address_) == int_sender () , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
 	refine {{ return_ {} }} .
 Defined . 
@@ -133,9 +132,9 @@ Definition setWalletCode ( wallet_code : cell ) : UExpression boolean true .
 	refine {{ tvm_accept () ; { _ } }} . 
 	refine {{ require_ ( ( ~ _wallet_code_ ) , error_code::cant_override_wallet_code ) ; { _ } }} . 
 	refine {{ _wallet_code_ := ( (#{ wallet_code }) -> set () ) ; { _ } }} . 
-	refine {{ if ( #{Internal} ) then { {_:UEf} } ; { _ } }} . 
+	refine {{ { if Internal then _: UEf else {{ return_ {} }} } ; { _ } }} . 
 	refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-	refine {{ tvm_rawreserve ( (tvm_balance ()) - (!{value_gr}) , rawreserve_flag::up_to ) ; {_} }} . 	
+	refine {{ tvm_rawreserve ( tvm_balance () - (!{value_gr}) , rawreserve_flag::up_to ) ; {_} }} . 	
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} . 
 	refine {{ return_ TRUE }} . 
 Defined . 
@@ -178,25 +177,6 @@ Definition workchain_id_right : URValue int false :=
  
 Notation " 'workchain_id_' '(' ')' " := ( workchain_id_right ) (in custom URValue at level 0 ) : ursus_scope . 
 
-(* inline
-std::pair<StateInit, uint256> prepare_wallet_state_init_and_addr(DTONTokenWallet wallet_data) {
-  cell wallet_data_cl =
-    prepare_persistent_data<ITONTokenWallet, wallet_replay_protection_t, DTONTokenWallet>(
-#ifdef TIP3_ENABLE_EXTERNAL
-      wallet_replay_protection_t::init(),
-#else
-      {},
-#endif
-      wallet_data);
-  StateInit wallet_init {
-    /*split_depth*/{}, /*special*/{},
-    wallet_data.code_, wallet_data_cl, /*library*/{}
-  };
-  cell wallet_init_cl = build(wallet_init).make_cell();
-  return { wallet_init, uint256(tvm_hash(wallet_init_cl)) };
-} *)
-
-(*AL: not in this file!*)
 Definition prepare_wallet_state_init_and_addr (wallet_data : TONTokenWalletClassTypes.DTONTokenWalletLRecord )
 											   : UExpression ( StateInitLRecord # uint256 ) false .
 	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" :=  
@@ -281,11 +261,10 @@ Definition deployEmptyWallet ( pubkey : uint256 )
 	refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
 	refine {{ tvm_rawreserve ( tvm_balance () - !{ value_gr } , rawreserve_flag::up_to ) ; { _ } }} . 
 	refine {{ new ( 'wallet_init : StateInitLRecord , 'dest:address ) @ ( "wallet_init" , "dest" ) := 
-                                   calc_wallet_init_ ( #{ pubkey } , #{ internal_owner } ) ; { _ } }} . 
-	(*AL: deploy_noop !*)								   
+                                   calc_wallet_init_ ( #{ pubkey } , #{ internal_owner } ) ; { _ } }} . 				   
 	refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
               {{ {dest_handle_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value }  $] 
-                                         ⤳ TONTokenWallet.deploy ( !{wallet_init} ) ; {_} }} ). 
+                                         ⤳ TONTokenWallet.deploy_noop ( !{wallet_init} ) ; {_} }} ). 
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; { _ } }} . 
 	refine {{ return_ !{dest} }} . 
 Defined . 
@@ -368,29 +347,63 @@ Definition getWalletAddress ( pubkey : uint256 ) ( owner : address ) : UExpressi
 	refine {{ return_ second ( calc_wallet_init_ ( #{ pubkey } , #{ owner } ) ) }} . 
 Defined . 
  
-(*AL: TODO*)
-(*  Definition Args := args_struct_t<&ITONTokenWallet::accept>; *) 
+(*  __always_inline static int _on_bounced(cell /*msg*/, slice msg_body) {
+    tvm_accept();
+
+    using Args = args_struct_t<&ITONTokenWallet::accept>;
+    parser p(msg_body);
+    require(p.ldi(32) == -1, error_code::wrong_bounced_header);
+    auto [opt_hdr, =p] = parse_continue<abiv2::internal_msg_header_with_answer_id>(p);
+    require(opt_hdr && opt_hdr->function_id == id_v<&ITONTokenWallet::accept>,
+            error_code::wrong_bounced_header);
+    auto args = parse<Args>(p, error_code::wrong_bounced_args);
+    auto bounced_val = args.tokens;
+
+    auto [hdr, persist] = load_persistent_data<IRootTokenContract, root_replay_protection_t, DRootTokenContract>();
+    require(bounced_val <= persist.total_granted_, error_code::wrong_bounced_args);
+    persist.total_granted_ -= bounced_val;
+    save_persistent_data<IRootTokenContract, root_replay_protection_t>(hdr, persist);
+    return 0;
+  } *)
+
+Parameter Args_ITONTokenWallet_accept : Type.  
+
+Declare Instance foo: LocalStateField slice.
+Declare Instance bar: LocalStateField (optional msg_header_t).
+(* Parameter id_v : forall b, URValue ITONTokenWallet b -> URValue uint32 b.
+Arguments id_v {b}.
+Notation " 'id_v' '(' x ')' " := (id_v x) (in custom URValue at level 0, x custom URValue ) : ursus_scope .   
+ *)
+
+Declare Instance baz: LocalStateField DTONTokenWalletLRecord.
+Declare Instance kkk: LocalStateField msg_header_t.
+Declare Instance yyy: LocalStateField int_msg_infoLRecord.
+Declare Instance www: LocalStateField Args_ITONTokenWallet_accept.
+Declare Instance ddd: XDefault Args_ITONTokenWallet_accept.
+
+
+Definition save_persistent_data_left { R a1 } (x: URValue DRootTokenContractLRecord a1) : UExpression R a1 := 
+ wrapULExpression ( ursus_call_with_args (LedgerableWithArgs:= λ0 ) (save_persistent_data x) ) .  
+
+Notation " 'save_persistent_data' '(' x ')' " := (save_persistent_data_left x)  (in custom ULValue at level 0, x custom URValue) : ursus_scope .
+
+
  Definition _on_bounced ( msg : cell ) ( msg_body : slice  ) : UExpression uint true . 
 	refine {{ tvm_accept () ; { _ } }} . 
-(*  	 	 refine {{ new 'p : parser @ "p" := ( (#{ msg_body }) ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( (* p ↑ ldi ( #{32} ) *) {} == #{(-1)%Z} ) , error_code::wrong_bounced_header ) ; { _ } }} . 
- 	 	 refine {{ new 'opt_hdr : ( optional address ) @ "opt_hdr" := {} ; { _ } }} . 
-(*  	 	 refine {{ [ opt_hdr , =p ] := parse_continue < abiv2::internal_msg_header_with_answer_id > ( p ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( ? !{opt_hdr} && {} (* opt_hdr -> function_id == id_v < &ITONTokenWallet::accept > *) ) , 
-                                               error_code::wrong_bounced_header ) ; { _ } }} . 
- 	 	 refine {{ new 'args : address @ "args" := {} 
-                              (* parse ( p , error_code::wrong_bounced_args ) *) ; { _ } }} . 
- 	 	 refine {{ new 'bounced_val : ( uint (* auto *) ) @ "bounced_val" := {} 
-                         (* (!{ args }) ↑ auto:tokens *) ; { _ } }} . 
-
-(* very controversial things: *)
-
- 	 	 refine {{ new ( 'hdr:uint , 'persist:DRootTokenContractLRecord ) @ ( "hdr" , "persist" ) := {}
-(*      load_persistent_data < IRootTokenContract , root_replay_protection_t , DRootTokenContract > ()*) ; { _ } }} .  
- 	 	 refine {{ require_ ( ( (!{bounced_val}) <= ((!{persist}) ↑ DRootTokenContract.total_granted_) ) , error_code::wrong_bounced_args ) ; { _ } }} . 
- 	 	 refine {{ (({persist}) ↑ DRootTokenContract.total_granted_) -= (!{ bounced_val }) ; { _ } }} . 
-(*  	 	 refine {{ save_persistent_data < IRootTokenContract , root_replay_protection_t > ( hdr , persist ) ; { _ } }} .  *)
- 	 	 refine {{ return_ 0 }} . 
+	refine {{new 'p @ "p" := parser (#{msg_body}) ; {_} }}.
+	refine {{ require_ ( !{p} -> ldi (32) == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} .
+	refine {{ new 'opt_hdr : optional msg_header_t  @ "opt_hdr" := {} ; {_} }}. 
+	refine {{ [ {opt_hdr} , {p} ] := parse_continue ( !{p} , 0  ) ; {_} }} .
+	refine {{ require_ ( (~~?!{opt_hdr}) && 
+	                    (( *!{opt_hdr} ) ↑ internal_msg_header.function_id == 0) , error_code::wrong_bounced_header ) ; {_} }} .
+	refine {{ new 'args : Args_ITONTokenWallet_accept @ "args" := parse (!{p}, error_code::wrong_bounced_args) ; {_} }}.
+    (* auto bounced_val = args.tokens; *)
+	refine {{ new 'bounced_val : uint @ "bounced_val" :=  {} ; { _ } }} . 
+  	refine {{  new ( 'hdr:msg_header_t , 'persist:_ ) @ ( "hdr" , "persist" ) := [ {}, load_persistent_data () ]; {_} }}.
+	refine {{ require_ ( !{bounced_val} <= (!{persist} ↑ DRootTokenContract.total_granted_), error_code::wrong_bounced_args ) ; {_} }}.
+	refine {{ {persist} ↑ DRootTokenContract.total_granted_ -=  !{bounced_val} ; {_} }}.
+	refine {{ save_persistent_data ( (* hdr , *) !{persist} ) ; {_} }} . 
+ 	refine {{ return_ 0 }} . 	
 Defined . 
 
 Definition getWalletCodeHash : UExpression uint256 false . 
