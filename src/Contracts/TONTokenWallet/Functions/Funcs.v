@@ -780,7 +780,7 @@ Definition approve ( spender : address )
  	refine {{ _allowance_ := [ #{ spender } , #{ tokens } ] -> set ()  ; {_} }} . 
  	refine {{ return_ {}  }} .
 Defined . 
- 
+
 Definition transfer_from_impl ( answer_addr : address ) 
 							  ( from : address ) 
 							  ( too : address ) 
