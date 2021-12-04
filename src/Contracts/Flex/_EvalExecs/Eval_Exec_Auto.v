@@ -102,115 +102,34 @@ Ltac generate_proof gen :=
   generate_both gen_nf e H; cycle -1;
   (only 1: (exists e; subst e; reflexivity));
   eexists; reflexivity.
-
-(*   Definition rejectXchgPairImpl 
-  ( pubkey :  uint256 ) 
-  ( xchg_pair_listing_requests :  xchg_pairs_map ) 
-  ( listing_cfg :  ListingConfigLRecord ): 
-  UExpression xchg_pairs_map true . 
-          refine {{ new 'opt_req_info : ( optional XchgPairListingRequestLRecord ) @ "opt_req_info" := 
-                  (#{xchg_pair_listing_requests}) -> extract (#{pubkey}) ; { _ } }} .  
-         refine {{ require_ ( !{ opt_req_info } ,  error_code::xchg_pair_not_requested  ) ; { _ } }} . 
-         refine {{ new 'req_info : ( XchgPairListingRequestLRecord ) @ "req_info" := 
-                    (!{opt_req_info}) -> get () ; { _ } }} . 
-          refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := 
-            ( (!{req_info}) ↑ XchgPairListingRequest.client_funds )
-                   - ( (#{listing_cfg}) ↑ ListingConfig.reject_pair_cost ) ; { _ } }} .  
-   refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_addr ]]
-            with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onXchgPairRejected ( #{pubkey} ) ; {_} }}.   
-         refine {{ return_ #{xchg_pair_listing_requests} }} . 
-   Defined . 
-Opaque uhmap_fetch. *)
-Section rejectXchgPairImpl.
-Definition rejectXchgPairImpl_exec_P (l : Ledger) ( pubkey :  uint256 ) 
-( xchg_pair_listing_requests :  xchg_pairs_map ) 
-( listing_cfg :  ListingConfigLRecord ): 
-{l' | l' = exec_state (Uinterpreter (rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg )) l}.
-  generate_proof (exec_expression l (rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg )).
-Defined.
-Definition rejectXchgPairImpl_auto_exec_ (l : Ledger) ( pubkey :  uint256 ) 
-( xchg_pair_listing_requests :  xchg_pairs_map ) 
-( listing_cfg :  ListingConfigLRecord )
-: Ledger.
-intros. destruct (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg).
-exact x. (* 
- term_of (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg ). *)
-Defined.
-
-Definition rejectXchgPairImpl_auto_exec (l : Ledger) ( pubkey :  uint256 ) 
-( xchg_pair_listing_requests :  xchg_pairs_map ) 
-( listing_cfg :  ListingConfigLRecord )
-: Ledger.
-intros.
-let t1 := (eval unfold rejectXchgPairImpl_auto_exec_ in (rejectXchgPairImpl_auto_exec_ l pubkey xchg_pair_listing_requests listing_cfg)) in 
-let t2 := eval unfold rejectXchgPairImpl_exec_P in t1 in exact t2.
-Defined.
-Print rejectXchgPairImpl_auto_exec.
-Eval unfold rejectXchgPairImpl_auto_exec_ in rejectXchgPairImpl_auto_exec_p l pubkey xchg_pair_listing_requests listing_cfg.
-intros. destruct (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg).
-exact x. (* 
- term_of (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg ). *)
-Defined.
-
-Theorem rejectXchgPairImpl_exec_proof_next (l : Ledger) ( pubkey :  uint256 ) 
-( xchg_pair_listing_requests :  xchg_pairs_map ) 
-( listing_cfg :  ListingConfigLRecord ) :
-  rejectXchgPairImpl_auto_exec l pubkey xchg_pair_listing_requests listing_cfg =
-  exec_state (Uinterpreter (rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg)) l.
-Proof.
-  intros. proof_of (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg).
-Qed.
+(**)
 
 
 
-Ltac generate_proof gen :=
-  let e := fresh "e" in
-  let H := fresh "H" in
-  let gen_nf := eval hnf in gen in
-  generate_both gen_nf e H; cycle -1;
-  (only 1: (exists e; subst e; reflexivity));
-  eexists; reflexivity.
-
-  Definition rejectXchgPairImpl 
-  ( pubkey :  uint256 ) 
-  ( xchg_pair_listing_requests :  xchg_pairs_map ) 
-  ( listing_cfg :  ListingConfigLRecord ) : 
-  UExpression xchg_pairs_map true . 
-         refine {{ new 'opt_req_info : ( optional XchgPairListingRequestLRecord ) @ "opt_req_info" := 
-                  (#{xchg_pair_listing_requests}) -> extract (#{pubkey}) ; { _ } }} . 
-         refine {{ require_ ( !{ opt_req_info } ,  error_code::xchg_pair_not_requested  ) ; { _ } }} . 
-         refine {{ new 'req_info : ( XchgPairListingRequestLRecord ) @ "req_info" := 
-                    (!{opt_req_info}) -> get () ; { _ } }} . 
-         refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := 
-            ( (!{req_info}) ↑ XchgPairListingRequest.client_funds )
-                   - ( (#{listing_cfg}) ↑ ListingConfig.reject_pair_cost ) ; { _ } }} . 
-(*   refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_addr ]]
-            with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onXchgPairRejected ( #{pubkey} ) ; {_} }}.  *) 
-         refine {{ return_ #{xchg_pair_listing_requests} }} . 
-   Defined . 
-
-Section rejectXchgPairImpl.
-Definition rejectXchgPairImpl_exec_P (l : Ledger) ( pubkey :  uint256 ) 
-( xchg_pair_listing_requests :  xchg_pairs_map ) 
-( listing_cfg :  ListingConfigLRecord ): 
-{l' | l' = exec_state (Uinterpreter (rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg)) l}.
-  generate_proof (exec_expression l (rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg)).
-Defined.
-Definition rejectXchgPairImpl_auto_exec (l : Ledger) ( pubkey :  uint256 ) 
-( xchg_pair_listing_requests :  xchg_pairs_map ) 
-( listing_cfg :  ListingConfigLRecord ): Ledger.
-intros. term_of (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg).
-Defined.
-Theorem rejectXchgPairImpl_exec_proof_next (l : Ledger) ( pubkey :  uint256 ) 
-( xchg_pair_listing_requests :  xchg_pairs_map ) 
-( listing_cfg :  ListingConfigLRecord ) :
-  rejectXchgPairImpl_auto_exec l pubkey xchg_pair_listing_requests listing_cfg =
-  exec_state (Uinterpreter (rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg)) l.
-Proof.
-  intros. proof_of (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg).
-Qed.
 
 
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 About new_lvalue.
 (* ----------------------------------------- *)
 Section Constructor.
@@ -441,7 +360,7 @@ Theorem prepare_trading_pair_state_init_and_addr_exec_proof_next (l : Ledger) ( 
   prepare_trading_pair_state_init_and_addr_auto_exec l pair_data pair_code =
   exec_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l.
 Proof. 
-Opaque builder_build_.  intros.
+ intros.
 destruct (prepare_trading_pair_state_init_and_addr_exec_P l pair_data pair_code) as [e H] eqn:E. rewrite <- H. replace e with
   (let (e', _) := (prepare_trading_pair_state_init_and_addr_exec_P l pair_data pair_code) in e').
 unfold prepare_trading_pair_state_init_and_addr_exec_P.
@@ -465,11 +384,16 @@ Theorem prepare_trading_pair_state_init_and_addr_eval_proof_next (l : Ledger) ( 
   prepare_trading_pair_state_init_and_addr_auto_eval l pair_data pair_code =
   toValue (eval_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l).
 Proof.
-  intros. 
-  unfold prepare_trading_pair_state_init_and_addr. 
-  reflexivity.
+  intros.
+
+  (* unfold prepare_trading_pair_state_init_and_addr. 
+  reflexivity. *)
   (* rewrite E. reflexivity. *)
-  (* proof_of (prepare_trading_pair_state_init_and_addr_eval_P l pair_data pair_code). *)
+  destruct (prepare_trading_pair_state_init_and_addr_eval_P l pair_data pair_code) as [e H] eqn:E.
+  rewrite <- H. replace e with (let (e', _) :=
+  (prepare_trading_pair_state_init_and_addr_eval_P l pair_data pair_code) in e').
+  unfold prepare_trading_pair_state_init_and_addr_eval_P. reflexivity.
+  rewrite E. reflexivity.
 Qed.
 End prepare_trading_pair_state_init_and_addr.
 (* ----------------------------------------- *)
@@ -515,6 +439,7 @@ Proof.
   intros. proof_of_norm (prepare_trading_pair_eval_P l flex tip3_root pair_code).
 Qed.
 End prepare_trading_pair.
+
 (* ----------------------------------------- *)
 Section registerTradingPair.
 Definition registerTradingPair_exec_P (l : Ledger) 
@@ -648,7 +573,10 @@ Defined.
 Definition rejectTradingPairImpl_auto_exec (l : Ledger) ( pubkey : uint256 ) 
                                  ( trading_pair_listing_requests : trading_pairs_map ) 
                                  ( listing_cfg :  ListingConfigLRecord ): Ledger.
-intros. term_of (rejectTradingPairImpl_exec_P l pubkey trading_pair_listing_requests listing_cfg).
+intros. let t := eval unfold rejectTradingPairImpl_exec_P in
+(let (e, _) := rejectTradingPairImpl_exec_P l pubkey trading_pair_listing_requests listing_cfg in e) in
+exact t.
+(* term_of (rejectTradingPairImpl_exec_P l pubkey trading_pair_listing_requests listing_cfg). *)
 Defined.
 Theorem rejectTradingPairImpl_exec_proof_next (l : Ledger) ( pubkey : uint256 ) 
                                  ( trading_pair_listing_requests : trading_pairs_map ) 
@@ -656,7 +584,9 @@ Theorem rejectTradingPairImpl_exec_proof_next (l : Ledger) ( pubkey : uint256 )
   rejectTradingPairImpl_auto_exec l pubkey trading_pair_listing_requests listing_cfg =
   exec_state (Uinterpreter (rejectTradingPairImpl pubkey trading_pair_listing_requests listing_cfg)) l.
 Proof.
-  intros. proof_of (rejectTradingPairImpl_exec_P l pubkey trading_pair_listing_requests listing_cfg).
+  intros. destruct (rejectTradingPairImpl_exec_P l pubkey trading_pair_listing_requests listing_cfg) as [e H] eqn:E.
+  rewrite <- H. replace e with (let (e', _) := (rejectTradingPairImpl_exec_P l pubkey trading_pair_listing_requests listing_cfg) in e').
+  unfold rejectTradingPairImpl_exec_P; reflexivity. rewrite E. reflexivity.
 Qed.
 (*  
 TODO eval true *)
@@ -677,9 +607,10 @@ Theorem rejectTradingPairImpl_eval_proof_next (l : Ledger) ( pubkey : uint256 )
   rejectTradingPairImpl_auto_eval l pubkey trading_pair_listing_requests listing_cfg =
    (eval_state (Uinterpreter (rejectTradingPairImpl pubkey trading_pair_listing_requests listing_cfg)) l).
 Proof.
-  intros. proof_of (rejectTradingPairImpl_eval_P l pubkey trading_pair_listing_requests listing_cfg).
+  intros. 
+  proof_of_norm (rejectTradingPairImpl_eval_P l pubkey trading_pair_listing_requests listing_cfg).
 Qed.
-
+(* 
 End rejectTradingPairImpl.
 (* ----------------------------------------- *)
 Section rejectTradingPair.
@@ -1379,5 +1310,5 @@ Theorem prepare_internal_wallet_state_init_and_addr_eval_proof_next (l : Ledger)
 Proof.
   intros. proof_of (prepare_internal_wallet_state_init_and_addr_eval_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Qed.
-End prepare_internal_wallet_state_init_and_addr.
+End prepare_internal_wallet_state_init_and_addr. *)
 End EvalExecAuto.

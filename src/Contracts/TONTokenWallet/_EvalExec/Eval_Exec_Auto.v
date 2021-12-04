@@ -52,23 +52,7 @@ Import FuncsInternal.
 
 Import co.
 
-(* Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
-Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
 
-Module TradingPairClassTypes := TradingPair.ClassTypes.ClassTypes XTypesModule StateMonadModule.
-Module XchgPairClassTypes := XchgPair.ClassTypes.ClassTypes XTypesModule StateMonadModule.
-Module WrapperClassTypesModule := Wrapper.ClassTypes.ClassTypes XTypesModule StateMonadModule.
-Module TONTokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule.
- *)
-(* Module Import TONTokenWalletModuleForTON := Contracts.TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module Import WrapperModuleForTON := Wrapper.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
- *)
-
-(*  Module Import xxx := SpecModuleForFuncNotations.LedgerModuleForFuncSig.
- Module Import generator := execGenerator XTypesModule StateMonadModule xxx.
- *)
-(* Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
-  *)
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
@@ -93,18 +77,6 @@ Ltac proof_of t :=
   (let (e', _) := t in e');
   try reflexivity ;try (rewrite E; reflexivity).
 
-(* Если proof_of падает, то меняем его на proof_of_norm
-Если зависает, то меняем на destruct (funcname_exec_P l  arg arg) as [e H] eqn:E. rewrite <- H. replace e with
-  (let (e', _) := (funcname_exec_P l  arg arg) in e').
-unfold filter_lend_ownerhip_map_exec_P.
-  reflexivity.
-  rewrite E.
-  reflexivity.
-
-Если зависает term_of 
-let t1 := (eval unfold funcname_exec_P in
-(let (e, _) := funcname_exec_P l args in e)) in exact t1.
-*)
 
 Section filter_lend_ownerhip_map.
 Definition filter_lend_ownerhip_map_exec_P (l : Ledger): 
@@ -802,7 +774,12 @@ Theorem calc_wallet_init_eval_proof_next (l : Ledger) ( pubkey : ( XUInteger256 
   calc_wallet_init_auto_eval l pubkey internal_owner =
   toValue (eval_state (Uinterpreter (calc_wallet_init pubkey internal_owner)) l).
 Proof.
-  intros. proof_of (calc_wallet_init_eval_P l pubkey internal_owner).
+  intros. 
+  destruct (calc_wallet_init_eval_P l pubkey internal_owner) as [e H] eqn:E. rewrite <- H. replace e with
+  (let (e', _) := (calc_wallet_init_eval_P l pubkey internal_owner) in e').
+unfold calc_wallet_init_eval_P;
+reflexivity.
+  rewrite E. reflexivity.
 Qed.
 
 
@@ -831,7 +808,9 @@ Definition transfer_to_recipient_impl_auto_exec (l : Ledger) ( answer_addr : ( a
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
 ( payload : ( cell ) ) : Ledger.
-intros. term_of (transfer_to_recipient_impl_exec_P l answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload ).
+intros. 
+let t1 := (eval unfold transfer_to_recipient_impl_exec_P in
+(let (e, _) := transfer_to_recipient_impl_exec_P l answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload in e)) in exact t1.
 Defined.
 Theorem transfer_to_recipient_impl_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) 
 ( recipient_public_key : ( XUInteger256 ) ) 
@@ -852,7 +831,7 @@ Qed.
 
 End transfer_to_recipient_impl.
 
-
+(* 
 Section transferToRecipient.
 Definition transferToRecipient_exec_P (l : Ledger) ( answer_addr : ( address ) ) 
 ( recipient_public_key : ( XUInteger256 ) ) 
@@ -1369,3 +1348,4 @@ Qed.
 End prepare_internal_wallet_state_init_and_addr.
 
 
+ *)

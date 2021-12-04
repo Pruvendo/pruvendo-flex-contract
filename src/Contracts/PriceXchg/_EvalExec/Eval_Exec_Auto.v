@@ -1,4 +1,4 @@
-Require Import Coq.Program.Basics. 
+(* Require Import Coq.Program.Basics. 
 Require Import Coq.Strings.String. 
 Require Import Setoid.
 Require Import ZArith.
@@ -486,3 +486,4 @@ Proof.
 Qed.
 End prepare_price_xchg_state_init_and_addr.
 End EvalExecAuto.
+ *)
