@@ -125,6 +125,12 @@ Notation " 'rawreserve_flag::up_to' " := (sInject rawreserve_flag_ι_up_to) (in 
 
 Notation " 'error_code::internal_owner_disabled' " := (sInject internal_owner_disabled) (in custom URValue at level 0) : ursus_scope.
 
+Definition save_persistent_data_left { R a1 } (x: URValue DWrapperLRecord a1) : UExpression R a1 := 
+ wrapULExpression ( ursus_call_with_args (LedgerableWithArgs:= λ0 ) (save_persistent_data x) ) .  
+
+Notation " 'save_persistent_data' '(' x ')' " := (save_persistent_data_left x)  (in custom ULValue at level 0, x custom URValue) : ursus_scope .
+
+
 Module Calls (tc : SpecSig).
 
 Export tc.

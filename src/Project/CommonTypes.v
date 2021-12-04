@@ -33,6 +33,10 @@ End CompilerOptions.
 | int_msg_info_ι_created_lt 
 | int_msg_info_ι_created_at .
 (* 10 *)
+Inductive internal_msg_header_with_answer_idFields := 
+| internal_msg_header_with_answer_id_ι_function_id 
+| internal_msg_header_with_answer_id_ι_answer_id. 
+
 Inductive CurrencyCollectionFields := | CurrencyCollection_ι_grams | CurrencyCollection_ι_other .
 Inductive ExtraCurrencyCollectionFields := | ExtraCurrencyCollection_ι_dict | ExtraCurrencyCollection_ι_fantomField .
 
@@ -104,6 +108,11 @@ Definition CurrencyCollectionL : list Type :=
   ExtraCurrencyCollectionLRecord : Type
 ] .
 Elpi GeneratePruvendoRecord CurrencyCollectionL CurrencyCollectionFields .
+
+Definition internal_msg_header_with_answer_idL: list Type := 
+ [ ( XUInteger32 ) : Type ; 
+   ( XUInteger32 ) : Type ] .
+Elpi GeneratePruvendoRecord internal_msg_header_with_answer_idL internal_msg_header_with_answer_idFields .
 
 (* 11 *)
 Definition int_msg_infoL : list Type := 

@@ -868,42 +868,27 @@ Definition disapprove : UExpression PhantomType true .
 Defined . 
 
 
-Declare Instance foo: LocalStateField slice.
-Declare Instance bar: LocalStateField (optional msg_header_t).
-(* Parameter id_v : forall b, URValue ITONTokenWallet b -> URValue uint32 b.
-Arguments id_v {b}.
-Notation " 'id_v' '(' x ')' " := (id_v x) (in custom URValue at level 0, x custom URValue ) : ursus_scope .   
- *)
+(*FIXME*******************************************************************)
+Parameter  ITONTokenWallet_internalTransferFrom_function_id: XUInteger32.
+Parameter  ITONTokenWallet_onTip3LendOwnership_function_id: XUInteger32.
+Parameter  ITONTokenWallet_internalTransfer_function_id: XUInteger32.
 
-Declare Instance baz: LocalStateField DTONTokenWalletLRecord.
-Declare Instance kkk: LocalStateField msg_header_t.
-Declare Instance yyy: LocalStateField int_msg_infoLRecord.
-
-Check Interface.IinternalTransferFrom.
-Check load_persistent_data.
- 
-Definition save_persistent_data_left { R a1 } (x: URValue DTONTokenWalletLRecord a1) : UExpression R a1 := 
- wrapULExpression ( ursus_call_with_args (LedgerableWithArgs:= λ0 ) (save_persistent_data x) ) .  
-
-Notation " 'save_persistent_data' '(' x ')' " := (save_persistent_data_left x)  (in custom ULValue at level 0, x custom URValue) : ursus_scope .
-
+(*************************************************************************)
 
 Definition _on_bounced ( msg : cell ) ( msg_body : slice ) : UExpression uint true . 
 	refine {{ tvm_accept () ; {_} }} . 
-	refine {{new 'p @ "p" := parser (#{msg_body}) ; {_} }}.
+	refine {{ new 'p @ "p" := parser (#{msg_body}) ; {_} }}.
 	refine {{ require_ ( !{p} -> ldi (32) == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} . 
     refine {{ new 'opt_hdr : optional msg_header_t  @ "opt_hdr" := {} ; {_} }}. 
 	refine {{ [ {opt_hdr} , {p} ] := parse_continue ( !{p} , 0  ) ; {_} }} .
     refine {{ require_ ( ~~!{opt_hdr} , error_code::wrong_bounced_header ) ; {_} }} .
-	refine {{ if ( *!{opt_hdr} ) ↑ internal_msg_header.function_id == (* id_v ( # {IinternalTransferFrom}  ) *)0 then { {_} } ; {_}  }}.	
+	refine {{ if ( *!{opt_hdr} ) ↑ internal_msg_header.function_id ==  # {ITONTokenWallet_internalTransferFrom_function_id}  then { {_} } ; {_}  }}.	
     refine {{ exit_ 0 }}.
-	refine {{  new ( 'hdr:msg_header_t , 'persist:_ ) @ ( "hdr" , "persist" ) := [ {}, load_persistent_data () ]; {_} }}.
-    refine {{  if (  ( * !{opt_hdr} )  ↑ internal_msg_header.function_id == 0
-            (* id_v < &ITONTokenWalletNotify::onTip3LendOwnership > *) ) then { {_:UEt} } else { {_:UEt} } ; {_} }} .
-    refine {{  new 'parsed_msg : int_msg_infoLRecord @ "parsed_msg" := parse ( parser ( (#{ msg }) -> ctos () ) ,  error_code::bad_incoming_msg )  ; {_} }} .  	
+	refine {{ new ( 'hdr : msg_header_t , 'persist : DTONTokenWalletLRecord ) @ ( "hdr" , "persist" ) := [ {}, load_persistent_data () ]; {_} }}.
+    refine {{ if (  ( * !{opt_hdr} )  ↑ internal_msg_header.function_id == #{ITONTokenWallet_onTip3LendOwnership_function_id}) then { {_:UEt} } else { {_:UEt} } ; {_} }} .
+    refine {{ new 'parsed_msg : int_msg_infoLRecord @ "parsed_msg" := parse ( parser ( (#{ msg }) -> ctos () ) ,  error_code::bad_incoming_msg )  ; {_} }} .  	
     refine {{ ({persist} ↑ DTONTokenWallet.lend_ownership_) -> erase ( !{parsed_msg} ↑ int_msg_info.src ) }} .
-	refine {{ require_ ( ( * !{opt_hdr} )  ↑ internal_msg_header.function_id == 0
-                          (*  id_v < &ITONTokenWallet::internalTransfer > *) , error_code::wrong_bounced_header ) ; {_} }} . 
+	refine {{ require_ ( ( * !{opt_hdr} )  ↑ internal_msg_header.function_id == #{ITONTokenWallet_internalTransfer_function_id} , error_code::wrong_bounced_header ) ; {_} }} . 
 	(* using Args = args_struct_t<&ITONTokenWallet::internalTransfer>;
       static_assert(std::is_same_v<decltype(Args{}.tokens), uint128>); *)						   	
 	refine {{ new 'answer_id : uint32  @ "answer_id" := {} ; {_} }} . 
