@@ -868,6 +868,32 @@ Definition disapprove : UExpression PhantomType true .
 Defined . 
 
 (*AL: TODO*) 
+
+(*   __always_inline static int _on_bounced(cell msg, slice msg_body) {
+    tvm_accept();
+    parser p(msg_body);
+    require(p.ldi(32) == -1, error_code::wrong_bounced_header);
+    auto [opt_hdr, =p] = parse_continue<abiv2::internal_msg_header>(p);
+    require(!!opt_hdr, error_code::wrong_bounced_header);
+    if (opt_hdr->function_id == id_v<&ITONTokenWallet::internalTransferFrom>)
+      return 0;
+    auto [hdr, persist] = load_persistent_data<ITONTokenWallet, wallet_replay_protection_t, DTONTokenWallet>();
+    if (opt_hdr->function_id == id_v<&ITONTokenWalletNotify::onTip3LendOwnership>) {
+      auto parsed_msg = parse<int_msg_info>(parser(msg), error_code::bad_incoming_msg);
+      persist.lend_ownership_.erase(incoming_msg(parsed_msg).int_sender());
+    } else {
+      require(opt_hdr->function_id == id_v<&ITONTokenWallet::internalTransfer>,
+              error_code::wrong_bounced_header);
+      using Args = args_struct_t<&ITONTokenWallet::internalTransfer>;
+      static_assert(std::is_same_v<decltype(Args{}.tokens), uint128>);
+
+      auto [answer_id, =p] = parse_continue<uint32>(p);
+      auto bounced_val = parse<uint128>(p, error_code::wrong_bounced_args);
+      persist.balance_ += bounced_val;
+    }
+    save_persistent_data<ITONTokenWallet, wallet_replay_protection_t>(hdr, persist);
+    return 0;
+  } *)
 Definition _on_bounced ( msg : cell ) ( msg_body : slice ) : UExpression uint true . 
 	refine {{ tvm_accept () ; {_} }} . 
 (*  	 	 refine {{ parser p ( (#{ msg_body }) ) ; {_} }} .  *)
