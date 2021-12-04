@@ -82,7 +82,7 @@ Definition init ( external_wallet : address ) : UExpression boolean true .
 	refine {{ new 'mycode : cell @ "mycode" := 
 						((!{init}) ↑ StateInit.code ) -> get_default () ; {_} }} . 
 	refine {{ require_ ( ( !{ mycode } -> ctos () -> srefs () == #{3} ) , error_code::unexpected_refs_count_in_code ) ; {_} }} .  
-  refine {{ new 'mycode_parser @ "mycode_parser" :=  
+  	refine {{ new 'mycode_parser @ "mycode_parser" :=  
                                       parse ( !{mycode} -> ctos () , 0 ) ; {_} }} . 
 	(* refine {{ {mycode_parser} -> ldref () ; {_} }} . 
 	   refine {{ {mycode_parser} -> ldref () ; {_} }} .  *)
@@ -91,7 +91,7 @@ Definition init ( external_wallet : address ) : UExpression boolean true .
 	refine {{ new 'flex_addr @ "flex_addr" := 
                       parse ( {} (* !{mycode_salt} *) , {} ) ; {_} }} .  *)
 	refine {{ require_ ( (* !{ flex_addr } *) {} == int_sender () , error_code::only_flex_may_deploy_me ) ; {_} }} . 
-  refine {{ _external_wallet_ := (#{ external_wallet }) -> set () ; {_} }} . 
+  	refine {{ _external_wallet_ := (#{ external_wallet }) -> set () ; {_} }} . 
 	refine {{ tvm_rawreserve ( _start_balance_ , rawreserve_flag::up_to ) ; {_} }} . 
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .  
 	refine {{ return_ TRUE }} . 
@@ -110,13 +110,13 @@ Notation " 'is_internal_owner_' '(' ')' " := ( is_internal_owner_right)
 Definition check_internal_owner : UExpression PhantomType true .
 	refine {{ require_ ( is_internal_owner_ ( )  , error_code::internal_owner_disabled ) ; {_} }} . 
 	refine {{ require_ ( ( _owner_address_ -> get_default () == int_sender () ) , error_code::message_sender_is_not_my_owner ) ; {_} }} .
-refine {{ return_ {} }} .  
+	refine {{ return_ {} }} .  
 Defined. 
  
 Definition check_external_owner : UExpression PhantomType true . 
 	refine {{ require_ (  ~ is_internal_owner_ ( ) , error_code::internal_owner_enabled ) ; {_} }} . 
 	refine {{ require_ ( ( msg_pubkey () == _root_public_key_ ) , error_code::message_sender_is_not_my_owner ) ; {_} }} .
-refine {{ return_ {} }} .  
+	refine {{ return_ {} }} .  
 Defined.
  
 Definition check_internal_owner_left { R }  : UExpression R true := 
@@ -135,7 +135,7 @@ Definition check_owner : UExpression PhantomType true .
 	refine {{ { if Internal then _ else _ } }} . 
 	refine {{ check_internal_owner_ ( ) }} . 
 	refine {{ check_external_owner_ ( ) ; {_} }} .
-refine {{ return_ {} }} .  
+	refine {{ return_ {} }} .  
 Defined.
 
 Definition check_owner_left { R } : UExpression R true  := 
@@ -218,15 +218,15 @@ Notation " 'calc_internal_wallet_init_' '(' pubkey ',' owner_addr ')' " := ( cal
 Definition deployEmptyWallet ( pubkey : uint256 ) 
  						     ( internal_owner : address ) 
 							 ( grams : uint128 ) : UExpression address true . 
-    refine {{ new 'value_gr : uint256 @ "value_gr" := int_value () ; {_} }} . 
-	  refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
-    refine {{ new ( 'wallet_init : StateInitLRecord , 'dest:address ) @
-                  ( "wallet_init" , "dest" ) := calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} .  
-    refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
-           {{ {dest_handle_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value }  $] 
-                                         ⤳ TONTokenWallet.deploy_noop (!{wallet_init}) ; {_} }} ). 
-	  refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .
-	  refine {{ return_ !{dest} }} . 
+	refine {{ new 'value_gr : uint256 @ "value_gr" := int_value () ; {_} }} . 
+	refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
+	refine {{ new ( 'wallet_init : StateInitLRecord , 'dest:address ) @
+				( "wallet_init" , "dest" ) := calc_internal_wallet_init_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} .  
+	refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
+		{{ {dest_handle_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value }  $] 
+										⤳ TONTokenWallet.deploy_noop (!{wallet_init}) ; {_} }} ). 
+	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .
+	refine {{ return_ !{dest} }} . 
 Defined . 
  
 Definition expected_internal_address ( sender_public_key :uint256 ) ( sender_owner_addr : address ) 
@@ -266,7 +266,7 @@ Definition onTip3Transfer ( answer_addr : address )
 	refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
 	{{ {dest_handle_ptr} with {} 
 							   ⤳ TONTokenWallet.deploy ( !{wallet_init} ) ; {_} }} ). 
-refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
+	refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
 	{{ {dest_handle_ptr} with [$ (!{ args }) ↑ FlexDeployWalletArgs.grams ⇒ { Messsage_ι_value }  $] 
 							   ⤳ .accept ( #{ new_tokens } , int_sender () ,
 							  (!{ args }) ↑ FlexDeployWalletArgs.grams )  ; {_} }} ). 
@@ -276,11 +276,10 @@ Defined .
  
 Definition burn ( answer_addr : address ) 
                 ( sender_pubkey :uint256 ) 
-			          ( sender_owner : address ) 
+			    ( sender_owner : address ) 
                 ( out_pubkey :uint256 ) 
-				        ( out_internal_owner : address ) 
-                ( tokens : uint128 ) 
-: UExpression PhantomType true . 
+				( out_internal_owner : address ) 
+                ( tokens : uint128 ) : UExpression PhantomType true . 
 
 	refine {{ require_ ( ( _total_granted_ >= (#{ tokens }) ) , error_code::burn_unallocated ) ; {_} }} . 
  	refine {{ new ( 'sender:address , 'value_gr:uint ) @ ( "sender" , "value_gr" ) :=
@@ -288,11 +287,14 @@ Definition burn ( answer_addr : address )
  	refine {{ require_ ( (!{sender}) == expected_internal_address_ ( #{ sender_pubkey } , #{ sender_owner } ) ,
                                         error_code::message_sender_is_not_good_wallet ) ; {_} }} .
  	refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
-    (* ( *external_wallet_)(Grams(0), SEND_ALL_GAS).
-      transferToRecipient(answer_addr, out_pubkey, out_internal_owner, tokens, uint128(0),
-                          bool_t{true}, bool_t{false});  *)	
-  refine {{ _total_granted_ -= #{ tokens } ; {_} }} .
-  refine {{ return_ {} }} .  
+
+	refine ( let external_wallet_ptr := {{ ITONTokenWalletPtr [[ * _external_wallet_  ]] }} in 
+			{{ {external_wallet_ptr} with [$ 0 ⇒ { Messsage_ι_value } ; #{SEND_ALL_GAS} ⇒ { Messsage_ι_flags } $] 
+							   ⤳ .transferToRecipient ( #{ answer_addr } , #{out_pubkey} ,
+							   							#{out_internal_owner}, #{tokens},
+														0, TRUE, FALSE )  ; {_} }} ).  
+	refine {{ _total_granted_ -= #{ tokens } ; {_} }} .
+	refine {{ return_ {} }} .  
 Defined. 
  
 Definition requestTotalGranted : UExpression uint128 false . 
@@ -405,49 +407,33 @@ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDetails ) 
 
 Notation " 'getDetails_' '(' ')' " := ( getDetails_right ) 
 (in custom URValue at level 0 ) : ursus_scope . 
- 
-(* Definition load_persistent_data : UExpression ( cell # DWrapperLRecord ) false .
- refine {{ return_ {} }} .  
-Defined .
 
-Definition load_persistent_data_right : URValue ( cell # DWrapperLRecord ) false := 
- wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ0 ) load_persistent_data ) . 
- 
-Notation " 'load_persistent_data_' '(' ')' " := ( load_persistent_data_right ) 
- (in custom URValue at level 0 ) : ursus_scope .  *)
 
-(* Definition save_persistent_data (persistent_data_header:cell) 
-                                (base:DWrapperLRecord) 
-                              : UExpression PhantomType false .
- refine {{ return_ {} }} .  
-Defined .
+(*FIXME*************************************************************)
 
-Definition save_persistent_data_left { R a1 a2 }  
-                                  ( a : URValue cell a1 ) 
-                                  ( b : URValue DWrapperLRecord a2 ) 
-: UExpression R ( orb a2 a1 ) := 
- wrapULExpression (ursus_call_with_args ( LedgerableWithArgs:= λ2 ) save_persistent_data a b ) . 
- 
-Notation " 'save_persistent_data_' '(' a ',' b ')' " := ( save_persistent_data_left a b ) 
- (in custom ULValue at level 0 ,
-     a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
- *)
+Parameter Args_ITONTokenWallet_accept : Type.  
+Parameter ITONTokenWallet_accept_function_id: XUInteger32.
+
+Declare Instance LocalStateField_Args_ITONTokenWallet_accept: LocalStateField Args_ITONTokenWallet_accept.
+Declare Instance XDefault_Args_ITONTokenWallet_accept: XDefault Args_ITONTokenWallet_accept.
+
+(*******************************************************************)
+
 Definition _on_bounced ( _ :  cell ) ( msg_body : slice ) : UExpression uint true. 
 	refine {{ tvm_accept () ; {_} }} . 
- 	refine {{ new 'Args : ( PhantomType (* auto *) ) @ "Args" := {}  
- 	 	                 (* args_struct_t<&ITONTokenWallet::accept> *) ; {_} }} . 
-(*   refine {{ new 'p : slice @ "p" := parser ( #{ msg_body } ) ; {_} }} . *)
-(*  	refine {{ require_ ( (* !{p} -> ldi (32) *) {} == #{(-1)%Z} , error_code::wrong_bounced_header ) ; {_} }} .  *)
- 	refine {{ new 'opt_hdr : ( PhantomType (* auto *) ) @ "opt_hdr" := {} ; {_} }} . 
-(*  	 	 refine {{ [ opt_hdr , =p ] := parse_continue < abiv1::internal_msg_header > ( p ) ; {_} }} .  *)
-(*  	 	 refine {{ require_ ( ( ? !{opt_hdr} (* && opt_hdr -> function_id == id_v < &ITONTokenWallet::accept > *) ) , 1 (* error_code::wrong_bounced_header *) ) ; {_} }} .  *)
- 	refine {{ new 'args @ "args" := parse ( (* p *) {} , error_code::wrong_bounced_args ) ; {_} }} .
- 	refine {{ new 'bounced_val : uint128 @ "bounced_val" := {} (* (!{ args }) ↑ tokens *) ; {_} }} .
- 	refine {{ new ( 'hdr: cell , 'persist: DWrapperLRecord ) @ ( "hdr" , "persist" ) := 
-                                  load_persistent_data_ ( ) ; {_} }} . 
-	refine {{ require_ ( !{ bounced_val } <= !{persist} ↑ DWrapper.total_granted_ , error_code::wrong_bounced_args ) ; {_} }} . 
- 	refine {{ {persist} ↑ DWrapper.total_granted_ -= !{ bounced_val } ; {_} }} . 
- 	refine {{ save_persistent_data_ ( !{hdr} , !{persist} ) ; {_} }} .  
+	refine {{ new 'p : slice @ "p" := parser ( #{ msg_body } ) ; {_} }} . 
+	refine {{ require_ ( !{p} -> ldi (32) == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} .
+	refine {{ new 'opt_hdr : optional msg_header_t  @ "opt_hdr" := {} ; {_} }}. 
+	refine {{ [ {opt_hdr} , {p} ] := parse_continue ( !{p} , 0  ) ; {_} }} .
+	refine {{ require_ ( (~~?!{opt_hdr}) && 
+	                    (( *!{opt_hdr} ) ↑ internal_msg_header.function_id == #{ITONTokenWallet_accept_function_id}) , error_code::wrong_bounced_header ) ; {_} }} .
+	refine {{ new 'args : Args_ITONTokenWallet_accept @ "args" := parse (!{p}, error_code::wrong_bounced_args) ; {_} }}.
+	(* auto bounced_val = args.tokens; *)
+	refine {{ new 'bounced_val : uint @ "bounced_val" := {}; {_} }}.
+	refine {{ new ( 'hdr : msg_header_t , 'persist: DWrapperLRecord ) @ ( "hdr" , "persist" ) := [ {}, load_persistent_data () ]; {_} }}.
+	refine {{ require_ ( !{bounced_val} <= (!{persist} ↑ DWrapper.total_granted_), error_code::wrong_bounced_args ) ; {_} }}.
+	refine {{ {persist} ↑ DWrapper.total_granted_ -=  !{bounced_val} ; {_} }}.
+	refine {{ save_persistent_data ( (* hdr , *) !{persist} ) ; {_} }} . 
  	refine {{ return_ 0 }} . 
 Defined . 
  
@@ -461,7 +447,7 @@ Defined .
   
 Definition prepare_wrapper_state_init_and_addr ( wrapper_code : cell ) ( wrapper_data : ( DWrapperLRecord ) ) : UExpression ( StateInitLRecord # uint256 ) false . 
 	refine {{ new 'wrapper_data_cl : cell @ "wrapper_data_cl" := {} ; {_} }} . 
-	refine {{ { wrapper_data_cl } := prepare_persistent_data_ ( {} (* wrapper_replay_protection_t::init () *) , #{ wrapper_data } ) ; {_} }} . 
+	refine {{ { wrapper_data_cl } := prepare_persistent_data_ (  wrapper_replay_protection_t::init ()  , #{ wrapper_data } ) ; {_} }} . 
 	refine {{ new 'wrapper_init : ( StateInitLRecord ) @ "wrapper_init" := 	 	 
 		[ {} , {} , (#{ wrapper_code }) -> set (), !{ wrapper_data_cl } -> set () , {} ] ; {_} }} . 
 	refine {{ new 'wrapper_init_cl : cell @ "wrapper_init_cl" := {} ; {_} }} . 

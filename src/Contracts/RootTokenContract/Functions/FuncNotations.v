@@ -111,6 +111,12 @@ Notation " 'SEND_ALL_GAS_' " := (sInject SEND_ALL_GAS) (in custom URValue at lev
  
 Notation " 'global_id::answer_id' " := (sInject global_id_ι_answer_id) (in custom URValue at level 0) : ursus_scope.
 
+Definition save_persistent_data_left { R a1 } (x: URValue DRootTokenContractLRecord a1) : UExpression R a1 := 
+ wrapULExpression ( ursus_call_with_args (LedgerableWithArgs:= λ0 ) (save_persistent_data x) ) .  
+
+Notation " 'save_persistent_data' '(' x ')' " := (save_persistent_data_left x)  (in custom ULValue at level 0, x custom URValue) : ursus_scope .
+
+
 Module Calls (tc : SpecSig).
 
 Export tc.

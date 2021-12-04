@@ -85,6 +85,8 @@ Notation " x '->' 'ldi' '(' '32' ')' " := (tvm_ldi32 x) (in custom URValue at le
 
 
 Definition msg_header_t := internal_msg_headerLRecord.
+Definition msg_header_with_answer_id_t := internal_msg_header_with_answer_idLRecord.
+
 
 Parameter parse_continue : forall X (b be: bool) (x: URValue slice b) (e: URValue ErrorType be) , URValue (X # slice) true.
 Arguments parse_continue {X} {b} {be}.

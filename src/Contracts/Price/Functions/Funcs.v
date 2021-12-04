@@ -715,7 +715,7 @@ Definition getTonsCfg_right  : URValue TonsConfigLRecord false :=
 Notation " 'getTonsCfg_' '(' ')' " := ( getTonsCfg_right ) (in custom URValue at level 0 ) : ursus_scope . 
  
 Definition getSells : UExpression ( mapping uint OrderInfoLRecord ) false . 	
-	refine {{ return_ {} }} . (*AL: queue -> hmap*)
+	refine {{ return_ _sells_ }} . 
 Defined . 
  
 Definition getSells_right  : URValue ( mapping uint OrderInfoLRecord ) false := 
@@ -725,7 +725,7 @@ Notation " 'getSells_' '(' ')' " := ( getSells_right )
  (in custom URValue at level 0 ) : ursus_scope . 
 
 Definition getBuys : UExpression ( mapping uint OrderInfoLRecord ) false . 	
-	refine {{ return_ {} }} . (*AL: queue -> hmap*)
+	refine {{ return_ _buys_ }} . 
 Defined . 
  
 Definition getSellAmount : UExpression uint128 false . 
