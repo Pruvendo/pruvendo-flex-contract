@@ -14,6 +14,7 @@ Require Import FinProof.MonadTransformers21.
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 
+Require Import UrsusTVM.Cpp.TvmCells.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 Require Import UMLang.ExecGenerator.
@@ -85,14 +86,14 @@ Qed.
 End onDeploy.
 
 Section prepare_trading_pair_state_init_and_addr.
-Definition prepare_trading_pair_state_init_and_addr_exec_P (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : TvmCell ): 
+Definition prepare_trading_pair_state_init_and_addr_exec_P (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : cell ): 
 {l' | l' = exec_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l}.
   generate_proof (exec_expression l (prepare_trading_pair_state_init_and_addr pair_data pair_code)).
 Defined.
-Definition prepare_trading_pair_state_init_and_addr_auto_exec (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : TvmCell ): Ledger.
+Definition prepare_trading_pair_state_init_and_addr_auto_exec (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : cell ): Ledger.
 intros. term_of (prepare_trading_pair_state_init_and_addr_exec_P l pair_data pair_code).
 Defined.
-Theorem prepare_trading_pair_state_init_and_addr_exec_proof_next (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : TvmCell ) :
+Theorem prepare_trading_pair_state_init_and_addr_exec_proof_next (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : cell ) :
   prepare_trading_pair_state_init_and_addr_auto_exec l pair_data pair_code =
   exec_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l.
 Proof.
@@ -101,14 +102,14 @@ Qed.
 
 
 
-Definition prepare_trading_pair_state_init_and_addr_eval_P (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : TvmCell ): 
+Definition prepare_trading_pair_state_init_and_addr_eval_P (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : cell ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l)}.
   generate_proof (eval_expression l (prepare_trading_pair_state_init_and_addr pair_data pair_code)).
 Defined.
-Definition prepare_trading_pair_state_init_and_addr_auto_eval (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : TvmCell ): StateInitLRecord * uint256.
+Definition prepare_trading_pair_state_init_and_addr_auto_eval (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : cell ): StateInitLRecord * uint256.
 intros. term_of (prepare_trading_pair_state_init_and_addr_eval_P l pair_data pair_code).
 Defined.
-Theorem prepare_trading_pair_state_init_and_addr_eval_proof_next (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : TvmCell ) :
+Theorem prepare_trading_pair_state_init_and_addr_eval_proof_next (l : Ledger) ( pair_data : ContractLRecord) ( pair_code : cell ) :
   prepare_trading_pair_state_init_and_addr_auto_eval l pair_data pair_code =
   toValue (eval_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l).
 Proof.
