@@ -759,7 +759,7 @@ Notation " 'cancel_order_impl_' '(' orders ',' client_addr ',' all_amount ',' se
 
 Definition cancelSell : UExpression PhantomType false . 
 	refine {{ new 'canceled_amount : uint128  @ "canceled_amount" := _sells_amount_ ; { _ } }} . 
-	refine {{ new 'client_addr : addr_std_fixed  @ "client_addr" := {} (* int_sender_ ( )  *); { _ } }} . 
+	refine {{ new 'client_addr : addr_std_fixed  @ "client_addr" := int_sender () ; { _ } }} . 
 	refine {{ new 'value : ( uint ) @ "value" := int_value ( ) ; { _ } }} . 
 	refine {{ new ( 'sells : (queue OrderInfoLRecord) , 'sells_amount : uint128 ) @ ( "sells" , "sells_amount" ) :=
 		cancel_order_impl_ ( _sells_ , !{client_addr} , _sells_amount_ , TRUE , 
@@ -776,7 +776,7 @@ refine ( let notify_addr__ptr := {{ IFlexNotifyPtr [[ _notify_addr_  ]] }} in
 								  _sells_amount_) ; {_} }} ). 
 
 	refine {{ if ( ( _sells_ -> empty () ) && ( _buys_ -> empty () ) ) then { { _: UEf } } }} . 
-		refine {{ {value} := {} (* suicide ( _flex_ ) *) ; {_} }} . 
+		refine {{ {value} := suicide ( _flex_ ) ; {_} }} . 
 refine {{ return_ {} }} .
 Defined . 
  

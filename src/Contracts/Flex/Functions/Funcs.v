@@ -630,13 +630,11 @@ refine {{ new 'wallet_data : ( TONTokenWalletClassTypesModule.DTONTokenWalletExt
              (!{wrapper_addr}) -> set () , 
               #{ext_wallet_code} , 
               #{workchain_id} ) ; { _ } }} . 
- refine {{ new 'wallet_addr : address @ "wallet_addr" := {} ; { _ } }} .
-
-          
-refine ( let wallet_addr_ptr := {{ ITONTokenWalletPtr [[ !{wallet_addr}  ]] }} in 
+ refine {{ new 'wallet_addr : address @ "wallet_addr" := [ #{workchain_id} , !{wrapper_hash_addr} ] ; { _ } }} .
+ refine ( let wallet_addr_ptr := {{ ITONTokenWalletPtr [[ !{wallet_addr} ]] }} in 
               {{ {wallet_addr_ptr} with [$ (#{listing_cfg}) ↑ ListingConfig.ext_wallet_balance ⇒ { Messsage_ι_value }  $] 
                                          ⤳ TONTokenWallet.deploy_noop ( !{wallet_init} ) ; {_} }} ).  
-refine ( let wallet_addr_ptr := {{ IWrapperPtr [[ !{wallet_addr}  ]] }} in 
+ refine ( let wallet_addr_ptr := {{ IWrapperPtr [[ !{wallet_addr}  ]] }} in 
               {{ {wallet_addr_ptr} with [$ ((#{listing_cfg}) ↑ ListingConfig.wrapper_deploy_value) ⇒ { Messsage_ι_value }  $] 
                                          ⤳ Wrapper.deploy ( !{wrapper_init} ) ; {_} }} ). (* Тут должен быть init, который делаент непонятно что *)  
 
