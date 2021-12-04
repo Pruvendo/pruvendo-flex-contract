@@ -17,11 +17,9 @@ Require Import CommonNotations.
 
 Require Import CommonConstSig.
 
-Module CommonAxioms (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm) (cc: ConstsTypesSig xt sm).
+Module CommonAxioms (xt: XTypesSig) (sm: StateMonadSig) (cs : ClassSigTVM xt sm) .
 Module Export CommonNotationsModule := CommonNotations xt sm cs.
 Module Import stdTypesNotations := stdTypesNotations xt sm cs.
-
-Import cc.
 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
@@ -109,7 +107,13 @@ Qed.
 Notation " 'flex_replay_protection_t::init' '()' " := 
 	(flex_replay_protection_init) (in custom URValue at level 0) : ursus_scope .
 
+Definition wrapper_replay_protection_init: URValue PhantomType false.
+  exact || {} ||.
+Qed.
 
+Notation " 'wrapper_replay_protection_t::init' '()' " := 
+	(wrapper_replay_protection_init) (in custom URValue at level 0) : ursus_scope .
+  
 (* wrapper_replay_protection_t::init () *)  
 
 (* Definition suicide (a: address) : UExpression PhantomType true.

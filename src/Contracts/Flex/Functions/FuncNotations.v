@@ -196,533 +196,392 @@ Export tc.
 Local Open Scope string_scope.
 
 
- Definition constructor_left { R a1 a2 a3 a4 a5 a6 }  
-( deployer_pubkey : URValue ( uint256 ) a1 ) 
-( ownership_description : URValue ( XString ) a2 ) 
-( owner_address : URValue ( XMaybe address ) a3 ) 
-( tons_cfg : URValue ( TonsConfigLRecord ) a4 ) 
-( deals_limit : URValue ( uint8 ) a5 ) 
-( listing_cfg : URValue ( ListingConfigLRecord ) a6 ) 
-: UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) constructor 
- deployer_pubkey ownership_description owner_address tons_cfg deals_limit listing_cfg ) . 
+Definition constructor_left { R a1 a2 a3 a4 a5 a6 }  
+                    ( deployer_pubkey : URValue ( uint256 ) a1 ) 
+                    ( ownership_description : URValue ( XString ) a2 ) 
+                    ( owner_address : URValue ( XMaybe address ) a3 ) 
+                    ( tons_cfg : URValue ( TonsConfigLRecord ) a4 ) 
+                    ( deals_limit : URValue ( uint8 ) a5 ) 
+                    ( listing_cfg : URValue ( ListingConfigLRecord ) a6 ) 
+                    : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ6 ) constructor deployer_pubkey ownership_description owner_address tons_cfg deals_limit listing_cfg ) . 
  
- Notation " 'constructor_' '(' deployer_pubkey ownership_description owner_address tons_cfg deals_limit listing_cfg ')' " := 
- ( constructor_left 
- deployer_pubkey ownership_description owner_address tons_cfg deals_limit listing_cfg ) 
+Notation " 'constructor_' '(' deployer_pubkey ownership_description owner_address tons_cfg deals_limit listing_cfg ')' " := 
+ ( constructor_left deployer_pubkey ownership_description owner_address tons_cfg deals_limit listing_cfg ) 
  (in custom ULValue at level 0 , deployer_pubkey custom URValue at level 0 
- , ownership_description custom URValue at level 0 
- , owner_address custom URValue at level 0 
- , tons_cfg custom URValue at level 0 
- , deals_limit custom URValue at level 0 
+ , ownership_description custom URValue at level 0 , owner_address custom URValue at level 0 
+ , tons_cfg custom URValue at level 0  , deals_limit custom URValue at level 0 
  , listing_cfg custom URValue at level 0 ) : ursus_scope . 
  
- Definition setSpecificCode_left { R a1 a2 }  ( type : URValue ( uint8 ) a1 ) ( code : URValue cell a2 ) : UExpression R ( orb a2 a1 ) := 
+Definition setSpecificCode_left { R a1 a2 }  ( type : URValue ( uint8 ) a1 ) ( code : URValue cell a2 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) setSpecificCode 
  type code ) . 
  
- Notation " 'setSpecificCode_' '(' type code ')' " := 
- ( setSpecificCode_left 
- type code ) 
- (in custom ULValue at level 0 , type custom URValue at level 0 
- , code custom URValue at level 0 ) : ursus_scope . 
+Notation " 'setSpecificCode_' '(' type code ')' " := 
+ ( setSpecificCode_left type code ) 
+ (in custom ULValue at level 0 , type custom URValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition setPairCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
+Definition setPairCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setPairCode 
  code ) . 
  
- Notation " 'setPairCode_' '(' code ')' " := 
- ( setPairCode_left 
- code ) 
+Notation " 'setPairCode_' '(' code ')' " := 
+ ( setPairCode_left code ) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition setXchgPairCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setXchgPairCode 
- code ) . 
+Definition setXchgPairCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setXchgPairCode code ) . 
  
- Notation " 'setXchgPairCode_' '(' code ')' " := 
- ( setXchgPairCode_left 
- code ) 
+Notation " 'setXchgPairCode_' '(' code ')' " := 
+ ( setXchgPairCode_left code ) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition setWrapperCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setWrapperCode 
- code ) . 
+Definition setWrapperCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setWrapperCode  code ) . 
  
- Notation " 'setWrapperCode_' '(' code ')' " := 
- ( setWrapperCode_left 
- code ) 
+Notation " 'setWrapperCode_' '(' code ')' " := 
+ ( setWrapperCode_left code ) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition setPriceCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setPriceCode 
- code ) . 
+Definition setPriceCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setPriceCode  code ) . 
  
- Notation " 'setPriceCode_' '(' code ')' " := 
- ( setPriceCode_left 
- code ) 
+Notation " 'setPriceCode_' '(' code ')' " := ( setPriceCode_left  code ) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition setXchgPriceCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setXchgPriceCode 
- code ) . 
+Definition setXchgPriceCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setXchgPriceCode  code ) . 
  
- Notation " 'setXchgPriceCode_' '(' code ')' " := 
- ( setXchgPriceCode_left 
- code ) 
+Notation " 'setXchgPriceCode_' '(' code ')' " := ( setXchgPriceCode_left  code ) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition setExtWalletCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setExtWalletCode 
- code ) . 
+Definition setExtWalletCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setExtWalletCode code ) . 
  
- Notation " 'setExtWalletCode_' '(' code ')' " := 
- ( setExtWalletCode_left 
- code ) 
+Notation " 'setExtWalletCode_' '(' code ')' " := ( setExtWalletCode_left code ) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition setFlexWalletCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setFlexWalletCode 
- code ) . 
+Definition setFlexWalletCode_left { R a1 }  ( code : URValue cell a1 ) : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) setFlexWalletCode  code ) . 
  
- Notation " 'setFlexWalletCode_' '(' code ')' " := 
- ( setFlexWalletCode_left 
- code ) 
+Notation " 'setFlexWalletCode_' '(' code ')' " := ( setFlexWalletCode_left  code ) 
  (in custom ULValue at level 0 , code custom URValue at level 0 ) : ursus_scope . 
  
- Definition transfer_left { R a1 a2 }  ( tto : URValue ( address ) a1 ) ( tons : URValue ( uint128 ) a2 ) : UExpression R true (* ( orb a2 a1 ) *) := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) transfer 
- tto tons ) . 
+Definition transfer_left { R a1 a2 }  ( tto : URValue ( address ) a1 ) ( tons : URValue ( uint128 ) a2 ) : UExpression R true (* ( orb a2 a1 ) *) := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) transfer  tto tons ) . 
  
- Notation " 'transfer_' '(' tto tons ')' " := 
- ( transfer_left 
- tto tons ) 
- (in custom ULValue at level 0 , tto custom URValue at level 0 
- , tons custom URValue at level 0 ) : ursus_scope . 
- Definition registerTradingPair_right { a1 a2 a3 a4 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3_root : URValue ( address ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( notify_addr : URValue ( address ) a4 ) : URValue address true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) registerTradingPair 
- pubkey tip3_root min_amount notify_addr ) . 
+Notation " 'transfer_' '(' tto tons ')' " := ( transfer_left tto tons ) 
+ (in custom ULValue at level 0 , tto custom URValue at level 0  , tons custom URValue at level 0 ) : ursus_scope . 
+
+Definition registerTradingPair_right { a1 a2 a3 a4 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3_root : URValue ( address ) a2 ) ( min_amount : URValue ( uint128 ) a3 ) ( notify_addr : URValue ( address ) a4 ) : URValue address true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ4 ) registerTradingPair  pubkey tip3_root min_amount notify_addr ) . 
  
- Notation " 'registerTradingPair_' '(' pubkey tip3_root min_amount notify_addr ')' " := 
- ( registerTradingPair_right 
- pubkey tip3_root min_amount notify_addr ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , tip3_root custom URValue at level 0 
- , min_amount custom URValue at level 0 
+Notation " 'registerTradingPair_' '(' pubkey tip3_root min_amount notify_addr ')' " := 
+ ( registerTradingPair_right pubkey tip3_root min_amount notify_addr ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0  , tip3_root custom URValue at level 0 
+ , min_amount custom URValue at level 0 , notify_addr custom URValue at level 0 ) : ursus_scope . 
+
+Definition approveTradingPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue address true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveTradingPair  pubkey ) .  
+ 
+Notation " 'approveTradingPair_' '(' pubkey ')' " := 
+ ( approveTradingPair_right pubkey ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
+
+Definition rejectTradingPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue XBool true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectTradingPair pubkey ) . 
+ 
+Notation " 'rejectTradingPair_' '(' pubkey ')' " :=  ( rejectTradingPair_right pubkey ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
+
+Definition registerXchgPair_right { a1 a2 a3 a4 a5 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3_major_root : URValue ( address ) a2 ) ( tip3_minor_root : URValue ( address ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( notify_addr : URValue ( address ) a5 ) : URValue address true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) registerXchgPair  pubkey tip3_major_root tip3_minor_root min_amount notify_addr ) . 
+ 
+Notation " 'registerXchgPair_' '(' pubkey tip3_major_root tip3_minor_root min_amount notify_addr ')' " := 
+ ( registerXchgPair_right pubkey tip3_major_root tip3_minor_root min_amount notify_addr ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0  , tip3_major_root custom URValue at level 0 
+ , tip3_minor_root custom URValue at level 0 , min_amount custom URValue at level 0 
  , notify_addr custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveTradingPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue address true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveTradingPair 
- pubkey ) .  
+Definition approveXchgPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue address true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveXchgPair pubkey ) . 
  
- Notation " 'approveTradingPair_' '(' pubkey ')' " := 
- ( approveTradingPair_right 
- pubkey ) 
+Notation " 'approveXchgPair_' '(' pubkey ')' " := ( approveXchgPair_right  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
- Definition rejectTradingPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue XBool true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectTradingPair 
- pubkey ) . 
+Definition rejectXchgPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue XBool true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectXchgPair pubkey ) . 
  
- Notation " 'rejectTradingPair_' '(' pubkey ')' " := 
- ( rejectTradingPair_right 
- pubkey ) 
+Notation " 'rejectXchgPair_' '(' pubkey ')' " := ( rejectXchgPair_right pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
- Definition registerXchgPair_right { a1 a2 a3 a4 a5 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3_major_root : URValue ( address ) a2 ) ( tip3_minor_root : URValue ( address ) a3 ) ( min_amount : URValue ( uint128 ) a4 ) ( notify_addr : URValue ( address ) a5 ) : URValue address true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) registerXchgPair 
- pubkey tip3_major_root tip3_minor_root min_amount notify_addr ) . 
+Definition registerWrapper_right { a1 a2 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a2 ) : URValue address true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) registerWrapper  pubkey tip3cfg ) . 
  
- Notation " 'registerXchgPair_' '(' pubkey tip3_major_root tip3_minor_root min_amount notify_addr ')' " := 
- ( registerXchgPair_right 
- pubkey tip3_major_root tip3_minor_root min_amount notify_addr ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , tip3_major_root custom URValue at level 0 
- , tip3_minor_root custom URValue at level 0 
- , min_amount custom URValue at level 0 
- , notify_addr custom URValue at level 0 ) : ursus_scope . 
+Notation " 'registerWrapper_' '(' pubkey tip3cfg ')' " := ( registerWrapper_right pubkey tip3cfg ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0  , tip3cfg custom URValue at level 0 ) : ursus_scope . 
 
- Definition approveXchgPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue address true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveXchgPair 
- pubkey ) . 
+Definition approveWrapper_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue address true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveWrapper  pubkey ) . 
  
- Notation " 'approveXchgPair_' '(' pubkey ')' " := 
- ( approveXchgPair_right 
- pubkey ) 
+Notation " 'approveWrapper_' '(' pubkey ')' " := ( approveWrapper_right  pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
- Definition rejectXchgPair_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue XBool true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectXchgPair 
- pubkey ) . 
+Definition rejectWrapper_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue XBool true (* a1 *) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectWrapper  pubkey ) . 
  
- Notation " 'rejectXchgPair_' '(' pubkey ')' " := 
- ( rejectXchgPair_right 
- pubkey ) 
+Notation " 'rejectWrapper_' '(' pubkey ')' " := ( rejectWrapper_right pubkey ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
 
- Definition registerWrapper_right { a1 a2 }  ( pubkey : URValue ( uint256 ) a1 ) ( tip3cfg : URValue ( Tip3ConfigLRecord ) a2 ) : URValue address true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) registerWrapper 
- pubkey tip3cfg ) . 
+Definition isFullyInitialized_right  : URValue XBool false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) isFullyInitialized  ) . 
  
- Notation " 'registerWrapper_' '(' pubkey tip3cfg ')' " := 
- ( registerWrapper_right 
- pubkey tip3cfg ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , tip3cfg custom URValue at level 0 ) : ursus_scope . 
-
- Definition approveWrapper_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue address true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) approveWrapper 
- pubkey ) . 
- 
- Notation " 'approveWrapper_' '(' pubkey ')' " := 
- ( approveWrapper_right 
- pubkey ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
-
- Definition rejectWrapper_right { a1 }  ( pubkey : URValue ( uint256 ) a1 ) : URValue XBool true (* a1 *) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) rejectWrapper 
- pubkey ) . 
- 
- Notation " 'rejectWrapper_' '(' pubkey ')' " := 
- ( rejectWrapper_right 
- pubkey ) 
- (in custom URValue at level 0 , pubkey custom URValue at level 0 ) : ursus_scope . 
-
- Definition isFullyInitialized_right  : URValue XBool false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) isFullyInitialized 
- ) . 
- 
- Notation " 'isFullyInitialized_' '(' ')' " := 
- ( isFullyInitialized_right 
- ) 
+Notation " 'isFullyInitialized_' '(' ')' " := ( isFullyInitialized_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getDetails_right  : URValue FlexDetailsLRecord true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDetails 
- ) . 
+Definition getDetails_right  : URValue FlexDetailsLRecord true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDetails  ) . 
  
- Notation " 'getDetails_' '(' ')' " := 
- ( getDetails_right 
- ) 
+Notation " 'getDetails_' '(' ')' " := ( getDetails_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
 
- Definition getTonsCfg_right  : URValue TonsConfigLRecord false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTonsCfg 
- ) . 
+Definition getTonsCfg_right  : URValue TonsConfigLRecord false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTonsCfg  ) . 
  
- Notation " 'getTonsCfg_' '(' ')' " := 
- ( getTonsCfg_right 
- ) 
+Notation " 'getTonsCfg_' '(' ')' " := ( getTonsCfg_right  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getListingCfg_right  : URValue ListingConfigLRecord false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getListingCfg 
- ) . 
+
+Definition getListingCfg_right  : URValue ListingConfigLRecord false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getListingCfg ) . 
  
- Notation " 'getListingCfg_' '(' ')' " := 
- ( getListingCfg_right 
- ) 
+Notation " 'getListingCfg_' '(' ')' " := ( getListingCfg_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getTradingPairCode_right  : URValue cell true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTradingPairCode 
- ) . 
+
+Definition getTradingPairCode_right  : URValue cell true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTradingPairCode  ) . 
  
- Notation " 'getTradingPairCode_' '(' ')' " := 
- ( getTradingPairCode_right 
- ) 
+Notation " 'getTradingPairCode_' '(' ')' " := ( getTradingPairCode_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getXchgPairCode_right  : URValue cell true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getXchgPairCode 
- ) . 
+
+Definition getXchgPairCode_right  : URValue cell true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getXchgPairCode  ) . 
  
- Notation " 'getXchgPairCode_' '(' ')' " := 
- ( getXchgPairCode_right 
- ) 
+Notation " 'getXchgPairCode_' '(' ')' " := ( getXchgPairCode_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getSellPriceCode_right { a1 }  ( tip3_addr : URValue ( address ) a1 ) : URValue cell true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) getSellPriceCode 
- tip3_addr ) . 
+
+Definition getSellPriceCode_right { a1 }  ( tip3_addr : URValue ( address ) a1 ) : URValue cell true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) getSellPriceCode tip3_addr ) . 
  
- Notation " 'getSellPriceCode_' '(' tip3_addr ')' " := 
- ( getSellPriceCode_right 
- tip3_addr ) 
+Notation " 'getSellPriceCode_' '(' tip3_addr ')' " := ( getSellPriceCode_right tip3_addr ) 
  (in custom URValue at level 0 , tip3_addr custom URValue at level 0 ) : ursus_scope . 
- Definition getXchgPriceCode_right { a1 a2 }  ( tip3_addr1 : URValue ( address ) a1 ) ( tip3_addr2 : URValue ( address ) a2 ) : URValue cell true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) getXchgPriceCode 
- tip3_addr1 tip3_addr2 ) . 
- 
- Notation " 'getXchgPriceCode_' '(' tip3_addr1 tip3_addr2 ')' " := 
- ( getXchgPriceCode_right 
- tip3_addr1 tip3_addr2 ) 
- (in custom URValue at level 0 , tip3_addr1 custom URValue at level 0 
- , tip3_addr2 custom URValue at level 0 ) : ursus_scope . 
 
- Definition getSellTradingPair_right { a1 }  ( tip3_root : URValue ( address ) a1 ) : URValue address true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) getSellTradingPair 
- tip3_root ) . 
+Definition getXchgPriceCode_right { a1 a2 }  ( tip3_addr1 : URValue ( address ) a1 ) ( tip3_addr2 : URValue ( address ) a2 ) : URValue cell true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) getXchgPriceCode tip3_addr1 tip3_addr2 ) . 
  
- Notation " 'getSellTradingPair_' '(' tip3_root ')' " := 
- ( getSellTradingPair_right 
- tip3_root ) 
+Notation " 'getXchgPriceCode_' '(' tip3_addr1 tip3_addr2 ')' " := ( getXchgPriceCode_right  tip3_addr1 tip3_addr2 ) 
+ (in custom URValue at level 0 , tip3_addr1 custom URValue at level 0 , tip3_addr2 custom URValue at level 0 ) : ursus_scope . 
+
+Definition getSellTradingPair_right { a1 }  ( tip3_root : URValue ( address ) a1 ) : URValue address true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) getSellTradingPair  tip3_root ) . 
+ 
+Notation " 'getSellTradingPair_' '(' tip3_root ')' " :=  ( getSellTradingPair_right tip3_root ) 
  (in custom URValue at level 0 , tip3_root custom URValue at level 0 ) : ursus_scope . 
- Definition getXchgTradingPair_right { a1 a2 }  ( tip3_major_root : URValue ( address ) a1 ) ( tip3_minor_root : URValue ( address ) a2 ) 
-: URValue address (* orb a2 a1 *) true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) getXchgTradingPair 
- tip3_major_root tip3_minor_root ) . 
  
- Notation " 'getXchgTradingPair_' '(' tip3_major_root tip3_minor_root ')' " := 
- ( getXchgTradingPair_right 
- tip3_major_root tip3_minor_root ) 
- (in custom URValue at level 0 , tip3_major_root custom URValue at level 0 
- , tip3_minor_root custom URValue at level 0 ) : ursus_scope . 
- Definition getDealsLimit_right  : URValue uint8 false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDealsLimit 
- ) . 
+Definition getXchgTradingPair_right { a1 a2 }  ( tip3_major_root : URValue ( address ) a1 ) 
+                                               ( tip3_minor_root : URValue ( address ) a2 ) 
+                                                : URValue address (* orb a2 a1 *) true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) getXchgTradingPair tip3_major_root tip3_minor_root ) . 
  
- Notation " 'getDealsLimit_' '(' ')' " := 
- ( getDealsLimit_right 
- ) 
+Notation " 'getXchgTradingPair_' '(' tip3_major_root tip3_minor_root ')' " := ( getXchgTradingPair_right tip3_major_root tip3_minor_root ) 
+ (in custom URValue at level 0 , tip3_major_root custom URValue at level 0 , tip3_minor_root custom URValue at level 0 ) : ursus_scope . 
+
+Definition getDealsLimit_right  : URValue uint8 false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDealsLimit ) . 
+ 
+Notation " 'getDealsLimit_' '(' ')' " := ( getDealsLimit_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getOwnershipInfo_right  : URValue FlexOwnershipInfoLRecord false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwnershipInfo 
- ) . 
+
+Definition getOwnershipInfo_right  : URValue FlexOwnershipInfoLRecord false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getOwnershipInfo ) . 
  
- Notation " 'getOwnershipInfo_' '(' ')' " := 
- ( getOwnershipInfo_right 
- ) 
+Notation " 'getOwnershipInfo_' '(' ')' " := ( getOwnershipInfo_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getWrapperListingRequests_right  : URValue ( XHMap uint WrapperListingRequestWithPubkeyLRecord) false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getWrapperListingRequests 
- ) . 
+
+Definition getWrapperListingRequests_right  : URValue ( XHMap uint WrapperListingRequestWithPubkeyLRecord) false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getWrapperListingRequests ) . 
  
- Notation " 'getWrapperListingRequests_' '(' ')' " := 
- ( getWrapperListingRequests_right 
- ) 
+Notation " 'getWrapperListingRequests_' '(' ')' " := ( getWrapperListingRequests_right ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getTradingPairListingRequests_right  : URValue ( XHMap uint TradingPairListingRequestWithPubkeyLRecord ) false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTradingPairListingRequests 
- ) . 
+
+Definition getTradingPairListingRequests_right  : URValue ( XHMap uint TradingPairListingRequestWithPubkeyLRecord ) false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTradingPairListingRequests ) . 
  
- Notation " 'getTradingPairListingRequests_' '(' ')' " := 
- ( getTradingPairListingRequests_right 
- ) 
+Notation " 'getTradingPairListingRequests_' '(' ')' " := ( getTradingPairListingRequests_right  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
- Definition getXchgPairListingRequests_right  : URValue ( XHMap uint XchgPairListingRequestWithPubkeyLRecord ) false := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getXchgPairListingRequests 
- ) . 
+
+Definition getXchgPairListingRequests_right  : URValue ( XHMap uint XchgPairListingRequestWithPubkeyLRecord ) false := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getXchgPairListingRequests ) . 
  
- Notation " 'getXchgPairListingRequests_' '(' ')' " := 
- ( getXchgPairListingRequests_right 
- ) 
+Notation " 'getXchgPairListingRequests_' '(' ')' " := ( getXchgPairListingRequests_right  ) 
  (in custom URValue at level 0 ) : ursus_scope . 
  
- Definition check_owner_left { R }  : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) check_owner 
- ) . 
+Definition check_owner_left { R }  : UExpression R true := 
+ wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) check_owner ) . 
  
- Notation " 'check_owner_' '(' ')' " := 
- ( check_owner_left 
- ) 
+Notation " 'check_owner_' '(' ')' " := ( check_owner_left  ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
- Definition _fallback_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( slice ) a2 ) : URValue uint ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback 
- msg msg_body ) . 
+
+Definition _fallback_right { a1 a2 }  ( msg : URValue cell a1 ) ( msg_body : URValue ( slice ) a2 ) : URValue uint ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) _fallback msg msg_body ) . 
  
- Notation " '_fallback_' '(' msg msg_body ')' " := 
- ( _fallback_right 
- msg msg_body ) 
- (in custom URValue at level 0 , msg custom URValue at level 0 
- , msg_body custom URValue at level 0 ) : ursus_scope . 
- Definition prepare_wrapper_state_init_and_addr_right { a1 a2 }  ( wrapper_code : URValue cell a1 ) ( wrapper_data : URValue ( WrapperClassTypesModule.DWrapperLRecord ) a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_wrapper_state_init_and_addr 
- wrapper_code wrapper_data ) . 
+Notation " '_fallback_' '(' msg msg_body ')' " := ( _fallback_right  msg msg_body ) 
+ (in custom URValue at level 0 , msg custom URValue at level 0 , msg_body custom URValue at level 0 ) : ursus_scope . 
+
+Definition prepare_wrapper_state_init_and_addr_right { a1 a2 }  ( wrapper_code : URValue cell a1 ) ( wrapper_data : URValue ( WrapperClassTypesModule.DWrapperLRecord ) a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_wrapper_state_init_and_addr  wrapper_code wrapper_data ) . 
  
- Notation " 'prepare_wrapper_state_init_and_addr_' '(' wrapper_code wrapper_data ')' " := 
- ( prepare_wrapper_state_init_and_addr_right 
- wrapper_code wrapper_data ) 
+Notation " 'prepare_wrapper_state_init_and_addr_' '(' wrapper_code wrapper_data ')' " := 
+ ( prepare_wrapper_state_init_and_addr_right  wrapper_code wrapper_data ) 
  (in custom URValue at level 0 , wrapper_code custom URValue at level 0 
  , wrapper_data custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_flex_state_init_and_addr_right { a1 a2 }  ( flex_data : URValue ( ContractLRecord ) a1 ) ( flex_code : URValue cell a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_flex_state_init_and_addr 
- flex_data flex_code ) . 
+Definition prepare_flex_state_init_and_addr_right { a1 a2 }  ( flex_data : URValue ( ContractLRecord ) a1 ) ( flex_code : URValue cell a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_flex_state_init_and_addr flex_data flex_code ) . 
  
- Notation " 'prepare_flex_state_init_and_addr_' '(' flex_data flex_code ')' " := 
- ( prepare_flex_state_init_and_addr_right 
- flex_data flex_code ) 
- (in custom URValue at level 0 , flex_data custom URValue at level 0 
- , flex_code custom URValue at level 0 ) : ursus_scope . 
+Notation " 'prepare_flex_state_init_and_addr_' '(' flex_data flex_code ')' " := 
+ ( prepare_flex_state_init_and_addr_right  flex_data flex_code ) 
+ (in custom URValue at level 0 , flex_data custom URValue at level 0 , flex_code custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_external_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue cell a8 ) ( workchain_id : URValue ( int ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_external_wallet_state_init_and_addr 
- name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
+Definition prepare_external_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue cell a8 ) ( workchain_id : URValue ( int ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_external_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
- Notation " 'prepare_external_wallet_state_init_and_addr_' '(' name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ')' " := 
- ( prepare_external_wallet_state_init_and_addr_right 
- name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) 
+Notation " 'prepare_external_wallet_state_init_and_addr_' '(' name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ')' " := 
+ ( prepare_external_wallet_state_init_and_addr_right name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) 
  (in custom URValue at level 0 , name custom URValue at level 0 
- , symbol custom URValue at level 0 
- , decimals custom URValue at level 0 
- , root_public_key custom URValue at level 0 
- , wallet_public_key custom URValue at level 0 
- , root_address custom URValue at level 0 
- , owner_address custom URValue at level 0 
- , code custom URValue at level 0 
- , workchain_id custom URValue at level 0 ) : ursus_scope . 
+ , symbol custom URValue at level 0 , decimals custom URValue at level 0 
+ , root_public_key custom URValue at level 0 , wallet_public_key custom URValue at level 0 
+ , root_address custom URValue at level 0 , owner_address custom URValue at level 0 
+ , code custom URValue at level 0 , workchain_id custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue cell a8 ) ( workchain_id : URValue ( int ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
+Definition prepare_internal_wallet_state_init_and_addr_right { a1 a2 a3 a4 a5 a6 a7 a8 a9 }  ( name : URValue ( XString ) a1 ) ( symbol : URValue ( XString ) a2 ) ( decimals : URValue ( uint8 ) a3 ) ( root_public_key : URValue ( uint256 ) a4 ) ( wallet_public_key : URValue ( uint256 ) a5 ) ( root_address : URValue ( address ) a6 ) ( owner_address : URValue ( XMaybe address ) a7 ) ( code : URValue cell a8 ) ( workchain_id : URValue ( int ) a9 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb ( orb ( orb ( orb ( orb ( orb ( orb a9 a8 ) a7 ) a6 ) a5 ) a4 ) a3 ) a2 ) a1 ) := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ9 ) prepare_internal_wallet_state_init_and_addr 
  name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) . 
  
  Notation " 'prepare_internal_wallet_state_init_and_addr_' '(' name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ')' " := 
- ( prepare_internal_wallet_state_init_and_addr_right 
- name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) 
+ ( prepare_internal_wallet_state_init_and_addr_right name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ) 
  (in custom URValue at level 0 , name custom URValue at level 0 
- , symbol custom URValue at level 0 
- , decimals custom URValue at level 0 
- , root_public_key custom URValue at level 0 
- , wallet_public_key custom URValue at level 0 
- , root_address custom URValue at level 0 
- , owner_address custom URValue at level 0 
- , code custom URValue at level 0 
- , workchain_id custom URValue at level 0 ) : ursus_scope . 
+ , symbol custom URValue at level 0, decimals custom URValue at level 0 
+ , root_public_key custom URValue at level 0 , wallet_public_key custom URValue at level 0 
+ , root_address custom URValue at level 0 , owner_address custom URValue at level 0 
+ , code custom URValue at level 0, workchain_id custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_trading_pair_state_init_and_addr_right { a1 a2 }  ( pair_data : URValue ( TradingPairClassTypesModule.DTradingPairLRecord ) a1 ) ( pair_code : URValue cell a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_trading_pair_state_init_and_addr 
- pair_data pair_code ) . 
+Definition prepare_trading_pair_state_init_and_addr_right { a1 a2 }  ( pair_data : URValue ( TradingPairClassTypesModule.DTradingPairLRecord ) a1 ) ( pair_code : URValue cell a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_trading_pair_state_init_and_addr pair_data pair_code ) . 
  
- Notation " 'prepare_trading_pair_state_init_and_addr_' '(' pair_data pair_code ')' " := 
- ( prepare_trading_pair_state_init_and_addr_right 
- pair_data pair_code ) 
+Notation " 'prepare_trading_pair_state_init_and_addr_' '(' pair_data pair_code ')' " := 
+ ( prepare_trading_pair_state_init_and_addr_right pair_data pair_code ) 
  (in custom URValue at level 0 , pair_data custom URValue at level 0 
  , pair_code custom URValue at level 0 ) : ursus_scope . 
- Definition prepare_trading_pair_right { a1 a2 a3 }  ( flex : URValue ( address ) a1 ) ( tip3_root : URValue ( address ) a2 ) ( pair_code : URValue cell a3 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb a3 a2 ) a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) prepare_trading_pair 
- flex tip3_root pair_code ) . 
+
+Definition prepare_trading_pair_right { a1 a2 a3 }  ( flex : URValue ( address ) a1 ) ( tip3_root : URValue ( address ) a2 ) ( pair_code : URValue cell a3 ) : URValue ( StateInitLRecord # uint256 ) ( orb ( orb a3 a2 ) a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) prepare_trading_pair flex tip3_root pair_code ) . 
  
- Notation " 'prepare_trading_pair_' '(' flex tip3_root pair_code ')' " := 
- ( prepare_trading_pair_right 
- flex tip3_root pair_code ) 
+Notation " 'prepare_trading_pair_' '(' flex tip3_root pair_code ')' " := 
+ ( prepare_trading_pair_right flex tip3_root pair_code ) 
  (in custom URValue at level 0 , flex custom URValue at level 0 
- , tip3_root custom URValue at level 0 
- , pair_code custom URValue at level 0 ) : ursus_scope . 
+ , tip3_root custom URValue at level 0 , pair_code custom URValue at level 0 ) : ursus_scope . 
 
- Definition prepare_xchg_pair_state_init_and_addr_right { a1 a2 }  ( pair_data : URValue ( XchgPairClassTypesModule.DXchgPairLRecord ) a1 ) ( pair_code : URValue cell a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_xchg_pair_state_init_and_addr 
- pair_data pair_code ) . 
+Definition prepare_xchg_pair_state_init_and_addr_right { a1 a2 }  ( pair_data : URValue ( XchgPairClassTypesModule.DXchgPairLRecord ) a1 ) ( pair_code : URValue cell a2 ) : URValue ( StateInitLRecord # uint256 ) ( orb a2 a1 ) := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) prepare_xchg_pair_state_init_and_addr pair_data pair_code ) . 
  
- Notation " 'prepare_xchg_pair_state_init_and_addr_' '(' pair_data pair_code ')' " := 
- ( prepare_xchg_pair_state_init_and_addr_right 
- pair_data pair_code ) 
- (in custom URValue at level 0 , pair_data custom URValue at level 0 
- , pair_code custom URValue at level 0 ) : ursus_scope .
+Notation " 'prepare_xchg_pair_state_init_and_addr_' '(' pair_data pair_code ')' " := 
+ ( prepare_xchg_pair_state_init_and_addr_right pair_data pair_code ) 
+ (in custom URValue at level 0 , pair_data custom URValue at level 0 , pair_code custom URValue at level 0 ) : ursus_scope .
 
- Definition approveTradingPairImpl_right { a1 a2 a3 a4 a5 }  
-( pubkey : URValue ( uint256 ) a1 ) 
-( trading_pair_listing_requests : URValue ( XHMap uint256  TradingPairListingRequestLRecord) a2 ) 
-( pair_code : URValue cell a3 )
- ( workchain_id : URValue ( int ) a4 ) 
-( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) : URValue (address # (XHMap uint256  TradingPairListingRequestLRecord)) true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveTradingPairImpl 
- pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) . 
+Definition approveTradingPairImpl_right { a1 a2 a3 a4 a5 }  
+                                          ( pubkey : URValue ( uint256 ) a1 ) 
+                                          ( trading_pair_listing_requests : URValue ( XHMap uint256  TradingPairListingRequestLRecord) a2 ) 
+                                          ( pair_code : URValue cell a3 )
+                                          ( workchain_id : URValue ( int ) a4 ) 
+                                          ( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) 
+                                          : URValue (address # (XHMap uint256  TradingPairListingRequestLRecord)) true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveTradingPairImpl pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) . 
  
- Notation " 'approveTradingPairImpl_' '(' pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ')' " := 
- ( approveTradingPairImpl_right 
- pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) 
+Notation " 'approveTradingPairImpl_' '(' pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ')' " := 
+ ( approveTradingPairImpl_right pubkey trading_pair_listing_requests pair_code workchain_id listing_cfg ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , trading_pair_listing_requests custom URValue at level 0 
- , pair_code custom URValue at level 0 
- , workchain_id custom URValue at level 0 
- , listing_cfg custom URValue at level 0 ) : ursus_scope . 
+ , trading_pair_listing_requests custom URValue at level 0 , pair_code custom URValue at level 0 
+ , workchain_id custom URValue at level 0 , listing_cfg custom URValue at level 0 ) : ursus_scope . 
 
- Definition rejectTradingPairImpl_right { a1 a2 a3 }  
-( pubkey : URValue ( uint256 ) a1 ) 
-( trading_pair_listing_requests : URValue ( XHMap uint256 TradingPairListingRequestLRecord )  a2 ) 
-( listing_cfg : URValue ( ListingConfigLRecord ) a3 ) 
-: URValue ( XHMap uint256 TradingPairListingRequestLRecord  ) true := 
+Definition rejectTradingPairImpl_right { a1 a2 a3 }  
+                                      ( pubkey : URValue ( uint256 ) a1 ) 
+                                      ( trading_pair_listing_requests : URValue ( XHMap uint256 TradingPairListingRequestLRecord )  a2 ) 
+                                      ( listing_cfg : URValue ( ListingConfigLRecord ) a3 ) 
+                                      : URValue ( XHMap uint256 TradingPairListingRequestLRecord  ) true := 
  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) rejectTradingPairImpl 
  pubkey trading_pair_listing_requests listing_cfg ) . 
 
- Notation " 'rejectTradingPairImpl_' '(' pubkey trading_pair_listing_requests listing_cfg ')' " := 
- ( rejectTradingPairImpl_right 
- pubkey trading_pair_listing_requests listing_cfg ) 
- (in custom URValue at level 0 , 
-   pubkey custom URValue at level 0 
+Notation " 'rejectTradingPairImpl_' '(' pubkey trading_pair_listing_requests listing_cfg ')' " := 
+ ( rejectTradingPairImpl_right pubkey trading_pair_listing_requests listing_cfg ) 
+ (in custom URValue at level 0 , pubkey custom URValue at level 0 
  , trading_pair_listing_requests custom URValue at level 0 
  , listing_cfg custom URValue at level 0 ) : ursus_scope .
  
- Definition approveXchgPairImpl_right { a1 a2 a3 a4 a5 }  
-( pubkey : URValue ( uint256 ) a1 )
- ( xchg_pair_listing_requests : URValue ( XHMap uint256 XchgPairListingRequestLRecord) a2 ) 
-( xchg_pair_code : URValue cell a3 )
- ( workchain_id : URValue ( int ) a4 ) 
-( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) :
- URValue ( address # (XHMap uint256 XchgPairListingRequestLRecord )  ) true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveXchgPairImpl 
- pubkey xchg_pair_listing_requests xchg_pair_code workchain_id listing_cfg ) . 
+Definition approveXchgPairImpl_right { a1 a2 a3 a4 a5 }  ( pubkey : URValue ( uint256 ) a1 )
+        ( xchg_pair_listing_requests : URValue ( XHMap uint256 XchgPairListingRequestLRecord) a2 ) 
+        ( xchg_pair_code : URValue cell a3 )
+        ( workchain_id : URValue ( int ) a4 ) 
+        ( listing_cfg : URValue ( ListingConfigLRecord ) a5 ) 
+        : URValue ( address # (XHMap uint256 XchgPairListingRequestLRecord )  ) true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ5 ) approveXchgPairImpl pubkey xchg_pair_listing_requests xchg_pair_code workchain_id listing_cfg ) . 
  
- Notation " 'approveXchgPairImpl_' '(' pubkey xchg_pair_listing_requests xchg_pair_code workchain_id listing_cfg ')' " := 
- ( approveXchgPairImpl_right 
- pubkey xchg_pair_listing_requests xchg_pair_code workchain_id listing_cfg ) 
+Notation " 'approveXchgPairImpl_' '(' pubkey xchg_pair_listing_requests xchg_pair_code workchain_id listing_cfg ')' " := 
+ ( approveXchgPairImpl_right pubkey xchg_pair_listing_requests xchg_pair_code workchain_id listing_cfg ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , xchg_pair_listing_requests custom URValue at level 0 
- , xchg_pair_code custom URValue at level 0 
- , workchain_id custom URValue at level 0 
- , listing_cfg custom URValue at level 0 ) : ursus_scope . 
+ , xchg_pair_listing_requests custom URValue at level 0 , xchg_pair_code custom URValue at level 0 
+ , workchain_id custom URValue at level 0 , listing_cfg custom URValue at level 0 ) : ursus_scope . 
 
- Definition rejectXchgPairImpl_right { a1 a2 a3 }  
-( pubkey : URValue ( uint256 ) a1 ) 
-( xchg_pair_listing_requests : URValue ( XHMap uint256 XchgPairListingRequestLRecord ) a2 ) 
-( listing_cfg : URValue ( ListingConfigLRecord ) a3 ) 
-: URValue ( XHMap uint256 XchgPairListingRequestLRecord)  true := 
-
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) rejectXchgPairImpl 
- pubkey xchg_pair_listing_requests listing_cfg ) . 
+Definition rejectXchgPairImpl_right { a1 a2 a3 }  
+                  ( pubkey : URValue ( uint256 ) a1 ) 
+                  ( xchg_pair_listing_requests : URValue ( XHMap uint256 XchgPairListingRequestLRecord ) a2 ) 
+                  ( listing_cfg : URValue ( ListingConfigLRecord ) a3 ) 
+                  : URValue ( XHMap uint256 XchgPairListingRequestLRecord)  true := 
+  wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg ) . 
  
- Notation " 'rejectXchgPairImpl_' '(' pubkey xchg_pair_listing_requests listing_cfg ')' " := 
- ( rejectXchgPairImpl_right 
- pubkey xchg_pair_listing_requests listing_cfg ) 
+Notation " 'rejectXchgPairImpl_' '(' pubkey xchg_pair_listing_requests listing_cfg ')' " := 
+ ( rejectXchgPairImpl_right pubkey xchg_pair_listing_requests listing_cfg ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , xchg_pair_listing_requests custom URValue at level 0 
- , listing_cfg custom URValue at level 0 ) : ursus_scope .
+ , xchg_pair_listing_requests custom URValue at level 0 , listing_cfg custom URValue at level 0 ) : ursus_scope .
  
- Definition approveWrapperImpl_right { a1 a2 a3 a4 a5 a6 a7 }  
-( pubkey : URValue ( uint256 ) a1 ) 
-( wrapper_listing_requests : URValue ( XHMap uint256 WrapperListingRequestLRecord)  a2 )
-( wrapper_code : URValue cell a3 ) 
-( ext_wallet_code : URValue cell a4 ) 
-( flex_wallet_code : URValue cell a5 )
- ( workchain_id : URValue ( int ) a6 ) 
-( listing_cfg : URValue ( ListingConfigLRecord ) a7 ) 
-: URValue ( address # (XHMap uint256 WrapperListingRequestLRecord)  ) true := 
-
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) approveWrapperImpl 
- pubkey wrapper_listing_requests wrapper_code ext_wallet_code flex_wallet_code workchain_id listing_cfg ) . 
+Definition approveWrapperImpl_right { a1 a2 a3 a4 a5 a6 a7 }  
+                                    ( pubkey : URValue ( uint256 ) a1 ) 
+                                    ( wrapper_listing_requests : URValue ( XHMap uint256 WrapperListingRequestLRecord)  a2 )
+                                    ( wrapper_code : URValue cell a3 ) 
+                                    ( ext_wallet_code : URValue cell a4 ) 
+                                    ( flex_wallet_code : URValue cell a5 )
+                                    ( workchain_id : URValue ( int ) a6 ) 
+                                    ( listing_cfg : URValue ( ListingConfigLRecord ) a7 ) 
+                                    : URValue ( address # (XHMap uint256 WrapperListingRequestLRecord)  ) true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ7 ) approveWrapperImpl pubkey wrapper_listing_requests wrapper_code ext_wallet_code flex_wallet_code workchain_id listing_cfg ) . 
  
- Notation " 'approveWrapperImpl_' '(' pubkey wrapper_listing_requests wrapper_code ext_wallet_code flex_wallet_code workchain_id listing_cfg ')' " := 
- ( approveWrapperImpl_right 
- pubkey wrapper_listing_requests wrapper_code ext_wallet_code flex_wallet_code workchain_id listing_cfg ) 
+Notation " 'approveWrapperImpl_' '(' pubkey wrapper_listing_requests wrapper_code ext_wallet_code flex_wallet_code workchain_id listing_cfg ')' " := 
+ ( approveWrapperImpl_right  pubkey wrapper_listing_requests wrapper_code ext_wallet_code flex_wallet_code workchain_id listing_cfg ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , wrapper_listing_requests custom URValue at level 0 
- , wrapper_code custom URValue at level 0 
- , ext_wallet_code custom URValue at level 0 
- , flex_wallet_code custom URValue at level 0 
- , workchain_id custom URValue at level 0 
- , listing_cfg custom URValue at level 0 ) : ursus_scope . 
+ , wrapper_listing_requests custom URValue at level 0 , wrapper_code custom URValue at level 0 
+ , ext_wallet_code custom URValue at level 0 , flex_wallet_code custom URValue at level 0 
+ , workchain_id custom URValue at level 0 , listing_cfg custom URValue at level 0 ) : ursus_scope . 
 
- Definition rejectWrapperImpl_right { a1 a2 a3 }  
-( pubkey : URValue ( uint256 ) a1 ) 
-( wrapper_listing_requests : URValue ( XHMap uint256 WrapperListingRequestLRecord)  a2 ) 
-( listing_cfg : URValue ( ListingConfigLRecord ) a3 ) 
-: URValue ( XHMap uint256 WrapperListingRequestLRecord)  true := 
- wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) rejectWrapperImpl 
- pubkey wrapper_listing_requests listing_cfg ) . 
+Definition rejectWrapperImpl_right { a1 a2 a3 }  
+                                  ( pubkey : URValue ( uint256 ) a1 ) 
+                                  ( wrapper_listing_requests : URValue ( XHMap uint256 WrapperListingRequestLRecord)  a2 ) 
+                                  ( listing_cfg : URValue ( ListingConfigLRecord ) a3 ) 
+                                  : URValue ( XHMap uint256 WrapperListingRequestLRecord)  true := 
+ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ3 ) rejectWrapperImpl pubkey wrapper_listing_requests listing_cfg ) . 
  
- Notation " 'rejectWrapperImpl_' '(' pubkey wrapper_listing_requests listing_cfg ')' " := 
- ( rejectWrapperImpl_right 
- pubkey wrapper_listing_requests listing_cfg ) 
+Notation " 'rejectWrapperImpl_' '(' pubkey wrapper_listing_requests listing_cfg ')' " := 
+ ( rejectWrapperImpl_right pubkey wrapper_listing_requests listing_cfg ) 
  (in custom URValue at level 0 , pubkey custom URValue at level 0 
- , wrapper_listing_requests custom URValue at level 0 
- , listing_cfg custom URValue at level 0 ) : ursus_scope . 
+ , wrapper_listing_requests custom URValue at level 0 , listing_cfg custom URValue at level 0 ) : ursus_scope . 
 
 End Calls. 
 

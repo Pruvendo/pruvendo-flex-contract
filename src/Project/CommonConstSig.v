@@ -7,7 +7,6 @@ Module Export CommonTypes := Types xt sm .
  
 Import xt. 
 
-(*Проверить типы!!!*)
 Parameter FLEX_TIMESTAMP_DELAY : ErrorType . 
 Parameter sender_is_not_deployer : ErrorType . 
 Parameter unexpected_refs_count_in_code : ErrorType . 
@@ -29,12 +28,12 @@ Parameter missed_flex_wallet_code : ErrorType .
 Parameter missed_flex_wrapper_code : ErrorType . 
 Parameter zero_owner_pubkey : ErrorType . 
 
-Parameter SENDER_WANTS_TO_PAY_FEES_SEPARATELY : XUInteger .
+(* Parameter SENDER_WANTS_TO_PAY_FEES_SEPARATELY : XUInteger . *)
 Parameter ec_ι_expired : ErrorType .
 Parameter ec_ι_out_of_tons : ErrorType .
 Parameter ok : ErrorType .
-Parameter SEND_ALL_GAS : XUInteger .
-Parameter DELETE_ME_IF_I_AM_EMPTY : XUInteger .
+(* Parameter SEND_ALL_GAS : XUInteger .
+Parameter DELETE_ME_IF_I_AM_EMPTY : XUInteger . *)
 Parameter rawreserve_flag_ι_up_to : ErrorType .
 Parameter ec_ι_not_enough_tons_to_process : ErrorType .
 Parameter ec_ι_unverified_tip3_wallet : ErrorType .
@@ -98,7 +97,7 @@ Parameter ec_ι_deals_limit : ErrorType .
 Parameter ec : ErrorType .
 Parameter ec_ι_canceled : ErrorType .
 
-Parameter IGNORE_ACTION_ERRORS : XUInteger .
+(* Parameter IGNORE_ACTION_ERRORS : XUInteger . *)
 
 Parameter global_id_ι_answer_id : XUInteger .
 
