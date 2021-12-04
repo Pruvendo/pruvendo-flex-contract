@@ -90,21 +90,39 @@ Compute default : LocalStateLRecord.
  Opaque LocalStateDefault.
  Import URSUS_.
 
+Ltac generate_proof gen :=
+  let e := fresh "e" in
+  let H := fresh "H" in
+  let gen_nf := eval hnf in gen in
+  generate_both gen_nf e H; cycle -1;
+  (only 1: (exists e; subst e; reflexivity));
+  eexists; reflexivity.
+
+Ltac proof_of t :=
+  let e := fresh "e" in
+  let H := fresh "H" in
+  let E := fresh "E" in
+  destruct t as [e H] eqn:E; rewrite <- H; replace e with
+  (let (e', _) := t in e');
+  try reflexivity ;try (rewrite E; reflexivity).
  (* ----------------------------------------- *)
-Section constructor.
-Definition constructor_exec_P (l : Ledger) ( pubkey : ( uint256 ) ) ( trading_pair_code : ( XCell ) ) ( xchg_pair_code : ( XCell ) ): 
+Section constructor. 
+Definition constructor_exec_P (l : Ledger) ( pubkey : ( uint256 ) ) ( trading_pair_code : ( TvmCells.cell ) ) ( xchg_pair_code : ( TvmCells.cell ) ): 
 {l' | l' = exec_state (Uinterpreter (constructor pubkey trading_pair_code xchg_pair_code)) l}.
   generate_proof (exec_expression l (constructor pubkey trading_pair_code xchg_pair_code)).
 Defined.
-Definition constructor_auto_exec (l : Ledger) ( pubkey : ( uint256 ) ) ( trading_pair_code : ( XCell ) ) ( xchg_pair_code : ( XCell ) ): Ledger.
+
+Definition constructor_auto_exec (l : Ledger) ( pubkey : ( uint256 ) ) ( trading_pair_code : ( TvmCells.cell ) ) ( xchg_pair_code : ( TvmCells.cell ) ): Ledger.
 intros. term_of (constructor_exec_P l pubkey trading_pair_code xchg_pair_code).
 Defined.
-Theorem constructor_exec_proof_next (l : Ledger) ( pubkey : ( uint256 ) ) ( trading_pair_code : ( XCell ) ) ( xchg_pair_code : ( XCell ) ) :
+
+Theorem constructor_exec_proof_next (l : Ledger) ( pubkey : ( uint256 ) ) ( trading_pair_code : ( TvmCells.cell ) ) ( xchg_pair_code : ( TvmCells.cell ) ) :
   constructor_auto_exec l pubkey trading_pair_code xchg_pair_code =
   exec_state (Uinterpreter (constructor pubkey trading_pair_code xchg_pair_code)) l.
 Proof.
   intros. proof_of (constructor_exec_P l pubkey trading_pair_code xchg_pair_code).
 Qed.
+
 (* no eval  *)
 End constructor.
 (* ----------------------------------------- *)
@@ -129,14 +147,14 @@ Qed.
 End setFlexCfg.
 (* ----------------------------------------- *)
 Section setExtWalletCode.
-Definition setExtWalletCode_exec_P (l : Ledger) ( ext_wallet_code : ( XCell ) ): 
+Definition setExtWalletCode_exec_P (l : Ledger) ( ext_wallet_code : ( TvmCells.cell ) ): 
 {l' | l' = exec_state (Uinterpreter (setExtWalletCode ext_wallet_code)) l}.
   generate_proof (exec_expression l (setExtWalletCode ext_wallet_code)).
 Defined.
-Definition setExtWalletCode_auto_exec (l : Ledger) ( ext_wallet_code : ( XCell ) ): Ledger.
+Definition setExtWalletCode_auto_exec (l : Ledger) ( ext_wallet_code : ( TvmCells.cell ) ): Ledger.
 intros. term_of (setExtWalletCode_exec_P l ext_wallet_code).
 Defined.
-Theorem setExtWalletCode_exec_proof_next (l : Ledger) ( ext_wallet_code : ( XCell ) ) :
+Theorem setExtWalletCode_exec_proof_next (l : Ledger) ( ext_wallet_code : ( TvmCells.cell ) ) :
   setExtWalletCode_auto_exec l ext_wallet_code =
   exec_state (Uinterpreter (setExtWalletCode ext_wallet_code)) l.
 Proof.
@@ -146,14 +164,14 @@ Qed.
 End setExtWalletCode.
 (* ----------------------------------------- *)
 Section setFlexWalletCode.
-Definition setFlexWalletCode_exec_P (l : Ledger) ( flex_wallet_code : ( XCell ) ): 
+Definition setFlexWalletCode_exec_P (l : Ledger) ( flex_wallet_code : ( TvmCells.cell ) ): 
 {l' | l' = exec_state (Uinterpreter (setFlexWalletCode flex_wallet_code)) l}.
   generate_proof (exec_expression l (setFlexWalletCode flex_wallet_code)).
 Defined.
-Definition setFlexWalletCode_auto_exec (l : Ledger) ( flex_wallet_code : ( XCell ) ): Ledger.
+Definition setFlexWalletCode_auto_exec (l : Ledger) ( flex_wallet_code : ( TvmCells.cell ) ): Ledger.
 intros. term_of (setFlexWalletCode_exec_P l flex_wallet_code).
 Defined.
-Theorem setFlexWalletCode_exec_proof_next (l : Ledger) ( flex_wallet_code : ( XCell ) ) :
+Theorem setFlexWalletCode_exec_proof_next (l : Ledger) ( flex_wallet_code : ( TvmCells.cell ) ) :
   setFlexWalletCode_auto_exec l flex_wallet_code =
   exec_state (Uinterpreter (setFlexWalletCode flex_wallet_code)) l.
 Proof.
@@ -162,14 +180,14 @@ Qed.
 End setFlexWalletCode.
 (* ----------------------------------------- *)
 Section setFlexWrapperCode.
-Definition setFlexWrapperCode_exec_P (l : Ledger) ( flex_wrapper_code : ( XCell ) ): 
+Definition setFlexWrapperCode_exec_P (l : Ledger) ( flex_wrapper_code : ( TvmCells.cell ) ): 
 {l' | l' = exec_state (Uinterpreter (setFlexWrapperCode flex_wrapper_code)) l}.
   generate_proof (exec_expression l (setFlexWrapperCode flex_wrapper_code)).
 Defined.
-Definition setFlexWrapperCode_auto_exec (l : Ledger) ( flex_wrapper_code : ( XCell ) ): Ledger.
+Definition setFlexWrapperCode_auto_exec (l : Ledger) ( flex_wrapper_code : ( TvmCells.cell ) ): Ledger.
 intros. term_of (setFlexWrapperCode_exec_P l flex_wrapper_code).
 Defined.
-Theorem setFlexWrapperCode_exec_proof_next (l : Ledger) ( flex_wrapper_code : ( XCell ) ) :
+Theorem setFlexWrapperCode_exec_proof_next (l : Ledger) ( flex_wrapper_code : ( TvmCells.cell ) ) :
   setFlexWrapperCode_auto_exec l flex_wrapper_code =
   exec_state (Uinterpreter (setFlexWrapperCode flex_wrapper_code)) l.
 Proof.
@@ -177,35 +195,45 @@ Proof.
 Qed.
 End setFlexWrapperCode.
 (* ----------------------------------------- *)
-Section prepare_trading_pair_state_init_and_addr.
+Section prepare_trading_pair_state_init_and_addr.    
 
 Definition prepare_trading_pair_state_init_and_addr_exec_P (l : Ledger) ( pair_data : TradingPairClassTypes.DTradingPairLRecord ) 
-                                                    ( pair_code : XCell  ): 
-{l' | l' = exec_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l}.
+                                                    ( pair_code : TvmCells.cell  ): 
+{l' | l' = exec_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l}. 
   generate_proof (exec_expression l (prepare_trading_pair_state_init_and_addr pair_data pair_code)).
 Defined.
 Definition prepare_trading_pair_state_init_and_addr_auto_exec (l : Ledger) ( pair_data : TradingPairClassTypes.DTradingPairLRecord ) 
-                                                    ( pair_code : XCell  ): Ledger.
+                                                    ( pair_code : TvmCells.cell  ): Ledger.
 intros. term_of (prepare_trading_pair_state_init_and_addr_exec_P l pair_data pair_code).
 Defined.
 Theorem prepare_trading_pair_state_init_and_addr_exec_proof_next (l : Ledger) ( pair_data : TradingPairClassTypes.DTradingPairLRecord ) 
-                                                    ( pair_code : XCell  ) :
+                                                    ( pair_code : TvmCells.cell  ) :
   prepare_trading_pair_state_init_and_addr_auto_exec l pair_data pair_code =
   exec_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l.
 Proof.
-  intros. proof_of (prepare_trading_pair_state_init_and_addr_exec_P l pair_data pair_code).
+  intros. (* proof_of (prepare_trading_pair_state_init_and_addr_exec_P l pair_data pair_code). *)
+  destruct (prepare_trading_pair_state_init_and_addr_exec_P l pair_data pair_code) as [e H] eqn:E. rewrite <- H.
+replace e with
+  (let (e', _) := ( prepare_trading_pair_state_init_and_addr_exec_P l pair_data pair_code ) in e').
+unfold prepare_trading_pair_state_init_and_addr_exec_P.
+  reflexivity.
+  rewrite E.
+  reflexivity.
 Qed.
+
 Definition prepare_trading_pair_state_init_and_addr_eval_P (l : Ledger) ( pair_data : TradingPairClassTypes.DTradingPairLRecord ) 
-                                                    ( pair_code : XCell  ): 
+                                                    ( pair_code : TvmCells.cell  ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l)}.
   generate_proof (eval_expression l (prepare_trading_pair_state_init_and_addr pair_data pair_code)).
 Defined.
+
 Definition prepare_trading_pair_state_init_and_addr_auto_eval (l : Ledger) ( pair_data : TradingPairClassTypes.DTradingPairLRecord ) 
-                                                    ( pair_code : XCell  ): (StateInitLRecord # uint256).
+                                                    ( pair_code : TvmCells.cell  ): (StateInitLRecord # uint256).
 intros. term_of (prepare_trading_pair_state_init_and_addr_eval_P l pair_data pair_code).
 Defined.
+
 Theorem prepare_trading_pair_state_init_and_addr_eval_proof_next (l : Ledger) ( pair_data : TradingPairClassTypes.DTradingPairLRecord ) 
-                                                    ( pair_code : XCell  ) :
+                                                    ( pair_code : TvmCells.cell  ) :
   prepare_trading_pair_state_init_and_addr_auto_eval l pair_data pair_code =
   toValue (eval_state (Uinterpreter (prepare_trading_pair_state_init_and_addr pair_data pair_code)) l).
 Proof.
@@ -224,6 +252,7 @@ Definition deployTradingPair_exec_P (l : Ledger) ( tip3_root : ( address ) )
 {l' | l' = exec_state (Uinterpreter (deployTradingPair tip3_root deploy_min_value deploy_value min_trade_amount notify_addr)) l}.
   generate_proof (exec_expression l (deployTradingPair tip3_root deploy_min_value deploy_value min_trade_amount notify_addr)).
 Defined.
+
 Definition deployTradingPair_auto_exec (l : Ledger) ( tip3_root : ( address ) ) 
                               ( deploy_min_value : ( uint128 ) ) 
                               ( deploy_value : ( uint128 ) ) 
@@ -231,6 +260,7 @@ Definition deployTradingPair_auto_exec (l : Ledger) ( tip3_root : ( address ) )
                               ( notify_addr : ( address ) ): Ledger.
 intros. term_of (deployTradingPair_exec_P l tip3_root deploy_min_value deploy_value min_trade_amount notify_addr).
 Defined.
+
 Theorem deployTradingPair_exec_proof_next (l : Ledger) ( tip3_root : ( address ) ) 
                               ( deploy_min_value : ( uint128 ) ) 
                               ( deploy_value : ( uint128 ) ) 
@@ -239,8 +269,16 @@ Theorem deployTradingPair_exec_proof_next (l : Ledger) ( tip3_root : ( address )
   deployTradingPair_auto_exec l tip3_root deploy_min_value deploy_value min_trade_amount notify_addr =
   exec_state (Uinterpreter (deployTradingPair tip3_root deploy_min_value deploy_value min_trade_amount notify_addr)) l.
 Proof.
-  intros. proof_of (deployTradingPair_exec_P l tip3_root deploy_min_value deploy_value min_trade_amount notify_addr).
-Qed.
+  intros. (* proof_of (deployTradingPair_exec_P l tip3_root deploy_min_value deploy_value min_trade_amount notify_addr). *)
+  destruct (deployTradingPair_exec_P l tip3_root deploy_min_value deploy_value min_trade_amount notify_addr) as [e H] eqn:E. rewrite <- H. 
+replace e with
+  (let (e', _) := ( deployTradingPair_exec_P l tip3_root deploy_min_value deploy_value min_trade_amount notify_addr) in e').
+unfold deployTradingPair_exec_P.
+  (* reflexivity.
+  rewrite E.
+  reflexivity.
+Qed. *)
+Admitted. 
 
 (* TODO eval true *)
 Definition deployTradingPair_eval_P (l : Ledger) ( tip3_root : ( address ) ) 
@@ -251,6 +289,7 @@ Definition deployTradingPair_eval_P (l : Ledger) ( tip3_root : ( address ) )
 {v | v =  (eval_state (Uinterpreter (deployTradingPair tip3_root deploy_min_value deploy_value min_trade_amount notify_addr)) l)}.
   generate_proof (eval_expression l (deployTradingPair tip3_root deploy_min_value deploy_value min_trade_amount notify_addr)).
 Defined.
+
 Definition deployTradingPair_auto_eval (l : Ledger) ( tip3_root : ( address ) ) 
                               ( deploy_min_value : ( uint128 ) ) 
                               ( deploy_value : ( uint128 ) ) 
@@ -272,32 +311,32 @@ End deployTradingPair.
 (* ----------------------------------------- *)
 Section prepare_xchg_pair_state_init_and_addr.
 Definition prepare_xchg_pair_state_init_and_addr_exec_P (l : Ledger) ( pair_data : XchgPairClassTypes.DXchgPairLRecord ) 
-                                                    ( pair_code : XCell  ): 
+                                                    ( pair_code : TvmCells.cell  ): 
 {l' | l' = exec_state (Uinterpreter (prepare_xchg_pair_state_init_and_addr pair_data pair_code)) l}.
   generate_proof (exec_expression l (prepare_xchg_pair_state_init_and_addr pair_data pair_code)).
 Defined.
 Definition prepare_xchg_pair_state_init_and_addr_auto_exec (l : Ledger) ( pair_data : XchgPairClassTypes.DXchgPairLRecord ) 
-                                                    ( pair_code : XCell  ): Ledger.
+                                                    ( pair_code : TvmCells.cell  ): Ledger.
 intros. term_of (prepare_xchg_pair_state_init_and_addr_exec_P l pair_data pair_code).
 Defined.
 Theorem prepare_xchg_pair_state_init_and_addr_exec_proof_next (l : Ledger) ( pair_data : XchgPairClassTypes.DXchgPairLRecord ) 
-                                                    ( pair_code : XCell  ) :
+                                                    ( pair_code : TvmCells.cell  ) :
   prepare_xchg_pair_state_init_and_addr_auto_exec l pair_data pair_code =
   exec_state (Uinterpreter (prepare_xchg_pair_state_init_and_addr pair_data pair_code)) l.
 Proof.
   intros. proof_of (prepare_xchg_pair_state_init_and_addr_exec_P l pair_data pair_code).
 Qed.
 Definition prepare_xchg_pair_state_init_and_addr_eval_P (l : Ledger) ( pair_data : XchgPairClassTypes.DXchgPairLRecord ) 
-                                                    ( pair_code : XCell  ): 
+                                                    ( pair_code : TvmCells.cell  ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_xchg_pair_state_init_and_addr pair_data pair_code)) l)}.
   generate_proof (eval_expression l (prepare_xchg_pair_state_init_and_addr pair_data pair_code)).
 Defined.
 Definition prepare_xchg_pair_state_init_and_addr_auto_eval (l : Ledger) ( pair_data : XchgPairClassTypes.DXchgPairLRecord ) 
-                                                    ( pair_code : XCell  ): (StateInitLRecord # uint256).
+                                                    ( pair_code : TvmCells.cell  ): (StateInitLRecord # uint256).
 intros. term_of (prepare_xchg_pair_state_init_and_addr_eval_P l pair_data pair_code).
 Defined.
 Theorem prepare_xchg_pair_state_init_and_addr_eval_proof_next (l : Ledger) ( pair_data : XchgPairClassTypes.DXchgPairLRecord ) 
-                                                    ( pair_code : XCell  ) :
+                                                    ( pair_code : TvmCells.cell  ) :
   prepare_xchg_pair_state_init_and_addr_auto_eval l pair_data pair_code =
   toValue (eval_state (Uinterpreter (prepare_xchg_pair_state_init_and_addr pair_data pair_code)) l).
 Proof.
@@ -372,32 +411,32 @@ End deployXchgPair.
 (* ----------------------------------------- *)
 Section prepare_price_state_init_and_addr.
 Definition prepare_price_state_init_and_addr_exec_P (l : Ledger) ( price_data : PriceClassTypes.DPriceLRecord ) 
-                                             ( price_code : XCell ): 
+                                             ( price_code : TvmCells.cell ): 
 {l' | l' = exec_state (Uinterpreter (prepare_price_state_init_and_addr price_data price_code)) l}.
   generate_proof (exec_expression l (prepare_price_state_init_and_addr price_data price_code)).
 Defined.
 Definition prepare_price_state_init_and_addr_auto_exec (l : Ledger) ( price_data : PriceClassTypes.DPriceLRecord ) 
-                                             ( price_code : XCell ): Ledger.
+                                             ( price_code : TvmCells.cell ): Ledger.
 intros. term_of (prepare_price_state_init_and_addr_exec_P l price_data price_code).
 Defined.
 Theorem prepare_price_state_init_and_addr_exec_proof_next (l : Ledger) ( price_data : PriceClassTypes.DPriceLRecord ) 
-                                             ( price_code : XCell ) :
+                                             ( price_code : TvmCells.cell ) :
   prepare_price_state_init_and_addr_auto_exec l price_data price_code =
   exec_state (Uinterpreter (prepare_price_state_init_and_addr price_data price_code)) l.
 Proof.
   intros. proof_of (prepare_price_state_init_and_addr_exec_P l price_data price_code).
 Qed.
 Definition prepare_price_state_init_and_addr_eval_P (l : Ledger) ( price_data : PriceClassTypes.DPriceLRecord ) 
-                                             ( price_code : XCell ): 
+                                             ( price_code : TvmCells.cell ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_price_state_init_and_addr price_data price_code)) l)}.
   generate_proof (eval_expression l (prepare_price_state_init_and_addr price_data price_code)).
 Defined.
 Definition prepare_price_state_init_and_addr_auto_eval (l : Ledger) ( price_data : PriceClassTypes.DPriceLRecord ) 
-                                             ( price_code : XCell ): (StateInitLRecord # uint256).
+                                             ( price_code : TvmCells.cell ): (StateInitLRecord # uint256).
 intros. term_of (prepare_price_state_init_and_addr_eval_P l price_data price_code).
 Defined.
 Theorem prepare_price_state_init_and_addr_eval_proof_next (l : Ledger) ( price_data : PriceClassTypes.DPriceLRecord ) 
-                                             ( price_code : XCell ) :
+                                             ( price_code : TvmCells.cell ) :
   prepare_price_state_init_and_addr_auto_eval l price_data price_code =
   toValue (eval_state (Uinterpreter (prepare_price_state_init_and_addr price_data price_code)) l).
 Proof.
@@ -409,21 +448,21 @@ End prepare_price_state_init_and_addr.
 (* ----------------------------------------- *)
 Section preparePrice.
 Definition preparePrice_exec_P (l : Ledger) (price min_amount : uint128 ) (deals_limit : uint8 )
-                        (tip3_code: XCell  )
-                        (tip3cfg: Tip3ConfigLRecord ) (price_code: XCell  )
+                        (tip3_code: TvmCells.cell  )
+                        (tip3cfg: Tip3ConfigLRecord ) (price_code: TvmCells.cell  )
                         (notify_addr: address  ): 
 {l' | l' = exec_state (Uinterpreter (preparePrice price min_amount deals_limit tip3_code tip3cfg price_code notify_addr)) l}.
   generate_proof (exec_expression l (preparePrice price min_amount deals_limit tip3_code tip3cfg price_code notify_addr)).
 Defined.
 Definition preparePrice_auto_exec (l : Ledger) (price min_amount : uint128 ) (deals_limit : uint8 )
-                        (tip3_code: XCell  )
-                        (tip3cfg: Tip3ConfigLRecord ) (price_code: XCell  )
+                        (tip3_code: TvmCells.cell  )
+                        (tip3cfg: Tip3ConfigLRecord ) (price_code: TvmCells.cell  )
                         (notify_addr: address  ): Ledger.
 intros. term_of (preparePrice_exec_P l price min_amount deals_limit tip3_code tip3cfg price_code notify_addr).
 Defined.
 Theorem preparePrice_exec_proof_next (l : Ledger) (price min_amount : uint128 ) (deals_limit : uint8 )
-                        (tip3_code: XCell  )
-                        (tip3cfg: Tip3ConfigLRecord ) (price_code: XCell  )
+                        (tip3_code: TvmCells.cell  )
+                        (tip3cfg: Tip3ConfigLRecord ) (price_code: TvmCells.cell  )
                         (notify_addr: address  ) :
   preparePrice_auto_exec l price min_amount deals_limit tip3_code tip3cfg price_code notify_addr =
   exec_state (Uinterpreter (preparePrice price min_amount deals_limit tip3_code tip3cfg price_code notify_addr)) l.
@@ -431,21 +470,21 @@ Proof.
   intros. proof_of (preparePrice_exec_P l price min_amount deals_limit tip3_code tip3cfg price_code notify_addr).
 Qed.
 Definition preparePrice_eval_P (l : Ledger) (price min_amount : uint128 ) (deals_limit : uint8 )
-                        (tip3_code: XCell  )
-                        (tip3cfg: Tip3ConfigLRecord ) (price_code: XCell  )
+                        (tip3_code: TvmCells.cell  )
+                        (tip3cfg: Tip3ConfigLRecord ) (price_code: TvmCells.cell  )
                         (notify_addr: address  ): 
 {v | v = toValue (eval_state (Uinterpreter (preparePrice price min_amount deals_limit tip3_code tip3cfg price_code notify_addr)) l)}.
   generate_proof (eval_expression l (preparePrice price min_amount deals_limit tip3_code tip3cfg price_code notify_addr)).
 Defined.
 Definition preparePrice_auto_eval (l : Ledger) (price min_amount : uint128 ) (deals_limit : uint8 )
-                        (tip3_code: XCell  )
-                        (tip3cfg: Tip3ConfigLRecord ) (price_code: XCell  )
+                        (tip3_code: TvmCells.cell  )
+                        (tip3cfg: Tip3ConfigLRecord ) (price_code: TvmCells.cell  )
                         (notify_addr: address  ): (StateInitLRecord # (address # uint256)).
 intros. term_of (preparePrice_eval_P l price min_amount deals_limit tip3_code tip3cfg price_code notify_addr).
 Defined.
 Theorem preparePrice_eval_proof_next (l : Ledger) (price min_amount : uint128 ) (deals_limit : uint8 )
-                        (tip3_code: XCell  )
-                        (tip3cfg: Tip3ConfigLRecord ) (price_code: XCell  )
+                        (tip3_code: TvmCells.cell  )
+                        (tip3cfg: Tip3ConfigLRecord ) (price_code: TvmCells.cell  )
                         (notify_addr: address  ) :
   preparePrice_auto_eval l price min_amount deals_limit tip3_code tip3cfg price_code notify_addr =
   toValue (eval_state (Uinterpreter (preparePrice price min_amount deals_limit tip3_code tip3cfg price_code notify_addr)) l).
@@ -463,7 +502,7 @@ Definition deployPriceWithSell_exec_P (l : Ledger) ( price : ( uint128 ) )
 ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) 
 ( tons_value : ( uint128 ) ) 
-( price_code : ( XCell ) ) 
+( price_code : ( TvmCells.cell ) ) 
 ( my_tip3_addr : ( address ) ) 
 ( receive_wallet : ( address ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) 
@@ -477,7 +516,7 @@ Definition deployPriceWithSell_auto_exec (l : Ledger) ( price : ( uint128 ) )
 ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) 
 ( tons_value : ( uint128 ) ) 
-( price_code : ( XCell ) ) 
+( price_code : ( TvmCells.cell ) ) 
 ( my_tip3_addr : ( address ) ) 
 ( receive_wallet : ( address ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) 
@@ -490,7 +529,7 @@ Theorem deployPriceWithSell_exec_proof_next (l : Ledger) ( price : ( uint128 ) )
 ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) 
 ( tons_value : ( uint128 ) ) 
-( price_code : ( XCell ) ) 
+( price_code : ( TvmCells.cell ) ) 
 ( my_tip3_addr : ( address ) ) 
 ( receive_wallet : ( address ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) 
@@ -509,7 +548,7 @@ Definition deployPriceWithSell_eval_P (l : Ledger) ( price : ( uint128 ) )
 ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) 
 ( tons_value : ( uint128 ) ) 
-( price_code : ( XCell ) ) 
+( price_code : ( TvmCells.cell ) ) 
 ( my_tip3_addr : ( address ) ) 
 ( receive_wallet : ( address ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) 
@@ -523,7 +562,7 @@ Definition deployPriceWithSell_auto_eval (l : Ledger) ( price : ( uint128 ) )
 ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) 
 ( tons_value : ( uint128 ) ) 
-( price_code : ( XCell ) ) 
+( price_code : ( TvmCells.cell ) ) 
 ( my_tip3_addr : ( address ) ) 
 ( receive_wallet : ( address ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) 
@@ -536,7 +575,7 @@ Theorem deployPriceWithSell_eval_proof_next (l : Ledger) ( price : ( uint128 ) )
 ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) 
 ( tons_value : ( uint128 ) ) 
-( price_code : ( XCell ) ) 
+( price_code : ( TvmCells.cell ) ) 
 ( my_tip3_addr : ( address ) ) 
 ( receive_wallet : ( address ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) 
@@ -552,20 +591,20 @@ End deployPriceWithSell.
 Section deployPriceWithBuy.
 Definition deployPriceWithBuy_exec_P (l : Ledger) ( price : ( uint128 ) ) ( amount : ( uint128 ) ) 
 ( order_finish_time : ( uint32 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
-( deploy_value : ( uint128 ) ) ( price_code : ( XCell ) ) ( my_tip3_addr : ( address_t ) ) 
+( deploy_value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address_t ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): 
 {l' | l' = exec_state (Uinterpreter (deployPriceWithBuy price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr)) l}.
   generate_proof (exec_expression l (deployPriceWithBuy price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr)).
 Defined.
 Definition deployPriceWithBuy_auto_exec (l : Ledger) ( price : ( uint128 ) ) ( amount : ( uint128 ) ) 
 ( order_finish_time : ( uint32 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
-( deploy_value : ( uint128 ) ) ( price_code : ( XCell ) ) ( my_tip3_addr : ( address_t ) ) 
+( deploy_value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address_t ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): Ledger.
 intros. term_of (deployPriceWithBuy_exec_P l price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr).
 Defined.
 Theorem deployPriceWithBuy_exec_proof_next (l : Ledger) ( price : ( uint128 ) ) ( amount : ( uint128 ) ) 
 ( order_finish_time : ( uint32 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
-( deploy_value : ( uint128 ) ) ( price_code : ( XCell ) ) ( my_tip3_addr : ( address_t ) ) 
+( deploy_value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address_t ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) :
   deployPriceWithBuy_auto_exec l price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr =
   exec_state (Uinterpreter (deployPriceWithBuy price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr)) l.
@@ -576,20 +615,20 @@ Qed.
 (* TODO eval true *)
 Definition deployPriceWithBuy_eval_P (l : Ledger) ( price : ( uint128 ) ) ( amount : ( uint128 ) ) 
 ( order_finish_time : ( uint32 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
-( deploy_value : ( uint128 ) ) ( price_code : ( XCell ) ) ( my_tip3_addr : ( address_t ) ) 
+( deploy_value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address_t ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): 
 {v | v =  (eval_state (Uinterpreter (deployPriceWithBuy price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr)) l)}.
   generate_proof (eval_expression l (deployPriceWithBuy price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr)).
 Defined.
 Definition deployPriceWithBuy_auto_eval (l : Ledger) ( price : ( uint128 ) ) ( amount : ( uint128 ) ) 
 ( order_finish_time : ( uint32 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
-( deploy_value : ( uint128 ) ) ( price_code : ( XCell ) ) ( my_tip3_addr : ( address_t ) ) 
+( deploy_value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address_t ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): ControlResult address true.
 intros. term_of (deployPriceWithBuy_eval_P l price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr).
 Defined.
 Theorem deployPriceWithBuy_eval_proof_next (l : Ledger) ( price : ( uint128 ) ) ( amount : ( uint128 ) ) 
 ( order_finish_time : ( uint32 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
-( deploy_value : ( uint128 ) ) ( price_code : ( XCell ) ) ( my_tip3_addr : ( address_t ) ) 
+( deploy_value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address_t ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) :
   deployPriceWithBuy_auto_eval l price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr =
    (eval_state (Uinterpreter (deployPriceWithBuy price amount order_finish_time min_amount deals_limit deploy_value price_code my_tip3_addr tip3cfg notify_addr)) l).
@@ -601,18 +640,18 @@ End deployPriceWithBuy.
 (* ----------------------------------------- *)
 Section cancelSellOrder.
 Definition cancelSellOrder_exec_P (l : Ledger) ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
-( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( price_code : ( XCell ) ) 
+( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): 
 {l' | l' = exec_state (Uinterpreter (cancelSellOrder price min_amount deals_limit value price_code tip3cfg notify_addr)) l}.
   generate_proof (exec_expression l (cancelSellOrder price min_amount deals_limit value price_code tip3cfg notify_addr)).
 Defined.
 Definition cancelSellOrder_auto_exec (l : Ledger) ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
-( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( price_code : ( XCell ) ) 
+( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): Ledger.
 intros. term_of (cancelSellOrder_exec_P l price min_amount deals_limit value price_code tip3cfg notify_addr).
 Defined.
 Theorem cancelSellOrder_exec_proof_next (l : Ledger) ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
-( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( price_code : ( XCell ) ) 
+( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) 
 ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) :
   cancelSellOrder_auto_exec l price min_amount deals_limit value price_code tip3cfg notify_addr =
   exec_state (Uinterpreter (cancelSellOrder price min_amount deals_limit value price_code tip3cfg notify_addr)) l.
@@ -624,16 +663,16 @@ End cancelSellOrder.
 (* ----------------------------------------- *)
 Section cancelBuyOrder.
 Definition cancelBuyOrder_exec_P (l : Ledger) ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
-( value : ( uint128 ) ) ( price_code : ( XCell ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): 
+( value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): 
 {l' | l' = exec_state (Uinterpreter (cancelBuyOrder price min_amount deals_limit value price_code tip3cfg notify_addr)) l}.
   generate_proof (exec_expression l (cancelBuyOrder price min_amount deals_limit value price_code tip3cfg notify_addr)).
 Defined.
 Definition cancelBuyOrder_auto_exec (l : Ledger) ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
-( value : ( uint128 ) ) ( price_code : ( XCell ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): Ledger.
+( value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ): Ledger.
 intros. term_of (cancelBuyOrder_exec_P l price min_amount deals_limit value price_code tip3cfg notify_addr).
 Defined.
 Theorem cancelBuyOrder_exec_proof_next (l : Ledger) ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) 
-( value : ( uint128 ) ) ( price_code : ( XCell ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) :
+( value : ( uint128 ) ) ( price_code : ( TvmCells.cell ) ) ( tip3cfg : ( Tip3ConfigLRecord ) ) ( notify_addr : ( address_t ) ) :
   cancelBuyOrder_auto_exec l price min_amount deals_limit value price_code tip3cfg notify_addr =
   exec_state (Uinterpreter (cancelBuyOrder price min_amount deals_limit value price_code tip3cfg notify_addr)) l.
 Proof.
@@ -644,32 +683,32 @@ End cancelBuyOrder.
 (* ----------------------------------------- *)
 Section prepare_price_xchg_state_init_and_addr.
 Definition prepare_price_xchg_state_init_and_addr_exec_P (l : Ledger) ( price_data : PriceXchgClassTypesModule.DPriceXchgLRecord ) 
-                                             ( price_code : XCell ): 
+                                             ( price_code : TvmCells.cell ): 
 {l' | l' = exec_state (Uinterpreter (prepare_price_xchg_state_init_and_addr price_data price_code)) l}.
   generate_proof (exec_expression l (prepare_price_xchg_state_init_and_addr price_data price_code)).
 Defined.
 Definition prepare_price_xchg_state_init_and_addr_auto_exec (l : Ledger) ( price_data : PriceXchgClassTypesModule.DPriceXchgLRecord ) 
-                                             ( price_code : XCell ): Ledger.
+                                             ( price_code : TvmCells.cell ): Ledger.
 intros. term_of (prepare_price_xchg_state_init_and_addr_exec_P l price_data price_code).
 Defined.
 Theorem prepare_price_xchg_state_init_and_addr_exec_proof_next (l : Ledger) ( price_data : PriceXchgClassTypesModule.DPriceXchgLRecord ) 
-                                             ( price_code : XCell ) :
+                                             ( price_code : TvmCells.cell ) :
   prepare_price_xchg_state_init_and_addr_auto_exec l price_data price_code =
   exec_state (Uinterpreter (prepare_price_xchg_state_init_and_addr price_data price_code)) l.
 Proof.
   intros. proof_of (prepare_price_xchg_state_init_and_addr_exec_P l price_data price_code).
 Qed.
 Definition prepare_price_xchg_state_init_and_addr_eval_P (l : Ledger) ( price_data : PriceXchgClassTypesModule.DPriceXchgLRecord ) 
-                                             ( price_code : XCell ): 
+                                             ( price_code : TvmCells.cell ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_price_xchg_state_init_and_addr price_data price_code)) l)}.
   generate_proof (eval_expression l (prepare_price_xchg_state_init_and_addr price_data price_code)).
 Defined.
 Definition prepare_price_xchg_state_init_and_addr_auto_eval (l : Ledger) ( price_data : PriceXchgClassTypesModule.DPriceXchgLRecord ) 
-                                             ( price_code : XCell ): (StateInitLRecord # uint256).
+                                             ( price_code : TvmCells.cell ): (StateInitLRecord # uint256).
 intros. term_of (prepare_price_xchg_state_init_and_addr_eval_P l price_data price_code).
 Defined.
 Theorem prepare_price_xchg_state_init_and_addr_eval_proof_next (l : Ledger) ( price_data : PriceXchgClassTypesModule.DPriceXchgLRecord ) 
-                                             ( price_code : XCell ) :
+                                             ( price_code : TvmCells.cell ) :
   prepare_price_xchg_state_init_and_addr_auto_eval l price_data price_code =
   toValue (eval_state (Uinterpreter (prepare_price_xchg_state_init_and_addr price_data price_code)) l).
 Proof.
@@ -681,7 +720,7 @@ Section preparePriceXchg.
 Definition preparePriceXchg_exec_P (l : Ledger) ( price_num : ( uint128 ) ) 
 ( price_denum : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
-( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( XCell ) )
+( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( TvmCells.cell ) )
  ( notify_addr : ( address ) ) : 
 {l' | l' = exec_state (Uinterpreter (preparePriceXchg price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr)) l}.
   generate_proof (exec_expression l (preparePriceXchg price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr)).
@@ -689,14 +728,14 @@ Defined.
 Definition preparePriceXchg_auto_exec (l : Ledger) ( price_num : ( uint128 ) ) 
 ( price_denum : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
-( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( XCell ) )
+( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( TvmCells.cell ) )
  ( notify_addr : ( address ) ) : Ledger.
 intros. term_of (preparePriceXchg_exec_P l price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr).
 Defined.
 Theorem preparePriceXchg_exec_proof_next (l : Ledger) ( price_num : ( uint128 ) ) 
 ( price_denum : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
-( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( XCell ) )
+( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( TvmCells.cell ) )
  ( notify_addr : ( address ) )  :
   preparePriceXchg_auto_exec l price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr =
   exec_state (Uinterpreter (preparePriceXchg price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr)) l.
@@ -707,7 +746,7 @@ Qed.
 Definition preparePriceXchg_eval_P (l : Ledger) ( price_num : ( uint128 ) ) 
 ( price_denum : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
-( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( XCell ) )
+( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( TvmCells.cell ) )
  ( notify_addr : ( address ) ) : 
 {v | v =  (eval_state (Uinterpreter (preparePriceXchg price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr)) l)}.
   generate_proof (eval_expression l (preparePriceXchg price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr)).
@@ -715,14 +754,14 @@ Defined.
 Definition preparePriceXchg_auto_eval (l : Ledger) ( price_num : ( uint128 ) ) 
 ( price_denum : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
-( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( XCell ) )
+( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( TvmCells.cell ) )
  ( notify_addr : ( address_t ) ) : ControlResult ( StateInitLRecord # ( address # uint256 ) ) true.
 intros. term_of (preparePriceXchg_eval_P l price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr).
 Defined.
 Theorem preparePriceXchg_eval_proof_next (l : Ledger) ( price_num : ( uint128 ) ) 
 ( price_denum : ( uint128 ) ) ( min_amount : ( uint128 ) ) 
 ( deals_limit : ( uint8 ) ) ( major_tip3cfg : ( Tip3ConfigLRecord ) ) 
-( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( XCell ) )
+( minor_tip3cfg : ( Tip3ConfigLRecord ) ) ( price_code : ( TvmCells.cell ) )
  ( notify_addr : ( address_t ) )  :
   preparePriceXchg_auto_eval l price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr =
    (eval_state (Uinterpreter (preparePriceXchg price_num price_denum min_amount deals_limit major_tip3cfg minor_tip3cfg price_code notify_addr)) l).
@@ -735,7 +774,7 @@ Section deployPriceXchg.
 Definition deployPriceXchg_exec_P (l : Ledger) ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
 ( amount : ( uint128 ) ) ( lend_amount : ( uint128 ) ) ( lend_finish_time : ( uint32 ) ) 
 ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( tons_value : ( uint128 ) ) 
-( xchg_price_code : ( XCell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
+( xchg_price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address ) ): 
 {l' | l' = exec_state (Uinterpreter (deployPriceXchg sell price_num price_denum amount lend_amount lend_finish_time min_amount deals_limit tons_value xchg_price_code my_tip3_addr receive_wallet major_tip3cfg minor_tip3cfg notify_addr)) l}.
@@ -744,7 +783,7 @@ Defined.
 Definition deployPriceXchg_auto_exec (l : Ledger) ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
 ( amount : ( uint128 ) ) ( lend_amount : ( uint128 ) ) ( lend_finish_time : ( uint32 ) ) 
 ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( tons_value : ( uint128 ) ) 
-( xchg_price_code : ( XCell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
+( xchg_price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address ) ): Ledger.
 intros. term_of (deployPriceXchg_exec_P l sell price_num price_denum amount lend_amount lend_finish_time min_amount deals_limit tons_value xchg_price_code my_tip3_addr receive_wallet major_tip3cfg minor_tip3cfg notify_addr).
@@ -752,7 +791,7 @@ Defined.
 Theorem deployPriceXchg_exec_proof_next (l : Ledger) ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
 ( amount : ( uint128 ) ) ( lend_amount : ( uint128 ) ) ( lend_finish_time : ( uint32 ) ) 
 ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( tons_value : ( uint128 ) ) 
-( xchg_price_code : ( XCell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
+( xchg_price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address ) ) :
   deployPriceXchg_auto_exec l sell price_num price_denum amount lend_amount lend_finish_time min_amount deals_limit tons_value xchg_price_code my_tip3_addr receive_wallet major_tip3cfg minor_tip3cfg notify_addr =
@@ -764,7 +803,7 @@ Qed.
 Definition deployPriceXchg_eval_P (l : Ledger) ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
 ( amount : ( uint128 ) ) ( lend_amount : ( uint128 ) ) ( lend_finish_time : ( uint32 ) ) 
 ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( tons_value : ( uint128 ) ) 
-( xchg_price_code : ( XCell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
+( xchg_price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address ) ): 
 {v | v =  (eval_state (Uinterpreter (deployPriceXchg sell price_num price_denum amount lend_amount lend_finish_time min_amount deals_limit tons_value xchg_price_code my_tip3_addr receive_wallet major_tip3cfg minor_tip3cfg notify_addr)) l)}.
@@ -773,7 +812,7 @@ Defined.
 Definition deployPriceXchg_auto_eval (l : Ledger) ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
 ( amount : ( uint128 ) ) ( lend_amount : ( uint128 ) ) ( lend_finish_time : ( uint32 ) ) 
 ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( tons_value : ( uint128 ) ) 
-( xchg_price_code : ( XCell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
+( xchg_price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address ) ): ControlResult address true.
 intros. term_of (deployPriceXchg_eval_P l sell price_num price_denum amount lend_amount lend_finish_time min_amount deals_limit tons_value xchg_price_code my_tip3_addr receive_wallet major_tip3cfg minor_tip3cfg notify_addr).
@@ -781,7 +820,7 @@ Defined.
 Theorem deployPriceXchg_eval_proof_next (l : Ledger) ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
 ( amount : ( uint128 ) ) ( lend_amount : ( uint128 ) ) ( lend_finish_time : ( uint32 ) ) 
 ( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( tons_value : ( uint128 ) ) 
-( xchg_price_code : ( XCell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
+( xchg_price_code : ( TvmCells.cell ) ) ( my_tip3_addr : ( address ) ) ( receive_wallet : ( address ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address ) ) :
   deployPriceXchg_auto_eval l sell price_num price_denum amount lend_amount lend_finish_time min_amount deals_limit tons_value xchg_price_code my_tip3_addr receive_wallet major_tip3cfg minor_tip3cfg notify_addr =
@@ -793,20 +832,20 @@ End deployPriceXchg.
 (* ----------------------------------------- *)
 Section cancelXchgOrder.
 Definition cancelXchgOrder_exec_P (l : Ledger) ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
-( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( xchg_price_code : ( XCell ) ) 
+( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( xchg_price_code : ( TvmCells.cell ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address_t ) ): 
 {l' | l' = exec_state (Uinterpreter (cancelXchgOrder sell price_num price_denum min_amount deals_limit value xchg_price_code major_tip3cfg minor_tip3cfg notify_addr)) l}.
   generate_proof (exec_expression l (cancelXchgOrder sell price_num price_denum min_amount deals_limit value xchg_price_code major_tip3cfg minor_tip3cfg notify_addr)).
 Defined.
 Definition cancelXchgOrder_auto_exec (l : Ledger) ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
-( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( xchg_price_code : ( XCell ) ) 
+( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( xchg_price_code : ( TvmCells.cell ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address_t ) ): Ledger.
 intros. term_of (cancelXchgOrder_exec_P l sell price_num price_denum min_amount deals_limit value xchg_price_code major_tip3cfg minor_tip3cfg notify_addr).
 Defined.
 Theorem cancelXchgOrder_exec_proof_next (l : Ledger) ( sell : ( XBool ) ) ( price_num : ( uint128 ) ) ( price_denum : ( uint128 ) ) 
-( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( xchg_price_code : ( XCell ) ) 
+( min_amount : ( uint128 ) ) ( deals_limit : ( uint8 ) ) ( value : ( uint128 ) ) ( xchg_price_code : ( TvmCells.cell ) ) 
 ( major_tip3cfg : ( Tip3ConfigLRecord ) ) ( minor_tip3cfg : ( Tip3ConfigLRecord ) ) 
 ( notify_addr : ( address_t ) ) :
   cancelXchgOrder_auto_exec l sell price_num price_denum min_amount deals_limit value xchg_price_code major_tip3cfg minor_tip3cfg notify_addr =
@@ -864,32 +903,32 @@ Qed.
 End prepare_wallet_state_init_and_addr.
 (* ----------------------------------------- *)
 Section prepare_wrapper_state_init_and_addr.
-Definition prepare_wrapper_state_init_and_addr_exec_P (l : Ledger) ( wrapper_code : XCell ) 
+Definition prepare_wrapper_state_init_and_addr_exec_P (l : Ledger) ( wrapper_code : TvmCells.cell ) 
                                                ( wrapper_data : WrapperClassTypesModule.DWrapperLRecord ): 
 {l' | l' = exec_state (Uinterpreter (prepare_wrapper_state_init_and_addr wrapper_code wrapper_data)) l}.
   generate_proof (exec_expression l (prepare_wrapper_state_init_and_addr wrapper_code wrapper_data)).
 Defined.
-Definition prepare_wrapper_state_init_and_addr_auto_exec (l : Ledger) ( wrapper_code : XCell ) 
+Definition prepare_wrapper_state_init_and_addr_auto_exec (l : Ledger) ( wrapper_code : TvmCells.cell ) 
                                                ( wrapper_data : WrapperClassTypesModule.DWrapperLRecord ): Ledger.
 intros. term_of (prepare_wrapper_state_init_and_addr_exec_P l wrapper_code wrapper_data).
 Defined.
-Theorem prepare_wrapper_state_init_and_addr_exec_proof_next (l : Ledger) ( wrapper_code : XCell ) 
+Theorem prepare_wrapper_state_init_and_addr_exec_proof_next (l : Ledger) ( wrapper_code : TvmCells.cell ) 
                                                ( wrapper_data : WrapperClassTypesModule.DWrapperLRecord ) :
   prepare_wrapper_state_init_and_addr_auto_exec l wrapper_code wrapper_data =
   exec_state (Uinterpreter (prepare_wrapper_state_init_and_addr wrapper_code wrapper_data)) l.
 Proof.
   intros. proof_of (prepare_wrapper_state_init_and_addr_exec_P l wrapper_code wrapper_data).
 Qed.
-Definition prepare_wrapper_state_init_and_addr_eval_P (l : Ledger) ( wrapper_code : XCell ) 
+Definition prepare_wrapper_state_init_and_addr_eval_P (l : Ledger) ( wrapper_code : TvmCells.cell ) 
                                                ( wrapper_data : WrapperClassTypesModule.DWrapperLRecord ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_wrapper_state_init_and_addr wrapper_code wrapper_data)) l)}.
   generate_proof (eval_expression l (prepare_wrapper_state_init_and_addr wrapper_code wrapper_data)).
 Defined.
-Definition prepare_wrapper_state_init_and_addr_auto_eval (l : Ledger) ( wrapper_code : XCell ) 
+Definition prepare_wrapper_state_init_and_addr_auto_eval (l : Ledger) ( wrapper_code : TvmCells.cell ) 
                                                ( wrapper_data : WrapperClassTypesModule.DWrapperLRecord ): (StateInitLRecord # uint256).
 intros. term_of (prepare_wrapper_state_init_and_addr_eval_P l wrapper_code wrapper_data).
 Defined.
-Theorem prepare_wrapper_state_init_and_addr_eval_proof_next (l : Ledger) ( wrapper_code : XCell ) 
+Theorem prepare_wrapper_state_init_and_addr_eval_proof_next (l : Ledger) ( wrapper_code : TvmCells.cell ) 
                                                ( wrapper_data : WrapperClassTypesModule.DWrapperLRecord ) :
   prepare_wrapper_state_init_and_addr_auto_eval l wrapper_code wrapper_data =
   toValue (eval_state (Uinterpreter (prepare_wrapper_state_init_and_addr wrapper_code wrapper_data)) l).
@@ -906,7 +945,7 @@ Definition prepare_internal_wallet_state_init_and_addr_exec_P (l : Ledger) ( nam
  ( wallet_public_key :  ( uint256 ) ) 
 ( root_address :  ( address ) ) 
 ( owner_address :  ( XMaybe address ) ) 
-( code :  ( XCell ) ) 
+( code :  ( TvmCells.cell ) ) 
 ( workchain_id :  ( int ) ) : 
 {l' | l' = exec_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )) l}.
   generate_proof (exec_expression l (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )).
@@ -918,7 +957,7 @@ Definition prepare_internal_wallet_state_init_and_addr_auto_exec (l : Ledger) ( 
  ( wallet_public_key :  ( uint256 ) ) 
 ( root_address :  ( address ) ) 
 ( owner_address :  ( XMaybe address ) ) 
-( code :  ( XCell ) ) 
+( code :  ( TvmCells.cell ) ) 
 ( workchain_id :  ( int ) ) : Ledger.
 intros. term_of (prepare_internal_wallet_state_init_and_addr_exec_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ).
 Defined.
@@ -929,7 +968,7 @@ Theorem prepare_internal_wallet_state_init_and_addr_exec_proof_next (l : Ledger)
  ( wallet_public_key :  ( uint256 ) ) 
 ( root_address :  ( address ) ) 
 ( owner_address :  ( XMaybe address ) ) 
-( code :  ( XCell ) ) 
+( code :  ( TvmCells.cell ) ) 
 ( workchain_id :  ( int ) )  :
   prepare_internal_wallet_state_init_and_addr_auto_exec l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id  =
   exec_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )) l.
@@ -943,7 +982,7 @@ Definition prepare_internal_wallet_state_init_and_addr_eval_P (l : Ledger) ( nam
  ( wallet_public_key :  ( uint256 ) ) 
 ( root_address :  ( address ) ) 
 ( owner_address :  ( XMaybe address ) ) 
-( code :  ( XCell ) ) 
+( code :  ( TvmCells.cell ) ) 
 ( workchain_id :  ( int ) ) : 
 {v | v = toValue (eval_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )) l)}.
   generate_proof (eval_expression l (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )).
@@ -955,7 +994,7 @@ Definition prepare_internal_wallet_state_init_and_addr_auto_eval (l : Ledger) ( 
  ( wallet_public_key :  ( uint256 ) ) 
 ( root_address :  ( address ) ) 
 ( owner_address :  ( XMaybe address ) ) 
-( code :  ( XCell ) ) 
+( code :  ( TvmCells.cell ) ) 
 ( workchain_id :  ( int ) ) : ( StateInitLRecord * uint256 ).
 intros. term_of (prepare_internal_wallet_state_init_and_addr_eval_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ).
 Defined.
@@ -966,7 +1005,7 @@ Theorem prepare_internal_wallet_state_init_and_addr_eval_proof_next (l : Ledger)
  ( wallet_public_key :  ( uint256 ) ) 
 ( root_address :  ( address ) ) 
 ( owner_address :  ( XMaybe address ) ) 
-( code :  ( XCell ) ) 
+( code :  ( TvmCells.cell ) ) 
 ( workchain_id :  ( int ) )  :
   prepare_internal_wallet_state_init_and_addr_auto_eval l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id  =
   toValue (eval_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )) l).

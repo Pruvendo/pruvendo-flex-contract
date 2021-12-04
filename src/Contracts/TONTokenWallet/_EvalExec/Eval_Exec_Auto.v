@@ -15,6 +15,7 @@ Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 Require Import UMLang.ExecGenerator.
 
+Require Import UrsusTVM.Cpp.TvmCells.
 Require Import UrsusTVM.Cpp.tvmTypes.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
@@ -63,11 +64,11 @@ Module TONTokenWalletClassTypesModule := TONTokenWallet.ClassTypes.ClassTypes XT
 Module Import WrapperModuleForTON := Wrapper.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
  *)
 
- Module Import xxx := SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+(*  Module Import xxx := SpecModuleForFuncNotations.LedgerModuleForFuncSig.
  Module Import generator := execGenerator XTypesModule StateMonadModule xxx.
-
-Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
- 
+ *)
+(* Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
+  *)
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
@@ -76,7 +77,34 @@ Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
-Import URSUS_.
+Ltac generate_proof gen :=
+  let e := fresh "e" in
+  let H := fresh "H" in
+  let gen_nf := eval hnf in gen in
+  generate_both gen_nf e H; cycle -1;
+  (only 1: (exists e; subst e; reflexivity));
+  eexists; reflexivity.
+
+Ltac proof_of t :=
+  let e := fresh "e" in
+  let H := fresh "H" in
+  let E := fresh "E" in
+  destruct t as [e H] eqn:E; rewrite <- H; replace e with
+  (let (e', _) := t in e');
+  try reflexivity ;try (rewrite E; reflexivity).
+
+(* Если proof_of падает, то меняем его на proof_of_norm
+Если зависает, то меняем на destruct (funcname_exec_P l  arg arg) as [e H] eqn:E. rewrite <- H. replace e with
+  (let (e', _) := (funcname_exec_P l  arg arg) in e').
+unfold filter_lend_ownerhip_map_exec_P.
+  reflexivity.
+  rewrite E.
+  reflexivity.
+
+Если зависает term_of 
+let t1 := (eval unfold funcname_exec_P in
+(let (e, _) := funcname_exec_P l args in e)) in exact t1.
+*)
 
 Section filter_lend_ownerhip_map.
 Definition filter_lend_ownerhip_map_exec_P (l : Ledger): 
@@ -90,12 +118,19 @@ Theorem filter_lend_ownerhip_map_exec_proof_next (l : Ledger) :
 filter_lend_ownerhip_map_auto_exec l  =
   exec_state (Uinterpreter (filter_lend_ownerhip_map )) l.
 Proof.
-  intros. proof_of (filter_lend_ownerhip_map_exec_P l ).
+  intros.
+  destruct (filter_lend_ownerhip_map_exec_P l  ) as [e H] eqn:E. rewrite <- H. replace e with
+  (let (e', _) := (filter_lend_ownerhip_map_exec_P l  ) in e').
+unfold filter_lend_ownerhip_map_exec_P.
+  reflexivity.
+  rewrite E.
+  reflexivity.
+  (* proof_of (filter_lend_ownerhip_map_exec_P l ). *)
 Qed.
 
+(* For inside *)
 
-
-Definition filter_lend_ownerhip_map_eval_P (l : Ledger) : 
+(* Definition filter_lend_ownerhip_map_eval_P (l : Ledger) : 
 {v | v = toValue (eval_state (Uinterpreter (filter_lend_ownerhip_map )) l)}.
   generate_proof (eval_expression l (filter_lend_ownerhip_map )).
 Defined.
@@ -106,8 +141,14 @@ Theorem filter_lend_ownerhip_map_eval_proof_next (l : Ledger) :
 filter_lend_ownerhip_map_auto_eval l  =
   toValue (eval_state (Uinterpreter (filter_lend_ownerhip_map )) l).
 Proof.
-  intros. proof_of (filter_lend_ownerhip_map_eval_P l ).
-Qed.
+  intros. 
+  destruct (filter_lend_ownerhip_map_eval_P l) as [e H] eqn:E. rewrite <- H. replace e with
+  (let (e', _) := (filter_lend_ownerhip_map_eval_P l) in e').
+unfold filter_lend_ownerhip_map_eval_P;
+reflexivity.
+  rewrite E. reflexivity.
+  proof_of (filter_lend_ownerhip_map_eval_P l ).
+Qed. *)
 
 
 
@@ -163,7 +204,13 @@ Theorem check_internal_owner_exec_proof_next (l : Ledger) ( original_owner_only 
   check_internal_owner_auto_exec l original_owner_only allowed_for_original_owner_in_lend_state =
   exec_state (Uinterpreter (check_internal_owner original_owner_only allowed_for_original_owner_in_lend_state)) l.
 Proof.
-  intros. proof_of (check_internal_owner_exec_P l original_owner_only allowed_for_original_owner_in_lend_state).
+  intros.
+  destruct (check_internal_owner_exec_P l original_owner_only allowed_for_original_owner_in_lend_state) as [e H] eqn:E. rewrite <- H. replace e with
+  (let (e', _) := (check_internal_owner_exec_P l original_owner_only allowed_for_original_owner_in_lend_state) in e').
+unfold check_internal_owner_exec_P;
+reflexivity.
+  rewrite E. reflexivity.
+  (* proof_of (check_internal_owner_exec_P l original_owner_only allowed_for_original_owner_in_lend_state). *)
 Qed.
 
 
@@ -311,19 +358,18 @@ Qed.
 
 
 Definition fixup_answer_addr_eval_P (l : Ledger) ( answer_addr : ( address ) ): 
-{v | v = toValue (eval_state (Uinterpreter (fixup_answer_addr answer_addr)) l)}.
+{v | v =  (eval_state (Uinterpreter (fixup_answer_addr answer_addr)) l)}.
   generate_proof (eval_expression l (fixup_answer_addr answer_addr)).
 Defined.
-Definition fixup_answer_addr_auto_eval (l : Ledger) ( answer_addr : ( address ) ): address.
+Definition fixup_answer_addr_auto_eval (l : Ledger) ( answer_addr : ( address ) ): (ControlResult address true).
 intros. term_of (fixup_answer_addr_eval_P l answer_addr).
 Defined.
 Theorem fixup_answer_addr_eval_proof_next (l : Ledger) ( answer_addr : ( address ) ) :
-  fixup_answer_addr_auto_eval l answer_addr =
-  toValue (eval_state (Uinterpreter (fixup_answer_addr answer_addr)) l).
+fixup_answer_addr_auto_eval l answer_addr =
+   (eval_state (Uinterpreter (fixup_answer_addr answer_addr)) l).
 Proof.
   intros. proof_of (fixup_answer_addr_eval_P l answer_addr).
 Qed.
-
 
 
 End fixup_answer_addr.
@@ -375,7 +421,14 @@ Theorem update_spent_balance_exec_proof_next (l : Ledger) ( tokens : uint128 ) (
   update_spent_balance_auto_exec l tokens return_ownership =
   exec_state (Uinterpreter (update_spent_balance tokens return_ownership)) l.
 Proof.
-  intros. proof_of (update_spent_balance_exec_P l tokens return_ownership).
+  intros. 
+  destruct (update_spent_balance_exec_P l  tokens return_ownership) as [e H] eqn:E. rewrite <- H. replace e with
+  (let (e', _) := (update_spent_balance_exec_P l  tokens return_ownership) in e').
+unfold update_spent_balance_exec_P;
+  reflexivity.
+  rewrite E.
+  reflexivity.
+  (* proof_of (update_spent_balance_exec_P l tokens return_ownership). *)
 Qed.
 
 
@@ -388,7 +441,7 @@ Definition  transfer_impl_exec_P (l : Ledger) ( answer_addr : ( address ) )
 ( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
-( payload : ( XCell ) ) : 
+( payload : ( cell ) ) : 
 {l' | l' = exec_state (Uinterpreter ( transfer_impl answer_addr too tokens grams return_ownership send_notify  payload)) l}.
   generate_proof (exec_expression l ( transfer_impl answer_addr too tokens grams return_ownership send_notify  payload)).
 Defined.
@@ -398,7 +451,7 @@ Definition  transfer_impl_auto_exec (l : Ledger) ( answer_addr : ( address ) )
 ( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
-( payload : ( XCell ) ) : Ledger.
+( payload : ( cell ) ) : Ledger.
 intros. term_of ( transfer_impl_exec_P l answer_addr too tokens grams return_ownership send_notify  payload).
 Defined.
 Theorem  transfer_impl_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) 
@@ -407,7 +460,7 @@ Theorem  transfer_impl_exec_proof_next (l : Ledger) ( answer_addr : ( address ) 
 ( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
-( payload : ( XCell ) )  :
+( payload : ( cell ) )  :
    transfer_impl_auto_exec l answer_addr too tokens grams return_ownership send_notify  payload =
   exec_state (Uinterpreter ( transfer_impl answer_addr too tokens grams return_ownership send_notify  payload)) l.
 Proof.
@@ -420,7 +473,7 @@ Definition  transfer_impl_eval_P (l : Ledger) ( answer_addr : ( address ) )
 ( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
-( payload : ( XCell ) ) : 
+( payload : ( cell ) ) : 
 {v | v =  (eval_state (Uinterpreter ( transfer_impl answer_addr too tokens grams return_ownership send_notify  payload)) l)}.
   generate_proof (eval_expression l ( transfer_impl answer_addr too tokens grams return_ownership send_notify  payload)).
 Defined.
@@ -428,7 +481,7 @@ Defined.
 End  transfer_impl.
 
 Section transfer.
-Definition transfer_exec_P (l : Ledger) ( answer_addr : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( return_ownership : ( XBool ) ): 
+(* Definition transfer_exec_P (l : Ledger) ( answer_addr : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( return_ownership : ( boolean ) ): 
 {l' | l' = exec_state (Uinterpreter (transfer answer_addr too tokens grams return_ownership)) l}.
   generate_proof (exec_expression l (transfer answer_addr too tokens grams return_ownership)).
 Defined.
@@ -441,7 +494,7 @@ Theorem transfer_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) ( to
 Proof.
   intros. proof_of (transfer_exec_P l answer_addr too tokens grams return_ownership).
 Qed.
-
+ *)
 End transfer.
 
 Section transferWithNotify.
@@ -450,7 +503,7 @@ Definition transferWithNotify_exec_P (l : Ledger) ( answer_addr : ( address ) )
 ( tokens : uint128 ) 
 ( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
-( payload : ( XCell ) ) : 
+( payload : ( cell ) ) : 
 {l' | l' = exec_state (Uinterpreter (transferWithNotify answer_addr too tokens grams return_ownership payload)) l}.
   generate_proof (exec_expression l (transferWithNotify answer_addr too tokens grams return_ownership payload)).
 Defined.
@@ -459,7 +512,7 @@ Definition transferWithNotify_auto_exec (l : Ledger) ( answer_addr : ( address )
 ( tokens : uint128 ) 
 ( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
-( payload : ( XCell ) ) : Ledger.
+( payload : ( cell ) ) : Ledger.
 intros. term_of (transferWithNotify_exec_P l answer_addr too tokens grams return_ownership payload).
 Defined.
 Theorem transferWithNotify_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) 
@@ -467,7 +520,7 @@ Theorem transferWithNotify_exec_proof_next (l : Ledger) ( answer_addr : ( addres
 ( tokens : uint128 ) 
 ( grams : uint128 ) 
 ( return_ownership : ( XBool ) ) 
-( payload : ( XCell ) )  :
+( payload : ( cell ) )  :
   transferWithNotify_auto_exec l answer_addr too tokens grams return_ownership payload =
   exec_state (Uinterpreter (transferWithNotify answer_addr too tokens grams return_ownership payload)) l.
 Proof.
@@ -485,7 +538,7 @@ Definition prepare_wallet_data_exec_P (l : Ledger) ( name : ( XString ) )
 ( wallet_public_key : ( XUInteger256 ) ) 
 ( root_address : ( address ) ) 
 ( owner_address : ( XMaybe address ) ) 
-( code : ( XCell ) ) 
+( code : ( cell ) ) 
 ( workchain_id : ( int ) ) : 
 {l' | l' = exec_state (Uinterpreter (prepare_wallet_data name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )) l}.
   generate_proof (exec_expression l (prepare_wallet_data name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )).
@@ -497,7 +550,7 @@ Definition prepare_wallet_data_auto_exec (l : Ledger) ( name : ( XString ) )
 ( wallet_public_key : ( XUInteger256 ) ) 
 ( root_address : ( address ) ) 
 ( owner_address : ( XMaybe address ) ) 
-( code : ( XCell ) ) 
+( code : ( cell ) ) 
 ( workchain_id : ( int ) ) : Ledger.
 intros. term_of (prepare_wallet_data_exec_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ).
 Defined.
@@ -508,7 +561,7 @@ Theorem prepare_wallet_data_exec_proof_next (l : Ledger) ( name : ( XString ) )
 ( wallet_public_key : ( XUInteger256 ) ) 
 ( root_address : ( address ) ) 
 ( owner_address : ( XMaybe address ) ) 
-( code : ( XCell ) ) 
+( code : ( cell ) ) 
 ( workchain_id : ( int ) )  :
   prepare_wallet_data_auto_exec l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id  =
   exec_state (Uinterpreter (prepare_wallet_data name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )) l.
@@ -525,7 +578,7 @@ Definition prepare_wallet_data_eval_P (l : Ledger) ( name : ( XString ) )
 ( wallet_public_key : ( XUInteger256 ) ) 
 ( root_address : ( address ) ) 
 ( owner_address : ( XMaybe address ) ) 
-( code : ( XCell ) ) 
+( code : ( cell ) ) 
 ( workchain_id : ( int ) ) : 
 {v | v = toValue (eval_state (Uinterpreter (prepare_wallet_data name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )) l)}.
   generate_proof (eval_expression l (prepare_wallet_data name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )).
@@ -537,7 +590,7 @@ Definition prepare_wallet_data_auto_eval (l : Ledger) ( name : ( XString ) )
 ( wallet_public_key : ( XUInteger256 ) ) 
 ( root_address : ( address ) ) 
 ( owner_address : ( XMaybe address ) ) 
-( code : ( XCell ) ) 
+( code : ( cell ) ) 
 ( workchain_id : ( int ) ) : DTONTokenWalletLRecord.
 intros. term_of (prepare_wallet_data_eval_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id ).
 Defined.
@@ -548,7 +601,7 @@ Theorem prepare_wallet_data_eval_proof_next (l : Ledger) ( name : ( XString ) )
 ( wallet_public_key : ( XUInteger256 ) ) 
 ( root_address : ( address ) ) 
 ( owner_address : ( XMaybe address ) ) 
-( code : ( XCell ) ) 
+( code : ( cell ) ) 
 ( workchain_id : ( int ) )  :
   prepare_wallet_data_auto_eval l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id  =
   toValue (eval_state (Uinterpreter (prepare_wallet_data name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id )) l).
@@ -765,7 +818,7 @@ Definition transfer_to_recipient_impl_exec_P (l : Ledger) ( answer_addr : ( addr
 ( deploy : ( XBool ) ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
-( payload : ( XCell ) ) : 
+( payload : ( cell ) ) : 
 {l' | l' = exec_state (Uinterpreter (transfer_to_recipient_impl answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload )) l}.
   generate_proof (exec_expression l (transfer_to_recipient_impl answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload )).
 Defined.
@@ -777,7 +830,7 @@ Definition transfer_to_recipient_impl_auto_exec (l : Ledger) ( answer_addr : ( a
 ( deploy : ( XBool ) ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
-( payload : ( XCell ) ) : Ledger.
+( payload : ( cell ) ) : Ledger.
 intros. term_of (transfer_to_recipient_impl_exec_P l answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload ).
 Defined.
 Theorem transfer_to_recipient_impl_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) 
@@ -788,7 +841,7 @@ Theorem transfer_to_recipient_impl_exec_proof_next (l : Ledger) ( answer_addr : 
 ( deploy : ( XBool ) ) 
 ( return_ownership : ( XBool ) ) 
 ( send_notify : ( XBool ) ) 
-( payload : ( XCell ) )  :
+( payload : ( cell ) )  :
   transfer_to_recipient_impl_auto_exec l answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload  =
   exec_state (Uinterpreter (transfer_to_recipient_impl answer_addr recipient_public_key recipient_internal_owner tokens grams deploy return_ownership send_notify payload )) l.
 Proof.
@@ -910,7 +963,7 @@ Definition internalTransfer_exec_P (l : Ledger) ( tokens : uint128 )
 ( sender_pubkey : ( XUInteger256 ) ) 
 ( sender_owner : ( address ) ) 
 ( notify_receiver : ( XBool ) ) 
-( payload : ( XCell ) ) : 
+( payload : ( cell ) ) : 
 {l' | l' = exec_state (Uinterpreter (internalTransfer tokens answer_addr sender_pubkey sender_owner notify_receiver payload )) l}.
   generate_proof (exec_expression l (internalTransfer tokens answer_addr sender_pubkey sender_owner notify_receiver payload )).
 Defined.
@@ -919,7 +972,7 @@ Definition internalTransfer_auto_exec (l : Ledger) ( tokens : uint128 )
 ( sender_pubkey : ( XUInteger256 ) ) 
 ( sender_owner : ( address ) ) 
 ( notify_receiver : ( XBool ) ) 
-( payload : ( XCell ) ) : Ledger.
+( payload : ( cell ) ) : Ledger.
 intros. term_of (internalTransfer_exec_P l tokens answer_addr sender_pubkey sender_owner notify_receiver payload ).
 Defined.
 Theorem internalTransfer_exec_proof_next (l : Ledger) ( tokens : uint128 ) 
@@ -927,7 +980,7 @@ Theorem internalTransfer_exec_proof_next (l : Ledger) ( tokens : uint128 )
 ( sender_pubkey : ( XUInteger256 ) ) 
 ( sender_owner : ( address ) ) 
 ( notify_receiver : ( XBool ) ) 
-( payload : ( XCell ) )  :
+( payload : ( cell ) )  :
   internalTransfer_auto_exec l tokens answer_addr sender_pubkey sender_owner notify_receiver payload  =
   exec_state (Uinterpreter (internalTransfer tokens answer_addr sender_pubkey sender_owner notify_receiver payload )) l.
 Proof.
@@ -945,8 +998,8 @@ Definition lendOwnership_exec_P (l : Ledger) ( answer_addr : ( address ) )
 ( std_dest : ( XUInteger256 ) ) 
 ( lend_balance : uint128 ) 
 ( lend_finish_time : ( XUInteger32 ) ) 
-( deploy_init_cl : ( XCell ) ) 
-( payload : ( XCell ) ) : 
+( deploy_init_cl : ( cell ) ) 
+( payload : ( cell ) ) : 
 {l' | l' = exec_state (Uinterpreter (lendOwnership answer_addr grams std_dest lend_balance lend_finish_time deploy_init_cl payload)) l}.
   generate_proof (exec_expression l (lendOwnership answer_addr grams std_dest lend_balance lend_finish_time deploy_init_cl payload)).
 Defined.
@@ -955,8 +1008,8 @@ Definition lendOwnership_auto_exec (l : Ledger) ( answer_addr : ( address ) )
 ( std_dest : ( XUInteger256 ) ) 
 ( lend_balance : uint128 ) 
 ( lend_finish_time : ( XUInteger32 ) ) 
-( deploy_init_cl : ( XCell ) ) 
-( payload : ( XCell ) ) : Ledger.
+( deploy_init_cl : ( cell ) ) 
+( payload : ( cell ) ) : Ledger.
 intros. term_of (lendOwnership_exec_P l answer_addr grams std_dest lend_balance lend_finish_time deploy_init_cl payload).
 Defined.
 Theorem lendOwnership_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) 
@@ -964,8 +1017,8 @@ Theorem lendOwnership_exec_proof_next (l : Ledger) ( answer_addr : ( address ) )
 ( std_dest : ( XUInteger256 ) ) 
 ( lend_balance : uint128 ) 
 ( lend_finish_time : ( XUInteger32 ) ) 
-( deploy_init_cl : ( XCell ) ) 
-( payload : ( XCell ) )  :
+( deploy_init_cl : ( cell ) ) 
+( payload : ( cell ) )  :
   lendOwnership_auto_exec l answer_addr grams std_dest lend_balance lend_finish_time deploy_init_cl payload =
   exec_state (Uinterpreter (lendOwnership answer_addr grams std_dest lend_balance lend_finish_time deploy_init_cl payload)) l.
 Proof.
@@ -1050,14 +1103,14 @@ Qed.
 End approve.
 
 Section transfer_from_impl.
-Definition transfer_from_impl_exec_P (l : Ledger) ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : ( XBool ) ) ( payload : ( XCell ) ): 
+Definition transfer_from_impl_exec_P (l : Ledger) ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : ( XBool ) ) ( payload : ( cell ) ): 
 {l' | l' = exec_state (Uinterpreter (transfer_from_impl answer_addr from too tokens grams send_notify payload)) l}.
   generate_proof (exec_expression l (transfer_from_impl answer_addr from too tokens grams send_notify payload)).
 Defined.
-Definition transfer_from_impl_auto_exec (l : Ledger) ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : ( XBool ) ) ( payload : ( XCell ) ): Ledger.
+Definition transfer_from_impl_auto_exec (l : Ledger) ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : ( XBool ) ) ( payload : ( cell ) ): Ledger.
 intros. term_of (transfer_from_impl_exec_P l answer_addr from too tokens grams send_notify payload).
 Defined.
-Theorem transfer_from_impl_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : ( XBool ) ) ( payload : ( XCell ) ) :
+Theorem transfer_from_impl_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) ( from : ( address ) ) ( too : ( address ) ) ( tokens : uint128 ) ( grams : uint128 ) ( send_notify : ( XBool ) ) ( payload : ( cell ) ) :
   transfer_from_impl_auto_exec l answer_addr from too tokens grams send_notify payload =
   exec_state (Uinterpreter (transfer_from_impl answer_addr from too tokens grams send_notify payload)) l.
 Proof.
@@ -1105,7 +1158,7 @@ Definition transferFromWithNotify_exec_P (l : Ledger) ( answer_addr : ( address 
 ( too : ( address ) ) 
 ( tokens : uint128 ) 
 ( grams : ( uint128 ) ) 
-( payload : ( XCell ) ) : 
+( payload : ( cell ) ) : 
 {l' | l' = exec_state (Uinterpreter (transferFromWithNotify answer_addr from too tokens grams payload)) l}.
   generate_proof (exec_expression l (transferFromWithNotify answer_addr from too tokens grams payload)).
 Defined.
@@ -1114,7 +1167,7 @@ Definition transferFromWithNotify_auto_exec (l : Ledger) ( answer_addr : ( addre
 ( too : ( address ) ) 
 ( tokens : uint128 ) 
 ( grams : ( uint128 ) ) 
-( payload : ( XCell ) ) : Ledger.
+( payload : ( cell ) ) : Ledger.
 intros. term_of (transferFromWithNotify_exec_P l answer_addr from too  tokens grams payload).
 Defined.
 Theorem transferFromWithNotify_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) 
@@ -1122,7 +1175,7 @@ Theorem transferFromWithNotify_exec_proof_next (l : Ledger) ( answer_addr : ( ad
 ( too : ( address ) ) 
 ( tokens : uint128 ) 
 ( grams : ( uint128 ) ) 
-( payload : ( XCell ) )  :
+( payload : ( cell ) )  :
   transferFromWithNotify_auto_exec l answer_addr from too tokens grams payload =
   exec_state (Uinterpreter (transferFromWithNotify answer_addr from too tokens grams payload)) l.
 Proof.
@@ -1136,7 +1189,7 @@ Definition internalTransferFrom_exec_P (l : Ledger) ( answer_addr : ( address ) 
 ( too : ( address ) ) 
 ( tokens : uint128 ) 
 ( notify_receiver : ( XBool ) ) 
-( payload : ( XCell ) ) : 
+( payload : ( cell ) ) : 
 {l' | l' = exec_state (Uinterpreter (internalTransferFrom answer_addr too tokens notify_receiver payload)) l}.
   generate_proof (exec_expression l (internalTransferFrom answer_addr too tokens notify_receiver payload)).
 Defined.
@@ -1144,14 +1197,14 @@ Definition internalTransferFrom_auto_exec (l : Ledger) ( answer_addr : ( address
 ( too : ( address ) ) 
 ( tokens : uint128 ) 
 ( notify_receiver : ( XBool ) ) 
-( payload : ( XCell ) ) : Ledger.
+( payload : ( cell ) ) : Ledger.
 intros. term_of (internalTransferFrom_exec_P l answer_addr too tokens notify_receiver payload).
 Defined.
 Theorem internalTransferFrom_exec_proof_next (l : Ledger) ( answer_addr : ( address ) ) 
 ( too : ( address ) ) 
 ( tokens : uint128 ) 
 ( notify_receiver : ( XBool ) ) 
-( payload : ( XCell ) )  :
+( payload : ( cell ) )  :
   internalTransferFrom_auto_exec l answer_addr too tokens notify_receiver payload =
   exec_state (Uinterpreter (internalTransferFrom answer_addr too tokens notify_receiver payload)) l.
 Proof.
@@ -1181,14 +1234,14 @@ End disapprove.
 
 
 Section _on_bounced.
-Definition _on_bounced_exec_P (l : Ledger) ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ): 
+Definition _on_bounced_exec_P (l : Ledger) ( msg : ( cell ) ) ( msg_body : ( XSlice ) ): 
 {l' | l' = exec_state (Uinterpreter (_on_bounced msg msg_body)) l}.
   generate_proof (exec_expression l (_on_bounced msg msg_body)).
 Defined.
-Definition _on_bounced_auto_exec (l : Ledger) ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ): Ledger.
+Definition _on_bounced_auto_exec (l : Ledger) ( msg : ( cell ) ) ( msg_body : ( XSlice ) ): Ledger.
 intros. term_of (_on_bounced_exec_P l msg msg_body).
 Defined.
-Theorem _on_bounced_exec_proof_next (l : Ledger) ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) :
+Theorem _on_bounced_exec_proof_next (l : Ledger) ( msg : ( cell ) ) ( msg_body : ( XSlice ) ) :
   _on_bounced_auto_exec l msg msg_body =
   exec_state (Uinterpreter (_on_bounced msg msg_body)) l.
 Proof.
@@ -1197,14 +1250,14 @@ Qed.
 
 
 
-Definition _on_bounced_eval_P (l : Ledger) ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ): 
+Definition _on_bounced_eval_P (l : Ledger) ( msg : ( cell ) ) ( msg_body : ( XSlice ) ): 
 {v | v =  (eval_state (Uinterpreter (_on_bounced msg msg_body)) l)}.
   generate_proof (eval_expression l (_on_bounced msg msg_body)).
 Defined.
-Definition _on_bounced_auto_eval (l : Ledger) ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ): (ControlResult XUInteger true).
+Definition _on_bounced_auto_eval (l : Ledger) ( msg : ( cell ) ) ( msg_body : ( XSlice ) ): (ControlResult XUInteger true).
 intros. term_of (_on_bounced_eval_P l msg msg_body).
 Defined.
-Theorem _on_bounced_eval_proof_next (l : Ledger) ( msg : ( XCell ) ) ( msg_body : ( XSlice ) ) :
+Theorem _on_bounced_eval_proof_next (l : Ledger) ( msg : ( cell ) ) ( msg_body : ( XSlice ) ) :
   _on_bounced_auto_eval l msg msg_body =
    (eval_state (Uinterpreter (_on_bounced msg msg_body)) l).
 Proof.
@@ -1215,14 +1268,14 @@ End _on_bounced.
 
 
 Section _fallback.
-Definition _fallback_exec_P (l : Ledger)  (msg : XCell ) ( msg_body : ( XSlice ) ): 
+Definition _fallback_exec_P (l : Ledger)  (msg : cell ) ( msg_body : ( XSlice ) ): 
 {l' | l' = exec_state (Uinterpreter (_fallback msg msg_body)) l}.
   generate_proof (exec_expression l (_fallback msg msg_body)).
 Defined.
-Definition _fallback_auto_exec (l : Ledger)  ( msg : XCell ) ( msg_body : ( XSlice ) ): Ledger.
+Definition _fallback_auto_exec (l : Ledger)  ( msg : cell ) ( msg_body : ( XSlice ) ): Ledger.
 intros. term_of (_fallback_exec_P l msg msg_body).
 Defined.
-Theorem _fallback_exec_proof_next (l : Ledger)  ( msg : XCell ) ( msg_body : ( XSlice ) ) :
+Theorem _fallback_exec_proof_next (l : Ledger)  ( msg : cell ) ( msg_body : ( XSlice ) ) :
   _fallback_auto_exec l msg msg_body =
   exec_state (Uinterpreter (_fallback msg msg_body)) l.
 Proof.
@@ -1231,14 +1284,14 @@ Qed.
 
 
 
-Definition _fallback_eval_P (l : Ledger)  ( msg : XCell ) ( msg_body : ( XSlice ) ): 
+Definition _fallback_eval_P (l : Ledger)  ( msg : cell ) ( msg_body : ( XSlice ) ): 
 {v | v =  (eval_state (Uinterpreter (_fallback msg msg_body)) l)}.
   generate_proof (eval_expression l (_fallback msg msg_body)).
 Defined.
-Definition _fallback_auto_eval (l : Ledger)  (msg : XCell ) ( msg_body : ( XSlice ) ): (ControlResult XUInteger true).
+Definition _fallback_auto_eval (l : Ledger)  (msg : cell ) ( msg_body : ( XSlice ) ): (ControlResult XUInteger true).
 intros. term_of (_fallback_eval_P l msg msg_body).
 Defined.
-Theorem _fallback_eval_proof_next (l : Ledger)  (msg : XCell ) ( msg_body : ( XSlice ) ) :
+Theorem _fallback_eval_proof_next (l : Ledger)  (msg : cell ) ( msg_body : ( XSlice ) ) :
   _fallback_auto_eval l msg msg_body =
    (eval_state (Uinterpreter (_fallback msg msg_body)) l).
 Proof.
@@ -1249,14 +1302,14 @@ End _fallback.
 
 
 Section prepare_external_wallet_state_init_and_addr.
-Definition prepare_external_wallet_state_init_and_addr_exec_P (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ): 
+Definition prepare_external_wallet_state_init_and_addr_exec_P (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ): 
 {l' | l' = exec_state (Uinterpreter (prepare_external_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l}.
   generate_proof (exec_expression l (prepare_external_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)).
 Defined.
-Definition prepare_external_wallet_state_init_and_addr_auto_exec (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ): Ledger.
+Definition prepare_external_wallet_state_init_and_addr_auto_exec (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ): Ledger.
 intros. term_of (prepare_external_wallet_state_init_and_addr_exec_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Defined.
-Theorem prepare_external_wallet_state_init_and_addr_exec_proof_next (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ) :
+Theorem prepare_external_wallet_state_init_and_addr_exec_proof_next (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ) :
   prepare_external_wallet_state_init_and_addr_auto_exec l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id =
   exec_state (Uinterpreter (prepare_external_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l.
 Proof.
@@ -1265,14 +1318,14 @@ Qed.
 
 
 
-Definition prepare_external_wallet_state_init_and_addr_eval_P (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ): 
+Definition prepare_external_wallet_state_init_and_addr_eval_P (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_external_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l)}.
   generate_proof (eval_expression l (prepare_external_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)).
 Defined.
-Definition prepare_external_wallet_state_init_and_addr_auto_eval (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ): StateInitLRecord # XUInteger256.
+Definition prepare_external_wallet_state_init_and_addr_auto_eval (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ): StateInitLRecord # XUInteger256.
 intros. term_of (prepare_external_wallet_state_init_and_addr_eval_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Defined.
-Theorem prepare_external_wallet_state_init_and_addr_eval_proof_next (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ) :
+Theorem prepare_external_wallet_state_init_and_addr_eval_proof_next (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ) :
   prepare_external_wallet_state_init_and_addr_auto_eval l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id =
   toValue (eval_state (Uinterpreter (prepare_external_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l).
 Proof.
@@ -1285,28 +1338,28 @@ End prepare_external_wallet_state_init_and_addr.
 
 
 Section prepare_internal_wallet_state_init_and_addr.
-Definition prepare_internal_wallet_state_init_and_addr_exec_P (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ): 
+Definition prepare_internal_wallet_state_init_and_addr_exec_P (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ): 
 {l' | l' = exec_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l}.
   generate_proof (exec_expression l (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)).
 Defined.
-Definition prepare_internal_wallet_state_init_and_addr_auto_exec (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ): Ledger.
+Definition prepare_internal_wallet_state_init_and_addr_auto_exec (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ): Ledger.
 intros. term_of (prepare_internal_wallet_state_init_and_addr_exec_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Defined.
-Theorem prepare_internal_wallet_state_init_and_addr_exec_proof_next (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ) :
+Theorem prepare_internal_wallet_state_init_and_addr_exec_proof_next (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ) :
   prepare_internal_wallet_state_init_and_addr_auto_exec l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id =
   exec_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l.
 Proof.
   intros. proof_of (prepare_internal_wallet_state_init_and_addr_exec_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Qed.
 
-Definition prepare_internal_wallet_state_init_and_addr_eval_P (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ): 
+Definition prepare_internal_wallet_state_init_and_addr_eval_P (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l)}.
   generate_proof (eval_expression l (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)).
 Defined.
-Definition prepare_internal_wallet_state_init_and_addr_auto_eval (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ): StateInitLRecord # XUInteger256.
+Definition prepare_internal_wallet_state_init_and_addr_auto_eval (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ): StateInitLRecord # XUInteger256.
 intros. term_of (prepare_internal_wallet_state_init_and_addr_eval_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Defined.
-Theorem prepare_internal_wallet_state_init_and_addr_eval_proof_next (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( XCell ) ) ( workchain_id : ( int ) ) :
+Theorem prepare_internal_wallet_state_init_and_addr_eval_proof_next (l : Ledger) ( name : ( XString ) ) ( symbol : ( XString ) ) ( decimals : ( XUInteger8 ) ) ( root_public_key : ( XUInteger256 ) ) ( wallet_public_key : ( XUInteger256 ) ) ( root_address : ( address ) ) ( owner_address : ( XMaybe address ) ) ( code : ( cell ) ) ( workchain_id : ( int ) ) :
   prepare_internal_wallet_state_init_and_addr_auto_eval l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id =
   toValue (eval_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l).
 Proof.
