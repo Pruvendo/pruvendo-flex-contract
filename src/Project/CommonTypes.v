@@ -20,6 +20,21 @@ End CompilerOptions.
 (* 4 *)Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address | Tip3Config_ι_workchain_id_.
 (* 5 *)Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .
 (* 7 *)Inductive OrderRetFields := | OrderRet_ι_err_code | OrderRet_ι_processed | OrderRet_ι_enqueued .
+(* 8 *)Inductive internal_msg_headerFields := | internal_msg_header_ι_function_id | internal_msg_header_ι_phantomField .
+(* 9 *)Inductive int_msg_infoFields := 
+| int_msg_info_ι_ihr_disabled 
+| int_msg_info_ι_bounce 
+| int_msg_info_ι_bounced 
+| int_msg_info_ι_src 
+| int_msg_info_ι_dest 
+| int_msg_info_ι_value 
+| int_msg_info_ι_ihr_fee 
+| int_msg_info_ι_fwd_fee 
+| int_msg_info_ι_created_lt 
+| int_msg_info_ι_created_at .
+(* 10 *)
+Inductive CurrencyCollectionFields := | CurrencyCollection_ι_grams | CurrencyCollection_ι_other .
+Inductive ExtraCurrencyCollectionFields := | ExtraCurrencyCollection_ι_dict | ExtraCurrencyCollection_ι_fantomField .
 
 Module Types (xt: XTypesSig) (sm: StateMonadSig).
 Export xt. 
@@ -69,6 +84,43 @@ Elpi GeneratePruvendoRecord StateInitL StateInitFields .
    ( XUInteger128 ) : Type ; 
    ( XUInteger128 ) : Type ] .
 Elpi GeneratePruvendoRecord OrderRetL OrderRetFields . 
+
+(* 8 *)
+Definition internal_msg_headerL: list Type := 
+ [ ( XUInteger32 ) : Type ; 
+   ( PhantomType ) : Type ] .
+Elpi GeneratePruvendoRecord internal_msg_headerL internal_msg_headerFields .
+
+(* 9 *)
+Definition ExtraCurrencyCollectionL : list Type := 
+[ (XHMap XUInteger32 XUInteger32) : Type ;
+  PhantomType : Type ] .
+Elpi GeneratePruvendoRecord ExtraCurrencyCollectionL ExtraCurrencyCollectionFields .
+Opaque ExtraCurrencyCollectionLRecord .
+(* 10 *)
+Definition CurrencyCollectionL : list Type :=
+[
+  XUInteger16 : Type ;
+  ExtraCurrencyCollectionLRecord : Type
+] .
+Elpi GeneratePruvendoRecord CurrencyCollectionL CurrencyCollectionFields .
+
+(* 11 *)
+Definition int_msg_infoL : list Type := 
+[
+    XBool : Type ;
+    XBool : Type ;
+    XBool : Type ;
+    address : Type ;
+    address : Type ;
+    CurrencyCollectionLRecord : Type ;
+    XUInteger16 : Type ;
+    XUInteger16 : Type ;
+    XUInteger64 : Type ;
+    XUInteger64 : Type
+] .
+Elpi GeneratePruvendoRecord int_msg_infoL int_msg_infoFields .
+
 
 (******************************************)
 Definition TokensType := XUInteger256. 
