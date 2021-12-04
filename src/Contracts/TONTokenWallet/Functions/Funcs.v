@@ -353,7 +353,8 @@ Notation " 'prepare_wallet_data_' '(' name ',' symbol ',' decimals ',' root_publ
 
 Definition prepare_wallet_state_init_and_addr ( wallet_data : DTONTokenWalletLRecord ) 
            									  : UExpression ( StateInitLRecord # uint256 ) false . 
-	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := prepare_persistent_data_ ( {} , #{ wallet_data} ) ; {_} }} . 
+	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
+                        prepare_persistent_data_ ( {} , #{ wallet_data} ) ; {_} }} . 
 	refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 	 	 
 	         [ {} , {} , ((#{ wallet_data}) ↑ DTONTokenWallet.code_) -> set () , !{wallet_data_cl} -> set () , {} ] ; {_} }} . 
 	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" :=  
@@ -408,7 +409,8 @@ Notation " 'expected_sender_address_' '(' sender_public_key ',' sender_owner ')'
 
 Definition calc_wallet_init ( pubkey : uint256 ) ( internal_owner : address ) 
                             : UExpression ( StateInitLRecord # address ) false . 
-	refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:uint256 ) @ ( "wallet_init" , "dest_addr" ) := 
+	refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:uint256 ) @ 
+                ( "wallet_init" , "dest_addr" ) := 
 	             calc_wallet_init_hash_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} . 
 	refine {{ new 'dest : address @ "dest" := [ _workchain_id_ , !{dest_addr} ] ; {_} }} . 
  	refine {{ return_ [ !{wallet_init} , (!{ dest }) ] }} . 
@@ -531,8 +533,8 @@ Defined .
 Definition internalTransfer ( tokens : uint128 ) ( answer_addr : address ) 
 						    ( sender_pubkey : uint256 ) ( sender_owner : address ) 
 						    ( notify_receiver : boolean ) ( payload : cell ) : UExpression PhantomType true . 
-	refine {{ new 'expected_address : uint256 @ "expected_address" := {} ; {_} }} . 
-	refine {{ { expected_address } := expected_sender_address_ ( #{ sender_pubkey } , #{ sender_owner } ) ; {_} }} . 
+	refine {{ new 'expected_address : uint256 @ "expected_address" :=          
+                     expected_sender_address_ ( #{ sender_pubkey } , #{ sender_owner } ) ; {_} }} . 
 	refine {{ new ( 'sender:address , 'value_gr:uint ) @
 				( "sender" , "value_gr" ) := int_sender_and_value () ; {_} }} . 
 	refine {{ require_ ( !{sender} ↑ address.address == !{ expected_address }  , error_code::message_sender_is_not_good_wallet  ) ; {_} }} . 
@@ -573,7 +575,7 @@ Notation " 'getBalance_' '(' ')' " := ( getBalance_right )
 Definition burn ( out_pubkey : uint256 ) ( out_internal_owner : address ) : UExpression PhantomType true . 
 	refine {{ check_owner_ ( TRUE , FALSE ) ; {_} }} . 
 	refine {{ tvm_accept () ; {_} }} . 
-	refine {{ new 'root_ptr : address @ "root_ptr" := {}; {_} }}.
+	refine {{ new 'root_ptr : address @ "root_ptr" := _root_address_ ; {_} }}.
 	refine {{ new 'flags : uint @ "flags" := 
                                    SEND_ALL_GAS_ \\ 
                    SENDER_WANTS_TO_PAY_FEES_SEPARATELY_ \\ 
@@ -797,9 +799,9 @@ Definition transfer_from_impl ( answer_addr : address )
 	refine {{ tvm_accept () ; {_} }} . 
 	refine {{ new 'answer_addr_fxd @ "answer_addr_fxd" := 
                             fixup_answer_addr_ ( (#{ answer_addr }) ) ; {_} }} . 
-	refine {{ new 'msg_flags : uint @ "msg_flags" := {} ; {_} }} . 
+
 	refine {{ new 'grams_ : uint128 @ "grams_" := #{grams} ; {_} }} .
-	refine {{ { msg_flags } := prepare_transfer_message_flags_ ( { grams_ } )  ; {_}  }} . 
+	refine {{ new 'msg_flags : uint @ "msg_flags" := prepare_transfer_message_flags_ ( { grams_ } )  ; {_}  }} . 
 	refine ( let dest_wallet_ptr := {{ ITONTokenWalletPtr [[ #{ from }  ]] }} in 
               {{ {dest_wallet_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value } ;
 			  								!{ msg_flags } ⇒ { Messsage_ι_flags } $] 

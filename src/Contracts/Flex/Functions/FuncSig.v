@@ -28,7 +28,7 @@ Module Type SpecSig.
 
 Parameter constructor : uint256 -> String -> optional address -> TonsConfigLRecord -> uint8 -> 
                         ListingConfigLRecord -> UExpression PhantomType true . 
-Parameter setSpecificCode : uint8 -> cell -> UExpression PhantomType false . 
+Parameter setSpecificCode : uint8 -> cell -> UExpression PhantomType true . 
 Parameter setPairCode : cell -> UExpression PhantomType true . 
 Parameter setXchgPairCode : cell -> UExpression PhantomType true . 
 Parameter setWrapperCode : cell -> UExpression PhantomType true . 

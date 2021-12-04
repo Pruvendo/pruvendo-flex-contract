@@ -38,8 +38,8 @@ Parameter process_queue : ULValue dealerLRecord ->  uint ->  uint  -> UExpressio
 Parameter onTip3LendOwnership : address -> uint128 -> uint32 -> uint256 -> address -> cell -> UExpression OrderRetLRecord true . 
 Parameter buyTip3 : uint128 -> address -> uint32 -> UExpression OrderRetLRecord true . 
 Parameter processQueue : UExpression PhantomType true . 
-Parameter cancelSell : UExpression PhantomType false . 
-Parameter cancelBuy : UExpression PhantomType false . 
+Parameter cancelSell : UExpression PhantomType true . 
+Parameter cancelBuy : UExpression PhantomType true . 
 Parameter getDetails : UExpression DetailsInfoLRecord false . 
 Parameter getPrice : UExpression uint128 false . 
 Parameter getMinimumAmount : UExpression uint128 false . 

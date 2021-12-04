@@ -348,7 +348,7 @@ public:
     require(amount >= min_amount_, ec::not_enough_tokens_amount);
     auto cost = calc_cost(amount, price_);
     require(!!cost, ec::too_big_tokens_amount);
-    require(value_gr.get() > buyTip3MinValue(*cost),
+    require(value_gr.get() > buyTip3MinValue( *cost),
             ec::not_enough_tons_to_process);
     require(is_active_time(order_finish_time), ec::expired);
 
