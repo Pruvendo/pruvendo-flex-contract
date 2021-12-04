@@ -60,6 +60,77 @@ Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 Existing Instance LedgerPruvendoRecord.
+Require Import FinProof.StateMonad21.
+Require Import FinProof.EpsilonMonad.
+Require Import FinProof.StateMonad21Instances.
+Require Import FinProof.MonadTransformers21.
+Ltac generate_proof gen :=
+  let e := fresh "e" in
+  let H := fresh "H" in
+  let gen_nf := eval hnf in gen in
+  generate_both gen_nf e H; cycle -1;
+  (only 1: (exists e; subst e; reflexivity));
+  eexists; reflexivity.
+
+  Definition rejectXchgPairImpl 
+  ( pubkey :  uint256 ) 
+  ( xchg_pair_listing_requests :  xchg_pairs_map ) 
+  ( listing_cfg :  ListingConfigLRecord ): 
+  UExpression xchg_pairs_map true . 
+          refine {{ new 'opt_req_info : ( optional XchgPairListingRequestLRecord ) @ "opt_req_info" := 
+                  (#{xchg_pair_listing_requests}) -> extract (#{pubkey}) ; { _ } }} .  
+         refine {{ require_ ( !{ opt_req_info } ,  error_code::xchg_pair_not_requested  ) ; { _ } }} . 
+         refine {{ new 'req_info : ( XchgPairListingRequestLRecord ) @ "req_info" := 
+                    (!{opt_req_info}) -> get () ; { _ } }} . 
+          refine {{ new 'remaining_funds : uint128 @ "remaining_funds" := 
+            ( (!{req_info}) ↑ XchgPairListingRequest.client_funds )
+                   - ( (#{listing_cfg}) ↑ ListingConfig.reject_pair_cost ) ; { _ } }} .  
+   refine {{ IListingAnswerPtr [[  !{req_info} ↑ XchgPairListingRequest.client_addr ]]
+            with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onXchgPairRejected ( #{pubkey} ) ; {_} }}.   
+         refine {{ return_ #{xchg_pair_listing_requests} }} . 
+   Defined . 
+Opaque uhmap_fetch.
+Section rejectXchgPairImpl.
+Definition rejectXchgPairImpl_exec_P (l : Ledger) ( pubkey :  uint256 ) 
+( xchg_pair_listing_requests :  xchg_pairs_map ) 
+( listing_cfg :  ListingConfigLRecord ): 
+{l' | l' = exec_state (Uinterpreter (rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg )) l}.
+  generate_proof (exec_expression l (rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg )).
+Defined.
+Definition rejectXchgPairImpl_auto_exec_ (l : Ledger) ( pubkey :  uint256 ) 
+( xchg_pair_listing_requests :  xchg_pairs_map ) 
+( listing_cfg :  ListingConfigLRecord )
+: Ledger.
+intros. destruct (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg).
+exact x. (* 
+ term_of (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg ). *)
+Defined.
+
+Definition rejectXchgPairImpl_auto_exec (l : Ledger) ( pubkey :  uint256 ) 
+( xchg_pair_listing_requests :  xchg_pairs_map ) 
+( listing_cfg :  ListingConfigLRecord )
+: Ledger.
+intros.
+let t1 := (eval unfold rejectXchgPairImpl_auto_exec_ in (rejectXchgPairImpl_auto_exec_ l pubkey xchg_pair_listing_requests listing_cfg)) in 
+let t2 := eval unfold rejectXchgPairImpl_exec_P in t1 in exact t2.
+Defined.
+Print rejectXchgPairImpl_auto_exec.
+Eval unfold rejectXchgPairImpl_auto_exec_ in rejectXchgPairImpl_auto_exec_ l pubkey xchg_pair_listing_requests listing_cfg.
+intros. destruct (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg).
+exact x. (* 
+ term_of (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg ). *)
+Defined.
+
+Theorem rejectXchgPairImpl_exec_proof_next (l : Ledger) ( pubkey :  uint256 ) 
+( xchg_pair_listing_requests :  xchg_pairs_map ) 
+( listing_cfg :  ListingConfigLRecord ) :
+  rejectXchgPairImpl_auto_exec l pubkey xchg_pair_listing_requests listing_cfg =
+  exec_state (Uinterpreter (rejectXchgPairImpl pubkey xchg_pair_listing_requests listing_cfg)) l.
+Proof.
+  intros. proof_of (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg).
+Qed.
+
+
 
 Definition constructor ( deployer_pubkey :  uint256 ) ( ownership_description : String ) ( owner_address :  optional address ) 
                        ( tons_cfg :  TonsConfigLRecord ) ( deals_limit :  uint8 ) ( listing_cfg :  ListingConfigLRecord ) 
@@ -322,8 +393,8 @@ Notation " 'approveTradingPairImpl_' '(' pubkey , trading_pair_listing_requests 
  	 	 refine {{ _trading_pair_listing_requests_ := !{new_trading_pair_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value ()  ; { _ } }} . 
-  	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  )  (* ; { _ } *) }} .
- 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .
+  	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) ; { _ } }} .
+ 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} .
  	 refine {{ return_ !{ trade_pair } }} . 
 Defined .
  
@@ -742,8 +813,8 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_add
  	 	 refine {{ _xchg_pair_listing_requests_ := !{xchg_pair_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .  
- 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .  
+  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) ; { _ } }} .  
+ 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} .  
  	 refine {{ return_ !{ xchg_pair } }} . 
  Defined . 
 
@@ -753,8 +824,8 @@ Definition rejectXchgPair ( pubkey : uint256 ) : UExpression XBool true .
           rejectXchgPairImpl_ ( #{pubkey} , _xchg_pair_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to ) (* ; { _ } *) }} .
-  	 	 	 refine {{ set_int_return_flag (  #{SEND_ALL_GAS} ) ; {_} }} .  
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to ) ; { _ }  }} .
+  	 	 	 refine {{ set_int_return_flag (  #{SEND_ALL_GAS} ) }} .  
  	 refine {{ return_ TRUE }} . 
  Defined . 
 
@@ -805,8 +876,8 @@ Definition registerWrapper
  	 	 refine {{ _wrapper_listing_requests_ := !{new_wrapper_listing_requests} ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 refine {{new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .
-  	 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} .
+  	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) ; { _ } }} .
+  	 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} .
  	 refine {{ return_ !{ wrapper_addr } }} . 
 Defined . 
  
@@ -818,8 +889,8 @@ Defined .
             rejectWrapperImpl_ ( #{pubkey} , _wrapper_listing_requests_ , _listing_cfg_ ) ; { _ } }} . 
  	 	 refine {{ if ( #{Internal} ) then { { _ } } else { exit_ {} } ; { _ } }} . 
  	 	 	 refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
- 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) (* ; { _ } *) }} .
-  	 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} . 
+ 	 	 	 refine {{ tvm_rawreserve ( tvm_balance () - !{value_gr} ,  rawreserve_flag::up_to  ) ; { _ }  }} .
+  	 	 	 refine {{ set_int_return_flag ( #{SEND_ALL_GAS} )  }} . 
  	 refine {{ return_ TRUE }} . 
 Defined . 
 
