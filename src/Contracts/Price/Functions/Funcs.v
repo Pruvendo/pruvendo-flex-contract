@@ -386,7 +386,7 @@ Definition on_sell_fail ( ec : uint ) ( wallet_in : ( address (* ITONTokenWallet
 								  ⤳ .returnOwnership ( #{amount} ) ; {_} }} ).  
 	refine {{ if  _sells_ -> empty () && _buys_ -> empty ()  then { { _: UEf } } else { { _: UEf } } ; { _ } }} .
  	refine {{ set_int_return_flag  ( #{SEND_ALL_GAS} \\ #{DELETE_ME_IF_I_AM_EMPTY} ) }} . 
- 	refine {{ new 'incoming_value : uint @ "incoming_value" := int_value ( ) ; { _ } }} . 
+ 	refine {{ new 'incoming_value : uint @ "incoming_value" := int_value () ; { _ } }} . 
   	refine {{ tvm_rawreserve ( tvm_balance () - !{incoming_value} ,  rawreserve_flag::up_to) ; { _ } }} .
  	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} . 
  	refine {{ return_ [ #{ec} , {} , {} ] }} . 
@@ -658,7 +658,7 @@ Notation " 'cancel_order_impl_' '(' orders ',' client_addr ',' all_amount ',' se
 Definition cancelSell : UExpression PhantomType true . 
 	refine {{ new 'canceled_amount : uint128  @ "canceled_amount" := _sells_amount_ ; { _ } }} . 
 	refine {{ new 'client_addr : addr_std_fixed  @ "client_addr" := int_sender () ; { _ } }} . 
-	refine {{ new 'value : ( uint ) @ "value" := int_value ( ) ; { _ } }} . 
+	refine {{ new 'value : ( uint ) @ "value" := int_value () ; { _ } }} . 
 	refine {{ new ( 'sells : (queue OrderInfoLRecord) , 'sells_amount : uint128 ) @ ( "sells" , "sells_amount" ) :=
 		cancel_order_impl_ ( _sells_ , !{client_addr} , _sells_amount_ , TRUE , 
 			_tons_cfg_ ↑ TonsConfig.return_ownership , 
@@ -680,7 +680,7 @@ Defined .
 Definition cancelBuy : UExpression PhantomType true . 
 	refine {{ new 'canceled_amount : uint128 @ "canceled_amount" := _buys_amount_ ; { _ } }} . 
 	refine {{ new 'client_addr : ( addr_std_fixed ) @ "client_addr" := int_sender () ; { _ } }} . 
-	refine {{ new 'value : ( uint ) @ "value" := int_value ( ) ; { _ } }} . 
+	refine {{ new 'value : ( uint ) @ "value" := int_value () ; { _ } }} . 
 	refine {{ new ( 'buys:(queue OrderInfoLRecord) , 'buys_amount:uint128 ) @ ( "buys" , "buys_amount" ) :=
 		cancel_order_impl_ ( _buys_ , !{client_addr} , _buys_amount_ , FALSE , 
 							_tons_cfg_ ↑ TonsConfig.return_ownership , _tons_cfg_ ↑ TonsConfig.process_queue , !{value} ) ; { _ } }} . 
