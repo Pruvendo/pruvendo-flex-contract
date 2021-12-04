@@ -15,7 +15,7 @@ Parameter TIP3_ENABLE_EXTERNAL : bool .
 End CompilerOptions.
 
 (* 1 *)Inductive TonsConfigFields := | TonsConfig_ι_transfer_tip3 | TonsConfig_ι_return_ownership | TonsConfig_ι_trading_pair_deploy | TonsConfig_ι_order_answer | TonsConfig_ι_process_queue | TonsConfig_ι_send_notify .
-(* 2 *)Inductive TickTockFields := | TickTock_ι_tick | TickTock_ι_tock .
+(* 2 *)Inductive TickTockFields := | TickTock_ι_tick  | TickTock_ι_tock  .
 (* 3 *)(* Inductive addr_std_fixedFields := | addr_std_fixed_ι_workchain_id | addr_std_fixed_ι_address . *)
 (* 4 *)Inductive Tip3ConfigFields := | Tip3Config_ι_name | Tip3Config_ι_symbol | Tip3Config_ι_decimals | Tip3Config_ι_root_public_key | Tip3Config_ι_root_address | Tip3Config_ι_workchain_id_.
 (* 5 *)Inductive StateInitFields := | StateInit_ι_split_depth | StateInit_ι_special | StateInit_ι_code | StateInit_ι_data | StateInit_ι_library .

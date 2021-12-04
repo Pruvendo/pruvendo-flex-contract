@@ -138,10 +138,10 @@ Notation " 'check_external_owner_' '(' ')' " := ( check_external_owner_right )
  (in custom URValue at level 0 ) : ursus_scope . 
 
 Definition check_owner ( original_owner_only : boolean ) ( allowed_in_lend_state : boolean ) : UExpression uint128 true . 
-	refine ( if Internal then _ else _ ).
-	refine {{ return_ (check_internal_owner_ ( #{original_owner_only} , 
-										       #{allowed_in_lend_state} ) ) }} . 
-	refine {{ return_ (check_external_owner_ ( ) ) }} . 
+	refine {{ {if Internal then _: UEt else _} ; {_} }} .
+	refine {{ exit_ (check_internal_owner_ ( #{original_owner_only} , #{allowed_in_lend_state} ) ) }} . 
+	refine {{ exit_ (check_external_owner_ ( ) ) }} . 
+	refine {{ return_ {} }}.
 Defined.
 
 Definition check_owner_right { a1 a2 }  ( original_owner_only : URValue boolean a1 ) 
@@ -153,7 +153,7 @@ Notation " 'check_owner_' '(' original_owner_only ',' allowed_in_lend_state ')' 
 (in custom URValue at level 0 , original_owner_only custom URValue at level 0 , allowed_in_lend_state custom URValue at level 0 ) : ursus_scope .
 
 Definition check_owner_left { R a1 a2 }  ( original_owner_only : URValue boolean a1 ) 
-                                          ( allowed_in_lend_state : URValue boolean a2 ) 
+                                         ( allowed_in_lend_state : URValue boolean a2 ) 
 										  : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ2 ) check_owner original_owner_only allowed_in_lend_state ) . 
  
@@ -161,14 +161,11 @@ Notation " 'check_owner_' '(' original_owner_only ',' allowed_in_lend_state ')' 
  ( check_owner_left original_owner_only allowed_in_lend_state ) 
  (in custom ULValue at level 0 , original_owner_only custom URValue at level 0 , allowed_in_lend_state custom URValue at level 0 ) : ursus_scope .
 
-(*AL*)
-Parameter min_transfer_costs : uint.
-
 Definition check_transfer_requires ( tokens : uint128 ) ( grams : uint128 ) : UExpression uint128 true . 
 	refine {{ new 'active_balance : uint128 @ "active_balance" := 	check_owner_ ( FALSE , FALSE ) ; {_} }} . 
 	refine {{ require_ ( (#{ tokens }) <= !{ active_balance } , error_code::not_enough_balance ) ; {_} }} . 
-	refine {{ { ( if Internal then _ else _ ) } ; { _ } }} . 
-	refine {{ require_ ( ( ( int_value () ) >= # {min_transfer_costs} ) ,  error_code::not_enough_tons_to_process  ) }} . 
+	refine {{ { if Internal then _ else _ } ; { _ } }} . 
+	refine {{ require_ ( int_value () >= # {min_transfer_costs} ,  error_code::not_enough_tons_to_process  ) }} . 
 	refine {{ require_ ( ( #{ grams } >= # {min_transfer_costs} )  && 
 	                     ( tvm_balance () > #{ grams } )  ,  error_code::not_enough_tons_to_process ) }} . 
 	refine {{ return_ !{ active_balance } }} . 
@@ -184,7 +181,7 @@ Notation " 'check_transfer_requires_' '(' tokens ',' grams ')' " :=
  (in custom URValue at level 0 , tokens custom URValue at level 0 , grams custom URValue at level 0 ) : ursus_scope . 
 
 Definition fixup_answer_addr ( answer_addr : address ) : UExpression address true . 
-	refine {{ if ( (#{ answer_addr }) ↑ address.address == 0 ) then { {_:UEt} } ; {_} }} . 
+	refine {{ if (#{ answer_addr }) ↑ address.address == 0 then { {_:UEt} } ; {_} }} . 
  	refine ( if Internal then {{ exit_ int_sender () }}
                          else {{ exit_ tvm_myaddr () }} ) . 
  	refine {{ return_ (#{ answer_addr }) }} . 
@@ -284,15 +281,11 @@ Notation " 'transfer_impl_' '(' answer_addr ',' too ',' tokens ',' grams ',' ret
  , tokens custom URValue at level 0 , grams custom URValue at level 0 , return_ownership custom URValue at level 0 
  , send_notify custom URValue at level 0 , payload custom URValue at level 0 ) : ursus_scope . 
 
-(******************************************************************)	
-
 Definition transfer ( answer_addr : address ) ( too : address ) ( tokens : uint128 ) 
 				    ( grams : uint128 ) ( return_ownership : boolean ) : UExpression PhantomType true . 
  refine {{ transfer_impl_ ( #{ answer_addr } , #{ too } , #{ tokens } , #{ grams } , 
                             #{ return_ownership } , FALSE , builder () -> endc ()  ) }} . 
 Defined . 
-
-(******************************)
 
 Definition transferWithNotify ( answer_addr : address ) ( too : address ) ( tokens : uint128 ) 
 							  ( grams : uint128 ) ( return_ownership : boolean ) ( payload : cell ) 
@@ -517,7 +510,7 @@ Definition requestBalance : UExpression uint128 false .
 	refine {{ return_ _balance_ }} . 
 Defined . 
  
-Definition accept ( tokens : uint128 ) ( answer_addr : address ) ( keep_grams : uint128 ) : UExpression XBool true . 
+Definition accept ( tokens : uint128 ) ( answer_addr : address ) ( keep_grams : uint128 ) : UExpression boolean true . 
 	refine {{ new ( 'sender:address , 'value_gr:uint ) @
 		          ( "sender" , "value_gr" ) := int_sender_and_value () ; {_} }} . 
 	refine {{ require_ ( ( _root_address_ == !{sender} ) , error_code::message_sender_is_not_my_root ) ; {_} }} . 

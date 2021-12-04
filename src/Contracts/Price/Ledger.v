@@ -206,7 +206,7 @@ GeneratePruvendoRecord LocalState11001L LocalStateFields11001I .
 Opaque LocalState11001LRecord . 
 
 Inductive LocalStateFields11010I := | ι110100 | ι110101 . 
-Definition LocalState11010L := [ ( XHMap (string*nat) XUInteger ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState11010L := [ ( XHMap (string*nat) SellArgsLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState11010L LocalStateFields11010I . 
 Opaque LocalState11010LRecord . 
 
@@ -958,7 +958,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField11001 : typeclass_instances. 
- #[global, program] Instance LocalStateField11010 : LocalStateField XUInteger.
+ #[global, program] Instance LocalStateField11010 : LocalStateField SellArgsLRecord.
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι11). 
@@ -994,10 +994,6 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField11011 : typeclass_instances. 
-
-(* Definition LocalStateField_XUInteger := LocalStateField01110 .
-Definition LocalStateField_XBool := LocalStateField00011 .
-Definition LocalStateField_cell := LocalStateField00000 . *)
 
 Definition GlobalParamsEmbedded := MessagesAndEventsLEmbeddedType _GlobalParams.
 Definition OutgoingMessageParamsEmbedded := MessagesAndEventsLEmbeddedType _OutgoingMessageParams.

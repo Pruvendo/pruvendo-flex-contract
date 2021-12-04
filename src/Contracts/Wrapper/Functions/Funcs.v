@@ -150,7 +150,7 @@ Definition setInternalWalletCode ( wallet_code : cell ) : UExpression boolean tr
 	refine {{ require_ ( ( ~ _internal_wallet_code_ ) , error_code::cant_override_wallet_code ) ; {_} }} . 
 	refine {{ _internal_wallet_code_ := (#{ wallet_code } ->set()) ; {_} }} . 
  	refine {{ {if Internal then _ else {{ return_ {} }} } ; {_} }} .  
-	refine {{ new 'value_gr : XUInteger256 @ "value_gr" := int_value () ; {_} }} . 
+	refine {{ new 'value_gr : uint256 @ "value_gr" := int_value () ; {_} }} . 
 	refine {{ tvm_rawreserve (( tvm_balance () - !{value_gr} ) , rawreserve_flag::up_to ) ; {_} }}. 
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} . 
  	refine {{ return_ TRUE }} . 
@@ -295,7 +295,7 @@ Definition burn ( answer_addr : address )
   refine {{ return_ {} }} .  
 Defined. 
  
-Definition requestTotalGranted : UExpression XUInteger128 false . 
+Definition requestTotalGranted : UExpression uint128 false . 
 	refine {{ new 'value_gr : ( uint256 ) @ "value_gr" := int_value () ; {_} }} . 
 	refine {{ tvm_rawreserve ( tvm_balance () - (!{ value_gr })  , rawreserve_flag::up_to ) ; {_} }} . 
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; {_} }} . 
@@ -310,15 +310,15 @@ Definition getSymbol : UExpression String false .
 	refine  {{ return_ _symbol_ }} . 
 Defined . 
  
-Definition getDecimals : UExpression XUInteger8 false . 	
+Definition getDecimals : UExpression uint8 false . 	
 	refine  {{ return_ _decimals_ }} . 
 Defined . 
  
-Definition getRootKey : UExpression XUInteger256 false . 
+Definition getRootKey : UExpression uint256 false . 
 	refine  {{ return_ _root_public_key_ }} . 
 Defined . 
  
-Definition getTotalGranted : UExpression XUInteger128 false . 
+Definition getTotalGranted : UExpression uint128 false . 
 	refine {{ return_ _total_granted_ }} . 
 Defined . 
  
@@ -355,19 +355,19 @@ Definition getSymbol_right  : URValue String false :=
 Notation " 'getSymbol_' '(' ')' " :=  ( getSymbol_right  ) 
 (in custom URValue at level 0 ) : ursus_scope . 
 
-Definition getDecimals_right  : URValue XUInteger8 false := 
+Definition getDecimals_right  : URValue uint8 false := 
 	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDecimals ) . 
 
 Notation " 'getDecimals_' '(' ')' " := ( getDecimals_right ) 
 (in custom URValue at level 0 ) : ursus_scope . 
 
-Definition getRootKey_right  : URValue XUInteger256 false := 
+Definition getRootKey_right  : URValue uint256 false := 
 	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getRootKey ) . 
 
 Notation " 'getRootKey_' '(' ')' " := ( getRootKey_right ) 
 (in custom URValue at level 0 ) : ursus_scope . 
 
-Definition getTotalGranted_right  : URValue XUInteger128 false := 
+Definition getTotalGranted_right  : URValue uint128 false := 
 	wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getTotalGranted ) . 
 
 Notation " 'getTotalGranted_' '(' ')' " := ( getTotalGranted_right ) 
@@ -432,7 +432,7 @@ Notation " 'save_persistent_data_' '(' a ',' b ')' " := ( save_persistent_data_l
  (in custom ULValue at level 0 ,
      a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
 
-Definition _on_bounced ( _ :  cell ) ( msg_body : slice ) : UExpression XUInteger true. 
+Definition _on_bounced ( _ :  cell ) ( msg_body : slice ) : UExpression uint true. 
 	refine {{ tvm_accept () ; {_} }} . 
  	refine {{ new 'Args : ( PhantomType (* auto *) ) @ "Args" := {}  
  	 	                 (* args_struct_t<&ITONTokenWallet::accept> *) ; {_} }} . 
@@ -451,15 +451,15 @@ Definition _on_bounced ( _ :  cell ) ( msg_body : slice ) : UExpression XUIntege
  	refine {{ return_ 0 }} . 
 Defined . 
  
-Definition getInternalWalletCodeHash : UExpression XUInteger256 true . 
+Definition getInternalWalletCodeHash : UExpression uint256 true . 
 	refine  {{ return_  tvm_hash ( _internal_wallet_code_ -> get () )  }} . 
 Defined . 
  
-Definition _fallback (_: cell) (_: slice) : UExpression XUInteger false . 
+Definition _fallback (_: cell) (_: slice) : UExpression uint false . 
 	refine  {{ return_ 0 }} . 
 Defined . 
   
-Definition prepare_wrapper_state_init_and_addr ( wrapper_code : cell ) ( wrapper_data : ( DWrapperLRecord ) ) : UExpression ( StateInitLRecord # XUInteger256 ) false . 
+Definition prepare_wrapper_state_init_and_addr ( wrapper_code : cell ) ( wrapper_data : ( DWrapperLRecord ) ) : UExpression ( StateInitLRecord # uint256 ) false . 
 	refine {{ new 'wrapper_data_cl : cell @ "wrapper_data_cl" := {} ; {_} }} . 
 	refine {{ { wrapper_data_cl } := prepare_persistent_data_ ( {} (* wrapper_replay_protection_t::init () *) , #{ wrapper_data } ) ; {_} }} . 
 	refine {{ new 'wrapper_init : ( StateInitLRecord ) @ "wrapper_init" := 	 	 

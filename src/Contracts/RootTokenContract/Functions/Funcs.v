@@ -74,7 +74,6 @@ Notation " 'is_internal_owner_' '(' ')' " := ( is_internal_owner_right )
 
 Definition check_internal_owner : UExpression PhantomType true . 
 	refine {{ require_ ( ( is_internal_owner_ ( ) ) , error_code::internal_owner_disabled ) ; { _ } }} . 
-	(*AL: get under require *)
 	refine {{ require_ ( ( * _owner_address_) == int_sender () , error_code::message_sender_is_not_my_owner ) ; {_} }} . 
 	refine {{ return_ {} }} .
 Defined . 
@@ -133,9 +132,9 @@ Definition setWalletCode ( wallet_code : cell ) : UExpression boolean true .
 	refine {{ tvm_accept () ; { _ } }} . 
 	refine {{ require_ ( ( ~ _wallet_code_ ) , error_code::cant_override_wallet_code ) ; { _ } }} . 
 	refine {{ _wallet_code_ := ( (#{ wallet_code }) -> set () ) ; { _ } }} . 
-	refine {{ if ( #{Internal} ) then { {_:UEf} } ; { _ } }} . 
+	refine {{ { if Internal then _: UEf else {{ return_ {} }} } ; { _ } }} . 
 	refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
-	refine {{ tvm_rawreserve ( (tvm_balance ()) - (!{value_gr}) , rawreserve_flag::up_to ) ; {_} }} . 	
+	refine {{ tvm_rawreserve ( tvm_balance () - (!{value_gr}) , rawreserve_flag::up_to ) ; {_} }} . 	
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) }} . 
 	refine {{ return_ TRUE }} . 
 Defined . 
@@ -178,25 +177,6 @@ Definition workchain_id_right : URValue int false :=
  
 Notation " 'workchain_id_' '(' ')' " := ( workchain_id_right ) (in custom URValue at level 0 ) : ursus_scope . 
 
-(* inline
-std::pair<StateInit, uint256> prepare_wallet_state_init_and_addr(DTONTokenWallet wallet_data) {
-  cell wallet_data_cl =
-    prepare_persistent_data<ITONTokenWallet, wallet_replay_protection_t, DTONTokenWallet>(
-#ifdef TIP3_ENABLE_EXTERNAL
-      wallet_replay_protection_t::init(),
-#else
-      {},
-#endif
-      wallet_data);
-  StateInit wallet_init {
-    /*split_depth*/{}, /*special*/{},
-    wallet_data.code_, wallet_data_cl, /*library*/{}
-  };
-  cell wallet_init_cl = build(wallet_init).make_cell();
-  return { wallet_init, uint256(tvm_hash(wallet_init_cl)) };
-} *)
-
-(*AL: not in this file!*)
 Definition prepare_wallet_state_init_and_addr (wallet_data : TONTokenWalletClassTypes.DTONTokenWalletLRecord )
 											   : UExpression ( StateInitLRecord # uint256 ) false .
 	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" :=  
@@ -281,11 +261,10 @@ Definition deployEmptyWallet ( pubkey : uint256 )
 	refine {{ new 'value_gr : uint @ "value_gr" := int_value () ; { _ } }} . 
 	refine {{ tvm_rawreserve ( tvm_balance () - !{ value_gr } , rawreserve_flag::up_to ) ; { _ } }} . 
 	refine {{ new ( 'wallet_init : StateInitLRecord , 'dest:address ) @ ( "wallet_init" , "dest" ) := 
-                                   calc_wallet_init_ ( #{ pubkey } , #{ internal_owner } ) ; { _ } }} . 
-	(*AL: deploy_noop !*)								   
+                                   calc_wallet_init_ ( #{ pubkey } , #{ internal_owner } ) ; { _ } }} . 				   
 	refine ( let dest_handle_ptr := {{ ITONTokenWalletPtr [[ !{dest}  ]] }} in 
               {{ {dest_handle_ptr} with [$ #{ grams } ⇒ { Messsage_ι_value }  $] 
-                                         ⤳ TONTokenWallet.deploy ( !{wallet_init} ) ; {_} }} ). 
+                                         ⤳ TONTokenWallet.deploy_noop ( !{wallet_init} ) ; {_} }} ). 
 	refine {{ set_int_return_flag ( #{SEND_ALL_GAS} ) ; { _ } }} . 
 	refine {{ return_ !{dest} }} . 
 Defined . 
