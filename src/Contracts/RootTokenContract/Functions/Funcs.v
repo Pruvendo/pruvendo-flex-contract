@@ -346,60 +346,28 @@ Defined .
 Definition getWalletAddress ( pubkey : uint256 ) ( owner : address ) : UExpression address false . 
 	refine {{ return_ second ( calc_wallet_init_ ( #{ pubkey } , #{ owner } ) ) }} . 
 Defined . 
- 
-(*  __always_inline static int _on_bounced(cell /*msg*/, slice msg_body) {
-    tvm_accept();
 
-    using Args = args_struct_t<&ITONTokenWallet::accept>;
-    parser p(msg_body);
-    require(p.ldi(32) == -1, error_code::wrong_bounced_header);
-    auto [opt_hdr, =p] = parse_continue<abiv2::internal_msg_header_with_answer_id>(p);
-    require(opt_hdr && opt_hdr->function_id == id_v<&ITONTokenWallet::accept>,
-            error_code::wrong_bounced_header);
-    auto args = parse<Args>(p, error_code::wrong_bounced_args);
-    auto bounced_val = args.tokens;
-
-    auto [hdr, persist] = load_persistent_data<IRootTokenContract, root_replay_protection_t, DRootTokenContract>();
-    require(bounced_val <= persist.total_granted_, error_code::wrong_bounced_args);
-    persist.total_granted_ -= bounced_val;
-    save_persistent_data<IRootTokenContract, root_replay_protection_t>(hdr, persist);
-    return 0;
-  } *)
-
+(*FIXME********************************************************************)
 Parameter Args_ITONTokenWallet_accept : Type.  
+Parameter ITONTokenWallet_accept_function_id: XUInteger32.
 
-Declare Instance foo: LocalStateField slice.
-Declare Instance bar: LocalStateField (optional msg_header_t).
-(* Parameter id_v : forall b, URValue ITONTokenWallet b -> URValue uint32 b.
-Arguments id_v {b}.
-Notation " 'id_v' '(' x ')' " := (id_v x) (in custom URValue at level 0, x custom URValue ) : ursus_scope .   
- *)
-
-Declare Instance baz: LocalStateField DTONTokenWalletLRecord.
-Declare Instance kkk: LocalStateField msg_header_t.
-Declare Instance yyy: LocalStateField int_msg_infoLRecord.
 Declare Instance www: LocalStateField Args_ITONTokenWallet_accept.
 Declare Instance ddd: XDefault Args_ITONTokenWallet_accept.
 
-
-Definition save_persistent_data_left { R a1 } (x: URValue DRootTokenContractLRecord a1) : UExpression R a1 := 
- wrapULExpression ( ursus_call_with_args (LedgerableWithArgs:= λ0 ) (save_persistent_data x) ) .  
-
-Notation " 'save_persistent_data' '(' x ')' " := (save_persistent_data_left x)  (in custom ULValue at level 0, x custom URValue) : ursus_scope .
-
+(*************************************************************************)
 
  Definition _on_bounced ( msg : cell ) ( msg_body : slice  ) : UExpression uint true . 
 	refine {{ tvm_accept () ; { _ } }} . 
-	refine {{new 'p @ "p" := parser (#{msg_body}) ; {_} }}.
+	refine {{ new 'p @ "p" := parser (#{msg_body}) ; {_} }}.
 	refine {{ require_ ( !{p} -> ldi (32) == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} .
-	refine {{ new 'opt_hdr : optional msg_header_t  @ "opt_hdr" := {} ; {_} }}. 
+	refine {{ new 'opt_hdr : optional msg_header_with_answer_id_t  @ "opt_hdr" := {} ; {_} }}. 
 	refine {{ [ {opt_hdr} , {p} ] := parse_continue ( !{p} , 0  ) ; {_} }} .
 	refine {{ require_ ( (~~?!{opt_hdr}) && 
-	                    (( *!{opt_hdr} ) ↑ internal_msg_header.function_id == 0) , error_code::wrong_bounced_header ) ; {_} }} .
+	                    (( *!{opt_hdr} ) ↑ internal_msg_header_with_answer_id.function_id == #{ITONTokenWallet_accept_function_id}) , error_code::wrong_bounced_header ) ; {_} }} .
 	refine {{ new 'args : Args_ITONTokenWallet_accept @ "args" := parse (!{p}, error_code::wrong_bounced_args) ; {_} }}.
     (* auto bounced_val = args.tokens; *)
 	refine {{ new 'bounced_val : uint @ "bounced_val" :=  {} ; { _ } }} . 
-  	refine {{  new ( 'hdr:msg_header_t , 'persist:_ ) @ ( "hdr" , "persist" ) := [ {}, load_persistent_data () ]; {_} }}.
+  	refine {{ new ( 'hdr : msg_header_t , 'persist: DRootTokenContractLRecord ) @ ( "hdr" , "persist" ) := [ {}, load_persistent_data () ]; {_} }}.
 	refine {{ require_ ( !{bounced_val} <= (!{persist} ↑ DRootTokenContract.total_granted_), error_code::wrong_bounced_args ) ; {_} }}.
 	refine {{ {persist} ↑ DRootTokenContract.total_granted_ -=  !{bounced_val} ; {_} }}.
 	refine {{ save_persistent_data ( (* hdr , *) !{persist} ) ; {_} }} . 

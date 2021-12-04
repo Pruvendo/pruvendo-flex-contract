@@ -371,6 +371,27 @@ Notation " a '↑' 'OrderRet.processed' " := ( OrderRet_processed_right a) (in c
 Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_left a) (in custom ULValue at level 0) : ursus_scope. 
 Notation " a '↑' 'OrderRet.enqueued' " := ( OrderRet_enqueued_right a) (in custom URValue at level 0) : ursus_scope. 
 
+
+Definition internal_msg_header_with_answer_id_ι_function_id_right {b} (x: URValue internal_msg_header_with_answer_idLRecord b): URValue XUInteger32 b :=
+    || {x} ^^ {internal_msg_header_with_answer_id_ι_function_id} || : _ .
+    
+Definition internal_msg_header_with_answer_id_ι_function_id_left (x: ULValue internal_msg_header_with_answer_idLRecord): ULValue XUInteger32 :=
+    {{ {x} ^^ {internal_msg_header_with_answer_id_ι_function_id} }} : _.
+    
+Notation " a '↑' 'internal_msg_header_with_answer_id.function_id' " := ( internal_msg_header_with_answer_id_ι_function_id_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'internal_msg_header_with_answer_id.function_id' " := ( internal_msg_header_with_answer_id_ι_function_id_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
+Definition internal_msg_header_with_answer_id_ι_answer_id_right {b} (x: URValue internal_msg_header_with_answer_idLRecord b): URValue XUInteger32 b :=
+    || {x} ^^ {internal_msg_header_with_answer_id_ι_answer_id} || : _ .
+    
+Definition internal_msg_header_with_answer_id_ι_answer_id_left (x: ULValue internal_msg_header_with_answer_idLRecord): ULValue XUInteger32 :=
+    {{ {x} ^^ {internal_msg_header_with_answer_id_ι_answer_id} }} : _.
+    
+Notation " a '↑' 'internal_msg_header_with_answer_id.answer_id' " := ( internal_msg_header_with_answer_id_ι_answer_id_right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'internal_msg_header_with_answer_id.answer_id' " := ( internal_msg_header_with_answer_id_ι_answer_id_left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
 Tactic Notation "vararg" ident(x) constr(ss) := 
 let s := fresh x in 
 let T := type of x in 
