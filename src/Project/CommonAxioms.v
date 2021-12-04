@@ -114,20 +114,5 @@ Qed.
 Notation " 'wrapper_replay_protection_t::init' '()' " := 
 	(wrapper_replay_protection_init) (in custom URValue at level 0) : ursus_scope .
   
-(* wrapper_replay_protection_t::init () *)  
-
-(* Definition suicide (a: address) : UExpression PhantomType true.
-  refine {{ tvm_transfer ( #{ a } , 0 , FALSE , #{SEND_ALL_GAS} \\ 
-							                                  #{SENDER_WANTS_TO_PAY_FEES_SEPARATELY} \\ 
-										                            #{DELETE_ME_IF_I_AM_EMPTY} \\
-										                            #{IGNORE_ACTION_ERRORS} ) ; {_} }}.
-  refine {{ exit_ {} }}.
-Defined.
-
-Definition suicide_left { R b } (x: URValue address b) : UExpression R true := 
- wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ1 ) suicide x) . 
- 
-Notation " 'suicide_' '(' x ')' " := ( suicide_left x) 
- (in custom ULValue at level 0 , x custom URValue at level 0 ) : ursus_scope .  *)
 
 End CommonAxioms.
