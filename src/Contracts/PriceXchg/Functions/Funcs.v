@@ -303,8 +303,6 @@ Defined .
 
 End Dealer.
 
-(***************************************************************************)						   
-
 Definition process_queue_left { R a1 a2 } (dealer: ULValue dealerLRecord) 
 										  ( sell_idx : URValue uint a1 ) 
 										  ( buy_idx : URValue uint a2 ) : UExpression R true := 

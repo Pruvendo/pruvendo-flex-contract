@@ -96,6 +96,7 @@ Parameter ec_ι_deals_limit : ErrorType .
 
 Parameter ec : ErrorType .
 Parameter ec_ι_canceled : ErrorType .
+Parameter min_transfer_costs : XUInteger.
 
 (* Parameter IGNORE_ACTION_ERRORS : XUInteger . *)
 
