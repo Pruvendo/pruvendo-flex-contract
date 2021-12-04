@@ -17,6 +17,7 @@ Require Import UMLang.ProofEnvironment2.
 Require Import UMLang.ExecGenerator.
 
 Require Import UrsusTVM.Cpp.tvmFunc.
+Require Import UrsusTVM.Cpp.TvmCells.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
 Require Import Project.CommonConstSig.
@@ -39,16 +40,7 @@ Module EvalExecAuto (co: CompilerOptions)(dc : ConstsTypesSig XTypesModule State
 Module Export FuncsModule := Funcs co dc.
 
 Import FuncsInternal.
-(* Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
-Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
-Module Import TONTonkenWalletModuleForPrice := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
-(* Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule. *)
- *)
-  Module Import xxx := SpecModuleForFuncNotations.LedgerModuleForFuncSig.
 
-Module Import generator := execGenerator XTypesModule StateMonadModule xxx.
- 
- 
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
@@ -58,47 +50,21 @@ Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
 
-(*move somewhere*)
-Local Notation UE := (UExpression _ _).
-Local Notation UEf := (UExpression _ false).
-Local Notation UEt := (UExpression _ true).
+Ltac generate_proof gen :=
+  let e := fresh "e" in
+  let H := fresh "H" in
+  let gen_nf := eval hnf in gen in
+  generate_both gen_nf e H; cycle -1;
+  (only 1: (exists e; subst e; reflexivity));
+  eexists; reflexivity.
 
-Notation " 'public' x " := ( x )(at level 12, left associativity, only parsing) : ursus_scope .
- 
-Arguments urgenerate_field {_} {_} {_} _ & .
-
-Notation " |{ e }| " := e (in custom URValue at level 0, 
-                           e custom ULValue ,  only parsing ) : ursus_scope.
-
-(***************************************************************************)		
-(* 
-Compute default : LocalStateLRecord.
-
- *)
-Definition LocalStateDefault := (Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil)),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil))),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil)),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil)))),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil)),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil))),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil),
-(Datatypes.nil, Datatypes.nil, (Datatypes.nil, Datatypes.nil)))))%xprod
-: LocalStateLRecord.
-
-Opaque LocalStateDefault.
-
-(* Import URSUS.
-Import FuncsModule.TONTonkenWalletModuleForPrice.CommonTypes.BasicTypesModule.
-Import FuncsModule.TONTonkenWalletModuleForPrice.CommonTypes.
- *) Import URSUS_.
-
-
+Ltac proof_of t :=
+  let e := fresh "e" in
+  let H := fresh "H" in
+  let E := fresh "E" in
+  destruct t as [e H] eqn:E; rewrite <- H; replace e with
+  (let (e', _) := t in e');
+  try reflexivity ;try (rewrite E; reflexivity).
 
 (* ---------------------------------------------- *)
 Section calc_cost .
@@ -106,9 +72,13 @@ Definition calc_cost_exec_P (l : Ledger) ( amount : uint128 ) ( price : uint128 
 {l' | l' = exec_state (Uinterpreter (calc_cost amount price)) l}.
   generate_proof (exec_expression l (calc_cost amount price)).
 Defined.
+
 Definition calc_cost_auto_exec (l : Ledger) ( amount : uint128 ) ( price : uint128 ): Ledger.
-intros. term_of (calc_cost_exec_P l amount price).
+intros. 
+let t1 := (eval unfold calc_cost_exec_P in
+(let (e, _) := calc_cost_exec_P l amount price in e)) in exact t1.
 Defined.
+
 Theorem calc_cost_exec_proof_next (l : Ledger) ( amount : uint128 ) ( price : uint128 ) :
   calc_cost_auto_exec l amount price =
   exec_state (Uinterpreter (calc_cost amount price)) l.
@@ -126,6 +96,7 @@ Context
  	 	 refine {{ if ( { b0 tons_cost }  ) 
                  then { { f0  } } ; { f1 tons_cost } }} . 
  Defined .
+
 Definition calc_cost_template_eval_P (l : Ledger) ( amount : uint128 ) ( price : uint128 ): 
 {v | v = (eval_state (Uinterpreter (calc_cost_template amount price)) l)}.
   generate_proof (eval_expression l (calc_cost_template amount price)).
@@ -143,13 +114,6 @@ End calc_cost.
 
 (* ----------------------------------------- *)
 Section is_active_time.
-Lemma is_active_time_exec : forall ( order_finish_time : uint32 )
-(s s0 : ContractLRecord)  (v : VMStateLRecord)  (m m0 : MessagesAndEventsLRecord) (l : LocalStateLRecord),
-let ll : Ledger  := (s, (s0, (v, (m, (m0, (LocalStateDefault , l))))))%xprod in 
-exec_state (Uinterpreter (is_active_time order_finish_time )) ll =  ll.
-Proof.
-    auto.
-Qed.
 Definition is_active_time_eval_P (l : Ledger) ( order_finish_time : uint32 ): 
 {v | v = toValue (eval_state (Uinterpreter (is_active_time order_finish_time)) l)}.
   generate_proof (eval_expression l (is_active_time order_finish_time)).
@@ -169,7 +133,7 @@ Section prepare_internal_wallet_state_init_and_addr.
 Definition prepare_internal_wallet_state_init_and_addr_exec_P (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ): 
 {l' | l' = exec_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l}.
   generate_proof (exec_expression l (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)).
@@ -177,14 +141,14 @@ Defined.
 Definition prepare_internal_wallet_state_init_and_addr_auto_exec (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ): Ledger.
 intros. term_of (prepare_internal_wallet_state_init_and_addr_exec_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Defined.
 Theorem prepare_internal_wallet_state_init_and_addr_exec_proof_next (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ) :
   prepare_internal_wallet_state_init_and_addr_auto_exec l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id =
   exec_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l.
@@ -194,7 +158,7 @@ Qed.
 Definition prepare_internal_wallet_state_init_and_addr_eval_P (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l)}.
   generate_proof (eval_expression l (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)).
@@ -202,14 +166,14 @@ Defined.
 Definition prepare_internal_wallet_state_init_and_addr_auto_eval (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ): ( StateInitLRecord * uint256 ).
 intros. term_of (prepare_internal_wallet_state_init_and_addr_eval_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Defined.
 Theorem prepare_internal_wallet_state_init_and_addr_eval_proof_next (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ) :
   prepare_internal_wallet_state_init_and_addr_auto_eval l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id =
   toValue (eval_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l).
@@ -334,7 +298,6 @@ Theorem process_queue_impl_exec_proof_next (l : Ledger) ( tip3root : address ) (
 Proof.
   intros. proof_of (process_queue_impl_exec_P l tip3root notify_addr price deals_limit tons_cfg sell_idx buy_idx sells_amount sells buys_amount buys).
 Qed.
-(* TODO eval true *)
 Definition process_queue_impl_eval_P (l : Ledger) ( tip3root : address ) ( notify_addr : address (* IFlexNotifyPtrLRecord *)) 
 							   ( price : uint128 ) ( deals_limit : uint8 ) ( tons_cfg : TonsConfigLRecord ) 
 							   ( sell_idx : uint ) ( buy_idx : uint ) ( sells_amount : uint128 ) ( sells : queue OrderInfoLRecord ) 
@@ -365,7 +328,9 @@ Definition buyTip3_exec_P (l : Ledger) ( amount : uint128 ) ( receive_tip3_walle
   generate_proof (exec_expression l (buyTip3 amount receive_tip3_wallet order_finish_time)).
 Defined.
 Definition buyTip3_auto_exec (l : Ledger) ( amount : uint128 ) ( receive_tip3_wallet : address ) ( order_finish_time : uint32 ): Ledger.
-intros. term_of (buyTip3_exec_P l amount receive_tip3_wallet order_finish_time).
+intros. 
+let t1 := (eval unfold buyTip3_exec_P in
+(let (e, _) := buyTip3_exec_P l amount receive_tip3_wallet order_finish_time in e)) in exact t1.
 Defined.
 Theorem buyTip3_exec_proof_next (l : Ledger) ( amount : uint128 ) ( receive_tip3_wallet : address ) ( order_finish_time : uint32 ) :
   buyTip3_auto_exec l amount receive_tip3_wallet order_finish_time =
@@ -373,7 +338,6 @@ Theorem buyTip3_exec_proof_next (l : Ledger) ( amount : uint128 ) ( receive_tip3
 Proof.
   intros. proof_of (buyTip3_exec_P l amount receive_tip3_wallet order_finish_time).
 Qed.
-(* TODO eval true *)
 Definition buyTip3_eval_P (l : Ledger) ( amount : uint128 ) ( receive_tip3_wallet : address ) ( order_finish_time : uint32 ): 
 {v | v =  (eval_state (Uinterpreter (buyTip3 amount receive_tip3_wallet order_finish_time)) l)}.
   generate_proof (eval_expression l (buyTip3 amount receive_tip3_wallet order_finish_time)).
@@ -396,7 +360,9 @@ Definition processQueue_exec_P (l : Ledger) :
   generate_proof (exec_expression l (processQueue )).
 Defined.
 Definition processQueue_auto_exec (l : Ledger) : Ledger.
-intros. term_of (processQueue_exec_P l ).
+intros. 
+let t1 := (eval unfold processQueue_exec_P in
+(let (e, _) := processQueue_exec_P l  in e)) in exact t1.
 Defined.
 Theorem processQueue_exec_proof_next (l : Ledger)  :
   processQueue_auto_exec l  =
@@ -404,10 +370,10 @@ Theorem processQueue_exec_proof_next (l : Ledger)  :
 Proof.
   intros. proof_of (processQueue_exec_P l ).
 Qed.
-(* no eval *)
+
 End processQueue.
 (* ----------------------------------------- *)
-Section cancelSell.
+(* Section cancelSell.
 Definition cancelSell_exec_P (l : Ledger) : 
 {l' | l' = exec_state (Uinterpreter (cancelSell )) l}.
   generate_proof (exec_expression l (cancelSell )).
@@ -442,57 +408,42 @@ End cancelBuy.
 (* ----------------------------------------- *)
 Section prepare_price_state_init_and_addr.
 Definition prepare_price_state_init_and_addr_exec_P (l : Ledger) ( price_data : DPriceLRecord ) 
-											 ( price_code : TvmCell ): 
+											 ( price_code : cell ): 
 {l' | l' = exec_state (Uinterpreter (prepare_price_state_init_and_addr price_data price_code)) l}.
   generate_proof (exec_expression l (prepare_price_state_init_and_addr price_data price_code)).
 Defined.
 Definition prepare_price_state_init_and_addr_auto_exec (l : Ledger) ( price_data : DPriceLRecord ) 
-											 ( price_code : TvmCell ): Ledger.
+											 ( price_code : cell ): Ledger.
 intros. term_of (prepare_price_state_init_and_addr_exec_P l price_data price_code).
 Defined.
 Theorem prepare_price_state_init_and_addr_exec_proof_next (l : Ledger) ( price_data : DPriceLRecord ) 
-											 ( price_code : TvmCell ) :
+											 ( price_code : cell ) :
   prepare_price_state_init_and_addr_auto_exec l price_data price_code =
   exec_state (Uinterpreter (prepare_price_state_init_and_addr price_data price_code)) l.
 Proof.
   intros. proof_of (prepare_price_state_init_and_addr_exec_P l price_data price_code).
 Qed.
 Definition prepare_price_state_init_and_addr_eval_P (l : Ledger) ( price_data : DPriceLRecord ) 
-											 ( price_code : TvmCell ): 
+											 ( price_code : cell ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_price_state_init_and_addr price_data price_code)) l)}.
   generate_proof (eval_expression l (prepare_price_state_init_and_addr price_data price_code)).
 Defined.
 Definition prepare_price_state_init_and_addr_auto_eval (l : Ledger) ( price_data : DPriceLRecord ) 
-											 ( price_code : TvmCell ): ( StateInitLRecord * uint256 ).
+											 ( price_code : cell ): ( StateInitLRecord * uint256 ).
 intros. term_of (prepare_price_state_init_and_addr_eval_P l price_data price_code).
 Defined.
 Theorem prepare_price_state_init_and_addr_eval_proof_next (l : Ledger) ( price_data : DPriceLRecord ) 
-											 ( price_code : TvmCell ) :
+											 ( price_code : cell ) :
   prepare_price_state_init_and_addr_auto_eval l price_data price_code =
   toValue (eval_state (Uinterpreter (prepare_price_state_init_and_addr price_data price_code)) l).
 Proof.
   intros. proof_of (prepare_price_state_init_and_addr_eval_P l price_data price_code).
 Qed.
+
+End prepare_price_state_init_and_addr.
 (* ---------------------------------------------- *)
 Section extract_active_order.
-Context 
-(f_while : ULValue (optional OrderInfoWithIdx) ->
-ULValue (queue OrderInfoLRecord) ->
-ULValue uint128 ->
-ULValue boolean ->UExpression ( ( optional OrderInfoWithIdx ) # ( ( queue OrderInfoLRecord ) # uint128 ) ) true).
-Definition  extract_active_order_template ( cur_order : optional OrderInfoWithIdx ) 
-( orders : queue OrderInfoLRecord  ) 
-( all_amount : uint128 ) 
-( sell : boolean ) : UExpression ( ( optional OrderInfoWithIdx ) # ( ( queue OrderInfoLRecord ) # uint128 ) ) true  .
-vararg cur_order "cur_order".
-vararg orders "orders".
-vararg all_amount "all_amount".
-vararg sell "sell".
-refine {{ if !{ cur_order } then { { _:UEt  } } ; { _ } }} .
-refine {{ exit_ [ !{ cur_order } , !{ orders } , !{ all_amount } ] }} .
-refine {{ { f_while  cur_order orders all_amount sell } ; { _ } }}.
-refine {{ return_ [ !{cur_order} , !{orders} , !{all_amount} ] }} . 
-Defined . 
+
 Definition extract_active_order_template_exec_P (l : Ledger) ( cur_order : optional OrderInfoWithIdx ) 
 ( orders : queue OrderInfoLRecord  ) 
 ( all_amount : uint128 ) 
@@ -541,47 +492,7 @@ End extract_active_order.
 
 (* ---------------------------------------------- *)
 Section make_deal.
-Context
-(d_a : ULValue OrderInfoLRecord -> ULValue OrderInfoLRecord -> URValue uint false)
-(s_o_t : ULValue OrderInfoLRecord ->  ULValue uint128 -> URValue boolean false )
-(b_o_t : ULValue OrderInfoLRecord ->  ULValue uint128 -> URValue boolean false )
-(l_t_s : ULValue uint -> ULValue OrderInfoLRecord -> URValue boolean false)
-(b_c :  ULValue (optional uint) -> URValue uint128 true)
-(f0  : ULValue OrderInfoLRecord -> ULValue OrderInfoLRecord -> ULValue uint -> UExpression ( boolean # (boolean # uint128) ) false )
-(b0 : ULValue boolean -> ULValue boolean -> URValue boolean false)
-( cc : ULValue uint -> ULValue dealerLRecord -> URValue (optional uint) true )
-(f01 : ULValue uint128 -> ULValue dealerLRecord -> UExpression ( boolean # (boolean # uint128) ) false)
-(f02 : ULValue uint128 -> ULValue dealerLRecord -> UExpression ( boolean # (boolean # uint128) ) false)
-(f1 : ULValue boolean -> ULValue boolean -> UExpression ( boolean # (boolean # uint128) ) true )
-(f2 : ULValue OrderInfoLRecord ->
-ULValue OrderInfoLRecord ->
-ULValue uint128 -> ULValue uint128 -> UExpression ( boolean # (boolean # uint128) ) false )
-( f3 : ULValue OrderInfoLRecord ->
- ULValue (optional uint) -> UExpression ( boolean # (boolean # uint128) ) true )
-(f4 : ULValue dealerLRecord ->
-ULValue OrderInfoLRecord ->
-ULValue OrderInfoLRecord ->
-ULValue uint -> ULValue (optional uint) -> UExpression ( boolean # (boolean # uint128) ) true )
-(f41 : ULValue dealerLRecord -> ULValue uint -> UExpression ( boolean # (boolean # uint128) ) false)
-(f42 :  ULValue uint -> UExpression ( boolean # (boolean # uint128) ) false).
- Definition make_deal_template (this : ULValue dealerLRecord) ( sell : ULValue OrderInfoLRecord ) ( buy : ULValue OrderInfoLRecord ) : UExpression ( boolean # (boolean # uint128) ) true .
- refine {{ new 'deal_amount : uint @ "deal_amount" :=  { d_a sell buy } ; { _ } }} . 
- refine {{ new 'last_tip3_sell : boolean @ "last_tip3_sell" :=  { l_t_s deal_amount sell} ; { _ } }} .
- refine {{ { f0 sell buy deal_amount : UEf } ; { _ }  }}.
- refine {{ new 'cost : optional uint @ "cost" :=   { cc deal_amount this}  ; { _ } }} .
- refine {{ new 'sell_costs : uint128 @ "sell_costs" := 0 ; { _ } }} . 
- refine {{ new 'buy_costs : uint128 @ "buy_costs" :=    { b_c cost } ; { _ } }} . 
- refine {{ if ( !{last_tip3_sell} ) then { { _:UEf } } 
- else { { _:UEf } } ; { _ } }} . 
- refine {{ { f01  sell_costs  this }   }}.
- refine {{ { f02  sell_costs  this }   }}.
- refine {{ new 'sell_out_of_tons : boolean @ "sell_out_of_tons" :=   { s_o_t sell sell_costs } ; { _ } }} . 
- refine {{ new 'buy_out_of_tons : boolean @ "buy_out_of_tons" :=  { b_o_t buy buy_costs } ; { _ } }} . 
- refine {{ if (  {b0 sell_out_of_tons buy_out_of_tons} ) then { { _ :UEt } } ; { _ } }} . 
- refine {{ { f1 sell_out_of_tons buy_out_of_tons}  }}.
- refine {{ { f2 sell buy sell_costs buy_costs   } ; { _ }  }}.
- refine {{ {f4 this sell buy deal_amount cost  } }}.
- Defined .
+
  Definition make_deal_template_exec_P (l : Ledger) (this : ULValue dealerLRecord) ( sell : ULValue OrderInfoLRecord ) ( buy : ULValue OrderInfoLRecord ): 
  {l' | l' = exec_state (Uinterpreter (make_deal_template this sell buy)) l}.
    generate_proof (exec_expression l (make_deal_template this sell buy)).
@@ -595,6 +506,6 @@ ULValue uint -> ULValue (optional uint) -> UExpression ( boolean # (boolean # ui
  Proof.
    intros. proof_of (make_deal_template_exec_P l this sell buy). 
  Qed.
-End make_deal.
-End prepare_price_state_init_and_addr.
+End make_deal. *)
+
 End EvalExecAuto.

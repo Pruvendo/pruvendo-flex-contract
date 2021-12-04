@@ -141,7 +141,7 @@ Section prepare_internal_wallet_state_init_and_addr.
 Definition prepare_internal_wallet_state_init_and_addr_exec_P (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ): 
 {l' | l' = exec_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l}.
   generate_proof (exec_expression l (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)).
@@ -149,14 +149,14 @@ Defined.
 Definition prepare_internal_wallet_state_init_and_addr_auto_exec (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ): Ledger.
 intros. term_of (prepare_internal_wallet_state_init_and_addr_exec_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Defined.
 Theorem prepare_internal_wallet_state_init_and_addr_exec_proof_next (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ) :
   prepare_internal_wallet_state_init_and_addr_auto_exec l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id =
   exec_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l.
@@ -166,7 +166,7 @@ Qed.
 Definition prepare_internal_wallet_state_init_and_addr_eval_P (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l)}.
   generate_proof (eval_expression l (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)).
@@ -174,14 +174,14 @@ Defined.
 Definition prepare_internal_wallet_state_init_and_addr_auto_eval (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ): ( StateInitLRecord * uint256 ).
 intros. term_of (prepare_internal_wallet_state_init_and_addr_eval_P l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id).
 Defined.
 Theorem prepare_internal_wallet_state_init_and_addr_eval_proof_next (l : Ledger) ( name :  String ) ( symbol : String )
  														( decimals : uint8 ) ( root_public_key : uint256 )
  														( wallet_public_key : uint256 ) ( root_address : address ) 
-														( owner_address : optional address ) ( code : TvmCell ) 
+														( owner_address : optional address ) ( code : cell ) 
 														( workchain_id : int ) :
   prepare_internal_wallet_state_init_and_addr_auto_eval l name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id =
   toValue (eval_state (Uinterpreter (prepare_internal_wallet_state_init_and_addr name symbol decimals root_public_key wallet_public_key root_address owner_address code workchain_id)) l).
@@ -453,32 +453,32 @@ End cancelBuy.
 (* ----------------------------------------- *)
 Section prepare_price_xchg_state_init_and_addr.
 Definition prepare_price_xchg_state_init_and_addr_exec_P (l : Ledger) ( price_data : ContractLRecord )
-												  ( price_code : TvmCell ): 
+												  ( price_code : cell ): 
 {l' | l' = exec_state (Uinterpreter (prepare_price_xchg_state_init_and_addr price_data price_code)) l}.
   generate_proof (exec_expression l (prepare_price_xchg_state_init_and_addr price_data price_code)).
 Defined.
 Definition prepare_price_xchg_state_init_and_addr_auto_exec (l : Ledger) ( price_data : ContractLRecord )
-												  ( price_code : TvmCell ): Ledger.
+												  ( price_code : cell ): Ledger.
 intros. term_of (prepare_price_xchg_state_init_and_addr_exec_P l price_data price_code).
 Defined.
 Theorem prepare_price_xchg_state_init_and_addr_exec_proof_next (l : Ledger) ( price_data : ContractLRecord )
-												  ( price_code : TvmCell ) :
+												  ( price_code : cell ) :
   prepare_price_xchg_state_init_and_addr_auto_exec l price_data price_code =
   exec_state (Uinterpreter (prepare_price_xchg_state_init_and_addr price_data price_code)) l.
 Proof.
   intros. proof_of (prepare_price_xchg_state_init_and_addr_exec_P l price_data price_code).
 Qed.
 Definition prepare_price_xchg_state_init_and_addr_eval_P (l : Ledger) ( price_data : ContractLRecord )
-												  ( price_code : TvmCell ): 
+												  ( price_code : cell ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_price_xchg_state_init_and_addr price_data price_code)) l)}.
   generate_proof (eval_expression l (prepare_price_xchg_state_init_and_addr price_data price_code)).
 Defined.
 Definition prepare_price_xchg_state_init_and_addr_auto_eval (l : Ledger) ( price_data : ContractLRecord )
-												  ( price_code : TvmCell ): ( StateInitLRecord # uint256 ).
+												  ( price_code : cell ): ( StateInitLRecord # uint256 ).
 intros. term_of (prepare_price_xchg_state_init_and_addr_eval_P l price_data price_code).
 Defined.
 Theorem prepare_price_xchg_state_init_and_addr_eval_proof_next (l : Ledger) ( price_data : ContractLRecord )
-												  ( price_code : TvmCell ) :
+												  ( price_code : cell ) :
   prepare_price_xchg_state_init_and_addr_auto_eval l price_data price_code =
   toValue (eval_state (Uinterpreter (prepare_price_xchg_state_init_and_addr price_data price_code)) l).
 Proof.
