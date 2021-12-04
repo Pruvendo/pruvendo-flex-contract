@@ -138,10 +138,10 @@ Notation " 'check_external_owner_' '(' ')' " := ( check_external_owner_right )
  (in custom URValue at level 0 ) : ursus_scope . 
 
 Definition check_owner ( original_owner_only : boolean ) ( allowed_in_lend_state : boolean ) : UExpression uint128 true . 
-	refine {{ {if Internal then _ else _} ; {_} }} .
+	refine {{ {if Internal then _: UEt else _} ; {_} }} .
 	refine {{ exit_ (check_internal_owner_ ( #{original_owner_only} , #{allowed_in_lend_state} ) ) }} . 
 	refine {{ exit_ (check_external_owner_ ( ) ) }} . 
-	refine {{ return {} }}.
+	refine {{ return_ {} }}.
 Defined.
 
 Definition check_owner_right { a1 a2 }  ( original_owner_only : URValue boolean a1 ) 
