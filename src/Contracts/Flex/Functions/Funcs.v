@@ -66,6 +66,7 @@ Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 Existing Instance LedgerPruvendoRecord.
 
+
 Definition constructor ( deployer_pubkey :  uint256 ) ( ownership_description : String ) ( owner_address :  optional address ) 
                        ( tons_cfg :  TonsConfigLRecord ) ( deals_limit :  uint8 ) ( listing_cfg :  ListingConfigLRecord ) 
                        : UExpression PhantomType true . 
