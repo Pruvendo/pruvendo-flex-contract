@@ -685,8 +685,9 @@ Definition cancelSell : UExpression PhantomType true .
 								  _price_ ↑ RationalPrice.denum ,
 									 !{canceled_amount} , 
 								  _sells_amount_) ; {_} }} ). 
-	refine {{ if ( (_sells_ -> empty ()) && (_buys_ -> empty ()) ) then { { _:UEt } } }} . 
+	refine {{ if ( (_sells_ -> empty ()) && (_buys_ -> empty ()) ) then { { _:UEt } } ; {_} }} . 
 	refine {{ suicide_ ( _flex_ ) }} . 
+refine {{ return_ {} }} .
 Defined . 
  
 Definition cancelBuy : UExpression PhantomType true . 
