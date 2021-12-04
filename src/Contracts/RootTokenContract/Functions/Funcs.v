@@ -199,15 +199,15 @@ std::pair<StateInit, uint256> prepare_wallet_state_init_and_addr(DTONTokenWallet
 (*AL: not in this file!*)
 Definition prepare_wallet_state_init_and_addr (wallet_data : TONTokenWalletClassTypes.DTONTokenWalletLRecord )
 											   : UExpression ( StateInitLRecord # uint256 ) false .
-	refine {{ new 'wallet_data_cl : cell @ "price_data_cl" :=  
+	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" :=  
               prepare_persistent_data_ ( wallet_replay_protection_t::init () , #{wallet_data} )  ; { _ } }} .
-	refine {{ new 'wallet_init : StateInitLRecord @ "pair_init" :=
+	refine {{ new 'wallet_init : StateInitLRecord @ "wallet_init" :=
                    [$ {} ⇒ { StateInit_ι_split_depth } ;
                       {} ⇒ { StateInit_ι_special } ;
                       {} ⇒ { StateInit_ι_code } ;
                       {} ⇒ { StateInit_ι_data } ;
                       {} ⇒ { StateInit_ι_library } $] ; { _ } }}.
-	refine {{ new 'wallet_init_cl : cell @ "price_init_cl" := build (σ !{wallet_init} ) -> make_cell()  ; { _ } }} .
+	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := build (σ !{wallet_init} ) -> make_cell()  ; { _ } }} .
 	refine {{ return_ [ !{wallet_init} , tvm_hash(!{wallet_init_cl}) ] }} .
 Defined.
 
@@ -394,7 +394,7 @@ Defined .
 Defined . 
 
 Definition getWalletCodeHash : UExpression uint256 false . 
-	refine {{ return_ __builtin_tvm_hashcu_ ( *_wallet_code_ )  }} . 
+	refine {{ return_ __builtin_tvm_hashcu_ ( *_wallet_code_ ) }} . 
 Defined. 
  
 Definition _fallback ( _ : cell ) ( _ : slice ) : UExpression uint false . 

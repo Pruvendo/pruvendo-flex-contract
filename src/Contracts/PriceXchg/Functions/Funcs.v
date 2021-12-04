@@ -189,7 +189,7 @@ Definition process_queue (sell_idx : uint)
 	refine {{ break_ }} . 
 	refine {{ new ( 'sell_idx_cur : uint , 'sell : OrderInfoXchgLRecord ) @ ( "sell_idx_cur" , "sell" ) 
                                  := !{sell_opt} -> get () ; { _ } }} . 
-	refine {{ new ( 'buy_idx_cur : uint , 'buy : OrderInfoXchgLRecord ) @ ( "sell_idx_cur" , "sell" ) 
+	refine {{ new ( 'buy_idx_cur : uint , 'buy : OrderInfoXchgLRecord ) @ ( "buy_idx_cur" , "buy" ) 
                                  := !{buy_opt} -> get () ; { _ } }} . 
 	refine {{ new 'sell_out_of_tons : boolean @ "sell_out_of_tons" := FALSE ; { _ } }} . 
 	refine {{ new 'buy_out_of_tons : boolean @ "buy_out_of_tons" := FALSE ; { _ } }} . 
@@ -292,7 +292,7 @@ Definition process_queue (sell_idx : uint)
 											  !{sell} ↑ OrderInfoXchg.amount ] ) }} . 
     refine {{ if ? !{buy_opt} && 
                  ? second ( !{buy_opt} -> get () ) ↑ OrderInfoXchg.amount then { { _:UEt } } }} .
-    refine {{ new 'buy : OrderInfoXchgLRecord @ "sell" := second ( !{buy_opt} -> get () ) ; { _ } }} . 
+    refine {{ new 'buy : OrderInfoXchgLRecord @ "buy" := second ( !{buy_opt} -> get () ) ; { _ } }} . 
   	refine {{ {this} ↑ dealer.buys_ -> change_front ( !{buy} ) ; { _ } }} .
  	refine {{ if #{buy_idx} == first ( !{buy_opt} -> get () ) then { { _:UEf } } }} . 
  	refine {{ {this} ↑ dealer.ret_ -> set ( [ 1 , !{buy} ↑ OrderInfoXchg.original_amount - 
@@ -495,7 +495,7 @@ Definition onTip3LendOwnership ( answer_addr : address )
 	refine {{ new ( 'tip3_wallet : address , 'value : Grams  ) @ 
                        ( "tip3_wallet" , "value" ) := int_sender_and_value () ; { _ } }} . 
 	refine {{ new 'wallet_in : address @ "wallet_in" (* ITONTokenWalletPtr *) := !{tip3_wallet} ; { _ } }} . 
-	refine {{new 'ret_owner_gr : Grams @ "ret_owner_gr" :=  _tons_cfg_ ↑ TonsConfig.return_ownership ; { _ } }} . 
+	refine {{ new 'ret_owner_gr : Grams @ "ret_owner_gr" :=  _tons_cfg_ ↑ TonsConfig.return_ownership ; { _ } }} . 
 	refine {{ set_int_sender ( #{answer_addr} ) ; { _ } }} . 
 	refine {{ set_int_return_value ( _tons_cfg_ ↑ TonsConfig.order_answer ) ; { _ } }} . 
 	refine {{ new 'min_value : uint128 @ "min_value" := onTip3LendOwnershipMinValue_ ( ) ; { _ } }} . 
@@ -685,8 +685,9 @@ Definition cancelSell : UExpression PhantomType true .
 								  _price_ ↑ RationalPrice.denum ,
 									 !{canceled_amount} , 
 								  _sells_amount_) ; {_} }} ). 
-	refine {{ if ( (_sells_ -> empty ()) && (_buys_ -> empty ()) ) then { { _:UEt } } }} . 
+	refine {{ if ( (_sells_ -> empty ()) && (_buys_ -> empty ()) ) then { { _:UEt } } ; {_} }} . 
 	refine {{ suicide_ ( _flex_ ) }} . 
+refine {{ return_ {} }} .
 Defined . 
  
 Definition cancelBuy : UExpression PhantomType true . 

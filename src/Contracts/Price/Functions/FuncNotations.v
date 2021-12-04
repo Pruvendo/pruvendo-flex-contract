@@ -240,7 +240,7 @@ Definition extract_active_order_right { a1 a2 a3 a4 }
  ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
  
- Definition cancelSell_left { R }  : UExpression R false := 
+ Definition cancelSell_left { R }  : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) cancelSell 
  ) . 
  
@@ -249,7 +249,7 @@ Definition extract_active_order_right { a1 a2 a3 a4 }
  ) 
  (in custom ULValue at level 0 ) : ursus_scope . 
  
- Definition cancelBuy_left { R }  : UExpression R false := 
+ Definition cancelBuy_left { R }  : UExpression R true := 
  wrapULExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) cancelBuy 
  ) . 
  
