@@ -38,9 +38,9 @@ Module Export FuncsModule := Funcs co dc.
 Import FuncsInternal.
 Import co.
 
-Module Import xxx := SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+(* Module Import xxx := SpecModuleForFuncNotations.LedgerModuleForFuncSig.
 Module Import generator := execGenerator XTypesModule StateMonadModule xxx.
-
+ *)
 Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig.
  
 Import UrsusNotations.
@@ -51,9 +51,9 @@ Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
-Import URSUS_.
 
 Section onDeploy.
+
 Definition onDeploy_exec_P (l : Ledger) ( min_amount : uint128 ) ( deploy_value : uint128 ) ( notify_addr : address ): 
 {l' | l' = exec_state (Uinterpreter (onDeploy min_amount deploy_value notify_addr)) l}.
   generate_proof (exec_expression l (onDeploy min_amount deploy_value notify_addr)).

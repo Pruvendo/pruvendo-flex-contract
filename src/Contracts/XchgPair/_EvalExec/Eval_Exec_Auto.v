@@ -131,7 +131,7 @@ Theorem prepare_xchg_pair_state_init_and_addr_eval_proof_next (l : Ledger) ( pai
   prepare_xchg_pair_state_init_and_addr_auto_eval l pair_data pair_code =
   toValue (eval_state (Uinterpreter (prepare_xchg_pair_state_init_and_addr pair_data pair_code)) l).
 Proof.
-  intros. NL_new_lvalue_exec_P. (* unfold prepare_xchg_pair_state_init_and_addr. *) proof_of (prepare_xchg_pair_state_init_and_addr_eval_P l pair_data pair_code).
+   proof_of (prepare_xchg_pair_state_init_and_addr_eval_P l pair_data pair_code).
 Qed.
 
 

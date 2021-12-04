@@ -111,7 +111,7 @@ Ltac generate_proof gen :=
   (only 1: (exists e; subst e; reflexivity));
   eexists; reflexivity.
 
-  Definition rejectXchgPairImpl 
+(*   Definition rejectXchgPairImpl 
   ( pubkey :  uint256 ) 
   ( xchg_pair_listing_requests :  xchg_pairs_map ) 
   ( listing_cfg :  ListingConfigLRecord ): 
@@ -128,7 +128,7 @@ Ltac generate_proof gen :=
             with [$ !{remaining_funds} ⇒ { Messsage_ι_value } $]  ⤳ .onXchgPairRejected ( #{pubkey} ) ; {_} }}.   
          refine {{ return_ #{xchg_pair_listing_requests} }} . 
    Defined . 
-Opaque uhmap_fetch.
+Opaque uhmap_fetch. *)
 Section rejectXchgPairImpl.
 Definition rejectXchgPairImpl_exec_P (l : Ledger) ( pubkey :  uint256 ) 
 ( xchg_pair_listing_requests :  xchg_pairs_map ) 
