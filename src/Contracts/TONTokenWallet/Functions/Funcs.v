@@ -353,7 +353,8 @@ Notation " 'prepare_wallet_data_' '(' name ',' symbol ',' decimals ',' root_publ
 
 Definition prepare_wallet_state_init_and_addr ( wallet_data : DTONTokenWalletLRecord ) 
            									  : UExpression ( StateInitLRecord # uint256 ) false . 
-	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := prepare_persistent_data_ ( {} , #{ wallet_data} ) ; {_} }} . 
+	refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" := 
+                        prepare_persistent_data_ ( {} , #{ wallet_data} ) ; {_} }} . 
 	refine {{ new 'wallet_init : ( StateInitLRecord ) @ "wallet_init" := 	 	 
 	         [ {} , {} , ((#{ wallet_data}) ↑ DTONTokenWallet.code_) -> set () , !{wallet_data_cl} -> set () , {} ] ; {_} }} . 
 	refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" :=  
@@ -408,7 +409,8 @@ Notation " 'expected_sender_address_' '(' sender_public_key ',' sender_owner ')'
 
 Definition calc_wallet_init ( pubkey : uint256 ) ( internal_owner : address ) 
                             : UExpression ( StateInitLRecord # address ) false . 
-	refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:uint256 ) @ ( "wallet_init" , "dest_addr" ) := 
+	refine {{ new ( 'wallet_init:StateInitLRecord , 'dest_addr:uint256 ) @ 
+                ( "wallet_init" , "dest_addr" ) := 
 	             calc_wallet_init_hash_ ( (#{ pubkey }) , (#{ internal_owner }) ) ; {_} }} . 
 	refine {{ new 'dest : address @ "dest" := [ _workchain_id_ , !{dest_addr} ] ; {_} }} . 
  	refine {{ return_ [ !{wallet_init} , (!{ dest }) ] }} . 

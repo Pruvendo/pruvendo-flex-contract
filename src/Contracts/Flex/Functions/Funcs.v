@@ -406,13 +406,13 @@ Definition approveXchgPairImpl ( pubkey :  uint256 ) ( xchg_pair_listing_request
                          (#{xchg_pair_listing_requests}) -> extract ( #{pubkey} ) ; { _ } }} . 
  	 	 refine {{ require_ ( !{ opt_req_info }  ,  error_code::xchg_pair_not_requested  ) ; { _ } }} . 
  	 	 refine {{ new 'req_info : ( XchgPairListingRequestLRecord ) @ "req_info" := 
-                          (!{opt_req_info}) -> get () ; { _ } }} . (* 43'' *)
+                          (!{opt_req_info}) -> get () ; { _ } }} . 
  	 	 refine {{ new 'pair_data : ( XchgPairClassTypesModule.DXchgPairLRecord ) @ "pair_data" :=  
                	 	 [$ tvm_myaddr () ⇒ { DXchgPair_ι_flex_addr_ } ; 
                       !{req_info} ↑ XchgPairListingRequest.tip3_major_root ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
                       !{req_info} ↑ XchgPairListingRequest.tip3_minor_root ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
                       0 ⇒ { DXchgPair_ι_min_amount_ } ; 
-                  [ #{0%Z} , 0 ] ⇒ { DXchgPair_ι_notify_addr_ } $] ; { _ } }} . (*45''*) 
+                  [ #{0%Z} , 0 ] ⇒ { DXchgPair_ι_notify_addr_ } $] ; { _ } }} .  
 
  	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ( "state_init" , "std_addr" ) := prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , #{xchg_pair_code} ) ; { _ } }} . 
       refine {{ new 'xchg_pair : address @ "xchg_pair" := 
@@ -716,13 +716,13 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_add
             #{tip3_minor_root} , 
             #{min_amount} , 
             #{notify_addr} ] ) ; { _ } }} . 
-       	 	 refine {{ new 'pair_data : ( XchgPairClassTypesModule.DXchgPairLRecord ) @ "pair_data" :=  
-               	 	 [$  ( tvm_myaddr () ) ⇒ { DXchgPair_ι_flex_addr_ }  ; 
-                      (#{tip3_major_root}) ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
-                      (#{tip3_minor_root}) ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
-                      0 ⇒ { DXchgPair_ι_min_amount_ }   ; 
-                     [ # {0%Z} , 0 ]  ⇒ { DXchgPair_ι_notify_addr_ }  
-                   $] ; { _ } }} . 
+ refine {{ new 'pair_data : ( XchgPairClassTypesModule.DXchgPairLRecord ) @ "pair_data" :=  
+     	 	 [$  ( tvm_myaddr () ) ⇒ { DXchgPair_ι_flex_addr_ }  ; 
+            (#{tip3_major_root}) ⇒ { DXchgPair_ι_tip3_major_root_ } ; 
+            (#{tip3_minor_root}) ⇒ { DXchgPair_ι_tip3_minor_root_ } ; 
+            0 ⇒ { DXchgPair_ι_min_amount_ }   ; 
+           [ # {0%Z} , 0 ]  ⇒ { DXchgPair_ι_notify_addr_ }  
+         $] ; { _ } }} . 
  	 	 refine {{ set_int_return_value ( _listing_cfg_ ↑ ListingConfig.register_return_value ) ; { _ } }} . 
  	 	 refine {{ new ( 'state_init : StateInitLRecord , 'std_addr : uint256 ) @ ( "state_init" , "std_addr" )  := 
        prepare_xchg_pair_state_init_and_addr_ ( !{pair_data} , _xchg_pair_code_ -> get () ) ; { _ } }} . 
@@ -733,7 +733,8 @@ refine {{ IListingAnswerPtr [[  !{req_info} ↑ WrapperListingRequest.client_add
  Definition approveXchgPair ( pubkey :  uint256 ) : UExpression address true . 
   	 	 refine {{ check_owner_ ( ) ; { _ } }} .
  	 	 refine {{ tvm_accept () ; { _ } }} . 
- 	 	 refine {{ new ( 'xchg_pair : address , 'xchg_pair_listing_requests : xchg_pairs_map  ) @ ( "xchg_pair" , "xchg_pair_listing_requests" ) := 
+ 	 	 refine {{ new ( 'xchg_pair : address , 'xchg_pair_listing_requests : xchg_pairs_map  ) @ 
+                   ( "xchg_pair" , "xchg_pair_listing_requests" ) := 
                approveXchgPairImpl_ ( #{pubkey} , 
                                       _xchg_pair_listing_requests_ , 
                                       _xchg_pair_code_ -> get () , 
@@ -784,7 +785,8 @@ Definition registerWrapper
         {} ⇒ { DWrapper_ι_external_wallet_ }  
       $] ; { _ } }} . 
   	 	 refine {{ set_int_return_value ( _listing_cfg_ ↑  ListingConfig.register_return_value ) ; { _ } }} .  
- 	 	 refine {{ new ( 'wrapper_init :StateInitLRecord , 'wrapper_hash_addr : uint256 ) @ ( "wrapper_init" , "wrapper_hash_addr" ) := 
+ 	 	 refine {{ new ( 'wrapper_init :StateInitLRecord , 'wrapper_hash_addr : uint256 ) @ 
+                   ( "wrapper_init" , "wrapper_hash_addr" ) := 
                prepare_wrapper_state_init_and_addr_ ( _wrapper_code_ -> get () , !{wrapper_data} ) ; { _ } }} . 
  	 	 refine {{ return_  [ _workchain_id_ , !{wrapper_hash_addr} ] }} . 
  Defined . 

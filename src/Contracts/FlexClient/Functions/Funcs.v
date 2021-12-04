@@ -515,7 +515,7 @@ Notation " 'preparePrice_' '(' x0 ',' x1 , x2 ',' x3 , x4 ',' x5 ',' x6 ')' " :=
                       'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
                  preparePrice_ ( #{price} , #{min_amount} , #{deals_limit} , _flex_wallet_code_ -> get () , #{tip3cfg} ,
                        #{price_code} , #{notify_addr} ) ; { _ } }} . 
- 	 	 refine {{ new 'price_addr : ( address ) @ "price_addr":= {} ; { _ } }} . 
+ 	 	 refine {{ new 'price_addr : ( address ) @ "price_addr":= !{addr} ; { _ } }} . 
   refine ( let price_addr_ptr := {{ IPricePtr [[ !{price_addr}  ]] }} in 
   {{ {price_addr_ptr} with {}
                              ⤳ Price.deploy ( !{state_init} ) ; {_} }} ).
@@ -593,8 +593,7 @@ Definition cancelBuyOrder ( price : ( uint128 ) ) ( min_amount : ( uint128 ) ) (
                       'std_addr : uint256 ) @ ("state_init", "addr" , "std_addr") :=
                   preparePrice_ ( #{price} , #{min_amount} , #{deals_limit} , _flex_wallet_code_ -> get () , 
                              #{tip3cfg} , #{price_code} , #{notify_addr} ) ; { _ } }} . 
- 	 	 refine {{ new 'price_addr : ( address ) @ "price_addr" := {}; { _ } }} . 
- 	 	(*  refine {{ {price_addr} := !{price_addr} (* What ? *) ; {_} }} .  *)
+ 	 	 refine {{ new 'price_addr : ( address ) @ "price_addr" := !{addr}; { _ } }} . 
        refine ( let price_addr_ptr := {{ IPricePtr [[ !{price_addr}  ]] }} in 
 {{ {price_addr_ptr} with [$ (#{value}) ⇒ { Messsage_ι_value } ;
                        DEFAULT_MSG_FLAGS ⇒ { Messsage_ι_flags } ;
@@ -632,7 +631,7 @@ Definition prepare_price_xchg_state_init_and_addr ( price_data : PriceXchgClassT
                            : UExpression (StateInitLRecord # uint256) false .
  	 	 refine {{ new 'price_data_cl : cell @ "price_data_cl" :=  
                        prepare_persistent_data_ ( {} , #{price_data} )  ; { _ } }} .
- 	 	 refine {{ new 'price_init : StateInitLRecord @ "pair_init" :=
+ 	 	 refine {{ new 'price_init : StateInitLRecord @ "price_init" :=
                    [$
                          {} ⇒ { StateInit_ι_split_depth } ;
                          {} ⇒ { StateInit_ι_special } ;
@@ -894,9 +893,9 @@ Definition prepare_wallet_state_init_and_addr (wallet_data : TonsConfigFields )
 (* refine {{ if ( #{TIP3_ENABLE_EXTERNAL} )
                         then  { { _:UEf } } (* wallet_replay_protection_t::init()  *)
                         else  { { _:UEf } } ; { _ } }}. *)
- 	 	 refine {{ new 'wallet_data_cl : cell @ "price_data_cl" :=  
+ 	 	 refine {{ new 'wallet_data_cl : cell @ "wallet_data_cl" :=  
                        prepare_persistent_data_ ( {} , #{wallet_data} )  ; { _ } }} .
- 	 	 refine {{ new 'wallet_init : StateInitLRecord @ "pair_init" :=
+ 	 	 refine {{ new 'wallet_init : StateInitLRecord @ "wallet_init" :=
                    [$
                          {} ⇒ { StateInit_ι_split_depth } ;
                          {} ⇒ { StateInit_ι_special } ;
@@ -904,7 +903,7 @@ Definition prepare_wallet_state_init_and_addr (wallet_data : TonsConfigFields )
                          {} ⇒ {StateInit_ι_data} ;
                          {} ⇒ {StateInit_ι_library}
                     $] ; { _ } }}.
- 	 	 refine {{ new 'wallet_init_cl : cell @ "price_init_cl" := {} (* build(wallet_init).make_cell() *) ; { _ } }} .
+ 	 	 refine {{ new 'wallet_init_cl : cell @ "wallet_init_cl" := {} (* build(wallet_init).make_cell() *) ; { _ } }} .
  	 	 refine {{ return_ [ !{wallet_init} , tvm_hash(!{wallet_init_cl}) ] }} .
 Defined.
 
@@ -936,7 +935,7 @@ Definition prepare_wrapper_state_init_and_addr ( wrapper_code : cell )
  	 	 refine {{ new 'wrapper_data_cl : cell @ "wrapper_data_cl" :=  
                   prepare_persistent_data_ ( {} ,
       (* wrapper_replay_protection_t::init() *) #{wrapper_data} ) ; { _ } }} .
- 	 	 refine {{ new 'wrapper_init : StateInitLRecord @ "pair_init" :=
+ 	 	 refine {{ new 'wrapper_init : StateInitLRecord @ "wrapper_init" :=
                    [$
                          {} ⇒ { StateInit_ι_split_depth } ;
                          {} ⇒ { StateInit_ι_special } ;
