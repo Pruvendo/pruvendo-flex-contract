@@ -35,7 +35,6 @@ Module EvalExecAuto (co : CompilerOptions)(dc : ConstsTypesSig XTypesModule Stat
 Module Export FuncsModule := Funcs co dc.
 
 Import co.
-
 (* Module Import xxx := SpecModuleForFuncNotations.LedgerModuleForFuncSig.
 
 Module Import generator := execGenerator XTypesModule StateMonadModule xxx.
