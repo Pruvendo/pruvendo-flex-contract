@@ -346,30 +346,32 @@ Defined .
 Definition getWalletAddress ( pubkey : uint256 ) ( owner : address ) : UExpression address false . 
 	refine {{ return_ second ( calc_wallet_init_ ( #{ pubkey } , #{ owner } ) ) }} . 
 Defined . 
- 
-(*AL: TODO*)
-(*  Definition Args := args_struct_t<&ITONTokenWallet::accept>; *) 
+
+(*FIXME********************************************************************)
+Parameter Args_ITONTokenWallet_accept : Type.  
+Parameter ITONTokenWallet_accept_function_id: XUInteger32.
+
+Declare Instance www: LocalStateField Args_ITONTokenWallet_accept.
+Declare Instance ddd: XDefault Args_ITONTokenWallet_accept.
+
+(*************************************************************************)
+
  Definition _on_bounced ( msg : cell ) ( msg_body : slice  ) : UExpression uint true . 
 	refine {{ tvm_accept () ; { _ } }} . 
-(*  	 	 refine {{ new 'p : parser @ "p" := ( (#{ msg_body }) ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( (* p ↑ ldi ( #{32} ) *) {} == #{(-1)%Z} ) , error_code::wrong_bounced_header ) ; { _ } }} . 
- 	 	 refine {{ new 'opt_hdr : ( optional address ) @ "opt_hdr" := {} ; { _ } }} . 
-(*  	 	 refine {{ [ opt_hdr , =p ] := parse_continue < abiv2::internal_msg_header_with_answer_id > ( p ) ; { _ } }} .  *)
- 	 	 refine {{ require_ ( ( ? !{opt_hdr} && {} (* opt_hdr -> function_id == id_v < &ITONTokenWallet::accept > *) ) , 
-                                               error_code::wrong_bounced_header ) ; { _ } }} . 
- 	 	 refine {{ new 'args : address @ "args" := {} 
-                              (* parse ( p , error_code::wrong_bounced_args ) *) ; { _ } }} . 
- 	 	 refine {{ new 'bounced_val : ( uint (* auto *) ) @ "bounced_val" := {} 
-                         (* (!{ args }) ↑ auto:tokens *) ; { _ } }} . 
-
-(* very controversial things: *)
-
- 	 	 refine {{ new ( 'hdr:uint , 'persist:DRootTokenContractLRecord ) @ ( "hdr" , "persist" ) := {}
-(*      load_persistent_data < IRootTokenContract , root_replay_protection_t , DRootTokenContract > ()*) ; { _ } }} .  
- 	 	 refine {{ require_ ( ( (!{bounced_val}) <= ((!{persist}) ↑ DRootTokenContract.total_granted_) ) , error_code::wrong_bounced_args ) ; { _ } }} . 
- 	 	 refine {{ (({persist}) ↑ DRootTokenContract.total_granted_) -= (!{ bounced_val }) ; { _ } }} . 
-(*  	 	 refine {{ save_persistent_data < IRootTokenContract , root_replay_protection_t > ( hdr , persist ) ; { _ } }} .  *)
- 	 	 refine {{ return_ 0 }} . 
+	refine {{ new 'p @ "p" := parser (#{msg_body}) ; {_} }}.
+	refine {{ require_ ( !{p} -> ldi (32) == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} .
+	refine {{ new 'opt_hdr : optional msg_header_with_answer_id_t  @ "opt_hdr" := {} ; {_} }}. 
+	refine {{ [ {opt_hdr} , {p} ] := parse_continue ( !{p} , 0  ) ; {_} }} .
+	refine {{ require_ ( (~~?!{opt_hdr}) && 
+	                    (( *!{opt_hdr} ) ↑ internal_msg_header_with_answer_id.function_id == #{ITONTokenWallet_accept_function_id}) , error_code::wrong_bounced_header ) ; {_} }} .
+	refine {{ new 'args : Args_ITONTokenWallet_accept @ "args" := parse (!{p}, error_code::wrong_bounced_args) ; {_} }}.
+    (* auto bounced_val = args.tokens; *)
+	refine {{ new 'bounced_val : uint @ "bounced_val" :=  {} ; { _ } }} . 
+  	refine {{ new ( 'hdr : msg_header_t , 'persist: DRootTokenContractLRecord ) @ ( "hdr" , "persist" ) := [ {}, load_persistent_data () ]; {_} }}.
+	refine {{ require_ ( !{bounced_val} <= (!{persist} ↑ DRootTokenContract.total_granted_), error_code::wrong_bounced_args ) ; {_} }}.
+	refine {{ {persist} ↑ DRootTokenContract.total_granted_ -=  !{bounced_val} ; {_} }}.
+	refine {{ save_persistent_data ( (* hdr , *) !{persist} ) ; {_} }} . 
+ 	refine {{ return_ 0 }} . 	
 Defined . 
 
 Definition getWalletCodeHash : UExpression uint256 false . 

@@ -867,35 +867,36 @@ Definition disapprove : UExpression PhantomType true .
 	refine {{ return_ {} }} .
 Defined . 
 
-(*AL: TODO*) 
+
+(*FIXME*******************************************************************)
+Parameter  ITONTokenWallet_internalTransferFrom_function_id: XUInteger32.
+Parameter  ITONTokenWallet_onTip3LendOwnership_function_id: XUInteger32.
+Parameter  ITONTokenWallet_internalTransfer_function_id: XUInteger32.
+
+(*************************************************************************)
+
 Definition _on_bounced ( msg : cell ) ( msg_body : slice ) : UExpression uint true . 
 	refine {{ tvm_accept () ; {_} }} . 
-(*  	 	 refine {{ parser p ( (#{ msg_body }) ) ; {_} }} .  *)
- 	 	 refine {{ require_ ( (* ( p ^^ ldi ( 32 ) *) {} == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} . 
-(*  	 	 refine {{ opt_hdr : ( auto ) @ "opt_hdr" ; {_} }} .  *)
-       refine {{ new 'opt_hdr @ "opt_hdr" := {} ; {_} }} .
-(* 	 	 refine {{ [ opt_hdr , =p ] := parse_continue < abiv2::internal_msg_header > ( p ) ; {_} }} . *) 
- 	 	 refine {{ require_ ( (  !{opt_hdr} ) , error_code::wrong_bounced_header ) ; {_} }} . 
- 	 	 refine {{  new ( 'hdr:_ , 'persist:_ ) @ ( "hdr" , "persist" ) := {}
-           (* load_persistent_data < ITONTokenWallet , wallet_replay_protection_t , DTONTokenWallet > () *) ; {_} }} . 
- 	 	 refine {{  if (  (* ( * {opt_hdr} )  ↑ ???.function_id *) {} == {}
-            (* id_v < &ITONTokenWalletNotify::onTip3LendOwnership > *) ) then { {_:UEf} } else { {_:UEt} } ; {_} }} .
-(*  	 	 refine {{  auto parsed_msg = parse < int_msg_info > ( parser ( (#{ msg }) ) , error_code::bad_incoming_msg ) ; {_} }} .  *)
-(*  	 	 refine {{ persist ^^ _lend_ownership_ . erase ( incoming_msg ( parsed_msg ) . int_sender () ) ; {_} }} .  *)
- 	 	 refine {{ return_ {} }} .
- 	 	 refine {{ require_ ( (* ( * {opt_hdr} )  ↑ ???.function_id *) {} == {}
-                          (*  id_v < &ITONTokenWallet::internalTransfer > *) , error_code::wrong_bounced_header ) ; {_} }} . 
- 	 	 refine {{ new 'Args @ "Args" := {}
-                     (* args_struct_t<&ITONTokenWallet::internalTransfer> *) ; {_} }} . 
-(*  	 	 refine {{ static_assert ( std::is_same_v < decltype ( (!{ Args }) {} . tokens ) , uint128 > ) ; {_} }} .  *)
- 	 	 refine {{ new 'answer_id @ "answer_id" := {} ; {_} }} . 
-(*  	 	 refine {{ =p : ( auto ) @ "=p" ; {_} }} .  *)
-(*  	 	 refine {{ [ answer_id , =p ] := parse_continue < uint32 > ( p ) ; {_} }} .  *)
- 	 	 refine {{ new 'bounced_val @ "bounced_val" := {}  
- 	 	                   (*  parse ( p , error_code::wrong_bounced_args )  *); {_} }} . 
- 	 	 refine {{ (* (!{persist}) ↑ _balance_ += (!{ bounced_val }) *) return_ {} }} . 
-(*  refine {{ save_persistent_data < ITONTokenWallet , wallet_replay_protection_t > ( hdr , persist ) ; {_} }} .  *)
- refine {{ return_ 0 }} . 
+	refine {{ new 'p @ "p" := parser (#{msg_body}) ; {_} }}.
+	refine {{ require_ ( !{p} -> ldi (32) == #{(-1)%Z} ,  error_code::wrong_bounced_header) ; {_} }} . 
+    refine {{ new 'opt_hdr : optional msg_header_t  @ "opt_hdr" := {} ; {_} }}. 
+	refine {{ [ {opt_hdr} , {p} ] := parse_continue ( !{p} , 0  ) ; {_} }} .
+    refine {{ require_ ( ~~!{opt_hdr} , error_code::wrong_bounced_header ) ; {_} }} .
+	refine {{ if ( *!{opt_hdr} ) ↑ internal_msg_header.function_id ==  # {ITONTokenWallet_internalTransferFrom_function_id}  then { {_} } ; {_}  }}.	
+    refine {{ exit_ 0 }}.
+	refine {{ new ( 'hdr : msg_header_t , 'persist : DTONTokenWalletLRecord ) @ ( "hdr" , "persist" ) := [ {}, load_persistent_data () ]; {_} }}.
+    refine {{ if (  ( * !{opt_hdr} )  ↑ internal_msg_header.function_id == #{ITONTokenWallet_onTip3LendOwnership_function_id}) then { {_:UEt} } else { {_:UEt} } ; {_} }} .
+    refine {{ new 'parsed_msg : int_msg_infoLRecord @ "parsed_msg" := parse ( parser ( (#{ msg }) -> ctos () ) ,  error_code::bad_incoming_msg )  ; {_} }} .  	
+    refine {{ ({persist} ↑ DTONTokenWallet.lend_ownership_) -> erase ( !{parsed_msg} ↑ int_msg_info.src ) }} .
+	refine {{ require_ ( ( * !{opt_hdr} )  ↑ internal_msg_header.function_id == #{ITONTokenWallet_internalTransfer_function_id} , error_code::wrong_bounced_header ) ; {_} }} . 
+	(* using Args = args_struct_t<&ITONTokenWallet::internalTransfer>;
+      static_assert(std::is_same_v<decltype(Args{}.tokens), uint128>); *)						   	
+	refine {{ new 'answer_id : uint32  @ "answer_id" := {} ; {_} }} . 
+	refine {{ [ {answer_id} , {p} ] := parse_continue ( !{p} , 0 ) ; {_} }} .  
+ 	refine {{ new 'bounced_val : uint128 @ "bounced_val" :=  parse ( !{p} , error_code::wrong_bounced_args )  ; {_} }} . 
+ 	refine {{ {persist} ↑ DTONTokenWallet.balance_ += !{ bounced_val } }} . 
+    refine {{ save_persistent_data ( (* hdr , *) !{persist} ) ; {_} }} . 
+ 	refine {{ return_ 0 }} . 
 Defined . 
 
 Definition _fallback ( msg : cell ) ( msg_body : slice ) : UExpression uint true . 

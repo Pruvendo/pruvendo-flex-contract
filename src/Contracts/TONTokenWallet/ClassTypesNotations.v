@@ -144,6 +144,17 @@ Definition DTONTokenWallet_ι_workchain_id__left (x: ULValue DTONTokenWalletLRec
 Notation " a '↑' 'DTONTokenWallet.workchain_id_' " := ( DTONTokenWallet_ι_workchain_id__right a ) (in custom URValue at level 0) : ursus_scope.
 Notation " a '↑' 'DTONTokenWallet.workchain_id_' " := ( DTONTokenWallet_ι_workchain_id__left a ) (in custom ULValue at level 0) : ursus_scope.
 
+
+Definition DTONTokenWallet_ι_lend_ownership__right {b} (x: URValue DTONTokenWalletLRecord b): URValue (XHMap addr_std_fixed lend_recordLRecord) (* XUInteger8 *) b :=
+    || {x} ^^ {DTONTokenWallet_ι_lend_ownership_} || : _.
+    
+Definition DTONTokenWallet_ι_lend_ownership__left (x: ULValue DTONTokenWalletLRecord): ULValue (XHMap addr_std_fixed lend_recordLRecord) (* XUInteger8 *) :=
+    {{ {x} ^^ {DTONTokenWallet_ι_lend_ownership_} }} : _.
+    
+Notation " a '↑' 'DTONTokenWallet.lend_ownership_' " := ( DTONTokenWallet_ι_lend_ownership__right a ) (in custom URValue at level 0) : ursus_scope.
+Notation " a '↑' 'DTONTokenWallet.lend_ownership_' " := ( DTONTokenWallet_ι_lend_ownership__left a ) (in custom ULValue at level 0) : ursus_scope.
+
+
 Definition DTONTokenWalletExternal_ι_name__right {b} (x: URValue DTONTokenWalletExternalLRecord b): URValue XString b :=
     || {x} ^^ {DTONTokenWalletExternal_ι_name_} || : _.
     

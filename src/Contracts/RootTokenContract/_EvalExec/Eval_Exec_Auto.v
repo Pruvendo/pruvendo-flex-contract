@@ -15,6 +15,7 @@ Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
 Require Import UMLang.ExecGenerator.
 
+Require Import UrsusTVM.Cpp.TvmCells.
 Require Import UrsusTVM.Cpp.tvmTypes.
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
@@ -45,18 +46,6 @@ Import FuncsInternal.
 
 Import co.
 
-(* Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
-Import SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
-Module TONTokenWalletClassTypes := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule.
-Module FuncsInternal <: SpecModuleForFuncNotations(* ForFuncs *).SpecSig. *)
- 
-Module Import xxx := SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-
-
-(* Module Import TONTokenWalletModuleForRoot := Contracts.TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig. *)
-
-Module Import generator := execGenerator XTypesModule StateMonadModule xxx.
-
 Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
@@ -65,7 +54,21 @@ Local Open Scope N_scope.
 Local Open Scope string_scope.
 Local Open Scope xlist_scope.
 
-Import URSUS_.
+Ltac generate_proof gen :=
+  let e := fresh "e" in
+  let H := fresh "H" in
+  let gen_nf := eval hnf in gen in
+  generate_both gen_nf e H; cycle -1;
+  (only 1: (exists e; subst e; reflexivity));
+  eexists; reflexivity.
+
+Ltac proof_of t :=
+  let e := fresh "e" in
+  let H := fresh "H" in
+  let E := fresh "E" in
+  destruct t as [e H] eqn:E; rewrite <- H; replace e with
+  (let (e', _) := t in e');
+  try reflexivity ;try (rewrite E; reflexivity).
 
 Section optional_owner.
 Definition optional_owner_exec_P (l : Ledger) ( owner :  address  ): 
@@ -225,14 +228,14 @@ Qed.
 End constructor.
 
 Section setWalletCode.
-Definition setWalletCode_exec_P (l : Ledger) ( wallet_code :  TvmCell  ): 
+Definition setWalletCode_exec_P (l : Ledger) ( wallet_code :  cell  ): 
 {l' | l' = exec_state (Uinterpreter (setWalletCode wallet_code)) l}.
   generate_proof (exec_expression l (setWalletCode wallet_code)).
 Defined.
-Definition setWalletCode_auto_exec (l : Ledger) ( wallet_code :  TvmCell  ): Ledger.
+Definition setWalletCode_auto_exec (l : Ledger) ( wallet_code :  cell  ): Ledger.
 intros. term_of (setWalletCode_exec_P l wallet_code).
 Defined.
-Theorem setWalletCode_exec_proof_next (l : Ledger) ( wallet_code :  TvmCell  ) :
+Theorem setWalletCode_exec_proof_next (l : Ledger) ( wallet_code :  cell  ) :
 setWalletCode_auto_exec l wallet_code =
   exec_state (Uinterpreter (setWalletCode wallet_code)) l.
 Proof.
@@ -240,16 +243,16 @@ Proof.
 Qed.
 
 
-Definition setWalletCode_eval_P (l : Ledger) ( wallet_code :  TvmCell  ): 
+Definition setWalletCode_eval_P (l : Ledger) ( wallet_code :  cell  ): 
 {v | v =  (eval_state (Uinterpreter (setWalletCode wallet_code)) l)}.
   generate_proof (eval_expression l (setWalletCode wallet_code)).
 Defined.
 
-Definition setWalletCode_auto_eval (l : Ledger) ( wallet_code :  TvmCell  ): (ControlResult boolean true).
+Definition setWalletCode_auto_eval (l : Ledger) ( wallet_code :  cell  ): (ControlResult boolean true).
 intros. term_of (setWalletCode_eval_P l wallet_code).
 Defined.
 
-Theorem setWalletCode_eval_proof_next (l : Ledger) ( wallet_code :  TvmCell  ) :
+Theorem setWalletCode_eval_proof_next (l : Ledger) ( wallet_code :  cell  ) :
 setWalletCode_auto_eval l wallet_code =
    (eval_state (Uinterpreter (setWalletCode wallet_code)) l).
 Proof.
@@ -268,7 +271,7 @@ Definition prepare_wallet_data_exec_P (l : Ledger)
 ( wallet_public_key :  XUInteger256  )
 ( root_address :  address  )
 ( owner_address : XMaybe address  )
-( code :  XCell  )
+( code :  cell  )
 ( workchain_id :  int  )
 : 
 {l' | l' = exec_state (Uinterpreter (prepare_wallet_data name symbol decimals 
@@ -287,7 +290,7 @@ Definition prepare_wallet_data_auto_exec (l : Ledger)
 ( wallet_public_key :  XUInteger256  )
 ( root_address :  address  )
 ( owner_address : XMaybe address  )
-( code :  XCell  )
+( code :  cell  )
 ( workchain_id :  int  )
 : Ledger.
 intros. term_of (prepare_wallet_data_exec_P l name symbol decimals 
@@ -302,7 +305,7 @@ Theorem prepare_wallet_data_exec_proof_next (l : Ledger)
 ( wallet_public_key :  XUInteger256  )
 ( root_address :  address  )
 ( owner_address : XMaybe address  )
-( code :  XCell  )
+( code :  cell  )
 ( workchain_id :  int  )
 :
 prepare_wallet_data_auto_exec l name symbol decimals 
@@ -327,7 +330,7 @@ Definition prepare_wallet_data_eval_P (l : Ledger)
 ( wallet_public_key :  XUInteger256  )
 ( root_address :  address  )
 ( owner_address : XMaybe address  )
-( code :  XCell  )
+( code :  cell  )
 ( workchain_id :  int  ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_wallet_data name symbol decimals 
 root_public_key wallet_public_key root_address
@@ -344,7 +347,7 @@ Definition prepare_wallet_data_auto_eval (l : Ledger)
 ( wallet_public_key :  XUInteger256  )
 ( root_address :  address  )
 ( owner_address : XMaybe address  )
-( code :  XCell  )
+( code :  cell  )
 ( workchain_id :  int  ): TONTokenWalletClassTypes.DTONTokenWalletLRecord.
 intros. term_of (prepare_wallet_data_eval_P l name symbol decimals 
 root_public_key wallet_public_key root_address
@@ -358,7 +361,7 @@ Theorem prepare_wallet_data_eval_proof_next (l : Ledger)
 ( wallet_public_key :  XUInteger256  )
 ( root_address :  address  )
 ( owner_address : XMaybe address  )
-( code :  XCell  )
+( code :  cell  )
 ( workchain_id :  int  ) :
 prepare_wallet_data_auto_eval l name symbol decimals 
 root_public_key wallet_public_key root_address
@@ -648,41 +651,50 @@ End requestTotalGranted.
 
 Section _on_bounced.
 
-Definition _on_bounced_exec_P (l : Ledger) ( msg :  XCell  )
-( msg_body :  XSlice  )
+Definition _on_bounced_exec_P (l : Ledger) ( msg :  cell  )
+( msg_body :  slice  )
 : 
 {l' | l' = exec_state (Uinterpreter (_on_bounced msg msg_body)) l}.
   generate_proof (exec_expression l (_on_bounced msg msg_body)).
 Defined.
 
-Definition _on_bounced_auto_exec (l : Ledger) ( msg :  XCell  )
-( msg_body :  XSlice  ): Ledger.
-intros. term_of (_on_bounced_exec_P l msg msg_body).
+Definition _on_bounced_auto_exec (l : Ledger) ( msg :  cell  )
+( msg_body :  slice  ): Ledger.
+intros. 
+let t1 := (eval unfold _on_bounced_exec_P in
+(let (e, _) := _on_bounced_exec_P l msg msg_body in e)) in exact t1.
 Defined.
 
-Theorem _on_bounced_exec_proof_next (l : Ledger) ( msg :  XCell  )
-( msg_body :  XSlice  ) :
+Theorem _on_bounced_exec_proof_next (l : Ledger) ( msg :  cell  )
+( msg_body :  slice  ) :
   _on_bounced_auto_exec l msg msg_body =
   exec_state (Uinterpreter (_on_bounced msg msg_body)) l.
 Proof.
-  intros. proof_of (_on_bounced_exec_P l msg msg_body).
+  intros.
+  destruct (_on_bounced_exec_P l  msg msg_body) as [e H] eqn:E. rewrite <- H. replace e with
+  (let (e', _) := (_on_bounced_exec_P l  msg msg_body) in e').
+unfold _on_bounced_exec_P.
+  reflexivity.
+  rewrite E.
+  reflexivity.
+  (* proof_of (_on_bounced_exec_P l msg msg_body). *)
 Qed.
 
 
 
-Definition _on_bounced_eval_P (l : Ledger) ( msg :  XCell  )
-( msg_body :  XSlice  ): 
+Definition _on_bounced_eval_P (l : Ledger) ( msg :  cell  )
+( msg_body :  slice  ): 
 {v | v =  (eval_state (Uinterpreter (_on_bounced msg msg_body)) l)}.
   generate_proof (eval_expression l (_on_bounced msg msg_body)).
 Defined.
 
-Definition _on_bounced_auto_eval (l : Ledger) ( msg :  XCell  )
-( msg_body :  XSlice  ): (ControlResult XUInteger true).
+Definition _on_bounced_auto_eval (l : Ledger) ( msg :  cell  )
+( msg_body :  slice  ): (ControlResult XUInteger true).
 intros. term_of (_on_bounced_eval_P l msg msg_body).
 Defined.
 
-Theorem _on_bounced_eval_proof_next (l : Ledger) ( msg :  XCell  )
-( msg_body :  XSlice  ) :
+Theorem _on_bounced_eval_proof_next (l : Ledger) ( msg :  cell  )
+( msg_body :  slice  ) :
 _on_bounced_auto_eval l msg msg_body =
    (eval_state (Uinterpreter (_on_bounced msg msg_body)) l).
 Proof.
@@ -693,18 +705,18 @@ End _on_bounced.
 
 
 Section prepare_root_state_init_and_addr.
-Definition prepare_root_state_init_and_addr_exec_P (l : Ledger) ( root_code :  XCell  )
+Definition prepare_root_state_init_and_addr_exec_P (l : Ledger) ( root_code :  cell  )
 ( root_data :  DRootTokenContractLRecord  )
 : 
 {l' | l' = exec_state (Uinterpreter (prepare_root_state_init_and_addr root_code root_data)) l}.
   generate_proof (exec_expression l (prepare_root_state_init_and_addr root_code root_data)).
 Defined.
 
-Definition prepare_root_state_init_and_addr_auto_exec (l : Ledger) ( root_code :  XCell  )
+Definition prepare_root_state_init_and_addr_auto_exec (l : Ledger) ( root_code :  cell  )
 ( root_data :  DRootTokenContractLRecord  ): Ledger.
 intros. term_of (prepare_root_state_init_and_addr_exec_P l  root_code root_data).
 Defined.
-Theorem prepare_root_state_init_and_addr_exec_proof_next (l : Ledger) ( root_code :  XCell  )
+Theorem prepare_root_state_init_and_addr_exec_proof_next (l : Ledger) ( root_code :  cell  )
 ( root_data :  DRootTokenContractLRecord  ) :
   prepare_root_state_init_and_addr_auto_exec l root_code root_data =
   exec_state (Uinterpreter (prepare_root_state_init_and_addr root_code root_data)) l.
@@ -714,16 +726,16 @@ Qed.
 
 
 
-Definition prepare_root_state_init_and_addr_eval_P (l : Ledger) ( root_code :  XCell  )
+Definition prepare_root_state_init_and_addr_eval_P (l : Ledger) ( root_code :  cell  )
 ( root_data :  DRootTokenContractLRecord  ): 
 {v | v = toValue (eval_state (Uinterpreter (prepare_root_state_init_and_addr root_code root_data)) l)}.
   generate_proof (eval_expression l (prepare_root_state_init_and_addr root_code root_data)).
 Defined.
-Definition prepare_root_state_init_and_addr_auto_eval (l : Ledger) ( root_code :  XCell  )
+Definition prepare_root_state_init_and_addr_auto_eval (l : Ledger) ( root_code :  cell  )
 ( root_data :  DRootTokenContractLRecord  ): StateInitLRecord * XUInteger256.
 intros. term_of (prepare_root_state_init_and_addr_eval_P l root_code root_data).
 Defined.
-Theorem prepare_root_state_init_and_addr_eval_proof_next (l : Ledger) ( root_code :  XCell  )
+Theorem prepare_root_state_init_and_addr_eval_proof_next (l : Ledger) ( root_code :  cell  )
 ( root_data :  DRootTokenContractLRecord  ) :
 prepare_root_state_init_and_addr_auto_eval l root_code root_data =
   toValue (eval_state (Uinterpreter (prepare_root_state_init_and_addr root_code root_data)) l).

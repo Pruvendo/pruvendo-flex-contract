@@ -147,22 +147,22 @@ GeneratePruvendoRecord LocalState10001L LocalStateFields10001I .
 Opaque LocalState10001LRecord . 
 
 Inductive LocalStateFields10010I := | ι100100 | ι100101 . 
-Definition LocalState10010L := [ ( XHMap (string*nat) XUInteger (* record2 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10010L := [ ( XHMap (string*nat) (XMaybe internal_msg_header_with_answer_idLRecord) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10010L LocalStateFields10010I . 
 Opaque LocalState10010LRecord . 
 
 Inductive LocalStateFields10011I := | ι100110 | ι100111 . 
-Definition LocalState10011L := [ ( XHMap (string*nat) XUInteger (* record3 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10011L := [ ( XHMap (string*nat) internal_msg_headerLRecord ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10011L LocalStateFields10011I . 
 Opaque LocalState10011LRecord . 
 
 Inductive LocalStateFields10100I := | ι101000 | ι101001 . 
-Definition LocalState10100L := [ ( XHMap (string*nat) XUInteger (* record4 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10100L := [ ( XHMap (string*nat) slice_ ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10100L LocalStateFields10100I . 
 Opaque LocalState10100LRecord . 
 
 Inductive LocalStateFields10101I := | ι101010 | ι101011 . 
-Definition LocalState10101L := [ ( XHMap (string*nat) XUInteger (* record5 *) ) : Type ; ( XHMap string nat ) : Type ] . 
+Definition LocalState10101L := [ ( XHMap (string*nat) XUInteger (*hole*) ) : Type ; ( XHMap string nat ) : Type ] . 
 GeneratePruvendoRecord LocalState10101L LocalStateFields10101I . 
 Opaque LocalState10101LRecord . 
 
@@ -713,7 +713,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10001 : typeclass_instances. 
- #[global, program] Instance LocalStateField10010 : LocalStateField XUInteger (* record2 *).
+ #[global, program] Instance LocalStateField10010 : LocalStateField (XMaybe internal_msg_header_with_answer_idLRecord) (* record2 *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι100). 
@@ -731,7 +731,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10010 : typeclass_instances. 
- #[global, program] Instance LocalStateField10011 : LocalStateField XUInteger (* record3 *).
+ #[global, program] Instance LocalStateField10011 : LocalStateField internal_msg_headerLRecord (* record3 *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι100). 
@@ -749,7 +749,7 @@ Next Obligation.
  Fail Next Obligation.
 #[local]
 Remove Hints LocalStateField10011 : typeclass_instances. 
- #[global, program] Instance LocalStateField10100 : LocalStateField XUInteger (* record4 *).
+ #[global, program] Instance LocalStateField10100 : LocalStateField slice_ (* record4 *).
 Next Obligation. 
  eapply TransEmbedded. eapply (_ ι1). 
  eapply TransEmbedded. eapply (_ ι101). 
