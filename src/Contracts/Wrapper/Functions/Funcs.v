@@ -406,7 +406,7 @@ wrapURExpression (ursus_call_with_args (LedgerableWithArgs:= λ0 ) getDetails ) 
 Notation " 'getDetails_' '(' ')' " := ( getDetails_right ) 
 (in custom URValue at level 0 ) : ursus_scope . 
  
-Definition load_persistent_data : UExpression ( cell # DWrapperLRecord ) false .
+(* Definition load_persistent_data : UExpression ( cell # DWrapperLRecord ) false .
  refine {{ return_ {} }} .  
 Defined .
 
@@ -414,9 +414,9 @@ Definition load_persistent_data_right : URValue ( cell # DWrapperLRecord ) false
  wrapURExpression (ursus_call_with_args ( LedgerableWithArgs:= λ0 ) load_persistent_data ) . 
  
 Notation " 'load_persistent_data_' '(' ')' " := ( load_persistent_data_right ) 
- (in custom URValue at level 0 ) : ursus_scope . 
+ (in custom URValue at level 0 ) : ursus_scope .  *)
 
-Definition save_persistent_data (persistent_data_header:cell) 
+(* Definition save_persistent_data (persistent_data_header:cell) 
                                 (base:DWrapperLRecord) 
                               : UExpression PhantomType false .
  refine {{ return_ {} }} .  
@@ -431,7 +431,7 @@ Definition save_persistent_data_left { R a1 a2 }
 Notation " 'save_persistent_data_' '(' a ',' b ')' " := ( save_persistent_data_left a b ) 
  (in custom ULValue at level 0 ,
      a custom URValue at level 0 , b custom URValue at level 0 ) : ursus_scope . 
-
+ *)
 Definition _on_bounced ( _ :  cell ) ( msg_body : slice ) : UExpression uint true. 
 	refine {{ tvm_accept () ; {_} }} . 
  	refine {{ new 'Args : ( PhantomType (* auto *) ) @ "Args" := {}  

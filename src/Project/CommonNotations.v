@@ -378,5 +378,8 @@ refine {{new 'x : T @ ss := {} ; {_} }} ;
 refine {{ {x} := #{s} ; {_} }} ;
 clear s.
 
+
+Notation " 'load_persistent_data' '()' " := (load_persistent_data)  (in custom URValue at level 0) : ursus_scope .
+
 End CommonNotations.
 

@@ -79,6 +79,18 @@ Notation " 'parse' '(' x , e ')' " := (parse x e) (in custom URValue at level 2,
 Notation " 'parser' '(' x ')' " := (parser x) (in custom URValue at level 2, x custom URValue) : ursus_scope .   
 Notation " x '->' 'ldu' '(' '32' ')' " := (tvm_ldu32 x) (in custom URValue at level 2, x custom URValue) : ursus_scope .
 
+Parameter tvm_ldi32 : forall b (s: URValue slice b), URValue int b.
+Arguments tvm_ldi32 {b}.
+Notation " x '->' 'ldi' '(' '32' ')' " := (tvm_ldi32 x) (in custom URValue at level 2, x custom URValue) : ursus_scope .
+
+
+Definition msg_header_t := internal_msg_headerLRecord.
+
+Parameter parse_continue : forall X (b be: bool) (x: URValue slice b) (e: URValue ErrorType be) , URValue (X # slice) true.
+Arguments parse_continue {X} {b} {be}.
+
+Notation " 'parse_continue' '(' x , e ')' " := (parse_continue x e) (in custom URValue at level 2, x custom URValue , e custom URValue) : ursus_scope .   
+
 Definition external_wallet_replay_protection_init: URValue PhantomType false.
   exact || {} ||.
 Qed.
