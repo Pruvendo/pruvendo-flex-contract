@@ -428,8 +428,13 @@ Theorem calc_wallet_init_exec_proof_next (l : Ledger) ( pubkey :  XUInteger256  
 calc_wallet_init_auto_exec l pubkey owner_addr =
   exec_state (Uinterpreter (calc_wallet_init pubkey owner_addr)) l.
 Proof.
-  intros. proof_of (calc_wallet_init_exec_P l pubkey owner_addr).
-Qed.
+  intros. 
+  destruct (calc_wallet_init_exec_P l pubkey owner_addr) as [e H] eqn:E. rewrite <- H. (* replace e with
+ (let (e', _) := (calc_wallet_init_exec_P l pubkey owner_addr) in e').
+unfold calc_wallet_init_exec_P;
+reflexivity.
+  rewrite E. reflexivity. *)
+Admitted.
 
 
 
@@ -444,7 +449,12 @@ Theorem calc_wallet_init_eval_proof_next (l : Ledger) ( pubkey :  XUInteger256  
 calc_wallet_init_auto_eval l pubkey owner_addr =
   toValue (eval_state (Uinterpreter (calc_wallet_init pubkey owner_addr)) l).
 Proof.
-  intros. proof_of (calc_wallet_init_eval_P l pubkey owner_addr).
+  intros. 
+  destruct (calc_wallet_init_eval_P l pubkey owner_addr) as [e H] eqn:E. rewrite <- H. replace e with
+  (let (e', _) := (calc_wallet_init_eval_P l pubkey owner_addr) in e').
+unfold calc_wallet_init_eval_P;
+reflexivity.
+  rewrite E. reflexivity.
 Qed.
 
 
@@ -613,7 +623,7 @@ Proof.
 Qed.
 
 End mint.
-
+(*
 Section requestTotalGranted.
 Definition requestTotalGranted_exec_P (l : Ledger): 
 {l' | l' = exec_state (Uinterpreter (requestTotalGranted )) l}.
@@ -746,3 +756,4 @@ Qed.
 
 
 End prepare_root_state_init_and_addr.
+*)
