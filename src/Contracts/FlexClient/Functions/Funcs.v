@@ -32,11 +32,11 @@ Require Import TONTokenWallet.ClassTypes.
 
 (*********************************************)
 Require Import TradingPair.ClassTypesNotations.
-Require Import Contracts.XchgPair.ClassTypesNotations.
-Require Import Contracts.TONTokenWallet.ClassTypesNotations.
-Require Import Contracts.PriceXchg.ClassTypesNotations.
-Require Import Contracts.Price.ClassTypesNotations.
-Require Import Contracts.Flex.ClassTypesNotations.
+Require Import XchgPair.ClassTypesNotations.
+Require Import TONTokenWallet.ClassTypesNotations.
+Require Import PriceXchg.ClassTypesNotations.
+Require Import Price.ClassTypesNotations.
+Require Import Flex.ClassTypesNotations.
 
 (*********************************************)
 
@@ -44,14 +44,12 @@ Module Funcs (co : CompilerOptions)(dc : ConstsTypesSig XTypesModule StateMonadM
 Import co.
  
 Module Export FuncNotationsModuleForFuncs := FuncNotations XTypesModule StateMonadModule dc. 
-Module Import TradingPairClassTypesNotations := Contracts.TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule LedgerModuleForFuncSig. 
-Module Import XchgPairModuleForFlexClient := Contracts.XchgPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module Import TONTokenWalletModuleForFlexClient := Contracts.TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module Import PriceXchgModuleForFlexClient := Contracts.PriceXchg.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module Import PriceModuleForFlexClient := Contracts.Price.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-Module Import FlexModuleForFlexClient := Contracts.Flex.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
-
-(* Export SpecModuleForFuncNotations.CommonAxiomsModule. *)
+Module Import TradingPairClassTypesNotations := TradingPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule LedgerModuleForFuncSig. 
+Module Import XchgPairModuleForFlexClient := XchgPair.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import TONTokenWalletModuleForFlexClient := TONTokenWallet.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import PriceXchgModuleForFlexClient := PriceXchg.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import PriceModuleForFlexClient := Price.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
+Module Import FlexModuleForFlexClient := Flex.ClassTypesNotations.ClassTypesNotations XTypesModule StateMonadModule SpecModuleForFuncNotations.LedgerModuleForFuncSig.
 
 Module FuncsInternal <: SpecModuleForFuncNotations.SpecSig. 
  

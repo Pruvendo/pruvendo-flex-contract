@@ -20,9 +20,7 @@ Require Import Project.CommonAxioms.
 Require Import FlexClient.Ledger.
 Require Import FlexClient.Functions.FuncSig.
 Require Import FlexClient.ClassTypes.
-(* Require Import Contracts.Wrapper.ClassTypes. *)
 
-(* здесь инмпортируем все внешние интерфейсы *)
 Require Import TradingPair.Interface.
 Require Import XchgPair.Interface.
 Require Import Price.Interface.

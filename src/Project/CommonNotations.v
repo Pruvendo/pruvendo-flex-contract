@@ -237,7 +237,5 @@ refine {{new 'x : T @ ss := {} ; {_} }} ;
 refine {{ {x} := #{s} ; {_} }} ;
 clear s.
 
-
-
 End CommonNotations.
 
