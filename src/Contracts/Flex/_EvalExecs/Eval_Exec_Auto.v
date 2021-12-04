@@ -11,52 +11,44 @@ Require Import FinProof.EpsilonMonad.
 Require Import FinProof.StateMonad21Instances.
 Require Import FinProof.MonadTransformers21.
 
-
 Require Import UMLang.UrsusLib.
 Require Import UMLang.ProofEnvironment2.
-(* Require Import UMLang.ExecGenerator.
- *)
+Require Import UMLang.ExecGenerator.
+
 Require Import UrsusTVM.Cpp.tvmFunc.
 Require Import UrsusTVM.Cpp.tvmNotations.
 
+Require Import Project.CommonAxioms.
 Require Import Project.CommonConstSig.
 Require Import Project.CommonTypes.
-Require Import Project.CommonNotations.
-(*Fully qualified name are mandatory in multi-contract environment*)
-Require Import Contracts.Flex.Ledger.
-Require Import Contracts.Flex.Functions.FuncSig.
-Require Import Contracts.Flex.Functions.FuncNotations.
-Require Import Contracts.Flex.Functions.Funcs.
-Require Contracts.Flex.Interface.
 
-(* Unset Typeclasses Iterative Deepening.
+(*Fully qualified name are mandatory in multi-contract environment*)
+Require Import Flex.ClassTypes.
+Require Import Flex.Ledger.
+Require Import Flex.Functions.FuncSig.
+Require Import Flex.Functions.FuncNotations.
+Require Import Flex.Functions.Funcs.
+
+(* Require Contracts.XchgPair.Interface. *)
+
+Unset Typeclasses Iterative Deepening.
 Set Typeclasses Depth 30.
- *)
 
 Module EvalExecAuto (co : CompilerOptions)(dc : ConstsTypesSig XTypesModule StateMonadModule) .
-
 
 Module Export FuncsModule := Funcs co dc.
 
 Import FuncsInternal.
+
 Import co.
- Module Export FuncNotationsModuleForFunc := FuncNotations XTypesModule StateMonadModule dc. 
-Export SpecModuleForFuncNotations.LedgerModuleForFuncSig. 
-Module Import TONTonkenWalletModuleForFlex := Contracts.TONTokenWallet.ClassTypes.ClassTypes XTypesModule StateMonadModule .
- (* Export SpecModuleForFuncNotations(* ForFuncs *).CommonNotationsModule. *)
- 
-(*   Module Import xxx := SpecModuleForFuncNotations.LedgerModuleForFuncSig.
- *)
-(* Module Import generator := execGenerator XTypesModule StateMonadModule xxx.
- 
-  *)
-(* Import UrsusNotations. *)
+
+Import UrsusNotations.
 Local Open Scope ursus_scope.
 Local Open Scope ucpp_scope.
-(* Local Open Scope struct_scope. *)
-(* Local Open Scope N_scope.
+Local Open Scope struct_scope.
+Local Open Scope N_scope.
 Local Open Scope string_scope.
-Local Open Scope xlist_scope. *)
+Local Open Scope xlist_scope.
 
 
 (*move somewhere*)
@@ -154,7 +146,7 @@ let t1 := (eval unfold rejectXchgPairImpl_auto_exec_ in (rejectXchgPairImpl_auto
 let t2 := eval unfold rejectXchgPairImpl_exec_P in t1 in exact t2.
 Defined.
 Print rejectXchgPairImpl_auto_exec.
-Eval unfold rejectXchgPairImpl_auto_exec_ in rejectXchgPairImpl_auto_exec_ l pubkey xchg_pair_listing_requests listing_cfg.
+Eval unfold rejectXchgPairImpl_auto_exec_ in rejectXchgPairImpl_auto_exec_p l pubkey xchg_pair_listing_requests listing_cfg.
 intros. destruct (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg).
 exact x. (* 
  term_of (rejectXchgPairImpl_exec_P l pubkey xchg_pair_listing_requests listing_cfg ). *)
