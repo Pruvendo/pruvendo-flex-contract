@@ -1,9 +1,11 @@
 # Initial version generated with
 # { echo "-R . FinProof " ; find . -name "*.v" -print } > _CoqProject
 
--R ./_build/default/src flexProject
-
-
-
+-R ./src flexProject
+-R ../ursus/pruvendo-ursus-tvm/_build/default/src UrsusTVM
+-R ../ursus/coq-finproof-base/_build/default/src FinProof
+-R ../ursus/pruvendo-base-lib/_build/default/src FinProof.Lib
+-R ../ursus/solidity-monadic-language/_build/default/src UMLang
+-R ../ursus/ursus-standard-library/_build/default/src UrsusStdLib
 
 
